@@ -12,7 +12,6 @@ import { Paper, TextField } from '@material-ui/core';
 import TableComponent from '../../../components/table/TableComponent';
 import ModalCita from '../../../components/modales/modal_cita';
 import { Multiselect } from 'multiselect-react-dropdown';
-import ModalPagos from '../../../components/modales/modal_pagos';
 import { toFormatterCurrency } from '../../../utils/utils';
 import ModalImprimirTratamiento from '../../../components/modales/imprimir/tratamiento';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
@@ -88,14 +87,10 @@ export const AgendarAparatologiaContainer = (props) => {
 		setFilterDate,
 		// MODAL PROXIMA
 		openModalProxima,
-		// MODAL PAGOS
-		onCloseVerPagos,
-		openModalPagos,
 		sucursal,
 		setMessage,
 		setSeverity,
 		setOpenAlert,
-		onGuardarModalPagos,
 		// MODAL IMPRIMIR
 		openModalImprimirCita,
 		datosImpresion,
@@ -153,21 +148,6 @@ export const AgendarAparatologiaContainer = (props) => {
 						setMessage={setMessage}
 						setSeverity={setSeverity}
 						setFilterDate={setFilterDate} /> : ''
-			}
-			{
-				openModalPagos ?
-					<ModalPagos
-						open={openModalPagos}
-						onClose={onCloseVerPagos}
-						servicio={cita}
-						empleado={empleado}
-						sucursal={sucursal}
-						setMessage={setMessage}
-						setSeverity={setSeverity}
-						setOpenAlert={setOpenAlert}
-						tipoServicioId={cita.servicio._id}
-						onGuardarModalPagos={onGuardarModalPagos} />
-					: ''
 			}
 			{
 				openModalImprimirCita ?

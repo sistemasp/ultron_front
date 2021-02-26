@@ -65,6 +65,7 @@ const LoginForm = (props) => {
   const rolSistemasId = process.env.REACT_APP_SISTEMAS_ROL_ID;
   const rolSupervisorId = process.env.REACT_APP_SUPERVISOR_ROL_ID;
   const rolAuxiliarAdministrativoId = process.env.REACT_APP_AUXILIAR_ADMINISTRATIVO_ROL_ID;
+  const rolCallCenterId = process.env.REACT_APP_CALL_CENTER_ROL_ID;
 
   useEffect(() => {
     const loadSucursales = async () => {
@@ -118,6 +119,8 @@ const LoginForm = (props) => {
         history.push('/recepcion', { empleado: empleado, sucursal: data.sucursal });
       } else if (empleado.rol._id === rolDermatologoId) {
         history.push('/dermatologos', { dermatologo: empleado, sucursal: data.sucursal });
+      } else if (empleado.rol._id === rolCallCenterId) {
+        history.push('/call_center', { empleado: empleado, sucursal: data.sucursal });
       }
     } else {
       setOpenAlert(true);

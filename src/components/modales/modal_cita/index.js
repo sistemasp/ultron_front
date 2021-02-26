@@ -24,7 +24,7 @@ import { addZero } from '../../../utils/utils';
 import { createAparatologia, updateAparatologia } from '../../../services/aparatolgia';
 import { createFacial, updateFacial } from '../../../services/faciales';
 import { createLaser, updateLaser } from '../../../services/laser';
-import { showAllStatus } from '../../../services/status';
+import { showAllStatusVisibles } from '../../../services/status';
 
 const validationSchema = Yup.object({
   fecha: Yup.string("Ingresa los nombres")
@@ -483,7 +483,7 @@ const ModalCita = (props) => {
     }
 
     const loadStaus = async () => {
-      const response = await showAllStatus();
+      const response = await showAllStatusVisibles();
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
         setStatements(response.data);
       }

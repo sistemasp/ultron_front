@@ -19,7 +19,7 @@ import {
 import { Backdrop, CircularProgress, makeStyles } from '@material-ui/core';
 import { addZero } from '../../../utils/utils';
 import ModalFormConsulta from './ModalFormConsulta';
-import { showAllStatus } from '../../../services/status';
+import { showAllStatusVisibles } from '../../../services/status';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -121,7 +121,7 @@ const ModalConsulta = (props) => {
     }
 
     const loadStaus = async () => {
-      const response = await showAllStatus();
+      const response = await showAllStatusVisibles();
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
         setStatements(response.data);
       }

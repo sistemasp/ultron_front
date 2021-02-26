@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-export const AgendarAparatologiaContainer = (props) => {
+export const AgendarFacialContainer = (props) => {
 
 	const classes = useStyles();
 
@@ -41,17 +41,16 @@ export const AgendarAparatologiaContainer = (props) => {
 		errors,
 		servicios,
 		tratamientos,
-		areas,
 		horarios,
 		tipoCitas,
-		onChangeFrecuencia,
-		frecuencias,
 		onChangeServicio,
 		onChangeTratamientos,
 		onChangeAreas,
 		onChangeFecha,
 		onChangeHora,
 		onChangeFilterDate,
+		onChangeFrecuencia,
+		frecuencias,
 		filterDate,
 		paciente,
 		onClickAgendar,
@@ -74,7 +73,7 @@ export const AgendarAparatologiaContainer = (props) => {
 		// TABLE DATES PROPERTIES
 		titulo,
 		columns,
-		aparatologias,
+		citas,
 		actions,
 		options,
 		components,
@@ -84,16 +83,13 @@ export const AgendarAparatologiaContainer = (props) => {
 		onClickActualizarCita,
 		onClickCancel,
 		onChangeAsistio,
-		loadAparatologias,
+		loadFaciales,
 		setFilterDate,
+		setSeverity,
 		// MODAL PROXIMA
 		openModalProxima,
-		// MODAL PAGOS
-		onCloseVerPagos,
-		openModalPagos,
 		sucursal,
 		setMessage,
-		setSeverity,
 		setOpenAlert,
 		onGuardarModalPagos,
 		// MODAL IMPRIMIR
@@ -122,7 +118,7 @@ export const AgendarAparatologiaContainer = (props) => {
 						tratamientos={tratamientos}
 						horarios={horarios}
 						empleado={empleado}
-						loadAparatologias={loadAparatologias}
+						loadFaciales={loadFaciales}
 						sucursal={sucursal}
 						setOpenAlert={setOpenAlert}
 						setMessage={setMessage}
@@ -147,27 +143,11 @@ export const AgendarAparatologiaContainer = (props) => {
 						tratamientos={tratamientos}
 						horarios={horarios}
 						empleado={empleado}
-						loadAparatologias={loadAparatologias}
+						loadFaciales={loadFaciales}
 						sucursal={sucursal}
 						setOpenAlert={setOpenAlert}
 						setMessage={setMessage}
-						setSeverity={setSeverity}
 						setFilterDate={setFilterDate} /> : ''
-			}
-			{
-				openModalPagos ?
-					<ModalPagos
-						open={openModalPagos}
-						onClose={onCloseVerPagos}
-						servicio={cita}
-						empleado={empleado}
-						sucursal={sucursal}
-						setMessage={setMessage}
-						setSeverity={setSeverity}
-						setOpenAlert={setOpenAlert}
-						tipoServicioId={cita.servicio._id}
-						onGuardarModalPagos={onGuardarModalPagos} />
-					: ''
 			}
 			{
 				openModalImprimirCita ?
@@ -178,7 +158,7 @@ export const AgendarAparatologiaContainer = (props) => {
 					: ''
 			}
 			<Paper>
-				<h1>{paciente.nombres ? `${paciente.nombres} ${paciente.apellidos}` : 'SELECCIONA UN PACIENTE'}</h1>
+				<h1>{paciente.nombres ? `${paciente.nombres} ${paciente.apellidos}` : 'SELECIONA UN PACIENTE'}</h1>
 				<Grid container spacing={3}>
 					{
 						true ?
@@ -200,7 +180,7 @@ export const AgendarAparatologiaContainer = (props) => {
 										id="simple-select-outlined-tratamientos"
 										value={values.tratamientos[0]}
 										onChange={(e) => onChangeTratamientos(e)}
-										label="RATAMIENTOS" >
+										label="TRATAMIENTOS" >
 										{tratamientos.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
 									</Select>
 								</FormControl>
@@ -240,7 +220,6 @@ export const AgendarAparatologiaContainer = (props) => {
 								labelId="simple-select-outlined-dermatologo"
 								id="simple-select-outlined-dermatologo"
 								value={values.dermatologo}
-								error={Boolean(errors.dermatologo)}
 								onChange={onChangeDoctors}
 								label="DERMATÓLOGO" >
 								{dermatologos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
@@ -315,7 +294,7 @@ export const AgendarAparatologiaContainer = (props) => {
 									KeyboardButtonProps={{
 										'aria-label': 'change date',
 									}}
-									invalidDateMessage='Selecciona una fecha' />
+									invalidDateMessage='SELECCIONA UNA FECHA' />
 							</Grid>
 						</MuiPickersUtilsProvider>
 					</Grid>
@@ -376,13 +355,14 @@ export const AgendarAparatologiaContainer = (props) => {
 							className={classes.button}
 							color="primary"
 							variant="contained"
-							disabled={!isValid || isSubmitting || !paciente.nombres
-								|| values.tratamientos.length === 0 || !values.fecha_hora || !values.precio}
+							disabled={!isValid || isSubmitting || !paciente.nombres || !values.servicio
+								|| values.tratamientos.length === 0 || !values.fecha_hora || !values.precio
+								|| !values.tiempo}
 							onClick={() => onClickAgendar(values)}
 							text='GUARDAR' />
 					</Grid>
 					<Grid item xs={12} sm={2}>
-						<h1>TOTAL: {toFormatterCurrency(values.precio)}</h1>
+						<h1>Total: {toFormatterCurrency(values.precio)}</h1>
 					</Grid>
 				</Grid>
 				<MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -398,7 +378,7 @@ export const AgendarAparatologiaContainer = (props) => {
 							format="dd/MM/yyyy"
 							margin="normal"
 							id="date-picker-inline-filter"
-							label="FILTRADO APARATOLOGÍA"
+							label="FILTRADO FACIALES"
 							value={filterDate}
 							onChange={onChangeFilterDate}
 							KeyboardButtonProps={{
@@ -411,7 +391,7 @@ export const AgendarAparatologiaContainer = (props) => {
 			<TableComponent
 				titulo={titulo}
 				columns={columns}
-				data={aparatologias}
+				data={citas}
 				actions={actions}
 				options={options}
 				components={components} />

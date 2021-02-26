@@ -120,6 +120,19 @@ const ModalFormConsulta = (props) => {
                 <h3 className={classes.label}>FRECUENCIA: {values.frecuencia.nombre}</h3>
               </Grid>
               <Grid item xs={12}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-statements">ESTADO</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-statements"
+                    id="simple-select-outlined-statements"
+                    value={values.status}
+                    onChange={onChangeStatus}
+                    label="ESTADO" >
+                    {statements.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
                 {
                   /* values.dermatologo*/ false ?
                     <h3 className={classes.label}>DERMATÓLOGO : {values.dermatologo.nombre}</h3> :
@@ -171,20 +184,6 @@ const ModalFormConsulta = (props) => {
                       </Select>
                     </FormControl>
                 }
-              </Grid>
-
-              <Grid item xs={12}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-statements">ESTADO</InputLabel>
-                  <Select
-                    labelId="simple-select-outlined-statements"
-                    id="simple-select-outlined-statements"
-                    value={values.status}
-                    onChange={onChangeStatus}
-                    label="ESTADO" >
-                    {statements.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                  </Select>
-                </FormControl>
               </Grid>
 
               {

@@ -3,7 +3,7 @@ import { createConsecutivo, createPago, deletePago, showAllOffices } from '../..
 import { addZero, generateFolio } from '../../../utils/utils';
 import ModalFormTraspaso from './ModalFormTraspaso';
 import { createConsult, updateConsult } from '../../../services/consultas';
-import { showAllStatus } from '../../../services/status';
+import { showAllStatusVisibles } from '../../../services/status';
 import { createIngreso, deleteIngreso, updateIngreso } from '../../../services/ingresos';
 
 const ModalTraspaso = (props) => {
@@ -133,7 +133,7 @@ const ModalTraspaso = (props) => {
   }
 
   const loadStaus = async () => {
-    const response = await showAllStatus();
+    const response = await showAllStatusVisibles();
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setEstadoAsistio(response.data.find(item => item._id === asistioStatusId));
     }

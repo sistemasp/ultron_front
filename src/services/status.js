@@ -15,3 +15,15 @@ export const showAllStatus = async () => {
         console.log('showAllStatus', error);
     }
 }
+
+export const showAllStatusVisibles = async () => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/status/visibles`,
+            method: 'GET'
+        });
+        return response;
+    } catch (error) {
+        console.log('showAllStatusVisibles', error);
+    }
+}
