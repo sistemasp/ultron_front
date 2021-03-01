@@ -48,6 +48,7 @@ const ModalFormPaciente = (props) => {
     handleSubmit,
     onChange,
     onChangeSexo,
+    onChangeEmail,
     dataComplete,
     onClickCancel,
     onClickGuardar,
@@ -99,12 +100,22 @@ const ModalFormPaciente = (props) => {
                 <TextField
                   className={classes.textField}
                   name="telefono"
-                  label="TELEFONO"
+                  label="TELÉFONO"
                   value={values.telefono}
                   onChange={onChange}
                   inputProps={{
                     maxLength: "10",
                   }}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  className={classes.textField}
+                  name="email"
+                  label="EMAIL"
+                  value={values.email}
+                  onChange={onChangeEmail}
                   variant="outlined"
                 />
               </Grid>

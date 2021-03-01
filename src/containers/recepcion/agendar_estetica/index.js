@@ -7,6 +7,7 @@ import {
 	showAllMaterials,
 	showAllMaterialEsteticas,
 	showAllFrecuencias,
+	showAllMetodoPago,
 } from "../../../services";
 import {
 	createEstetica,
@@ -65,6 +66,7 @@ const AgendarEstetica = (props) => {
 	const frecuenciaPrimeraVezId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
 	const frecuenciaReconsultaId = process.env.REACT_APP_FRECUENCIA_RECONSULTA_ID;
 	const productoAplicacionToxinaBotulinicaDituroxalId = process.env.REACT_APP_PRO_APL_TOX_BOT_DIT_ID;
+	const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
 
 	const [openAlert, setOpenAlert] = useState(false);
 	const [message, setMessage] = useState('');
@@ -75,6 +77,7 @@ const AgendarEstetica = (props) => {
 	const [frecuencias, setFrecuencias] = useState([]);
 	const [productos, setProductos] = useState([]);
 	const [toxinasRellenos, setToxinaRellenos] = useState([]);
+	const [formasPago, setFormasPago] = useState([]);
 
 	const [values, setValues] = useState({
 		servicio: esteticaServicioId,
@@ -89,6 +92,7 @@ const AgendarEstetica = (props) => {
 		porcentaje_descuento_clinica: 0,
 		descuento_clinica: 0,
 		descuento_dermatologo: 0,
+		forma_pago: efectivoMetodoPagoId,
 	});
 	const [esteticas, setEsteticas] = useState([]);
 	const [openModal, setOpenModal] = useState(false);
@@ -114,15 +118,16 @@ const AgendarEstetica = (props) => {
 		{ title: 'HORA', field: 'hora' },
 		//{ title: 'FOLIO CONSULTA', field: 'consulta.consecutivo' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
-		{ title: 'TELEFONO', field: 'paciente.telefono' },
-		{ title: 'QUIEN AGENDA', field: 'quien_agenda.nombre' },
-		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
-		{ title: 'ESTADO', field: 'status.nombre' },
-		{ title: 'TOTAL', field: 'total_moneda' },
-		{ title: 'OBSERVACIONES', field: 'observaciones' },
+		{ title: 'TELÉFONO', field: 'paciente.telefono' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
 		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
 		{ title: 'HORA SALIDA', field: 'hora_salida' },
+		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
+		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
+		{ title: 'ESTADO', field: 'status.nombre' },
+		{ title: 'TOTAL', field: 'total_moneda' },
+		{ title: 'MÉTODO PAGO', field: 'forma_pago.nombre' },
+		{ title: 'OBSERVACIONES', field: 'observaciones' },
 	];
 
 	const options = {
@@ -232,7 +237,7 @@ const AgendarEstetica = (props) => {
 			const responseConsecutivo = await createConsecutivo(consecutivo);
 			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 				setOpenAlert(true);
-				setMessage('EL ESTETICA SE AGREGO CORRECTAMENTE');
+				setMessage('EL ESTÉTICA SE AGREGO CORRECTAMENTE');
 				setValues({
 					materiales: [],
 					dermatologo: '',
@@ -318,7 +323,7 @@ const AgendarEstetica = (props) => {
 		//new Date(anio, mes - 1, dia) < filterDate.fecha_hora  ? 
 		{
 			icon: EditIcon,
-			tooltip: 'EDITAR ESTETICA',
+			tooltip: 'EDITAR ESTÉTICA',
 			onClick: handleOnClickEditarCita
 		}, //: ''
 		rowData => (
@@ -331,7 +336,7 @@ const AgendarEstetica = (props) => {
 		/*rowData => (
 			rowData.status._id === atendidoStatusId ? {
 				icon: EventAvailableIcon,
-				tooltip: 'NUEVA ESTETICA',
+				tooltip: 'NUEVA ESTÉTICA',
 				onClick: handleOnClickNuevaCita
 			} : ''
 		),*/
@@ -422,6 +427,20 @@ const AgendarEstetica = (props) => {
 		});
 	}
 
+	const handleChangePaymentMethod = (event) => {
+		setValues({
+		  ...values,
+		  forma_pago: event.target.value,
+		});
+	  }
+
+	const loadFormasPago = async () => {
+		const response = await showAllMetodoPago();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setFormasPago(response.data);
+		}
+	}
+
 	useEffect(() => {
 		const loadToxinasRellenos = async () => {
 			const response = await showAllMaterialEsteticas();
@@ -482,6 +501,7 @@ const AgendarEstetica = (props) => {
 		loadEsteticas();
 		loadFrecuencias();
 		loadProductos();
+		loadFormasPago();
 		loadHorariosByServicio(new Date(), esteticaServicioId);
 		loadDermatologos();
 		loadMateriales();
@@ -508,10 +528,12 @@ const AgendarEstetica = (props) => {
 								filterDate={filterDate.fecha_show}
 								paciente={paciente}
 								disableDate={disableDate}
+								formasPago={formasPago}
 								onClickAgendar={handleClickAgendar}
 								onChangeTiempo={(e) => handleChangeTiempo(e)}
-								titulo={`ESTETICA (${dateToString(filterDate.fecha_show)})`}
+								titulo={`ESTÉTICA (${dateToString(filterDate.fecha_show)})`}
 								onChangeToxinasRellenos={(e) => handleChangeToxinasRellenos(e)}
+								onChangePaymentMethod={(e) => handleChangePaymentMethod(e)}
 								onChangeTotal={handleChangeTotal}
 								columns={columns}
 								options={options}

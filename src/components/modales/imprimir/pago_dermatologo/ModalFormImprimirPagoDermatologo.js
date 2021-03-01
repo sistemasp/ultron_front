@@ -502,7 +502,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                 <Fragment>
                   <Grid container className={classes.container}>
                     <Grid item xs={12}>
-                      <p className={classes.label_title_descripcion}> {`${cirugias.length} CIRUGIAS`}</p>
+                      <p className={classes.label_title_descripcion}> {`${cirugias.length} CIRUGíAS`}</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
                       <p className={classes.label_cells_totales}>HORA</p>
@@ -552,7 +552,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                 <Fragment>
                   <Grid container className={classes.container}>
                     <Grid item xs={12}>
-                      <p className={classes.label_title_descripcion}> {`${cirugiasPA.length} CIRUGIAS PAGO ANTICIPADO`}</p>
+                      <p className={classes.label_title_descripcion}> {`${cirugiasPA.length} CIRUGíAS PAGO ANTICIPADO`}</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
                       <p className={classes.label_cells_totales}>HORA</p>

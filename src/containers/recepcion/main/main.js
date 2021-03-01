@@ -205,9 +205,9 @@ export const MainContainer = props => {
 						<ListItemIcon> <ListAltIcon /> </ListItemIcon>
 						<ListItemText primary={'LISTA DE ESPERA'} />
 					</ListItem>
-					<ListItem button key={'RAZON SOCIAL'} onClick={(e) => onChangeTab(e, 5, handleDrawerClose)}>
+					<ListItem button key={'RAZÓN SOCIAL'} onClick={(e) => onChangeTab(e, 5, handleDrawerClose)}>
 						<ListItemIcon> <Description /> </ListItemIcon>
-						<ListItemText primary={'RAZON SOCIAL'} />
+						<ListItemText primary={'RAZÓN SOCIAL'} />
 					</ListItem>
 					<ListItem button key={'REPORTES'} onClick={(e) => onChangeTab(e, 6, handleDrawerClose)}>
 						<ListItemIcon> <AssignmentIcon /> </ListItemIcon>

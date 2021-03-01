@@ -160,7 +160,7 @@ const ReportesCirugias = (props) => {
 						onChangeEndDate={(e) => handleChangeEndDate(e)}
 						startDate={startDate.fecha_show}
 						endDate={endDate.fecha_show}
-						titulo={`REPORTES CIRUGIAS(${startDate.fecha} - ${endDate.fecha})`}
+						titulo={`REPORTES CIRUGíAS(${startDate.fecha} - ${endDate.fecha})`}
 						columns={columns}
 						options={options}
 						citas={citas}

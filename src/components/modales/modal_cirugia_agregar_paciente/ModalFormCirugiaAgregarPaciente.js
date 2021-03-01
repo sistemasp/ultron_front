@@ -74,21 +74,21 @@ const ModalFormCirugiaAgregarPaciente = (props) => {
           <form onSubmit={handleSubmit}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <h2 className={classes.label}>{cambio ? 'CAMBIAR DE ' : ' ASIGNAR A '}SALA DE CIRUGIA</h2>
+                <h2 className={classes.label}>{cambio ? 'CAMBIAR DE ' : ' ASIGNAR A '}SALA DE CIRUGíA</h2>
               </Grid>
               <Grid item xs={12}>
                 <h2 className={classes.label}>{`${paciente.nombres}`}</h2>
               </Grid>
               <Grid item xs={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-asignar">SALA DE CIRUGIA DISPONIBLE</InputLabel>
+                  <InputLabel id="simple-select-outlined-asignar">SALA DE CIRUGíA DISPONIBLE</InputLabel>
                   <Select
                     labelId="simple-select-outlined-asignar"
                     id="simple-select-outlined-asignar"
                     value={values.salaCirugia}
                     error={Boolean(errors.salaCirugia)}
                     onChange={onChangeSalaCirugia}
-                    label="SALA CIRUGIA DISPONIBLE" >
+                    label="SALA CIRUGíA DISPONIBLE" >
                     {salaCirugias.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
                   </Select>
                 </FormControl>

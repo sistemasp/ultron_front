@@ -80,6 +80,8 @@ export const AgendarDermapenContainer = (props) => {
 		onChangeFrecuencia,
 		frecuencias,
 		onChangeCosto,
+		onChangePaymentMethod,
+		formasPago,
 		// TABLE DATES PROPERTIES
 		titulo,
 		columns,
@@ -183,7 +185,27 @@ export const AgendarDermapenContainer = (props) => {
 					: ''
 			}
 			<Paper>
-				<h1>{paciente.nombres ? `${paciente.nombres} ${paciente.apellidos}` : 'SELECCIONA DESDE UNA CONSULTA'}</h1>
+				<Grid container spacing={3}>
+					<Grid item xs={12} sm={6}>
+						<h1>{paciente.nombres ? `${paciente.nombres} ${paciente.apellidos}` : 'SELECCIONA DESDE UNA CONSULTA'}</h1>
+					</Grid>
+					<Grid item xs={12} sm={2}>
+						<h2>APLICACIÓN: {toFormatterCurrency(values.total_aplicacion)}</h2>
+					</Grid>
+					<Grid item xs={12} sm={2}>
+						<h1>TOTAL: {toFormatterCurrency(values.precio)}</h1>
+					</Grid>
+					<Grid item xs={12} sm={2}>
+						<ButtonCustom
+							className={classes.button}
+							color="primary"
+							variant="contained"
+							disabled={!isValid || isSubmitting || !paciente.nombres || !values.dermatologo
+								|| !values.fecha_hora || !values.tiempo}
+							onClick={() => onClickAgendar(values)}
+							text='GUARDAR' />
+					</Grid>
+				</Grid>
 				<Grid container spacing={3}>
 					<Grid item xs={12} sm={2}>
 						<TextField
@@ -224,6 +246,30 @@ export const AgendarDermapenContainer = (props) => {
 						/>
 					</Grid>
 					<Grid item xs={12} sm={2}>
+						<Multiselect
+							options={materiales} // Options to display in the dropdown
+							displayValue="nombre" // Property name to display in the dropdown options
+							onSelect={(e) => onChangeMateriales(e)} // Function will trigger on select event
+							onRemove={(e) => onChangeMateriales(e)} // Function will trigger on remove event
+							placeholder="SELECCIONA MATERIALES"
+							selectedValues={values.materiales} // Preselected value to persist in dropdown
+						/>
+					</Grid>
+
+					{
+						values.materiales.map((item, index) =>
+							<Grid item xs={12} sm={2}>
+								<TextField
+									className={classes.button}
+									name={item.precio}
+									label={`PRECIO: ${item.nombre}`}
+									value={item.precio}
+									type='Number'
+									onChange={(e) => onChangeItemPrecio(e, index)}
+									variant="outlined" />
+							</Grid>)
+					}
+					<Grid item xs={12} sm={2}>
 						<FormControl variant="outlined" className={classes.formControl}>
 							<InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
 							<Select
@@ -238,7 +284,7 @@ export const AgendarDermapenContainer = (props) => {
 					</Grid>
 					<Grid item xs={12} sm={2}>
 						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-hora">Dermatologo</InputLabel>
+							<InputLabel id="simple-select-outlined-hora">DERMATÓLOGO</InputLabel>
 							<Select
 								labelId="simple-select-outlined-dermatologo"
 								id="simple-select-outlined-dermatologo"
@@ -252,7 +298,7 @@ export const AgendarDermapenContainer = (props) => {
 					</Grid>
 					<Grid item xs={12} sm={2}>
 						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-promovendedor">Promovendedor</InputLabel>
+							<InputLabel id="simple-select-outlined-promovendedor">PROMOVENDEDOR</InputLabel>
 							<Select
 								labelId="simple-select-outlined-promovendedor"
 								id="simple-select-outlined-promovendedor"
@@ -292,7 +338,7 @@ export const AgendarDermapenContainer = (props) => {
 					</Grid>
 					<Grid item xs={12} sm={2}>
 						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-hora">Hora</InputLabel>
+							<InputLabel id="simple-select-outlined-hora">HORA</InputLabel>
 							<Select
 								labelId="simple-select-outlined-hora"
 								id="simple-select-outlined-hora"
@@ -333,6 +379,19 @@ export const AgendarDermapenContainer = (props) => {
 							variant="outlined" />
 					</Grid>
 					<Grid item xs={12} sm={2}>
+						<FormControl variant="outlined" className={classes.formControl}>
+							<InputLabel id="simple-select-outlined-payment">MÉTODO PAGO</InputLabel>
+							<Select
+								labelId="simple-select-outlined-payment"
+								id="simple-select-outlined-payment"
+								value={values.forma_pago}
+								onChange={onChangePaymentMethod}
+								label="MÉTODO PAGO" >
+								{formasPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+							</Select>
+						</FormControl>
+					</Grid>
+					<Grid item xs={12} sm={2}>
 						<TextField
 							className={classes.button}
 							name="observaciones"
@@ -341,46 +400,6 @@ export const AgendarDermapenContainer = (props) => {
 							value={values.observaciones}
 							onChange={onChangeObservaciones}
 							variant="outlined" />
-					</Grid>
-					<Grid item xs={12} sm={2}>
-						<Multiselect
-							options={materiales} // Options to display in the dropdown
-							displayValue="nombre" // Property name to display in the dropdown options
-							onSelect={(e) => onChangeMateriales(e)} // Function will trigger on select event
-							onRemove={(e) => onChangeMateriales(e)} // Function will trigger on remove event
-							placeholder="SELECCIONA MATERIALES"
-							selectedValues={values.materiales} // Preselected value to persist in dropdown
-						/>
-					</Grid>
-
-					{
-						values.materiales.map((item, index) =>
-							<Grid item xs={12} sm={2}>
-								<TextField
-									className={classes.button}
-									name={item.precio}
-									label={`PRECIO: ${item.nombre}`}
-									value={item.precio}
-									type='Number'
-									onChange={(e) => onChangeItemPrecio(e, index)}
-									variant="outlined" />
-							</Grid>)
-					}
-					<Grid item xs={12} sm={2}>
-						<ButtonCustom
-							className={classes.button}
-							color="primary"
-							variant="contained"
-							disabled={!isValid || isSubmitting || !paciente.nombres || !values.dermatologo
-								|| !values.fecha_hora || !values.tiempo}
-							onClick={() => onClickAgendar(values)}
-							text='GUARDAR' />
-					</Grid>
-					<Grid item xs={12} sm={2}>
-						<h2>APLICACIÓN: {toFormatterCurrency(values.total_aplicacion)}</h2>
-					</Grid>
-					<Grid item xs={12} sm={2}>
-						<h1>TOTAL: {toFormatterCurrency(values.precio)}</h1>
 					</Grid>
 				</Grid>
 				<MuiPickersUtilsProvider utils={DateFnsUtils}>

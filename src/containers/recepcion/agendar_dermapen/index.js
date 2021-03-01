@@ -7,6 +7,7 @@ import {
 	showAllMedios,
 	showAllMaterials,
 	showAllFrecuencias,
+	showAllMetodoPago,
 } from "../../../services";
 import {
 	createDermapen,
@@ -75,6 +76,7 @@ const AgendarDermapen = (props) => {
 	const dermapenTratamientoId = process.env.REACT_APP_DERMAPEN_TRATAMIENTO_ID;
 	const dermapenAreaId = process.env.REACT_APP_DERMAPEN_AREA_ID;
 	const productoMicropuncionId = process.env.REACT_APP_PRODUCTO_MICROPUNCION_ID;
+	const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
 
 	const [openAlert, setOpenAlert] = useState(false);
 	const [message, setMessage] = useState('');
@@ -84,6 +86,7 @@ const AgendarDermapen = (props) => {
 	const [promovendedores, setPromovendedores] = useState([]);
 	const [frecuencias, setFrecuencias] = useState([]);
 	const [cosmetologas, setCosmetologas] = useState([]);
+	const [formasPago, setFormasPago] = useState([]);
 	const [tipoCitas, setTipoCitas] = useState([]);
 	const [medios, setMedios] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
@@ -103,6 +106,7 @@ const AgendarDermapen = (props) => {
 		porcentaje_descuento_clinica: 0,
 		descuento_clinica: 0,
 		descuento_dermatologo: 0,
+		forma_pago: efectivoMetodoPagoId,
 	});
 	const [dermapens, setDermapens] = useState([]);
 	const [areas, setAreas] = useState([]);
@@ -129,22 +133,23 @@ const AgendarDermapen = (props) => {
 		{ title: 'HORA', field: 'hora' },
 		//{ title: 'FOLIO CONSULTA', field: 'consulta.consecutivo' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
-		{ title: 'TELEFONO', field: 'paciente.telefono' },
-		{ title: 'QUIEN AGENDA', field: 'quien_agenda.nombre' },
+		{ title: 'TELÉFONO', field: 'paciente.telefono' },
+		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
+		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
+		{ title: 'HORA SALIDA', field: 'hora_salida' },
+		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		sucursal._id === sucursalManuelAcunaId ? { title: 'MEDIO', field: 'medio.nombre' } : {},
 		{ title: 'TIPO CONSULTA', field: 'tipo_cita.nombre' },
-		sucursal._id === sucursalManuelAcunaId ? { title: 'QUIEN CONFIRMA LLAMADA', field: 'quien_confirma_llamada.nombre' } : {},
-		sucursal._id === sucursalManuelAcunaId ? { title: 'QUIEN CONFIRMA ASISTENCIA', field: 'quien_confirma_asistencia.nombre' } : {},
+		sucursal._id === sucursalManuelAcunaId ? { title: 'QUIÉN CONFIRMA LLAMADA', field: 'quien_confirma_llamada.nombre' } : {},
+		sucursal._id === sucursalManuelAcunaId ? { title: 'QUIÉN CONFIRMA ASISTENCIA', field: 'quien_confirma_asistencia.nombre' } : {},
 		{ title: 'PROMOVENDEDOR', field: 'promovendedor_nombre' },
 		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
 		{ title: 'ESTADO', field: 'status.nombre' },
 		{ title: 'PRECIO', field: 'precio_moneda' },
 		{ title: 'TOTAL', field: 'total_moneda' },
 		{ title: 'TIEMPO (MINUTOS)', field: 'tiempo' },
+		{ title: 'MÉTODO PAGO', field: 'forma_pago.nombre' },
 		{ title: 'OBSERVACIONES', field: 'observaciones' },
-		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
-		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
-		{ title: 'HORA SALIDA', field: 'hora_salida' },
 	];
 
 	const options = {
@@ -467,6 +472,20 @@ const AgendarDermapen = (props) => {
 		});
 	}
 
+	const handleChangePaymentMethod = (event) => {
+		setValues({
+		  ...values,
+		  forma_pago: event.target.value,
+		});
+	  }
+
+	const loadFormasPago = async () => {
+		const response = await showAllMetodoPago();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setFormasPago(response.data);
+		}
+	}
+
 	useEffect(() => {
 		const loadDermapens = async () => {
 			const response = await findDermapenByDateAndSucursal(date.getDate(), date.getMonth(), date.getFullYear(), sucursal);
@@ -549,6 +568,7 @@ const AgendarDermapen = (props) => {
 		loadPromovendedores();
 		loadDermatologos();
 		loadMateriales();
+		loadFormasPago();
 		loadMedios();
 	}, [sucursal]);
 
@@ -591,6 +611,7 @@ const AgendarDermapen = (props) => {
 								dermatologos={dermatologos}
 								tipoCitas={tipoCitas}
 								medios={medios}
+								formasPago={formasPago}
 								onChangeFrecuencia={(e) => handleChangeFrecuencia(e)}
 								frecuencias={frecuencias}
 								onChangeTipoCita={(e) => handleChangeTipoCita(e)}
@@ -599,6 +620,7 @@ const AgendarDermapen = (props) => {
 								onChangeDoctors={(e) => handleChangeDoctors(e)}
 								onChangePromovendedor={(e) => handleChangePromovendedor(e)}
 								onChangeCosmetologa={(e) => handleChangeCosmetologa(e)}
+								onChangePaymentMethod={(e) => handleChangePaymentMethod(e)}
 								onCloseVerPagos={handleCloseVerPagos}
 								openModalPagos={openModalPagos}
 								openModalProxima={openModalProxima}

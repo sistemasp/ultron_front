@@ -88,7 +88,7 @@ const ModalImprimirPagoPatologo = (props) => {
     setIsLoading(true);
     let total = 0;
 
-    // TOTAL DE LAS CIRUGIAS
+    // TOTAL DE LAS CIRUGíAS
     cirugias.forEach(async (cirugia) => {
       const pagoPatologo = Number(cirugia.costo_biopsias);
       cirugia.pago_patologo = pagoPatologo;

@@ -625,10 +625,10 @@ const ListaEspera = (props) => {
 						columnsEsperaConsultas={columnsEsperaConsultas}
 						tituloConsultorios='CONSULTORIOS'
 						tituloCabinas='CABINAS'
-						tituloSalaCirugia='SALA CIRUGIAS'
+						tituloSalaCirugia='SALA CIRUGíAS'
 						tituloEsperaConsultas='CONSULTAS EN ESPERA'
 						tituloEsperaTratamientos='TRATAMIENTOS EN ESPERA'
-						tituloEsperaSalaCirugia="CIRUGIAS EN ESPERA"
+						tituloEsperaSalaCirugia="CIRUGíAS EN ESPERA"
 						optionsEspera={optionsEspera}
 						optionsConsultorio={optionsConsultorio}
 						consultorio={consultorio}

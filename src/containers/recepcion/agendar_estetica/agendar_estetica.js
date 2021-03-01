@@ -101,6 +101,8 @@ export const AgendarEsteticaContainer = (props) => {
 		onChangeFrecuencia,
 		frecuenciaPrimeraVezId,
 		frecuenciaReconsultaId,
+		onChangePaymentMethod,
+		formasPago,
 		// TABLE DATES PROPERTIES
 		titulo,
 		columns,
@@ -206,14 +208,35 @@ export const AgendarEsteticaContainer = (props) => {
 					: ''
 			}
 			<Paper>
-				<h1>{paciente.nombres ? `${paciente.nombres} ${paciente.apellidos}` : 'SELECCIONA DESDE UNA CONSULTA'}</h1>
+
+				<Grid container spacing={3}>
+					<Grid item xs={12} sm={6}>
+						<h1>{paciente.nombres ? `${paciente.nombres} ${paciente.apellidos}` : 'SELECCIONA DESDE UNA CONSULTA'}</h1>
+					</Grid>
+					<Grid item xs={12} sm={2}>
+						<h2>APLICACIÓN: {toFormatterCurrency(values.total_aplicacion)}</h2>
+					</Grid>
+					<Grid item xs={12} sm={2}>
+						<h1>TOTAL: {toFormatterCurrency(values.precio)}</h1>
+					</Grid>
+					<Grid item xs={12} sm={2}>
+						<ButtonCustom
+							className={classes.button}
+							color="primary"
+							variant="contained"
+							disabled={!isValid || isSubmitting || !paciente.nombres || !values.dermatologo
+								|| !values.fecha_hora}
+							onClick={() => onClickAgendar(values)}
+							text='GUARDAR' />
+					</Grid>
+				</Grid>
 				<Grid container spacing={3}>
 					<Grid container spacing={1} xs={12} sm={6}>
 						<Grid item xs={12} sm={4}>
 							<TextField
 								className={classes.textField}
 								name="total"
-								label="TOTAL DE LA ESTETICA"
+								label="TOTAL DE LA ESTÉTICA"
 								value={values.precio}
 								type='Number'
 								onChange={onChangeTotal}
@@ -305,7 +328,7 @@ export const AgendarEsteticaContainer = (props) => {
 						</Grid>
 						<Grid item xs={12} sm={4}>
 							<FormControl variant="outlined" className={classes.formControl}>
-								<InputLabel id="simple-select-outlined-hora">Hora</InputLabel>
+								<InputLabel id="simple-select-outlined-hora">HORA</InputLabel>
 								<Select
 									labelId="simple-select-outlined-hora"
 									id="simple-select-outlined-hora"
@@ -343,6 +366,19 @@ export const AgendarEsteticaContainer = (props) => {
 								</Grid>)
 						}
 						<Grid item xs={12} sm={4}>
+							<FormControl variant="outlined" className={classes.formControl}>
+								<InputLabel id="simple-select-outlined-payment">MÉTODO PAGO</InputLabel>
+								<Select
+									labelId="simple-select-outlined-payment"
+									id="simple-select-outlined-payment"
+									value={values.forma_pago}
+									onChange={onChangePaymentMethod}
+									label="MÉTODO PAGO" >
+									{formasPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+								</Select>
+							</FormControl>
+						</Grid>
+						<Grid item xs={12} sm={4}>
 							<TextField
 								className={classes.button}
 								name="observaciones"
@@ -351,22 +387,6 @@ export const AgendarEsteticaContainer = (props) => {
 								value={values.observaciones}
 								onChange={onChangeObservaciones}
 								variant="outlined" />
-						</Grid>
-						<Grid item xs={12} sm={4}>
-							<ButtonCustom
-								className={classes.button}
-								color="primary"
-								variant="contained"
-								disabled={!isValid || isSubmitting || !paciente.nombres || !values.dermatologo
-									|| !values.fecha_hora}
-								onClick={() => onClickAgendar(values)}
-								text='GUARDAR' />
-						</Grid>
-						<Grid item xs={12} sm={6}>
-							<h2>APLICACIÓN: {toFormatterCurrency(values.total_aplicacion)}</h2>
-						</Grid>
-						<Grid item xs={12} sm={6}>
-							<h1>TOTAL: {toFormatterCurrency(values.precio)}</h1>
 						</Grid>
 					</Grid>
 					<Grid container spacing={2} xs={12} sm={6}>
@@ -427,7 +447,7 @@ export const AgendarEsteticaContainer = (props) => {
 							format="dd/MM/yyyy"
 							margin="normal"
 							id="date-picker-inline-filter"
-							label="FILTRADO ESTETICA"
+							label="FILTRADO ESTÉTICA"
 							value={filterDate}
 							onChange={onChangeFilterDate}
 							KeyboardButtonProps={{

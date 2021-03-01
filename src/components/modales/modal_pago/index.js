@@ -40,9 +40,9 @@ const ModalPago = (props) => {
 
   const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
   const tipoIngresoConsultaId = process.env.REACT_APP_TIPO_INGRESO_CONSULTA_ID;
-  const tipoIngresoCirugiaId = process.env.REACT_APP_TIPO_INGRESO_CIRUGIA_ID;
+  const tipoIngresoCirugiaId = process.env.REACT_APP_TIPO_INGRESO_CIRUGíA_ID;
   const tipoIngresoFacialesId = process.env.REACT_APP_TIPO_INGRESO_FACIALES_ID;
-  const tipoIngresoEsteticaId = process.env.REACT_APP_TIPO_INGRESO_ESTETICA_ID;
+  const tipoIngresoEsteticaId = process.env.REACT_APP_TIPO_INGRESO_ESTÉTICA_ID;
   const tipoIngresoAparatologiaId = process.env.REACT_APP_TIPO_INGRESO_APARATOLOGIA_ID;
   const tipoIngresoLaserId = process.env.REACT_APP_TIPO_INGRESO_LASER_ID;
   const tipoIngresoDermapenId = process.env.REACT_APP_TIPO_INGRESO_DERMAPEN_ID;
@@ -63,7 +63,7 @@ const ModalPago = (props) => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [bancos, setBancos] = useState([]);
-  const [metodosPago, setMetodosPago] = useState([]);
+  const [formasPago, setFormasPago] = useState([]);
   const [tiposTarjeta, setTiposTarjeta] = useState([]);
   const [esquema, setEsquema] = useState({});
 
@@ -291,7 +291,7 @@ const ModalPago = (props) => {
   const loadMetodosPago = async () => {
     const response = await showAllMetodoPago();
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setMetodosPago(response.data);
+      setFormasPago(response.data);
     }
   }
 
@@ -330,7 +330,7 @@ const ModalPago = (props) => {
           aria-describedby="simple-modal-description"
           open={open}
           bancos={bancos}
-          metodosPago={metodosPago}
+          formasPago={formasPago}
           tiposTarjeta={tiposTarjeta}
           onClickCancel={onClose}
           onClickGuardar={handleClickGuardarPago}

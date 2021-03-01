@@ -33,13 +33,13 @@ const TabBiopsias = (props) => {
     { title: 'PATÓLOGO', field: 'patoloo.nombre' },
     { title: 'SUCURSAL', field: 'sucursal.nombre' },
     { title: 'FECHA ENTREGA', field: 'precio_moneda' },
-    { title: 'QUIEN ENTREGA', field: 'precio_moneda' },
+    { title: 'QUIÉN ENTREGA', field: 'precio_moneda' },
     { title: 'FECHA RESULTADO', field: 'precio_moneda' },
-    { title: 'QUIEN RECIBE', field: 'precio_moneda' },
+    { title: 'QUIÉN RECIBE', field: 'precio_moneda' },
     { title: 'DIAGNÓSTICO', field: 'precio_moneda' },
-    { title: 'A QUIEN SE ENTREGA', field: 'precio_moneda' },
+    { title: 'A QUIÉN SE ENTREGA', field: 'precio_moneda' },
     { title: 'FECHA ENTREGA', field: 'precio_moneda' },
-    { title: 'QUIEN ENTREGA', field: 'precio_moneda' },
+    { title: 'QUIÉN ENTREGA', field: 'precio_moneda' },
   ];
 
   const options = {

@@ -6,6 +6,7 @@ import {
 	createConsecutivo,
 	showAllMaterials,
 	showAllFrecuencias,
+	showAllMetodoPago,
 } from "../../../services";
 import {
 	createCirugia,
@@ -70,6 +71,7 @@ const AgendarCirugia = (props) => {
 	const frecuenciaPrimeraVezId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
 	const frecuenciaReconsultaId = process.env.REACT_APP_FRECUENCIA_RECONSULTA_ID;
 	const productoCirugiaId = process.env.REACT_APP_PRODUCTO_CIRUGIA_ID;
+	const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
 
 	const [openAlert, setOpenAlert] = useState(false);
 	const [message, setMessage] = useState('');
@@ -77,6 +79,7 @@ const AgendarCirugia = (props) => {
 	const [dermatologos, setDermatologos] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [disableDate, setDisableDate] = useState(false);
+	const [formasPago, setFormasPago] = useState([]);
 	const [frecuencias, setFrecuencias] = useState([]);
 	const [productos, setProductos] = useState([]);
 	const [values, setValues] = useState({
@@ -92,6 +95,7 @@ const AgendarCirugia = (props) => {
 		porcentaje_descuento_clinica: 0,
 		descuento_clinica: 0,
 		descuento_dermatologo: 0,
+		forma_pago: efectivoMetodoPagoId,
 	});
 	const [cirugias, setCirugias] = useState([]);
 	const [openModal, setOpenModal] = useState(false);
@@ -117,16 +121,17 @@ const AgendarCirugia = (props) => {
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'FOLIO CONSULTA', field: 'consulta.consecutivo' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
-		{ title: 'TELEFONO', field: 'paciente.telefono' },
-		{ title: 'QUIEN AGENDA', field: 'quien_agenda.nombre' },
+		{ title: 'TELÉFONO', field: 'paciente.telefono' },
+		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
+		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
+		{ title: 'HORA SALIDA', field: 'hora_salida' },
+		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
 		{ title: 'ESTADO', field: 'status.nombre' },
 		{ title: 'PRECIO', field: 'precio_moneda' },
 		{ title: 'TOTAL', field: 'total_moneda' },
+		{ title: 'MÉTODO PAGO', field: 'forma_pago.nombre' },
 		{ title: 'OBSERVACIONES', field: 'observaciones' },
-		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
-		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
-		{ title: 'HORA SALIDA', field: 'hora_salida' },
 	];
 
 	const options = {
@@ -238,7 +243,7 @@ const AgendarCirugia = (props) => {
 			const responseConsecutivo = await createConsecutivo(consecutivo);
 			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 				setOpenAlert(true);
-				setMessage('EL CIRUGIA SE AGREGO CORRECTAMENTE');
+				setMessage('EL CIRUGíA SE AGREGO CORRECTAMENTE');
 				setValues({
 					materiales: [],
 					dermatologo: '',
@@ -325,7 +330,7 @@ const AgendarCirugia = (props) => {
 		//new Date(anio, mes - 1, dia) < filterDate.fecha_hora  ? 
 		{
 			icon: EditIcon,
-			tooltip: 'EDITAR CIRUGIA',
+			tooltip: 'EDITAR CIRUGíA',
 			onClick: handleOnClickEditarCita
 		}, //: ''
 		rowData => (
@@ -338,7 +343,7 @@ const AgendarCirugia = (props) => {
 		/*rowData => (
 			rowData.status._id === atendidoStatusId ? {
 				icon: EventAvailableIcon,
-				tooltip: 'NUEVO CIRUGIA',
+				tooltip: 'NUEVO CIRUGíA',
 				onClick: handleOnClickNuevaCita
 			} : ''
 		),*/
@@ -401,6 +406,20 @@ const AgendarCirugia = (props) => {
 		});
 	}
 
+	const handleChangePaymentMethod = (event) => {
+		setValues({
+		  ...values,
+		  forma_pago: event.target.value,
+		});
+	  }
+
+	const loadFormasPago = async () => {
+		const response = await showAllMetodoPago();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setFormasPago(response.data);
+		}
+	}
+
 	useEffect(() => {
 		const loadCirugias = async () => {
 			const response = await findCirugiaByDateAndSucursal(date.getDate(), date.getMonth(), date.getFullYear(), sucursal);
@@ -456,6 +475,7 @@ const AgendarCirugia = (props) => {
 		loadHorariosByServicio(new Date(), cirugiaServicioId);
 		loadDermatologos();
 		loadMateriales();
+		loadFormasPago();
 	}, [sucursal]);
 
 	return (
@@ -480,7 +500,8 @@ const AgendarCirugia = (props) => {
 								disableDate={disableDate}
 								onClickAgendar={handleClickAgendar}
 								onChangeTiempo={(e) => handleChangeTiempo(e)}
-								titulo={`CIRUGIA (${dateToString(filterDate.fecha_show)})`}
+								onChangePaymentMethod={(e) => handleChangePaymentMethod(e)}
+								titulo={`CIRUGíA (${dateToString(filterDate.fecha_show)})`}
 								onChangeTotal={handleChangeTotal}
 								columns={columns}
 								options={options}
@@ -492,6 +513,7 @@ const AgendarCirugia = (props) => {
 								onClickCancel={handleCloseModal}
 								loadCirugias={loadCirugias}
 								dermatologos={dermatologos}
+								formasPago={formasPago}
 								onChangeMedio={(e) => handleChangeMedio(e)}
 								onChangeDoctors={(e) => handleChangeDoctors(e)}
 								onCloseVerPagos={handleCloseVerPagos}

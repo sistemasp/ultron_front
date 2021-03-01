@@ -39,6 +39,13 @@ const ModalPaciente = (props) => {
     })
   }
 
+  const handleChangeEmail = (e) => {
+    setValues({
+      ...values,
+      email: e.target.value
+    })
+  }
+
   const dataComplete = !values.nombres || !values.apellidos
     || !values.sexo || !values.telefono || !values.fecha_nacimiento || values.fecha_nacimiento.length !== 10;
 
@@ -69,6 +76,7 @@ const ModalPaciente = (props) => {
       dataComplete={dataComplete}
       onChange={handleChange}
       onChangeSexo={handleChangeSexo}
+      onChangeEmail={handleChangeEmail}
       sexos={sexos} />
 
   );

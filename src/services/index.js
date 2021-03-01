@@ -408,7 +408,7 @@ export const findOfficeById = async (idSucursal) => {
     }
 }
 
-// SALA DE CIRUGIA
+// SALA DE CIRUGíA
 
 export const findSalaCirugiaBySucursalId = async (sucursalId) => {
     try {
@@ -932,7 +932,7 @@ export const createConsecutivo = async (consecutivo) => {
     }
 }
 
-// TIPO ESTETICA
+// TIPO ESTÉTICA
 
 export const showAllTipoEsteticas = async () => {
     try {
@@ -946,7 +946,7 @@ export const showAllTipoEsteticas = async () => {
     }
 }
 
-// MATERIALES ESTETICA
+// MATERIALES ESTÉTICA
 
 export const showAllMaterialEsteticas = async () => {
     try {

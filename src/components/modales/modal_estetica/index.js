@@ -114,7 +114,7 @@ const ModalEstetica = (props) => {
       || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
       if (data._id) {
         setOpenAlert(true);
-        setMessage('ESTETICA ACTUALIZADA CORRECTAMENTE.');
+        setMessage('ESTÉTICA ACTUALIZADA CORRECTAMENTE.');
       } else {
         const consecutivo = {
           consecutivo: response.data.consecutivo,
@@ -127,7 +127,7 @@ const ModalEstetica = (props) => {
         const responseConsecutivo = await createConsecutivo(consecutivo);
         if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
           setOpenAlert(true);
-          setMessage('ESTETICA GUARDADA CORRECTAMENTE.');
+          setMessage('ESTÉTICA GUARDADA CORRECTAMENTE.');
         }
       }
     }

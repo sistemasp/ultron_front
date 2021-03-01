@@ -7,6 +7,7 @@ import {
 	createConsecutivo,
 	showAllMedios,
 	showAllFrecuencias,
+	showAllMetodoPago,
 } from "../../../services";
 import {
 	findTreatmentByServicio,
@@ -72,13 +73,15 @@ const AgendarAparatologia = (props) => {
 	const directoTipoCitaId = process.env.REACT_APP_TIPO_CITA_DIRECTO_ID;
 	const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
 	const cosmetologaSinAsignarId = process.env.REACT_APP_COSMETOLOGA_SIN_ASIGNAR_ID;
-	const promovendedorSinAsignarId = process.env.REACT_APP_PROMOVENDEDOR_SIN_ASIGNAR_ID;
+	const promovendedorSinPromovendedorId = process.env.REACT_APP_PROMOVENDEDOR_SIN_PROMOVENDEDOR_ID;
 	const frecuenciaPrimeraVezId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
+	const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
 
 	const [openAlert, setOpenAlert] = useState(false);
 	const [message, setMessage] = useState('');
 	const [severity, setSeverity] = useState('success');
 	const [servicios, setServicios] = useState([]);
+	const [formasPago, setFormasPago] = useState([]);
 	const [tratamientos, setTratamientos] = useState([]);
 	const [horarios, setHorarios] = useState([]);
 	const [dermatologos, setDermatologos] = useState([]);
@@ -105,8 +108,9 @@ const AgendarAparatologia = (props) => {
 		descuento_clinica: 0,
 		descuento_dermatologo: 0,
 		cosmetologa: cosmetologaSinAsignarId,
-		promovendedor: promovendedorSinAsignarId,
+		promovendedor: promovendedorSinPromovendedorId,
 		frecuencia: frecuenciaPrimeraVezId,
+		forma_pago: efectivoMetodoPagoId,
 	});
 	const [aparatologias, setAparatologia] = useState([]);
 	const [areas, setAreas] = useState([]);
@@ -132,12 +136,15 @@ const AgendarAparatologia = (props) => {
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'TELÉFONO', field: 'paciente.telefono' },
+		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
+		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
+		{ title: 'HORA SALIDA', field: 'hora_salida' },
 		{ title: 'SERVICIO', field: 'servicio.nombre' },
 		{ title: 'TRATAMIENTOS (AREAS)', field: 'show_tratamientos' },
-		{ title: 'QUIEN AGENDA', field: 'quien_agenda.nombre' },
+		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		{ title: 'MEDIO', field: 'medio.nombre' },
-		{ title: 'QUIEN CONFIRMA LLAMADA', field: 'quien_confirma_llamada.nombre' },
-		{ title: 'QUIEN CONFIRMA ASISTENCIA', field: 'quien_confirma_asistencia.nombre' },
+		{ title: 'QUIÉN CONFIRMA LLAMADA', field: 'quien_confirma_llamada.nombre' },
+		{ title: 'QUIÉN CONFIRMA ASISTENCIA', field: 'quien_confirma_asistencia.nombre' },
 		{ title: 'PROMOVENDEDOR', field: 'promovendedor_nombre' },
 		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
 		{ title: 'TIPO CITA', field: 'tipo_cita.nombre' },
@@ -145,10 +152,8 @@ const AgendarAparatologia = (props) => {
 		{ title: 'ESTADO', field: 'status.nombre' },
 		{ title: 'PRECIO', field: 'precio_moneda' },
 		{ title: 'TOTAL', field: 'total_moneda' },
+		{ title: 'MÉTODO PAGO', field: 'forma_pago.nombre' },
 		{ title: 'OBSERVACIONES', field: 'observaciones' },
-		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
-		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
-		{ title: 'HORA SALIDA', field: 'hora_salida' },
 	];
 
 	const options = {
@@ -497,6 +502,20 @@ const AgendarAparatologia = (props) => {
 		});
 	}
 
+	const handleChangePaymentMethod = (event) => {
+		setValues({
+		  ...values,
+		  forma_pago: event.target.value,
+		});
+	  }
+
+	const loadFormasPago = async () => {
+		const response = await showAllMetodoPago();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setFormasPago(response.data);
+		}
+	}
+
 	useEffect(() => {
 
 		const loadAparatologias = async () => {
@@ -581,6 +600,7 @@ const AgendarAparatologia = (props) => {
 		loadDermatologos();
 		loadTipoCitas();
 		loadFrecuencias();
+		loadFormasPago();
 		loadMedios();
 	}, [sucursal]);
 
@@ -625,9 +645,11 @@ const AgendarAparatologia = (props) => {
 								medios={medios}
 								frecuencias={frecuencias}
 								productos={productos}
+								formasPago={formasPago}
 								onChangeFrecuencia={(e) => handleChangeFrecuencia(e)}
 								onChangeTipoCita={(e) => handleChangeTipoCita(e)}
 								onChangeMedio={(e) => handleChangeMedio(e)}
+								onChangePaymentMethod={(e) => handleChangePaymentMethod(e)}
 								onChangeDoctors={(e) => handleChangeDoctors(e)}
 								onChangePromovendedor={(e) => handleChangePromovendedor(e)}
 								onChangeCosmetologa={(e) => handleChangeCosmetologa(e)}

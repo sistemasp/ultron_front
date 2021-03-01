@@ -63,7 +63,8 @@ const Pacientes = (props) => {
 	const columns = [
 		{ title: 'NOMBRES', field: 'nombres' },
 		{ title: 'APELLIDOS', field: 'apellidos' },
-		{ title: 'TELEFONO', field: 'telefono' },
+		{ title: 'TELÉFONO', field: 'telefono' },
+		{ title: 'EMAIL', field: 'email' },
 		{ title: 'SEXO', field: 'sexo.nombre' },
 		{ title: 'FECHA DE NACIMIENTO', field: 'fecha_nacimiento' },
 	];
@@ -115,7 +116,7 @@ const Pacientes = (props) => {
 		if (`${existPatient.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			if (existPatient.data.length > 0) {
 				setSeverity('warning');
-				setMessage('YA EXISTE UN REGISTRO CON EL MISMO NUMERO DE TELEFONO');
+				setMessage('YA EXISTE UN REGISTRO CON EL MISMO NUMERO DE TELÉFONO');
 				setIsLoading(false);
 				handleClose();
 				return;
@@ -142,7 +143,7 @@ const Pacientes = (props) => {
 		if (`${existPatient.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			if (existPatient.data.length > 0) {
 				setSeverity('warning');
-				setMessage('YA EXISTE UN REGISTRO CON EL MISMO NUMERO DE TELEFONO');
+				setMessage('YA EXISTE UN REGISTRO CON EL MISMO NUMERO DE TELÉFONO');
 				setIsLoading(false);
 				handleClose();
 				return;
@@ -200,7 +201,7 @@ const Pacientes = (props) => {
 		},
 		{
 			icon: HistoryIcon,
-			tooltip: 'HISTORICO',
+			tooltip: 'HISTÓRICO',
 			onClick: handleClickHistorico
 		}
 	];
@@ -223,7 +224,7 @@ const Pacientes = (props) => {
 			case 'ACTUALIZAR REGISTRO':
 				handleOnClickEditar(e, rowData);
 				break;
-			case 'HISTORICO':
+			case 'HISTÓRICO':
 				handleClickHistorico(e, rowData);
 				break;
 		}

@@ -77,6 +77,8 @@ export const AgendarConsultaContainer = (props) => {
     dataComplete,
     frecuenciaPrimeraVezId,
     frecuenciaReconsultaId,
+    onChangePaymentMethod,
+    formasPago,
     // TABLE DATES PROPERTIES
     titulo,
     columns,
@@ -183,7 +185,23 @@ export const AgendarConsultaContainer = (props) => {
           : ''
       }
       <Paper>
-        <h1>{paciente.nombres ? `${paciente.nombres} ${paciente.apellidos}` : 'SELECCIONA UN PACIENTE'}</h1>
+      <Grid container spacing={3}>
+          <Grid item xs={12} sm={8}>
+            <h1>{paciente.nombres ? `${paciente.nombres} ${paciente.apellidos}` : 'SELECCIONA UN PACIENTE'}</h1>
+          </Grid>
+          <Grid item xs={12} sm={2}>
+            <h1>{toFormatterCurrency(values.precio)}</h1>
+          </Grid>
+          <Grid item xs={12} sm={2}>
+            <ButtonCustom
+              className={classes.button}
+              color="primary"
+              variant="contained"
+              disabled={dataComplete}
+              onClick={() => onClickAgendar(values)}
+              text='GUARDAR' />
+          </Grid>
+        </Grid>
 
         <Grid container spacing={3}>
           {sucursal._id === process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID ?
@@ -236,7 +254,7 @@ export const AgendarConsultaContainer = (props) => {
                 value={values.frecuencia}
                 onChange={onChangeFrecuencia}
                 label="FRECUENCIA" >
-                {frecuencias.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
+                {frecuencias.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
               </Select>
             </FormControl>
           </Grid>
@@ -258,7 +276,7 @@ export const AgendarConsultaContainer = (props) => {
               : ''
           }
           {
-            values.frecuencia === frecuenciaPrimeraVezId
+            false
               ? <Grid item xs={12} sm={2}>
                 <h2> {values.dermatologo.nombre} </h2>
               </Grid>
@@ -271,7 +289,7 @@ export const AgendarConsultaContainer = (props) => {
                     value={values.dermatologo}
                     onChange={onChangeDermatologos}
                     label="DERMATÓLOGO" >
-                    {dermatologos.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
+                    {dermatologos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
                   </Select>
                 </FormControl>
               </Grid>
@@ -290,7 +308,7 @@ export const AgendarConsultaContainer = (props) => {
                     value={values.promovendedor}
                     onChange={onChangePromovendedor}
                     label="PROMOVENDEDOR" >
-                    {promovendedores.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
+                    {promovendedores.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
                   </Select>
                 </FormControl>
               </Grid>
@@ -307,12 +325,25 @@ export const AgendarConsultaContainer = (props) => {
                     value={values.medio}
                     onChange={onChangeMedio}
                     label="MEDIO" >
-                    {medios.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
+                    {medios.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
                   </Select>
                 </FormControl>
               </Grid>
             </Fragment>
             : ''}
+            <Grid item xs={12} sm={2}>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel id="simple-select-outlined-payment">MÉTODO PAGO</InputLabel>
+              <Select
+                labelId="simple-select-outlined-payment"
+                id="simple-select-outlined-payment"
+                value={values.forma_pago}
+                onChange={onChangePaymentMethod}
+                label="MÉTODO PAGO" >
+                {formasPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+              </Select>
+            </FormControl>
+          </Grid>
           <Grid item xs={12} sm={2}>
             <TextField
               className={classes.button}
@@ -322,18 +353,6 @@ export const AgendarConsultaContainer = (props) => {
               value={values.observaciones}
               onChange={onChangeObservaciones}
               variant="outlined" />
-          </Grid>
-          <Grid item xs={12} sm={2}>
-            <h1>{toFormatterCurrency(values.precio)}</h1>
-          </Grid>
-          <Grid item xs={12} sm={2}>
-            <ButtonCustom
-              className={classes.button}
-              color="primary"
-              variant="contained"
-              disabled={dataComplete}
-              onClick={() => onClickAgendar(values)}
-              text='GUARDAR' />
           </Grid>
         </Grid>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>

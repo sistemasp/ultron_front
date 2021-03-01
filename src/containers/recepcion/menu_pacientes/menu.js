@@ -107,8 +107,8 @@ export const MenuContainer = props => {
 					<Tab className={classes.tabs} label="FACIALES" {...a11yProps(2)} />
 					<Tab className={classes.tabs} label="APARATOLOGÍA" {...a11yProps(3)} />
 					<Tab className={classes.tabs} label="DERMAPEN" {...a11yProps(4)} />
-					<Tab className={classes.tabs} label="CIRUGIA" {...a11yProps(5)} />
-					<Tab className={classes.tabs} label="ESTETICA" {...a11yProps(6)} />
+					<Tab className={classes.tabs} label="CIRUGíA" {...a11yProps(5)} />
+					<Tab className={classes.tabs} label="ESTÉTICA" {...a11yProps(6)} />
 					{
 					/*
 					<Tab className={classes.tabs} label="VER CONSULTAS" {...a11yProps(7)} />

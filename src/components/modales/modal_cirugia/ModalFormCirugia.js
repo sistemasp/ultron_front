@@ -111,7 +111,7 @@ const ModalFormCirugia = (props) => {
             }
             <Grid container spacing={1}>
               <Grid item xs={12}>
-                <h1 className={classes.label}>CIRUGIA</h1>
+                <h1 className={classes.label}>CIRUGíA</h1>
               </Grid>
               <Grid item xs={12}>
                 <h2 className={classes.label}>{cirugia.paciente_nombre} ({cirugia.paciente.telefono})</h2>
@@ -160,7 +160,7 @@ const ModalFormCirugia = (props) => {
                 <TextField
                   className={classes.textField}
                   name="precio"
-                  label="TOTAL CIRUGIA"
+                  label="TOTAL CIRUGíA"
                   value={values.total}
                   type='Number'
                   onChange={onChangeTotal}
@@ -275,7 +275,7 @@ const ModalFormCirugia = (props) => {
                 <h2 className={classes.labelItemRight}>PRECIO DE LA APLICACIÓN: {toFormatterCurrency(values.total_aplicacion)}</h2>
               </Grid>
               <Grid item xs={12}>
-                <h1 className={classes.labelItemRight}>TOTAL DE LA CIRUGIA: {toFormatterCurrency(values.total)}</h1>
+                <h1 className={classes.labelItemRight}>TOTAL DE LA CIRUGíA: {toFormatterCurrency(values.total)}</h1>
               </Grid>
 
               <Grid item xs={12} sm={6}>

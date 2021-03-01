@@ -111,7 +111,7 @@ const RazonSocial = (props) => {
 		if (`${existPatient.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			if (existPatient.data.length > 0) {
 				setSeverity('warning');
-				setMessage('YA EXISTE UN REGISTRO CON EL MISMO NUMERO DE TELEFONO');
+				setMessage('YA EXISTE UN REGISTRO CON EL MISMO NUMERO DE TELÉFONO');
 				setIsLoading(false);
 				handleClose();
 				return;
@@ -138,7 +138,7 @@ const RazonSocial = (props) => {
 		if (`${existPatient.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			if (existPatient.data.length > 0) {
 				setSeverity('warning');
-				setMessage('YA EXISTE UN REGISTRO CON EL MISMO NUMERO DE TELEFONO');
+				setMessage('YA EXISTE UN REGISTRO CON EL MISMO NUMERO DE TELÉFONO');
 				setIsLoading(false);
 				handleClose();
 				return;
@@ -202,7 +202,7 @@ const RazonSocial = (props) => {
 					<RazonSocialContainer
 						razonSociales={razonSociales}
 						columns={columns}
-						titulo='RAZON SOCIAL'
+						titulo='RAZÓN SOCIAL'
 						actions={actions}
 						options={options}
 						open={open}

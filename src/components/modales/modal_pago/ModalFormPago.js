@@ -61,7 +61,7 @@ const ModalFormPago = (props) => {
     handleSubmit,
     isValid,
     bancos,
-    metodosPago,
+    formasPago,
     tiposTarjeta,
     onClickCancel,
     onClickGuardar,
@@ -98,7 +98,7 @@ const ModalFormPago = (props) => {
                     error={Boolean(errors.forma_pago)}
                     onChange={onChangePaymentMethod}
                     label="MÉTODO PAGO" >
-                    {metodosPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                    {formasPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
                   </Select>
                 </FormControl>
               </Grid>

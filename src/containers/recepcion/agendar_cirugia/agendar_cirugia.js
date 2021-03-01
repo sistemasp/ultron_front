@@ -73,9 +73,11 @@ export const AgendarCirugiaContainer = (props) => {
 		onChangeMateriales,
 		onChangeItemPrecio,
 		onChangeFrecuencia,
+		onChangePaymentMethod,
 		frecuencias,
 		onChangeProductos,
 		productos,
+		formasPago,
 		frecuenciaReconsultaId,
 		// TABLE DATES PROPERTIES
 		titulo,
@@ -182,13 +184,34 @@ export const AgendarCirugiaContainer = (props) => {
 					: ''
 			}
 			<Paper>
-				<h1>{paciente.nombres ? `${paciente.nombres} ${paciente.apellidos}` : 'SELECCIONA DESDE UNA CONSULTA'}</h1>
+			<Grid container spacing={3}>
+					<Grid item xs={12} sm={6}>
+					<h1>{paciente.nombres ? `${paciente.nombres} ${paciente.apellidos}` : 'SELECCIONA DESDE UNA CONSULTA'}</h1>
+					</Grid>
+					<Grid item xs={12} sm={2}>
+						<h2>APLICACIÓN: {toFormatterCurrency(values.total_aplicacion)}</h2>
+					</Grid>
+					<Grid item xs={12} sm={2}>
+						<h1>TOTAL A COBRAR: {toFormatterCurrency(values.precio)}</h1>
+					</Grid>
+					<Grid item xs={12} sm={2}>
+						<ButtonCustom
+							className={classes.button}
+							color="primary"
+							variant="contained"
+							disabled={!isValid || isSubmitting || !paciente.nombres || !values.dermatologo
+								|| !values.fecha_hora}
+							onClick={() => onClickAgendar(values)}
+							text='GUARDAR' />
+					</Grid>
+				</Grid>
+				
 				<Grid container spacing={3}>
 					<Grid item xs={12} sm={2}>
 						<TextField
 							className={classes.textField}
 							name="total"
-							label="TOTAL DE LA CIRUGIA"
+							label="TOTAL DE LA CIRUGíA"
 							value={values.precio}
 							type='Number'
 							onChange={onChangeTotal}
@@ -227,6 +250,30 @@ export const AgendarCirugiaContainer = (props) => {
 								</FormControl>
 							</Grid>
 							: ''
+					}
+					<Grid item xs={12} sm={2}>
+						<Multiselect
+							options={materiales} // Options to display in the dropdown
+							displayValue="nombre" // Property name to display in the dropdown options
+							onSelect={(e) => onChangeMateriales(e)} // Function will trigger on select event
+							onRemove={(e) => onChangeMateriales(e)} // Function will trigger on remove event
+							placeholder="SELECCIONA MATERIALES"
+							selectedValues={values.materiales} // Preselected value to persist in dropdown
+						/>
+					</Grid>
+
+					{
+						values.materiales.map((item, index) =>
+							<Grid item xs={12} sm={2}>
+								<TextField
+									className={classes.button}
+									name={item.precio}
+									label={`PRECIO: ${item.nombre}`}
+									value={item.precio}
+									type='Number'
+									onChange={(e) => onChangeItemPrecio(e, index)}
+									variant="outlined" />
+							</Grid>)
 					}
 					<Grid item xs={12} sm={2}>
 						<FormControl variant="outlined" className={classes.formControl}>
@@ -284,29 +331,18 @@ export const AgendarCirugiaContainer = (props) => {
 						</FormControl>
 					</Grid>
 					<Grid item xs={12} sm={2}>
-						<Multiselect
-							options={materiales} // Options to display in the dropdown
-							displayValue="nombre" // Property name to display in the dropdown options
-							onSelect={(e) => onChangeMateriales(e)} // Function will trigger on select event
-							onRemove={(e) => onChangeMateriales(e)} // Function will trigger on remove event
-							placeholder="SELECCIONA MATERIALES"
-							selectedValues={values.materiales} // Preselected value to persist in dropdown
-						/>
+						<FormControl variant="outlined" className={classes.formControl}>
+							<InputLabel id="simple-select-outlined-payment">MÉTODO PAGO</InputLabel>
+							<Select
+								labelId="simple-select-outlined-payment"
+								id="simple-select-outlined-payment"
+								value={values.forma_pago}
+								onChange={onChangePaymentMethod}
+								label="MÉTODO PAGO" >
+								{formasPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+							</Select>
+						</FormControl>
 					</Grid>
-
-					{
-						values.materiales.map((item, index) =>
-							<Grid item xs={12} sm={2}>
-								<TextField
-									className={classes.button}
-									name={item.precio}
-									label={`PRECIO: ${item.nombre}`}
-									value={item.precio}
-									type='Number'
-									onChange={(e) => onChangeItemPrecio(e, index)}
-									variant="outlined" />
-							</Grid>)
-					}
 					<Grid item xs={12} sm={2}>
 						<TextField
 							className={classes.button}
@@ -316,22 +352,6 @@ export const AgendarCirugiaContainer = (props) => {
 							value={values.observaciones}
 							onChange={onChangeObservaciones}
 							variant="outlined" />
-					</Grid>
-					<Grid item xs={12} sm={2}>
-						<ButtonCustom
-							className={classes.button}
-							color="primary"
-							variant="contained"
-							disabled={!isValid || isSubmitting || !paciente.nombres || !values.dermatologo
-								|| !values.fecha_hora}
-							onClick={() => onClickAgendar(values)}
-							text='GUARDAR' />
-					</Grid>
-					<Grid item xs={12} sm={2}>
-						<h2>APLICACIÓN: {toFormatterCurrency(values.total_aplicacion)}</h2>
-					</Grid>
-					<Grid item xs={12} sm={2}>
-						<h1>TOTAL A COBRAR: {toFormatterCurrency(values.precio)}</h1>
 					</Grid>
 				</Grid>
 				<MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -347,7 +367,7 @@ export const AgendarCirugiaContainer = (props) => {
 							format="dd/MM/yyyy"
 							margin="normal"
 							id="date-picker-inline-filter"
-							label="FILTRADO CIRUGIA"
+							label="FILTRADO CIRUGíA"
 							value={filterDate}
 							onChange={onChangeFilterDate}
 							KeyboardButtonProps={{

@@ -7,6 +7,7 @@ import {
 	createConsecutivo,
 	showAllMedios,
 	showAllFrecuencias,
+	showAllMetodoPago,
 } from "../../../services";
 import {
 	findTreatmentByServicio,
@@ -79,8 +80,9 @@ const AgendarFacial = (props) => {
 	const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
 	const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
 	const cosmetologaSinAsignarId = process.env.REACT_APP_COSMETOLOGA_SIN_ASIGNAR_ID;
-	const promovendedorSinAsignarId = process.env.REACT_APP_PROMOVENDEDOR_SIN_ASIGNAR_ID;
+	const promovendedorSinPromovendedorId = process.env.REACT_APP_PROMOVENDEDOR_SIN_PROMOVENDEDOR_ID;
 	const frecuenciaPrimeraVezId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
+	const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
 	
 	const [openAlert, setOpenAlert] = useState(false);
 	const [message, setMessage] = useState('');
@@ -88,6 +90,7 @@ const AgendarFacial = (props) => {
 	const [tratamientos, setTratamientos] = useState([]);
 	const [horarios, setHorarios] = useState([]);
 	const [dermatologos, setDermatologos] = useState([]);
+	const [formasPago, setFormasPago] = useState([]);
 	const [promovendedores, setPromovendedores] = useState([]);
 	const [cosmetologas, setCosmetologas] = useState([]);
 	const [tipoCitas, setTipoCitas] = useState([]);
@@ -111,8 +114,9 @@ const AgendarFacial = (props) => {
 		descuento_clinica: 0,
 		descuento_dermatologo: 0,
 		cosmetologa: cosmetologaSinAsignarId,
-		promovendedor: promovendedorSinAsignarId,
+		promovendedor: promovendedorSinPromovendedorId,
 		frecuencia: frecuenciaPrimeraVezId,
+		forma_pago: efectivoMetodoPagoId,
 	});
 	const [faciales, setFaciales] = useState([]);
 	const [areas, setAreas] = useState([]);
@@ -138,12 +142,15 @@ const AgendarFacial = (props) => {
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'TELÉFONO', field: 'paciente.telefono' },
+		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
+		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
+		{ title: 'HORA SALIDA', field: 'hora_salida' },
 		{ title: 'SERVICIO', field: 'servicio.nombre' },
 		{ title: 'TRATAMIENTOS (AREAS)', field: 'show_tratamientos' },
-		{ title: 'QUIEN AGENDA', field: 'quien_agenda.nombre' },
+		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		{ title: 'MEDIO', field: 'medio.nombre' },
-		{ title: 'QUIEN CONFIRMA LLAMADA', field: 'quien_confirma_llamada.nombre' },
-		{ title: 'QUIEN CONFIRMA ASISTENCIA', field: 'quien_confirma_asistencia.nombre' },
+		{ title: 'QUIÉN CONFIRMA LLAMADA', field: 'quien_confirma_llamada.nombre' },
+		{ title: 'QUIÉN CONFIRMA ASISTENCIA', field: 'quien_confirma_asistencia.nombre' },
 		{ title: 'PROMOVENDEDOR', field: 'promovendedor_nombre' },
 		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
 		{ title: 'TIPO CITA', field: 'tipo_cita.nombre' },
@@ -152,10 +159,8 @@ const AgendarFacial = (props) => {
 		{ title: 'PRECIO', field: 'precio_moneda' },
 		{ title: 'TOTAL', field: 'total_moneda' },
 		{ title: 'TIEMPO (MINUTOS)', field: 'tiempo' },
+		{ title: 'MÉTODO PAGO', field: 'forma_pago.nombre' },
 		{ title: 'OBSERVACIONES', field: 'observaciones' },
-		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
-		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
-		{ title: 'HORA SALIDA', field: 'hora_salida' },
 	];
 
 	const options = {
@@ -507,6 +512,20 @@ const AgendarFacial = (props) => {
 		});
 	}
 
+	const handleChangePaymentMethod = (event) => {
+		setValues({
+		  ...values,
+		  forma_pago: event.target.value,
+		});
+	  }
+
+	const loadFormasPago = async () => {
+		const response = await showAllMetodoPago();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setFormasPago(response.data);
+		}
+	}
+
 	useEffect(() => {
 		const loadFaciales = async () => {
 			const response = await findFacialByDateAndSucursal(date.getDate(), date.getMonth(), date.getFullYear(), sucursal);
@@ -590,6 +609,7 @@ const AgendarFacial = (props) => {
 		loadDermatologos();
 		loadTipoCitas();
 		loadFrecuencias();
+		loadFormasPago();
 		loadMedios();
 	}, [sucursal]);
 
@@ -606,11 +626,13 @@ const AgendarFacial = (props) => {
 								tratamientos={tratamientos}
 								areas={areas}
 								horarios={horarios}
+								formasPago={formasPago}
 								onChangeTratamientos={(e) => handleChangeTratamientos(e)}
 								onChangeAreas={handleChangeAreas}
 								onChangeFecha={(e) => handleChangeFecha(e)}
 								onChangeFilterDate={(e) => handleChangeFilterDate(e)}
 								onChangeHora={(e) => handleChangeHora(e)}
+								onChangePaymentMethod={(e) => handleChangePaymentMethod(e)}
 								onChangeObservaciones={(e) => handleChangeObservaciones(e)}
 								filterDate={filterDate.fecha_show}
 								paciente={paciente}

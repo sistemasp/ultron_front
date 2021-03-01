@@ -40,7 +40,8 @@ export const AgendarAparatologiaContainer = (props) => {
 		errors,
 		servicios,
 		tratamientos,
-		areas,
+		formasPago,
+		onChangePaymentMethod,
 		horarios,
 		tipoCitas,
 		onChangeFrecuencia,
@@ -158,7 +159,24 @@ export const AgendarAparatologiaContainer = (props) => {
 					: ''
 			}
 			<Paper>
-				<h1>{paciente.nombres ? `${paciente.nombres} ${paciente.apellidos}` : 'SELECCIONA UN PACIENTE'}</h1>
+				<Grid container spacing={3}>
+					<Grid item xs={12} sm={8}>
+						<h1>{paciente.nombres ? `${paciente.nombres} ${paciente.apellidos}` : 'SELECCIONA UN PACIENTE'}</h1>
+					</Grid>
+					<Grid item xs={12} sm={2}>
+						<h1>{toFormatterCurrency(values.precio)}</h1>
+					</Grid>
+					<Grid item xs={12} sm={2}>
+						<ButtonCustom
+							className={classes.button}
+							color="primary"
+							variant="contained"
+							disabled={!isValid || isSubmitting || !paciente.nombres
+								|| values.tratamientos.length === 0 || !values.fecha_hora || !values.precio}
+							onClick={() => onClickAgendar(values)}
+							text='GUARDAR' />
+					</Grid>
+				</Grid>
 				<Grid container spacing={3}>
 					{
 						true ?
@@ -231,14 +249,14 @@ export const AgendarAparatologiaContainer = (props) => {
 						dermatologoDirectoId !== values.dermatologo ?
 							<Grid item xs={12} sm={2}>
 								<FormControl variant="outlined" className={classes.formControl}>
-									<InputLabel id="simple-select-outlined-tipo-cita">TIPO CITA</InputLabel>
+									<InputLabel id="simple-select-outlined-tipo-cita">TIPO</InputLabel>
 									<Select
 										labelId="simple-select-outlined-tipo-cita"
 										id="simple-select-outlined-tipo-cita"
 										value={values.tipoCita}
 										error={Boolean(errors.tipoCita)}
 										onChange={onChangeTipoCita}
-										label="TIPO CITA" >
+										label="TIPO" >
 										{tipoCitas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
 									</Select>
 								</FormControl>
@@ -342,6 +360,19 @@ export const AgendarAparatologiaContainer = (props) => {
 							variant="outlined" />
 					</Grid>
 					<Grid item xs={12} sm={2}>
+						<FormControl variant="outlined" className={classes.formControl}>
+							<InputLabel id="simple-select-outlined-payment">MÉTODO PAGO</InputLabel>
+							<Select
+								labelId="simple-select-outlined-payment"
+								id="simple-select-outlined-payment"
+								value={values.forma_pago}
+								onChange={onChangePaymentMethod}
+								label="MÉTODO PAGO" >
+								{formasPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+							</Select>
+						</FormControl>
+					</Grid>
+					<Grid item xs={12} sm={2}>
 						<TextField
 							className={classes.button}
 							name="observaciones"
@@ -350,19 +381,6 @@ export const AgendarAparatologiaContainer = (props) => {
 							value={values.observaciones}
 							onChange={onChangeObservaciones}
 							variant="outlined" />
-					</Grid>
-					<Grid item xs={12} sm={2}>
-						<ButtonCustom
-							className={classes.button}
-							color="primary"
-							variant="contained"
-							disabled={!isValid || isSubmitting || !paciente.nombres
-								|| values.tratamientos.length === 0 || !values.fecha_hora || !values.precio}
-							onClick={() => onClickAgendar(values)}
-							text='GUARDAR' />
-					</Grid>
-					<Grid item xs={12} sm={2}>
-						<h1>TOTAL: {toFormatterCurrency(values.precio)}</h1>
 					</Grid>
 				</Grid>
 				<MuiPickersUtilsProvider utils={DateFnsUtils}>

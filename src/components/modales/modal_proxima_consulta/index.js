@@ -40,7 +40,7 @@ const ModalProximaConsulta = (props) => {
   const fecha = `${addZero(fecha_cita.getDate())}/${addZero(Number(fecha_cita.getMonth() + 1))}/${addZero(fecha_cita.getFullYear())}`;
   const hora = `${addZero(Number(fecha_cita.getHours()))}:${addZero(fecha_cita.getMinutes())}`;
 
-  const promovendedorSinAsignarId = process.env.REACT_APP_PROMOVENDEDOR_SIN_ASIGNAR_ID;
+  const promovendedorSinPromovendedorId = process.env.REACT_APP_PROMOVENDEDOR_SIN_PROMOVENDEDOR_ID;
   const pendienteStatusId = process.env.REACT_APP_PENDIENTE_STATUS_ID;
   const asistioStatusId = process.env.REACT_APP_ASISTIO_STATUS_ID;
   const consultaServicioId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
@@ -60,7 +60,7 @@ const ModalProximaConsulta = (props) => {
     precio: consulta.precio,
     quien_agenda: empleado,
     tipo_cita: tipoCitaDerivadaId,
-    promovendedor: promovendedorSinAsignarId,
+    promovendedor: promovendedorSinPromovendedorId,
     status: pendienteStatusId,
     observaciones: consulta.observaciones,
     dermatologo: consulta.dermatologo ? consulta.dermatologo : '',

@@ -250,7 +250,7 @@ const ModalImprimirPagoDermatologo = (props) => {
       total += Number(pagoDermatologo);
     });
 
-    // TOTAL DE LAS CIRUGIAS
+    // TOTAL DE LAS CIRUGíAS
     cirugias.forEach(async (cirugia) => {
       const pagoDermatologo = cirugia.has_descuento_dermatologo ? 0 : Number(cirugia.total_aplicacion) * Number(dermatologo.esquema.porcentaje_cirugias) / 100;
       cirugia.pago_dermatologo = pagoDermatologo;
@@ -345,7 +345,7 @@ const ModalImprimirPagoDermatologo = (props) => {
       total += Number(pagoDermatologo);
     });
 
-    // TOTAL DE LAS ESTETICAS
+    // TOTAL DE LAS ESTÉTICAS
     esteticas.map(async (estetica) => {
       const pagoDermatologo = estetica.has_descuento_dermatologo ? 0 : Number(estetica.total_aplicacion) * Number(dermatologo.esquema.porcentaje_dermocosmetica) / 100;
       estetica.pago_dermatologo = pagoDermatologo;

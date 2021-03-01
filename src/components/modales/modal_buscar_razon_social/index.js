@@ -136,7 +136,7 @@ const ModalBuscarRazonSocial = (props) => {
             onClose={onClose}
             razonSociales={razonSociales}
             columns={columns}
-            titulo='RAZON SOCIAL'
+            titulo='RAZÓN SOCIAL'
             actions={actions}
             options={options}
             factura={factura}

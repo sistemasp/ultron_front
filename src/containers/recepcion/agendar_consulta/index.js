@@ -8,6 +8,7 @@ import {
 	showAllFrecuencias,
 	createConsecutivo,
 	findScheduleByDateAndSucursalAndService,
+	showAllMetodoPago,
 } from "../../../services";
 import {
 	createConsult,
@@ -76,13 +77,14 @@ const AgendarConsulta = (props) => {
 	const consultaServicioId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
 	const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
 	const dermatologoDirectoId = process.env.REACT_APP_DERMATOLOGO_DIRECTO_ID;
-	const promovendedorSinAsignarId = process.env.REACT_APP_PROMOVENDEDOR_SIN_ASIGNAR_ID;
+	const promovendedorSinPromovendedorId = process.env.REACT_APP_PROMOVENDEDOR_SIN_PROMOVENDEDOR_ID;
 	const frecuenciaPrimeraVezId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
 	const frecuenciaReconsultaId = process.env.REACT_APP_FRECUENCIA_RECONSULTA_ID;
 	const tipoCitaRevisionId = process.env.REACT_APP_TIPO_CITA_REVISADO_ID;
 	const tipoCitaDerivadaId = process.env.REACT_APP_TIPO_CITA_DERIVADO_ID;
 	const medioSinCitaId = process.env.REACT_APP_MEDIO_SIN_CITA_ID;
 	const productoConsultaId = process.env.REACT_APP_PRODUCTO_CONSULTA_ID;
+	const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
 
 	const date = new Date();
 
@@ -110,9 +112,14 @@ const AgendarConsulta = (props) => {
 		porcentaje_descuento_clinica: 0,
 		descuento_clinica: 0,
 		descuento_dermatologo: 0,
+		frecuencia: frecuenciaPrimeraVezId,
+		forma_pago: efectivoMetodoPagoId,
+		promovendedor: promovendedorSinPromovendedorId,
+		dermatologo: dermatologoDirectoId,
 	});
 
-	const [citas, setConsultas] = useState([]);
+	const [consultas, setConsultas] = useState([]);
+	const [formasPago, setFormasPago] = useState([]);
 	const [openModal, setOpenModal] = useState(false);
 	const [openModalProxima, setOpenModalProxima] = useState(false);
 	const [openModalPagos, setOpenModalPagos] = useState(false);
@@ -142,21 +149,22 @@ const AgendarConsulta = (props) => {
 		{ title: 'FOLIO', field: 'consecutivo' },
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
-		{ title: 'TELEFONO', field: 'paciente.telefono' },
+		{ title: 'TELÉFONO', field: 'paciente.telefono' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
 		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
 		{ title: 'HORA SALIDA', field: 'hora_salida' },
-		{ title: 'QUIEN AGENDA', field: 'quien_agenda.nombre' },
+		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
 		sucursal._id === sucursalManuelAcunaId ? { title: 'MEDIO', field: 'medio.nombre' } : {},
-		{ title: 'TIPO CONSULTA', field: 'tipo_cita.nombre' },
-		sucursal._id === sucursalManuelAcunaId ? { title: 'QUIEN CONFIRMA LLAMADA', field: 'quien_confirma_llamada.nombre' } : {},
-		sucursal._id === sucursalManuelAcunaId ? { title: 'QUIEN CONFIRMA ASISTENCIA', field: 'quien_confirma_asistencia.nombre' } : {},
+		{ title: 'TIPO', field: 'tipo_cita.nombre' },
+		sucursal._id === sucursalManuelAcunaId ? { title: 'QUIÉN CONFIRMA LLAMADA', field: 'quien_confirma_llamada.nombre' } : {},
+		sucursal._id === sucursalManuelAcunaId ? { title: 'QUIÉN CONFIRMA ASISTENCIA', field: 'quien_confirma_asistencia.nombre' } : {},
 		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
 		{ title: 'PROMOVENDEDOR', field: 'promovendedor_nombre' },
-		{ title: 'ESTADO', field: 'status.nombre' },
+		{ title: 'STATUS', field: 'status.nombre' },
 		{ title: 'PRECIO', field: 'precio_moneda' },
 		{ title: 'TOTAL', field: 'total_moneda' },
+		{ title: 'MÉTODO PAGO', field: 'forma_pago.nombre' },
 		{ title: 'OBSERVACIONES', field: 'observaciones' },
 	];
 
@@ -344,18 +352,18 @@ const AgendarConsulta = (props) => {
 	}
 
 	const handleChangeFrecuencia = (e) => {
-		const frecuencia = e.target.value._id;
-		const dermatologo = dermatologos.filter(item => {
+		const frecuencia = e.target.value;
+		const dermatologo = dermatologos.find(item => {
 			return item._id === dermatologoDirectoId;
 		});
-		const promovendedor = promovendedores.filter(item => {
-			return item._id === promovendedorSinAsignarId;
+		const promovendedor = promovendedores.find(item => {
+			return item._id === promovendedorSinPromovendedorId;
 		});
 		setValues({
 			...values,
 			frecuencia: frecuencia,
-			dermatologo: frecuencia === frecuenciaPrimeraVezId ? dermatologo[0] : undefined,
-			promovendedor: frecuencia === frecuenciaReconsultaId ? promovendedor[0] : undefined,
+			dermatologo: frecuencia === frecuenciaPrimeraVezId ? dermatologo._id : dermatologoDirectoId,
+			promovendedor: frecuencia === frecuenciaReconsultaId ? promovendedor : promovendedorSinPromovendedorId,
 			producto: frecuencia === frecuenciaPrimeraVezId ? productoConsultaId : values.producto,
 		});
 	}
@@ -467,7 +475,7 @@ const AgendarConsulta = (props) => {
 		},
 		{
 			icon: LocalHospitalIcon,
-			tooltip: 'AGREGAR CIRUGIA',
+			tooltip: 'AGREGAR CIRUGíA',
 			onClick: onClickAgendarCirugia
 		},
 		{
@@ -487,17 +495,17 @@ const AgendarConsulta = (props) => {
 		},
 		{
 			icon: FaceIcon,
-			tooltip: 'TOXINA Y RELLENOS',
+			tooltip: 'AGREGAR ESTÉTICA',
 			onClick: onClickAgendarEstetica
 		},
 		{
 			icon: EventAvailableIcon,
-			tooltip: 'NUEVA CITA',
+			tooltip: 'AGENDAR NUEVA CITA',
 			onClick: handleOnClickNuevaConsulta
 		},
 		{
 			icon: AttachMoneyIcon,
-			tooltip: 'PAGOS',
+			tooltip: 'AGREGAR PAGOS',
 			onClick: handleClickVerPagos
 		},
 		{
@@ -511,7 +519,7 @@ const AgendarConsulta = (props) => {
 				|| rowData.status._id === enCabinaStatusId || rowData.status._id === atendidoStatusId)
 				? {
 					icon: LocalHospitalIcon,
-					tooltip: 'AGREGAR CIRUGIA',
+					tooltip: 'AGREGAR CIRUGíA',
 					onClick: onClickAgendarCirugia
 				} : ''
 		},
@@ -520,7 +528,7 @@ const AgendarConsulta = (props) => {
 				|| rowData.status._id === enCabinaStatusId || rowData.status._id === atendidoStatusId)
 				? {
 					icon: FaceIcon,
-					tooltip: 'TOXINA Y RELLENOS',
+					tooltip: 'AGREGAR ESTÉTICA',
 					onClick: onClickAgendarEstetica
 				} : ''
 		},
@@ -534,7 +542,7 @@ const AgendarConsulta = (props) => {
 		rowData => (
 			rowData.status._id === atendidoStatusId ? {
 				icon: EventAvailableIcon,
-				tooltip: 'NUEVA CITA',
+				tooltip: 'AGENDAR NUEVA CITA',
 				onClick: handleOnClickNuevaConsulta
 			} : ''
 		),*/
@@ -549,10 +557,10 @@ const AgendarConsulta = (props) => {
 			case 'EDITAR CONSULTA':
 				handleOnClickEditarConsulta(e, rowData);
 				break;
-			case 'AGREGAR CIRUGIA':
+			case 'AGREGAR CIRUGíA':
 				onClickAgendarCirugia(e, rowData);
 				break;
-			case 'TOXINA Y RELLENOS':
+			case 'AGREGAR ESTÉTICA':
 				onClickAgendarEstetica(e, rowData);
 				break;
 			case 'AGREGAR DERMAPEN':
@@ -564,10 +572,10 @@ const AgendarConsulta = (props) => {
 			case 'AGREGAR FACIAL':
 				onClickAgendarFaciales(e, rowData);
 				break;
-			case 'NUEVA CITA':
+			case 'AGENDAR NUEVA CITA':
 				handleOnClickNuevaConsulta(e, rowData);
 				break;
-			case 'PAGOS':
+			case 'AGREGAR PAGOS':
 				handleClickVerPagos(e, rowData);
 				break;
 			case 'TRASPASO':
@@ -580,7 +588,7 @@ const AgendarConsulta = (props) => {
 		Pagination: props => {
 			return <TablePagination
 				{...props}
-				rowsPerPageOptions={[5, 10, 20, 30, citas.length]}
+				rowsPerPageOptions={[5, 10, 20, 30, consultas.length]}
 			/>
 		},
 		Actions: props => {
@@ -604,6 +612,20 @@ const AgendarConsulta = (props) => {
 					</Select>
 				</FormControl>
 			</Fragment>
+		}
+	}
+
+	const handleChangePaymentMethod = (event) => {
+		setValues({
+		  ...values,
+		  forma_pago: event.target.value,
+		});
+	  }
+
+	const loadFormasPago = async () => {
+		const response = await showAllMetodoPago();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setFormasPago(response.data);
 		}
 	}
 
@@ -677,6 +699,7 @@ const AgendarConsulta = (props) => {
 		loadTipoCitas();
 		loadFrecuencias();
 		loadMedios();
+		loadFormasPago();
 		loadHorarios(values.fecha_hora);
 	}, [sucursal, dermatologoRolId, promovendedorRolId, consultaServicioId]);
 
@@ -687,6 +710,7 @@ const AgendarConsulta = (props) => {
 					<AgendarConsultaContainer
 						values={values}
 						horarios={horarios}
+						formasPago={formasPago}
 						onChangeFecha={(e) => handleChangeFecha(e)}
 						onChangeFilterDate={(e) => handleChangeFilterDate(e)}
 						onChangeHora={(e) => handleChangeHora(e)}
@@ -697,10 +721,11 @@ const AgendarConsulta = (props) => {
 						onChangePrecio={(e) => handleChangePrecio(e)}
 						onChangeTiempo={(e) => handleChangeTiempo(e)}
 						onChangeObservaciones={(e) => handleChangeObservaciones(e)}
+						onChangePaymentMethod={(e) => handleChangePaymentMethod(e)}
 						titulo={`CONSULTAS (${dateToString(filterDate.fecha_show)})`}
 						columns={columns}
 						options={options}
-						citas={citas}
+						citas={consultas}
 						actions={actions}
 						components={components}
 						consulta={consulta}

@@ -45,7 +45,7 @@ const ReportesPagos = (props) => {
 		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
 		{ title: 'SERVICIO', field: 'servicio.nombre' },
 		{ title: 'TRATAMIENTOS', field: 'show_tratamientos' },
-		{ title: 'QUIEN RECIBE PAGO', field: 'quien_recibe_pago.nombre' },
+		{ title: 'QUIÉN RECIBE PAGO', field: 'quien_recibe_pago.nombre' },
 		{ title: 'CANTIDAD', field: 'cantidad_show' },
 		{ title: 'PORCENTAJE COMISIÓN', field: 'porcentaje_comision_show' },
 		{ title: 'COMISIÓN', field: 'comision_show' },

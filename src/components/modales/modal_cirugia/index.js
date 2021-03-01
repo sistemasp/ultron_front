@@ -123,7 +123,7 @@ const ModalCirugia = (props) => {
       || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
       if (data._id) {
         setOpenAlert(true);
-        setMessage('CIRUGIA ACTUALIZADA CORRECTAMENTE');
+        setMessage('CIRUGíA ACTUALIZADA CORRECTAMENTE');
       } else {
         const consecutivo = {
           consecutivo: response.data.consecutivo,
@@ -136,7 +136,7 @@ const ModalCirugia = (props) => {
         const responseConsecutivo = await createConsecutivo(consecutivo);
         if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
           setOpenAlert(true);
-          setMessage('CIRUGIA AGREGADA CORRECTAMENTE');
+          setMessage('CIRUGíA AGREGADA CORRECTAMENTE');
         }
       }
     }

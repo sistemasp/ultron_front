@@ -44,7 +44,7 @@ const ModalCirugiaAgregarPaciente = (props) => {
   const [values, setValues] = useState({
   });
 
-  const enSalaCirugiaStatusId = process.env.REACT_APP_EN_SALA_CIRUGIA_STATUS_ID;
+  const enSalaCirugiaStatusId = process.env.REACT_APP_EN_SALA_CIRUGíA_STATUS_ID;
   const cirugiaServicioId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID;
 
   const handleClickGuardar = async (event, rowData) => {
@@ -70,7 +70,7 @@ const ModalCirugiaAgregarPaciente = (props) => {
     const response = await updateSalaCirugia(salaCirugia._id, salaCirugia);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setOpenAlert(true);
-      setMessage('EL PACIENTE ENTRO A LA SALA DE CIRUGIA');
+      setMessage('EL PACIENTE ENTRO A LA SALA DE CIRUGíA');
     }
 
     onClose();

@@ -154,7 +154,7 @@ const ModalRazonSocial = (props) => {
       || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
       setSeverity('success');
       setOpenAlert(true);
-      setMessage(`RAZON SOCIAL ${razonSocial._id ? 'ACTUALIZADA' : 'CREADA'} ORRECTAMENTE`);
+      setMessage(`RAZÓN SOCIAL ${razonSocial._id ? 'ACTUALIZADA' : 'CREADA'} ORRECTAMENTE`);
     }
     loadRazonSocial();
     onClose();
