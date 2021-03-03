@@ -17,47 +17,11 @@ import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import ModalProximaCita from '../../../components/modales/modal_proxima_cita';
 import ModalEstetica from '../../../components/modales/modal_estetica';
 import ModalImprimirCirugia from '../../../components/modales/imprimir/cirugia';
-
-const useStyles = makeStyles(theme => ({
-	formControl: {
-		minWidth: 120,
-		width: '100%',
-	},
-	selectEmpty: {
-		marginTop: theme.spacing(2),
-	},
-	button: {
-		width: '100%',
-		color: '#FFFFFF',
-	},
-	labelItemLeft: {
-		marginTop: '0px',
-		marginBottom: '0px',
-		textAlign: 'left',
-		//display: "flex",
-		alignItems: "center",
-	},
-	labelItemRight: {
-		marginTop: '0px',
-		marginBottom: '0px',
-		textAlign: 'right',
-		alignSelf: 'center',
-		//display: "flex",
-		alignItems: "center",
-	},
-	labelItemCenter: {
-		marginTop: '0px',
-		marginBottom: '0px',
-		alignSelf: 'center',
-		textAlign: 'center',
-		//display: "flex",
-		alignItems: "center",
-	},
-}));
+import myStyles from '../../../css';
 
 export const AgendarEsteticaContainer = (props) => {
 
-	const classes = useStyles();
+	const classes = myStyles();
 
 	const {
 		values,
@@ -210,16 +174,16 @@ export const AgendarEsteticaContainer = (props) => {
 			<Paper>
 
 				<Grid container spacing={3}>
-					<Grid item xs={12} sm={6}>
+					<Grid item xs={12} sm={6} className={classes.grid_center}>
 						<h1>{paciente.nombres ? `${paciente.nombres} ${paciente.apellidos}` : 'SELECCIONA DESDE UNA CONSULTA'}</h1>
 					</Grid>
-					<Grid item xs={12} sm={2}>
+					<Grid item xs={12} sm={2} className={classes.grid_center}>
 						<h2>APLICACIÓN: {toFormatterCurrency(values.total_aplicacion)}</h2>
 					</Grid>
-					<Grid item xs={12} sm={2}>
+					<Grid item xs={12} sm={2} className={classes.grid_center}>
 						<h1>TOTAL: {toFormatterCurrency(values.precio)}</h1>
 					</Grid>
-					<Grid item xs={12} sm={2}>
+					<Grid item xs={12} sm={2} className={classes.grid_center}>
 						<ButtonCustom
 							className={classes.button}
 							color="primary"
@@ -367,13 +331,13 @@ export const AgendarEsteticaContainer = (props) => {
 						}
 						<Grid item xs={12} sm={4}>
 							<FormControl variant="outlined" className={classes.formControl}>
-								<InputLabel id="simple-select-outlined-payment">MÉTODO PAGO</InputLabel>
+								<InputLabel id="simple-select-outlined-payment">FORMA DE PAGO</InputLabel>
 								<Select
 									labelId="simple-select-outlined-payment"
 									id="simple-select-outlined-payment"
 									value={values.forma_pago}
 									onChange={onChangePaymentMethod}
-									label="MÉTODO PAGO" >
+									label="FORMA DE PAGO" >
 									{formasPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
 								</Select>
 							</FormControl>
@@ -390,26 +354,26 @@ export const AgendarEsteticaContainer = (props) => {
 						</Grid>
 					</Grid>
 					<Grid container spacing={2} xs={12} sm={6}>
-						<Grid item xs={3} >
+						<Grid item xs={3} className={classes.grid_center}>
 							<h3 className={classes.labelItemLeft}>{`NOMBRE`}</h3>
 						</Grid>
-						<Grid item xs={3} >
+						<Grid item xs={3} className={classes.grid_center}>
 							<h3 className={classes.labelItemCenter}> {`CANTIDAD UNIDADES`} </h3>
 						</Grid>
-						<Grid className={classes.labelItemLeft} item xs={3} >
+						<Grid className={classes.labelItemLeft, classes.grid_center} item xs={3} >
 							<h3 className={classes.labelItemCenter}>{`PRECIO POR UNIDAD`}</h3>
 						</Grid>
-						<Grid item xs={3} >
+						<Grid item xs={3} className={classes.grid_center}>
 							<h3 className={classes.labelItemRight}> {`TOTAL`} </h3>
 						</Grid>
 						{
 							values.toxinas_rellenos ?
 								values.toxinas_rellenos.map((item, index) =>
 									<Fragment>
-										<Grid item xs={3} >
+										<Grid item xs={3} className={classes.grid_center}>
 											<h3 className={classes.labelItemLeft}>{item.nombre}</h3>
 										</Grid>
-										<Grid item xs={12} sm={3}>
+										<Grid item xs={12} sm={3} className={classes.grid_center}>
 											<TextField
 												className={classes.labelItemCenter}
 												name={item.unidades}
@@ -423,10 +387,10 @@ export const AgendarEsteticaContainer = (props) => {
 												}}
 												variant="outlined" />
 										</Grid>
-										<Grid item xs={3} >
+										<Grid item xs={3} className={classes.grid_center}>
 											<h3 className={classes.labelItemCenter}>{toFormatterCurrency(item.precio)}</h3>
 										</Grid>
-										<Grid item xs={3} >
+										<Grid item xs={3} className={classes.grid_center}>
 											<h3 className={classes.labelItemRight}>{toFormatterCurrency(item.unidades * item.precio)}</h3>
 										</Grid>
 									</Fragment>) : ''

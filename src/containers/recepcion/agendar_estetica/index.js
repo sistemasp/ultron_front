@@ -126,7 +126,7 @@ const AgendarEstetica = (props) => {
 		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
 		{ title: 'ESTADO', field: 'status.nombre' },
 		{ title: 'TOTAL', field: 'total_moneda' },
-		{ title: 'MÉTODO PAGO', field: 'forma_pago.nombre' },
+		{ title: 'FORMA DE PAGO', field: 'forma_pago.nombre' },
 		{ title: 'OBSERVACIONES', field: 'observaciones' },
 	];
 

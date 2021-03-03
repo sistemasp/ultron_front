@@ -16,24 +16,11 @@ import { toFormatterCurrency } from '../../../utils/utils';
 import ModalImprimirTratamiento from '../../../components/modales/imprimir/tratamiento';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import ModalProximaCita from '../../../components/modales/modal_proxima_cita';
-
-const useStyles = makeStyles(theme => ({
-	formControl: {
-		minWidth: 120,
-		width: '100%',
-	},
-	selectEmpty: {
-		marginTop: theme.spacing(2),
-	},
-	button: {
-		width: '100%',
-		color: '#FFFFFF',
-	}
-}));
+import myStyles from '../../../css';
 
 export const AgendarAparatologiaContainer = (props) => {
 
-	const classes = useStyles();
+	const classes = myStyles();
 
 	const {
 		values,
@@ -166,7 +153,7 @@ export const AgendarAparatologiaContainer = (props) => {
 					<Grid item xs={12} sm={2}>
 						<h1>{toFormatterCurrency(values.precio)}</h1>
 					</Grid>
-					<Grid item xs={12} sm={2}>
+					<Grid item xs={12} sm={2} className={classes.grid_center}>
 						<ButtonCustom
 							className={classes.button}
 							color="primary"
@@ -361,13 +348,13 @@ export const AgendarAparatologiaContainer = (props) => {
 					</Grid>
 					<Grid item xs={12} sm={2}>
 						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-payment">MÉTODO PAGO</InputLabel>
+							<InputLabel id="simple-select-outlined-payment">FORMA DE PAGO</InputLabel>
 							<Select
 								labelId="simple-select-outlined-payment"
 								id="simple-select-outlined-payment"
 								value={values.forma_pago}
 								onChange={onChangePaymentMethod}
-								label="MÉTODO PAGO" >
+								label="FORMA DE PAGO" >
 								{formasPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
 							</Select>
 						</FormControl>

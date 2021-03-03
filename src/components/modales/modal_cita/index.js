@@ -93,6 +93,7 @@ const ModalCita = (props) => {
   const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
   const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
   const sucursalFedeId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
+  const rolCallCenterId = process.env.REACT_APP_CALL_CENTER_ROL_ID;
 
   const [isLoading, setIsLoading] = useState(true);
   const [areas, setAreas] = useState([]);
@@ -250,8 +251,8 @@ const ModalCita = (props) => {
 
   const handleOnClickActualizarCita = async (event, rowData) => {
     rowData.tratamientos.forEach(tratamiento => {
-			tratamiento.areas = undefined;
-		});
+      tratamiento.areas = undefined;
+    });
     if (rowData.pagado) {
       if (rowData.status === canceloCPStatusId) {
         rowData.pagos.forEach(async (pago) => {
@@ -273,7 +274,12 @@ const ModalCita = (props) => {
       }
     }
     if (rowData.status._id !== pendienteStatusId) {
-      rowData.quien_confirma_asistencia = empleado._id;
+      if (empleado.rol._id === rolCallCenterId) {
+        rowData.quien_confirma_llamada = empleado._id;
+      } else {
+        rowData.quien_confirma_asistencia = empleado._id;
+      }
+
       if (rowData.status === asistioStatusId) {
         const dateNow = new Date();
         rowData.hora_aplicacion = rowData.hora_aplicacion ? rowData.hora_aplicacion : dateNow;

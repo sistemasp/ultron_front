@@ -99,7 +99,7 @@ const ReportesDetallesGeneral = (props) => {
 		{ title: 'TOTAL', field: 'total_moneda' },
 		{ title: 'TOTAL DOCTOR', field: 'total_doctor' },
 		{ title: 'TOTAL CLÍNICA', field: 'total_clinica' },
-		{ title: 'METODO DE PAGO', field: 'metodo_pago_nombre' },
+		{ title: 'FORMA DE PAGO', field: 'metodo_pago_nombre' },
 		{ title: 'FACTURA', field: 'requiere_factura' },
 		{ title: 'TARJETA', field: 'tipo_tarjeta' },
 		{ title: 'BANCO', field: 'banco_nombre' },

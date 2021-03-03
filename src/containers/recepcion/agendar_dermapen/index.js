@@ -148,7 +148,7 @@ const AgendarDermapen = (props) => {
 		{ title: 'PRECIO', field: 'precio_moneda' },
 		{ title: 'TOTAL', field: 'total_moneda' },
 		{ title: 'TIEMPO (MINUTOS)', field: 'tiempo' },
-		{ title: 'MÉTODO PAGO', field: 'forma_pago.nombre' },
+		{ title: 'FORMA DE PAGO', field: 'forma_pago.nombre' },
 		{ title: 'OBSERVACIONES', field: 'observaciones' },
 	];
 

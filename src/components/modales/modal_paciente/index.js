@@ -21,6 +21,7 @@ const ModalPaciente = (props) => {
     nombres: paciente.nombres,
     apellidos: paciente.apellidos,
     telefono: paciente.telefono,
+    email: paciente.email,
     sexo: paciente.sexo ? paciente.sexo._id : '',
     fecha_nacimiento: paciente.fecha_nacimiento ? paciente.fecha_nacimiento : '',
   });

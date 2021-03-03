@@ -148,7 +148,7 @@ const AgendarAparatologia = (props) => {
 		{ title: 'ESTADO', field: 'status.nombre' },
 		{ title: 'PRECIO', field: 'precio_moneda' },
 		{ title: 'TOTAL', field: 'total_moneda' },
-		{ title: 'MÉTODO PAGO', field: 'forma_pago.nombre' },
+		{ title: 'FORMA DE PAGO', field: 'forma_pago.nombre' },
 		{ title: 'OBSERVACIONES', field: 'observaciones' },
 	];
 

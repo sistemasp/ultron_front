@@ -626,7 +626,7 @@ export const showAllBanco = async () => {
     }
 }
 
-// MÉTODO PAGO
+// FORMA DE PAGO
 
 export const showAllMetodoPago = async () => {
     try {

@@ -31,6 +31,9 @@ const myStyles = makeStyles(theme => ({
         minWidth: 120,
         width: '100%',
     },
+    grid_center: {
+        placeSelf: 'center',
+    },
     button: {
         width: '100%',
         color: '#FFFFFF',
