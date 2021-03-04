@@ -1,13 +1,13 @@
-import React, { useState, Fragment, useEffect } from "react";
-import { MainContainer } from "./main";
+import React, { useState, Fragment } from "react";
 import { Snackbar } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
+import { MainContainer, MainCosmetologasContainer } from "./main";
 
 const Alert = (props) => {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-const MenuMainRecepcion = (props) => {
+const MenuMainCosmetologas = (props) => {
 
 	const [pacienteAgendado, setPacienteAgendado] = useState({});
 	const [value, setValue] = useState(0);
@@ -90,4 +90,4 @@ const MenuMainRecepcion = (props) => {
 	);
 }
 
-export default MenuMainRecepcion;
+export default MenuMainCosmetologas;

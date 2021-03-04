@@ -5,6 +5,7 @@ import MenuMainRecepcion from "./containers/recepcion/main/index";
 import './App.css';
 import MenuMainDermatologos from './containers/dermatologos/main';
 import MenuMainCallCenter from './containers/call_center/main';
+import MenuMainCosmetologas from './containers/cosmetologas/main';
 
 const App = () => {
 
@@ -18,9 +19,12 @@ const App = () => {
           exact path="/call_center"
           component={MenuMainCallCenter} />
         <Route
+          exact path="/cabinas"
+          component={MenuMainCosmetologas} />
+        <Route
           exact path="/dermatologos"
           component={MenuMainDermatologos} />
-          <Route
+        <Route
           exact path="/recepcion"
           component={MenuMainRecepcion} />
       </div>

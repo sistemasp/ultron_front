@@ -8,6 +8,7 @@ import TableComponent from '../../table/TableComponent';
 import ModalPago from '../modal_pago';
 import ModalBuscarRazonSocial from '../modal_buscar_razon_social';
 import { toFormatterCurrency } from '../../../utils/utils';
+import myStyles from '../../../css';
 
 function getModalStyle() {
   const top = 50;
@@ -20,37 +21,8 @@ function getModalStyle() {
   };
 }
 
-const useStyles = makeStyles(theme => ({
-  formControl: {
-    minWidth: 120,
-    width: '100%',
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-  paper: {
-    position: 'absolute',
-    width: '95%',
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-  },
-  textField: {
-    width: '100%',
-  },
-  button: {
-    width: '100%',
-    color: '#FFFFFF',
-  },
-  label: {
-    marginTop: '0px',
-    marginBottom: '0px',
-  }
-}));
-
 const ModalFormPagos = (props) => {
-  const classes = useStyles();
+  const classes = myStyles();
 
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
@@ -113,9 +85,9 @@ const ModalFormPagos = (props) => {
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
         open={open} >
-        <div style={modalStyle} className={classes.paper}>
+        <div style={modalStyle} className={classes.paper_95}>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={true}>
+            <Grid item xs={12} sm={true} className={classes.grid_center}>
               <ButtonCustom
                 className={classes.button}
                 color="primary"
@@ -124,7 +96,7 @@ const ModalFormPagos = (props) => {
                 text='AGREGAR PAGO' />
             </Grid>
 
-            <Grid item xs={true} sm={true}>
+            <Grid item xs={true} sm={true} className={classes.grid_center}>
               <TextField
                 className={classes.textField}
                 name="porcentaje_descuento_clinica"
@@ -140,7 +112,7 @@ const ModalFormPagos = (props) => {
                 variant="outlined" />
             </Grid>
 
-            <Grid item xs={true} sm={true}>
+            <Grid item xs={true} sm={true} className={classes.grid_center}>
               <CheckCustom
                 checked={values.has_descuento_dermatologo}
                 onChange={onChangDescuentoDermatologo}
@@ -148,7 +120,7 @@ const ModalFormPagos = (props) => {
                 label="DESCUENTO DERMATÓLOGO" />
             </Grid>
 
-            <Grid item xs={true} sm={true}>
+            <Grid item xs={true} sm={true} className={classes.grid_center}>
               <CheckCustom
                 checked={servicio.factura}
                 onChange={onChangeFactura}

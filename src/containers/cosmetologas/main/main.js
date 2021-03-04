@@ -1,7 +1,8 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@material-ui/core/styles';
+import MenuPatient from '../menu_pacientes/index';
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
@@ -17,10 +18,10 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import { Button } from '@material-ui/core';
+import { Button, Grid } from '@material-ui/core';
 import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
 import ModalPassword from '../../../components/modales/modal_password';
-import MenuPatientForCosmetologas from '../menu_pacientes/index_cosmetologas';
+import myStyles from '../../../css';
 
 const TabPanel = (props) => {
 	const { children, value, index, ...other } = props;
@@ -34,7 +35,7 @@ const TabPanel = (props) => {
 			aria-labelledby={`simple-tab-${index}`}
 			{...other}
 		>
-			{value === index && <Box p={3}>{children}</Box>}
+			{value === index && <Box>{children}</Box>}
 		</Typography>
 	);
 }
@@ -45,77 +46,9 @@ TabPanel.propTypes = {
 	value: PropTypes.any.isRequired,
 };
 
-const drawerWidth = 240;
-
-const useStyles = makeStyles((theme) => ({
-	root: {
-		display: 'flex',
-	},
-	appBar: {
-		backgroundColor: "#2BA6C6",
-		transition: theme.transitions.create(['margin', 'width'], {
-			easing: theme.transitions.easing.sharp,
-			duration: theme.transitions.duration.leavingScreen,
-		}),
-	},
-	appBarShift: {
-		width: `calc(100% - ${drawerWidth}px)`,
-		marginLeft: drawerWidth,
-		transition: theme.transitions.create(['margin', 'width'], {
-			easing: theme.transitions.easing.easeOut,
-			duration: theme.transitions.duration.enteringScreen,
-		}),
-	},
-	menuButton: {
-		marginRight: theme.spacing(2),
-	},
-	hide: {
-		display: 'none',
-	},
-	drawer: {
-		width: drawerWidth,
-		flexShrink: 0,
-	},
-	drawerPaper: {
-		width: drawerWidth,
-	},
-	drawerHeader: {
-		display: 'flex',
-		alignItems: 'center',
-		padding: theme.spacing(0, 1),
-		// necessary for content to be below app bar
-		...theme.mixins.toolbar,
-		justifyContent: 'flex-end',
-	},
-	content: {
-		flexGrow: 1,
-		padding: theme.spacing(3),
-		transition: theme.transitions.create('margin', {
-			easing: theme.transitions.easing.sharp,
-			duration: theme.transitions.duration.leavingScreen,
-		}),
-		marginLeft: -drawerWidth,
-	},
-	contentShift: {
-		transition: theme.transitions.create('margin', {
-			easing: theme.transitions.easing.easeOut,
-			duration: theme.transitions.duration.enteringScreen,
-		}),
-		marginLeft: 0,
-	},
-	title: {
-		flexGrow: 1,
-	},
-	fragment: {
-		width: '100%',
-	}
-}));
-
-export const MainCosmetologasContainer = props => {
+export const MainContainer = props => {
 
 	const {
-		pacienteAgendado,
-		setPacienteAgendado,
 		onChangeTab,
 		value,
 		empleado,
@@ -127,11 +60,12 @@ export const MainCosmetologasContainer = props => {
 		setMessage,
 		setSeverity,
 		setOpenAlert,
+		history,
 	} = props;
 
-	const classes = useStyles();
+	const classes = myStyles();
 	const theme = useTheme();
-	const [openDrawer, setOpenDrawer] = React.useState(false);
+	const [openDrawer, setOpenDrawer] = useState(false);
 
 	const handleDrawerOpen = () => {
 		setOpenDrawer(true);
@@ -175,16 +109,16 @@ export const MainCosmetologasContainer = props => {
 						<MenuIcon />
 					</IconButton>
 					<Typography variant="h6" className={classes.title}>
-						{`SUCURSAL: ${sucursal.nombre} - ${empleado.nombre} ( ${empleado.rol.nombre} )`}
+						{`SUCURSAL: ${sucursal.nombre} - ${empleado.numero_empleado} : ${empleado.nombre ? empleado.nombre : ''} ( ${empleado.rol ? empleado.rol.nombre : ''} )`}
 					</Typography>
 					<Button
 						color="default"
 						variant="contained"
-						onClick={onClickCambioPassword}>Cambiar Contraseña</Button>
+						onClick={onClickCambioPassword}>CAMBIAR CONTRASEÑA</Button>
 					<Button
 						color="secondary"
 						variant="contained"
-						onClick={onClickLogout}>Cerrar Sesion</Button>
+						onClick={onClickLogout}>CERRAR SESION</Button>
 				</Toolbar>
 			</AppBar>
 			<Drawer
@@ -203,9 +137,9 @@ export const MainCosmetologasContainer = props => {
 				</div>
 				<Divider />
 				<List>
-					<ListItem button key={'Pacientes'} onClick={(e) => onChangeTab(e, 0, handleDrawerClose)}>
+					<ListItem button key={'PACIENTES'} onClick={(e) => onChangeTab(e, 0, handleDrawerClose)}>
 						<ListItemIcon> <AccessibilityNewIcon /> </ListItemIcon>
-						<ListItemText primary={'Pacientes'} />
+						<ListItemText primary={'PACIENTES'} />
 					</ListItem>
 				</List>
 			</Drawer>
@@ -217,9 +151,10 @@ export const MainCosmetologasContainer = props => {
 				<div className={classes.drawerHeader} />
 				<Fragment className={classes.fragment}>
 					<TabPanel value={value} index={0}>
-						<MenuPatientForCosmetologas
+						<MenuPatient
 							empleado={empleado}
-							sucursal={sucursal} />
+							sucursal={sucursal}
+							history={history} />
 					</TabPanel>
 				</Fragment>
 			</main>
