@@ -45,7 +45,7 @@ const validationSchema = Yup.object({
 		.required("El tratamiento es requerido"),
 	fecha: Yup.string("Ingresa la fecha de nacimiento")
 		.required("Los nombres del pacientes son requeridos"),
-	hora: Yup.string("Ingresa la direccion")
+	hora: Yup.string("Ingresa la domicilio")
 		.required("Los nombres del pacientes son requeridos")
 });
 
@@ -136,7 +136,7 @@ const AgendarAparatologia = (props) => {
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'TELÉFONO', field: 'paciente.telefono' },
-		{ title: 'TRATAMIENTOS (AREAS)', field: 'show_tratamientos' },
+		{ title: 'TRATAMIENTOS (ÁREAS)', field: 'show_tratamientos' },
 		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		{ title: 'MEDIO', field: 'medio.nombre' },
 		{ title: 'QUIÉN CONFIRMA LLAMADA', field: 'quien_confirma_llamada.nombre' },
@@ -144,7 +144,7 @@ const AgendarAparatologia = (props) => {
 		{ title: 'PROMOVENDEDOR', field: 'promovendedor_nombre' },
 		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
 		{ title: 'TIPO CITA', field: 'tipo_cita.nombre' },
-		{ title: 'COSMETOLOGA', field: 'cosmetologa_nombre' },
+		{ title: 'COSMETÓLOGA', field: 'cosmetologa_nombre' },
 		{ title: 'ESTADO', field: 'status.nombre' },
 		{ title: 'PRECIO', field: 'precio_moneda' },
 		{ title: 'TOTAL', field: 'total_moneda' },

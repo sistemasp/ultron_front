@@ -51,7 +51,7 @@ const ReportesTratamientos = (props) => {
 		{ title: 'QUIÉN CONFIRMA', field: 'quien_confirma.nombre' },
 		{ title: 'PROMOVENDEDOR', field: 'promovendedor_nombre' },
 		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
-		{ title: 'COSMETOLOGA', field: 'cosmetologa_nombre' },
+		{ title: 'COSMETÓLOGA', field: 'cosmetologa_nombre' },
 		{ title: 'ESTADO', field: 'status.nombre' },
 		{ title: 'MOTIVOS', field: 'motivos' },
 		{ title: 'PRECIO', field: 'precio_moneda' },

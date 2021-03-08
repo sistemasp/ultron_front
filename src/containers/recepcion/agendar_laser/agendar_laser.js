@@ -177,7 +177,7 @@ export const AgendarLaserContainer = (props) => {
 							displayValue="nombre" // Property name to display in the dropdown options
 							onSelect={(e) => onChangeAreas(e)} // Function will trigger on select event
 							onRemove={(e) => onChangeAreas(e)} // Function will trigger on remove event
-							placeholder={`AREAS`}
+							placeholder={`ÁREAS`}
 							selectedValues={values.areas} // Preselected value to persist in dropdown
 						/>
 					</Grid>
@@ -229,14 +229,14 @@ export const AgendarLaserContainer = (props) => {
 					</Grid>
 					<Grid item xs={12} sm={2}>
 						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-cosmetologa">COSMETOLOGA</InputLabel>
+							<InputLabel id="simple-select-outlined-cosmetologa">COSMETÓLOGA</InputLabel>
 							<Select
 								labelId="simple-select-outlined-cosmetologa"
 								id="simple-select-outlined-cosmetologa"
 								value={values.cosmetologa}
 								error={Boolean(errors.cosmetologa)}
 								onChange={onChangeCosmetologa}
-								label="COSMETOLOGA" >
+								label="COSMETÓLOGA" >
 								{cosmetologas.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
 							</Select>
 						</FormControl>

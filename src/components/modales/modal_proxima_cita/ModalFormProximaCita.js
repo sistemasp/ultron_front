@@ -150,13 +150,13 @@ const ModalFormProximaCita = (props) => {
               </Grid>
               <Grid item xs={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-cosmetologa">COSMETOLOGA</InputLabel>
+                  <InputLabel id="simple-select-outlined-cosmetologa">COSMETÓLOGA</InputLabel>
                   <Select
                     labelId="simple-select-outlined-cosmetologa"
                     id="simple-select-outlined-cosmetologa"
                     value={values.cosmetologa}
                     onChange={onChangeCosmetologa}
-                    label="COSMETOLOGA" >
+                    label="COSMETÓLOGA" >
                     {cosmetologas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
                   </Select>
                 </FormControl>

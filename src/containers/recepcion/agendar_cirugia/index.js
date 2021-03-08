@@ -7,13 +7,14 @@ import {
 	showAllMaterials,
 	showAllFrecuencias,
 	showAllMetodoPago,
+	showAllMedios,
 } from "../../../services";
 import {
 	createCirugia,
 	findCirugiaByDateAndSucursal,
 	updateCirugia
 } from "../../../services/cirugias";
-import { Backdrop, CircularProgress, Snackbar } from "@material-ui/core";
+import { Backdrop, CircularProgress, FormControl, InputLabel, MenuItem, Select, Snackbar, TablePagination } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
 import { Formik } from 'formik';
 import EditIcon from '@material-ui/icons/Edit';
@@ -40,7 +41,7 @@ const validationSchema = Yup.object({
 		.required("El servicio es requerido."),
 	fecha: Yup.string("Ingresa la fecha de nacimiento")
 		.required("Los nombres del pacientes son requeridos"),
-	hora: Yup.string("Ingresa la direccion")
+	hora: Yup.string("Ingresa la domicilio")
 		.required("Los nombres del pacientes son requeridos")
 });
 
@@ -72,6 +73,7 @@ const AgendarCirugia = (props) => {
 	const frecuenciaReconsultaId = process.env.REACT_APP_FRECUENCIA_RECONSULTA_ID;
 	const productoCirugiaId = process.env.REACT_APP_PRODUCTO_CIRUGIA_ID;
 	const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
+	const fisicoMedioId = process.env.REACT_APP_MEDIO_FISICO_ID;
 
 	const [openAlert, setOpenAlert] = useState(false);
 	const [message, setMessage] = useState('');
@@ -96,6 +98,7 @@ const AgendarCirugia = (props) => {
 		descuento_clinica: 0,
 		descuento_dermatologo: 0,
 		forma_pago: efectivoMetodoPagoId,
+		medio: fisicoMedioId,
 	});
 	const [cirugias, setCirugias] = useState([]);
 	const [openModal, setOpenModal] = useState(false);
@@ -105,6 +108,7 @@ const AgendarCirugia = (props) => {
 	const [openModalImprimirCita, setOpenModalImprimirCita] = useState(false);
 	const [datosImpresion, setDatosImpresion] = useState();
 	const [materiales, setMateriales] = useState([]);
+	const [medios, setMedios] = useState([]);
 
 	const date = new Date();
 	const dia = addZero(date.getDate());
@@ -206,7 +210,7 @@ const AgendarCirugia = (props) => {
 				const fecha = new Date(item.fecha_hora);
 				item.hora = `${addZero(fecha.getHours())}:${addZero(fecha.getMinutes())}`;
 				item.precio_moneda = toFormatterCurrency(item.precio);
-				item.total_moneda = toFormatterCurrency(item.total);				
+				item.total_moneda = toFormatterCurrency(item.total);
 				item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
 				item.promovendedor_nombre = item.promovendedor ? item.promovendedor.nombre : 'SIN ASIGNAR';
 				item.cosmetologa_nombre = item.cosmetologa ? item.cosmetologa.nombre : 'SIN ASIGNAR';
@@ -327,27 +331,63 @@ const AgendarCirugia = (props) => {
 			tooltip: 'IMPRIMIR',
 			onClick: handlePrint
 		},
-		//new Date(anio, mes - 1, dia) < filterDate.fecha_hora  ? 
 		{
 			icon: EditIcon,
 			tooltip: 'EDITAR CIRUGíA',
 			onClick: handleOnClickEditarCita
-		}, //: ''
-		rowData => (
-			rowData.status._id !== pendienteStatusId ? {
-				icon: AttachMoneyIcon,
-				tooltip: rowData.pagado ? 'VER PAGO' : 'PAGAR',
-				onClick: handleClickVerPagos
-			} : ''
-		),
-		/*rowData => (
-			rowData.status._id === atendidoStatusId ? {
-				icon: EventAvailableIcon,
-				tooltip: 'NUEVO CIRUGíA',
-				onClick: handleOnClickNuevaCita
-			} : ''
-		),*/
+		},
+		{
+			icon: AttachMoneyIcon,
+			tooltip: 'PAGOS',
+			onClick: handleClickVerPagos
+		},
 	];
+
+	const onChangeActions = (e, rowData) => {
+		const action = e.target.value;
+		switch (action) {
+			case 'IMPRIMIR':
+				handlePrint(e, rowData);
+				break;
+			case 'EDITAR CIRUGíA':
+				handleOnClickEditarCita(e, rowData);
+				break;
+			case 'PAGOS':
+				handleClickVerPagos(e, rowData);
+				break;
+		}
+	}
+
+	const components = {
+		Pagination: props => {
+			return <TablePagination
+				{...props}
+				rowsPerPageOptions={[5, 10, 20, 30, cirugias.length]}
+			/>
+		},
+		Actions: props => {
+			return <Fragment>
+				<FormControl variant="outlined" className={classes.formControl}>
+					<InputLabel id="simple-select-outlined-hora"></InputLabel>
+					<Select
+						labelId="simple-select-outlined-actions"
+						id="simple-select-outlined-actions"
+						onChange={(e) => onChangeActions(e, props.data)}
+						label="ACCIONES">
+						{
+							props.actions.map((item, index) => {
+
+								return <MenuItem
+									key={index}
+									value={item.tooltip}
+								>{item.tooltip}</MenuItem>
+							})
+						}
+					</Select>
+				</FormControl>
+			</Fragment>
+		}
+	}
 
 	const handleGuardarModalPagos = async (servicio) => {
 		servicio.pagado = servicio.pagos.length > 0;
@@ -408,15 +448,22 @@ const AgendarCirugia = (props) => {
 
 	const handleChangePaymentMethod = (event) => {
 		setValues({
-		  ...values,
-		  forma_pago: event.target.value,
+			...values,
+			forma_pago: event.target.value,
 		});
-	  }
+	}
 
 	const loadFormasPago = async () => {
 		const response = await showAllMetodoPago();
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setFormasPago(response.data);
+		}
+	}
+
+	const loadMedios = async () => {
+		const response = await showAllMedios();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setMedios(response.data);
 		}
 	}
 
@@ -476,6 +523,7 @@ const AgendarCirugia = (props) => {
 		loadDermatologos();
 		loadMateriales();
 		loadFormasPago();
+		loadMedios();
 	}, [sucursal]);
 
 	return (
@@ -507,12 +555,14 @@ const AgendarCirugia = (props) => {
 								options={options}
 								cirugias={cirugias}
 								actions={actions}
+								components={components}
 								cirugia={cirugia}
 								openModal={openModal}
 								empleado={empleado}
 								onClickCancel={handleCloseModal}
 								loadCirugias={loadCirugias}
 								dermatologos={dermatologos}
+								medios={medios}
 								formasPago={formasPago}
 								onChangeMedio={(e) => handleChangeMedio(e)}
 								onChangeDoctors={(e) => handleChangeDoctors(e)}

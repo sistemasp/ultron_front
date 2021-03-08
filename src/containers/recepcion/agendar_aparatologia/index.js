@@ -15,7 +15,7 @@ import {
 import {
 	findAreasByTreatmentServicio,
 } from "../../../services/areas";
-import { Backdrop, CircularProgress, Snackbar } from "@material-ui/core";
+import { Backdrop, CircularProgress, FormControl, InputLabel, MenuItem, Select, Snackbar, TablePagination } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
 import { Formik } from 'formik';
 import EditIcon from '@material-ui/icons/Edit';
@@ -45,7 +45,7 @@ const validationSchema = Yup.object({
 		.required("El tratamiento es requerido"),
 	fecha: Yup.string("Ingresa la fecha de nacimiento")
 		.required("Los nombres del pacientes son requeridos"),
-	hora: Yup.string("Ingresa la direccion")
+	hora: Yup.string("Ingresa la domicilio")
 		.required("Los nombres del pacientes son requeridos")
 });
 
@@ -76,6 +76,7 @@ const AgendarAparatologia = (props) => {
 	const promovendedorSinPromovendedorId = process.env.REACT_APP_PROMOVENDEDOR_SIN_PROMOVENDEDOR_ID;
 	const frecuenciaPrimeraVezId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
 	const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
+	const fisicoMedioId = process.env.REACT_APP_MEDIO_FISICO_ID;
 
 	const [openAlert, setOpenAlert] = useState(false);
 	const [message, setMessage] = useState('');
@@ -111,6 +112,7 @@ const AgendarAparatologia = (props) => {
 		promovendedor: promovendedorSinPromovendedorId,
 		frecuencia: frecuenciaPrimeraVezId,
 		forma_pago: efectivoMetodoPagoId,
+		medio: fisicoMedioId,
 	});
 	const [aparatologias, setAparatologia] = useState([]);
 	const [areas, setAreas] = useState([]);
@@ -140,7 +142,7 @@ const AgendarAparatologia = (props) => {
 		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
 		{ title: 'HORA SALIDA', field: 'hora_salida' },
 		{ title: 'SERVICIO', field: 'servicio.nombre' },
-		{ title: 'TRATAMIENTOS (AREAS)', field: 'show_tratamientos' },
+		{ title: 'TRATAMIENTOS (ÁREAS)', field: 'show_tratamientos' },
 		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		{ title: 'MEDIO', field: 'medio.nombre' },
 		{ title: 'QUIÉN CONFIRMA LLAMADA', field: 'quien_confirma_llamada.nombre' },
@@ -148,7 +150,7 @@ const AgendarAparatologia = (props) => {
 		{ title: 'PROMOVENDEDOR', field: 'promovendedor_nombre' },
 		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
 		{ title: 'TIPO CITA', field: 'tipo_cita.nombre' },
-		{ title: 'COSMETOLOGA', field: 'cosmetologa_nombre' },
+		{ title: 'COSMETÓLOGA', field: 'cosmetologa_nombre' },
 		{ title: 'ESTADO', field: 'status.nombre' },
 		{ title: 'PRECIO', field: 'precio_moneda' },
 		{ title: 'TOTAL', field: 'total_moneda' },
@@ -462,30 +464,83 @@ const AgendarAparatologia = (props) => {
 	const actions = [
 		{
 			icon: PrintIcon,
-			tooltip: 'Imprimir',
+			tooltip: 'IMPRIMIR',
 			onClick: handlePrint
 		},
 		//new Date(anio, mes - 1, dia) < filterDate.fecha_hora  ? 
 		{
 			icon: EditIcon,
-			tooltip: 'Editar cita',
+			tooltip: 'EDITAR CITA',
 			onClick: handleOnClickEditarCita
-		}, //: ''
-		rowData => (
-			rowData.status._id !== pendienteStatusId ? {
-				icon: AttachMoneyIcon,
-				tooltip: rowData.pagado ? 'VER PAGO' : 'PAGAR',
-				onClick: handleClickVerPagos
-			} : ''
-		),
-		rowData => (
-			rowData.status._id === atendidoStatusId ? {
-				icon: EventAvailableIcon,
-				tooltip: 'NUEVA CITA',
-				onClick: handleOnClickNuevaCita
-			} : ''
-		),
+		},
+		{
+			icon: AttachMoneyIcon,
+			tooltip: 'PAGOS',
+			onClick: handleClickVerPagos
+		},
+		{
+			icon: EventAvailableIcon,
+			tooltip: 'NUEVA CITA',
+			onClick: handleOnClickNuevaCita
+		},
+		{
+			icon: EventAvailableIcon,
+			tooltip: 'TRASPASO',
+			//onClick: handleOnClickNuevaCita
+		},
 	];
+
+	const onChangeActions = (e, rowData) => {
+		const action = e.target.value;
+		switch (action) {
+			case 'IMPRIMIR':
+				handlePrint(e, rowData);
+				break;
+			case 'EDITAR CITA':
+				handleOnClickEditarCita(e, rowData);
+				break;
+			case 'NUEVA CITA':
+				handleOnClickNuevaCita(e, rowData);
+				break;
+			case 'PAGOS':
+				handleClickVerPagos(e, rowData);
+				break;
+			case 'TRASPASO':
+				//handleClickTraspaso(e, rowData);
+				break;
+		}
+	}
+
+	const components = {
+		Pagination: props => {
+			return <TablePagination
+				{...props}
+				rowsPerPageOptions={[5, 10, 20, 30, aparatologias.length]}
+			/>
+		},
+		Actions: props => {
+			return <Fragment>
+				<FormControl variant="outlined" className={classes.formControl}>
+					<InputLabel id="simple-select-outlined-hora"></InputLabel>
+					<Select
+						labelId="simple-select-outlined-actions"
+						id="simple-select-outlined-actions"
+						onChange={(e) => onChangeActions(e, props.data)}
+						label="ACCIONES">
+						{
+							props.actions.map((item, index) => {
+
+								return <MenuItem
+									key={index}
+									value={item.tooltip}
+								>{item.tooltip}</MenuItem>
+							})
+						}
+					</Select>
+				</FormControl>
+			</Fragment>
+		}
+	}
 
 	const handleGuardarModalPagos = async (servicio) => {
 		servicio.pagado = servicio.pagos.length > 0;
@@ -504,10 +559,10 @@ const AgendarAparatologia = (props) => {
 
 	const handleChangePaymentMethod = (event) => {
 		setValues({
-		  ...values,
-		  forma_pago: event.target.value,
+			...values,
+			forma_pago: event.target.value,
 		});
-	  }
+	}
 
 	const loadFormasPago = async () => {
 		const response = await showAllMetodoPago();
@@ -634,6 +689,7 @@ const AgendarAparatologia = (props) => {
 								options={options}
 								aparatologias={aparatologias}
 								actions={actions}
+								components={components}
 								cita={cita}
 								openModal={openModal}
 								openModalProxima={openModalProxima}

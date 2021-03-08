@@ -85,6 +85,7 @@ const AgendarConsulta = (props) => {
 	const medioSinCitaId = process.env.REACT_APP_MEDIO_SIN_CITA_ID;
 	const productoConsultaId = process.env.REACT_APP_PRODUCTO_CONSULTA_ID;
 	const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
+	const fisicoMedioId = process.env.REACT_APP_MEDIO_FISICO_ID;
 
 	const date = new Date();
 
@@ -116,6 +117,7 @@ const AgendarConsulta = (props) => {
 		forma_pago: efectivoMetodoPagoId,
 		promovendedor: promovendedorSinPromovendedorId,
 		dermatologo: dermatologoDirectoId,
+		medio: fisicoMedioId,
 	});
 
 	const [consultas, setConsultas] = useState([]);
@@ -153,6 +155,7 @@ const AgendarConsulta = (props) => {
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
 		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
 		{ title: 'HORA SALIDA', field: 'hora_salida' },
+		{ title: 'PRODUCTO', field: 'producto.nombre' },
 		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
 		sucursal._id === sucursalManuelAcunaId ? { title: 'MEDIO', field: 'medio.nombre' } : {},
@@ -290,7 +293,6 @@ const AgendarConsulta = (props) => {
 			dateNow.setMinutes(0);
 			dateNow.setSeconds(0);
 			data.fecha_hora = dateNow;
-			data.medio = medioSinCitaId;
 			data.status = asistioStatusId;
 			data.hora_aplicacion = new Date();
 			// data.quien_confirma_asistencia = empleado._id;

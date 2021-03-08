@@ -33,7 +33,7 @@ const validationSchema = Yup.object({
     .required("Los nombres del pacientes son requeridos"),
   paciente: Yup.string("Ingresa la fecha de nacimiento")
     .required("Los nombres del pacientes son requeridos"),
-  servicio: Yup.string("Ingresa la direccion")
+  servicio: Yup.string("Ingresa la domicilio")
     .required("Los nombres del pacientes son requeridos"),
   tratamiento: Yup.string("Ingresa el telefono")
     .required("Los nombres del pacientes son requeridos"),
@@ -43,7 +43,7 @@ const validationSchema = Yup.object({
     .required("Los nombres del pacientes son requeridos"),
   confirmo: Yup.string("Ingresa la fecha de nacimiento")
     .required("Los nombres del pacientes son requeridos"),
-  quien_confirma: Yup.string("Ingresa la direccion")
+  quien_confirma: Yup.string("Ingresa la domicilio")
     .required("Los nombres del pacientes son requeridos"),
   asistio: Yup.string("Ingresa el telefono")
     .required("Los nombres del pacientes son requeridos"),
@@ -145,10 +145,14 @@ const ModalCita = (props) => {
     hora_aplicacion: cita.hora_aplicacion,
     tratamientos: cita.tratamientos,
     areas: cita.areas,
+    frecuencia: cita.frecuencia,
   });
 
-  const loadHorarios = async () => {
-    const response = await getAllSchedules();
+  const loadHorarios = async (date) => {
+    const dia = date ? date.getDate() : values.fecha_hora.getDate();
+    const mes = Number(date ? date.getMonth() : values.fecha_hora.getMonth());
+    const anio = date ? date.getFullYear() : values.fecha_hora.getFullYear();
+    const response = await findScheduleByDateAndSucursalAndService(dia, mes, anio, sucursal, values.servicio._id);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setHorarios(response.data);
     }
@@ -184,13 +188,18 @@ const ModalCita = (props) => {
 
   const handleChangeFecha = async (date) => {
     setIsLoading(true);
+    if (values.nueva_fecha_hora) {
+      date.setHours(values.nueva_fecha_hora.getHours());
+      date.setMinutes(values.nueva_fecha_hora.getMinutes());
+      date.setSeconds(0);
+    }
     const fechaObservaciones = `${addZero(date.getDate())}/${addZero(Number(date.getMonth() + 1))}/${date.getFullYear()} - ${values.hora} hrs`;
     await setValues({
       ...values,
       nueva_fecha_hora: date,
       observaciones: fechaObservaciones,
     });
-    await loadHorarios(date);
+    loadHorarios(date);
     setIsLoading(false);
   };
 
@@ -198,7 +207,7 @@ const ModalCita = (props) => {
     setIsLoading(true);
     const hora = (e.target.value).split(':');
     const date = new Date(values.nueva_fecha_hora);
-    date.setHours(Number(hora[0])); // -5 por zona horaria
+    date.setHours(Number(hora[0]));
     date.setMinutes(hora[1]);
     date.setSeconds(0);
     const fechaObservaciones = `${addZero(date.getDate())}/${addZero(Number(date.getMonth() + 1))}/${date.getFullYear()} - ${e.target.value} hrs`;
@@ -309,6 +318,7 @@ const ModalCita = (props) => {
       rowData.observaciones = `TRATAMIENTO REAGENDADO ${values.fecha_actual} - ${values.hora_actual} HRS`;
       rowData.fecha_hora = rowData.nueva_fecha_hora;
       let response;
+      console.log("KAOZ", rowData);
       switch (cita.servicio._id) {
         case servicioAparatologiaId:
           response = await createAparatologia(rowData);
@@ -325,7 +335,7 @@ const ModalCita = (props) => {
           consecutivo: response.data.consecutivo,
           tipo_servicio: cita.servicio._id,
           servicio: response.data._id,
-          sucursal: sucursal._id,
+          sucursal: sucursal,
           fecha_hora: new Date(),
           status: response.data.status,
         }
@@ -361,6 +371,7 @@ const ModalCita = (props) => {
         fecha_show: rowData.fecha_show,
         fecha: `${dia}/${mes}/${anio}`
       });
+
       switch (cita.servicio._id) {
         case servicioAparatologiaId:
           await updateAparatologia(cita._id, rowData);
@@ -377,6 +388,7 @@ const ModalCita = (props) => {
       }
     }
     onClose();
+
   }
 
   const handleChangeSesion = e => {
@@ -450,14 +462,6 @@ const ModalCita = (props) => {
   }
 
   useEffect(() => {
-    const loadHorariosByServicio = async () => {
-      const date = new Date(cita.fecha_hora);
-      const response = await findScheduleByDateAndSucursalAndService(date.getDate(), Number(date.getMonth()), date.getFullYear(), cita.sucursal._id, cita.servicio._id);
-      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-        response.data.push({ hora: values.hora });
-        setHorarios(response.data);
-      }
-    }
 
     const loadPromovendedores = async () => {
       const response = await findEmployeesByRolId(promovendedorRolId);
@@ -498,7 +502,7 @@ const ModalCita = (props) => {
 
     setIsLoading(true);
     loadAreas(cita);
-    loadHorariosByServicio();
+    loadHorarios(new Date());
     loadPromovendedores();
     loadCosmetologas();
     loadDoctores();

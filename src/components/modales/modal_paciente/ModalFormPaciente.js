@@ -87,11 +87,11 @@ const ModalFormPaciente = (props) => {
               <Grid item xs={12}>
                 <TextField
                 className={classes.textField}
-                name="direccion"
-                helperText={touched.direccion ? errors.direccion : ""}
-                error={Boolean(errors.direccion)}
+                name="domicilio"
+                helperText={touched.domicilio ? errors.domicilio : ""}
+                error={Boolean(errors.domicilio)}
                 label="Direccion"
-                value={values.direccion}
+                value={values.domicilio}
                 onChange={handleChange}
                 variant="outlined" />
               </Grid>

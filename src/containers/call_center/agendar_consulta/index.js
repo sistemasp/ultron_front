@@ -76,6 +76,7 @@ const AgendarConsulta = (props) => {
 	const medioSinCitaId = process.env.REACT_APP_MEDIO_SIN_CITA_ID;
 	const productoConsultaId = process.env.REACT_APP_PRODUCTO_CONSULTA_ID;
 	const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
+	const callCenterMedioId = process.env.REACT_APP_MEDIO_CALL_CENTER_ID;
 
 	const date = new Date();
 
@@ -107,6 +108,7 @@ const AgendarConsulta = (props) => {
 		forma_pago: efectivoMetodoPagoId,
 		promovendedor: promovendedorSinPromovendedorId,
 		dermatologo: dermatologoDirectoId,
+		medio: callCenterMedioId,
 	});
 
 	const [consultas, setConsultas] = useState([]);

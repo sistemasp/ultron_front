@@ -2,6 +2,8 @@ import React, { Fragment } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { TextField, Button, Grid, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
+import myStyles from '../../../css';
+import { ButtonCustom } from '../../basic/ButtonCustom';
 
 function getModalStyle() {
   const top = 50;
@@ -16,65 +18,28 @@ function getModalStyle() {
   };
 }
 
-const useStyles = makeStyles(theme => ({
-  paper: {
-    position: 'absolute',
-    width: 400,
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-  },
-  textField: {
-    width: '100%',
-  },
-  button: {
-    width: '100%',
-    color: '#FFFFFF',
-  },
-  formControl: {
-    minWidth: 120,
-    width: '100%',
-  },
-  label: {
-    marginTop: '0px',
-    marginBottom: '0px',
-  },
-}));
-
-const ModalFormRazonSocial = (props) => {
-  const classes = useStyles();
+const ModalFormPacienteDomicilio = (props) => {
+  const classes = myStyles();
 
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
 
   const {
     values,
-    errors,
     touched,
     handleSubmit,
-    handleChange,
-    isValid,
     onClickCancel,
-    onClickGuardar,
     estados,
     municipios,
     ciudades,
     colonias,
     open,
+    onChange,
     onChangeEstado,
     onChangeMunicipio,
     onChangeColonia,
     onClickBuscar,
-    onChangeCP,
-    onChangeDomicilio,
-    onChangeEmail,
-    onChangeNombre,
-    onChangeNumeroExterior,
-    onChangeNumeroInterior,
-    onChangeRfc,
-    onChangeTelefono,
-    onChangeCiudad,
+    onClickGuardar,
   } = props;
 
   return (
@@ -89,81 +54,77 @@ const ModalFormRazonSocial = (props) => {
               <Grid item xs={12}>
                 <TextField
                   className={classes.textField}
-                  name="rfc"
-                  helperText={touched.rfc ? errors.rfc : ""}
-                  error={Boolean(errors.rfc)}
-                  label="RFC"
-                  value={values.rfc}
-                  onChange={onChangeRfc}
+                  name="nombres"
+                  label="NOMBRES"
+                  value={values.nombres}
+                  onChange={onChange}
+                  variant="outlined" />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  className={classes.textField}
+                  name="apellidos"
+                  label="APELLIDOS"
+                  value={values.apellidos}
+                  onChange={onChange}
+                  variant="outlined" />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  className={classes.textField}
+                  name="fecha_nacimiento"
+                  label="FECHA DE NACIMIENTO"
+                  value={values.fecha_nacimiento}
+                  onChange={onChange}
                   inputProps={{
-                    maxLength: "13"
+                    maxLength: "10",
+                    placeholder: "dd/mm/aaaa"
                   }}
                   variant="outlined" />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   className={classes.textField}
-                  name="nombre_completo"
-                  helperText={touched.nombre_completo ? errors.nombre_completo : ""}
-                  error={Boolean(errors.nombre_completo)}
-                  label="NOMBRE COMPLETO"
-                  value={values.nombre_completo}
-                  onChange={onChangeNombre}
-                  variant="outlined" />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  className={classes.textField}
                   name="domicilio"
-                  helperText={touched.domicilio ? errors.domicilio : ""}
-                  error={Boolean(errors.domicilio)}
                   label="DOMICILIO"
                   value={values.domicilio}
-                  onChange={onChangeDomicilio}
+                  onChange={onChange}
                   variant="outlined" />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={6}>
                 <TextField
                   className={classes.textField}
                   name="numero_exterior"
-                  helperText={touched.numero_exterior ? errors.numero_exterior : ""}
-                  error={Boolean(errors.numero_exterior)}
                   label="NUMERO EXTERIOR"
                   value={values.numero_exterior}
-                  onChange={onChangeNumeroExterior}
+                  onChange={onChange}
                   variant="outlined" />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={6}>
                 <TextField
                   className={classes.textField}
                   name="numero_interior"
-                  helperText={touched.numero_interior ? errors.numero_interior : ""}
-                  error={Boolean(errors.numero_interior)}
                   label="NUMERO INTERIOR"
                   value={values.numero_interior}
-                  onChange={onChangeNumeroInterior}
+                  onChange={onChange}
                   variant="outlined" />
               </Grid>
               <Grid item xs={12} sm={6} >
                 <TextField
                   className={classes.textField}
                   name="codigo_postal"
-                  helperText={touched.codigo_postal ? errors.codigo_postal : ""}
-                  error={Boolean(errors.codigo_postal)}
                   label="CÓDIGO POSTAL"
                   value={values.codigo_postal}
-                  onChange={onChangeCP}
+                  onChange={onChange}
                   variant="outlined" />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <Button
+              <Grid item xs={12} sm={6} className={classes.grid_center}>
+                <ButtonCustom
                   className={classes.button}
                   color="primary"
                   variant="contained"
-                  onClick={(e) => onClickBuscar(e)}
-                  disabled={!isValid} >
-                  BUSCAR
-                </Button>
+                  onClick={onClickBuscar}
+                  text="BUSCAR" />
               </Grid>
 
               {
@@ -176,7 +137,7 @@ const ModalFormRazonSocial = (props) => {
                       <h3 className={classes.label}>MUNICIPIO: {values.municipio}</h3>
                     </Grid>
                     <Grid item xs={12}>
-                      <h3 className={classes.label}>CIUDAD : {values.ciudad}</h3>
+                      <h3 className={classes.label}>CIUDAD: {values.ciudad}</h3>
                     </Grid>
                   </Fragment> :
                   <Fragment>
@@ -187,9 +148,8 @@ const ModalFormRazonSocial = (props) => {
                           labelId="simple-select-outlined-estados"
                           id="simple-select-outlined-estados"
                           value={values.estado}
-                          error={Boolean(errors.estados)}
-                          isSearchable={true}
                           onChange={onChangeEstado}
+                          isSearchable={true}
                           label="ESTADOS" >
                           {estados.sort().map((item, index) => <MenuItem key={index} value={item}>{item}</MenuItem>)}
                         </Select>
@@ -202,7 +162,6 @@ const ModalFormRazonSocial = (props) => {
                           labelId="simple-select-outlined-municipio"
                           id="simple-select-outlined-municipio"
                           value={values.municipio}
-                          error={Boolean(errors.municipio)}
                           onChange={onChangeMunicipio}
                           label="MUNICIPIO" >
                           {municipios.sort().map((item, index) => <MenuItem key={index} value={item}>{item}</MenuItem>)}
@@ -213,10 +172,9 @@ const ModalFormRazonSocial = (props) => {
                       <TextField
                         className={classes.textField}
                         name="ciudad"
-                        helperText={touched.ciudad ? errors.ciudad : ""}
                         label="CIUDAD"
                         value={values.ciudad}
-                        onChange={onChangeCiudad}
+                        onChange={onChange}
                         variant="outlined" />
                     </Grid>
                   </Fragment>
@@ -229,7 +187,6 @@ const ModalFormRazonSocial = (props) => {
                     labelId="simple-select-outlined-colonia"
                     id="simple-select-outlined-colonia"
                     value={values.colonia}
-                    error={Boolean(errors.colonia)}
                     onChange={onChangeColonia}
                     label="COLONIA" >
                     {colonias.sort().map((item, index) => <MenuItem key={index} value={item}>{item.toUpperCase()}</MenuItem>)}
@@ -240,11 +197,9 @@ const ModalFormRazonSocial = (props) => {
                 <TextField
                   className={classes.textField}
                   name="telefono"
-                  helperText={touched.telefono ? errors.telefono : ""}
-                  error={Boolean(errors.telefono)}
                   label="TELÉFONO"
                   value={values.telefono}
-                  onChange={onChangeTelefono}
+                  onChange={onChange}
                   inputProps={{
                     maxLength: "10",
                   }}
@@ -254,31 +209,26 @@ const ModalFormRazonSocial = (props) => {
                 <TextField
                   className={classes.textField}
                   name="email"
-                  helperText={touched.email ? errors.email : ""}
-                  error={Boolean(errors.email)}
                   label="EMAIL"
                   value={values.email}
-                  onChange={onChangeEmail}
+                  onChange={onChange}
                   variant="outlined" />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Button
+                <ButtonCustom
                   className={classes.button}
                   color="primary"
                   variant="contained"
-                  onClick={(e) => onClickGuardar(e, values)}
-                  disabled={!isValid} >
-                  GUARDAR
-                </Button>
+                  onClick={() => onClickGuardar()}
+                  text="GUARDAD" />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Button
+                <ButtonCustom
                   className={classes.button}
                   color="secondary"
                   variant="contained"
-                  onClick={onClickCancel} >
-                  CANCELAR
-                </Button>
+                  onClick={onClickCancel}
+                  text="CANCELAR" />
               </Grid>
             </Grid>
           </form>
@@ -288,4 +238,4 @@ const ModalFormRazonSocial = (props) => {
   );
 }
 
-export default ModalFormRazonSocial;
+export default ModalFormPacienteDomicilio;

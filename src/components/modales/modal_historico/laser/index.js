@@ -30,7 +30,7 @@ const TabLaser = (props) => {
     { title: 'FECHA', field: 'fecha_show' },
     { title: 'HORA', field: 'hora' },
     { title: 'SESION', field: 'status.nombre' },
-    { title: 'AREA', field: 'status.nombre' },
+    { title: 'ÁREA', field: 'status.nombre' },
     { title: 'INTENSIDAD', field: 'status.nombre' },
     { title: 'PROGRAMACIÓN', field: 'status.nombre' },
     { title: 'TIPO CITA', field: 'tipo_cita.nombre' },

@@ -8,13 +8,14 @@ import {
 	showAllMaterialEsteticas,
 	showAllFrecuencias,
 	showAllMetodoPago,
+	showAllMedios,
 } from "../../../services";
 import {
 	createEstetica,
 	findEsteticaByDateAndSucursal,
 	updateEstetica
 } from "../../../services/esteticas";
-import { Backdrop, CircularProgress, Snackbar } from "@material-ui/core";
+import { Backdrop, CircularProgress, FormControl, InputLabel, MenuItem, Select, Snackbar, TablePagination } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
 import { Formik } from 'formik';
 import EditIcon from '@material-ui/icons/Edit';
@@ -41,7 +42,7 @@ const validationSchema = Yup.object({
 		.required("El servicio es requerido."),
 	fecha: Yup.string("Ingresa la fecha de nacimiento")
 		.required("Los nombres del pacientes son requeridos"),
-	hora: Yup.string("Ingresa la direccion")
+	hora: Yup.string("Ingresa la domicilio")
 		.required("Los nombres del pacientes son requeridos")
 });
 
@@ -67,6 +68,7 @@ const AgendarEstetica = (props) => {
 	const frecuenciaReconsultaId = process.env.REACT_APP_FRECUENCIA_RECONSULTA_ID;
 	const productoAplicacionToxinaBotulinicaDituroxalId = process.env.REACT_APP_PRO_APL_TOX_BOT_DIT_ID;
 	const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
+	const fisicoMedioId = process.env.REACT_APP_MEDIO_FISICO_ID;
 
 	const [openAlert, setOpenAlert] = useState(false);
 	const [message, setMessage] = useState('');
@@ -76,6 +78,7 @@ const AgendarEstetica = (props) => {
 	const [disableDate, setDisableDate] = useState(false);
 	const [frecuencias, setFrecuencias] = useState([]);
 	const [productos, setProductos] = useState([]);
+	const [medios, setMedios] = useState([]);
 	const [toxinasRellenos, setToxinaRellenos] = useState([]);
 	const [formasPago, setFormasPago] = useState([]);
 
@@ -93,6 +96,7 @@ const AgendarEstetica = (props) => {
 		descuento_clinica: 0,
 		descuento_dermatologo: 0,
 		forma_pago: efectivoMetodoPagoId,
+		medio: fisicoMedioId,
 	});
 	const [esteticas, setEsteticas] = useState([]);
 	const [openModal, setOpenModal] = useState(false);
@@ -320,27 +324,65 @@ const AgendarEstetica = (props) => {
 			tooltip: 'IMPRIMIR',
 			onClick: handlePrint
 		},
-		//new Date(anio, mes - 1, dia) < filterDate.fecha_hora  ? 
 		{
 			icon: EditIcon,
 			tooltip: 'EDITAR ESTÉTICA',
 			onClick: handleOnClickEditarCita
-		}, //: ''
-		rowData => (
-			rowData.status._id !== pendienteStatusId ? {
-				icon: AttachMoneyIcon,
-				tooltip: rowData.pagado ? 'VER PAGO' : 'PAGAR',
-				onClick: handleClickVerPagos
-			} : ''
-		),
-		/*rowData => (
-			rowData.status._id === atendidoStatusId ? {
-				icon: EventAvailableIcon,
-				tooltip: 'NUEVA ESTÉTICA',
-				onClick: handleOnClickNuevaCita
-			} : ''
-		),*/
+		},
+		{
+			icon: AttachMoneyIcon,
+			tooltip: 'PAGOS',
+			onClick: handleClickVerPagos
+		},
 	];
+
+
+
+	const onChangeActions = (e, rowData) => {
+		const action = e.target.value;
+		switch (action) {
+			case 'IMPRIMIR':
+				handlePrint(e, rowData);
+				break;
+			case 'EDITAR ESTÉTICA':
+				handleOnClickEditarCita(e, rowData);
+				break;
+			case 'PAGOS':
+				handleClickVerPagos(e, rowData);
+				break;
+		}
+	}
+
+	const components = {
+		Pagination: props => {
+			return <TablePagination
+				{...props}
+				rowsPerPageOptions={[5, 10, 20, 30, esteticas.length]}
+			/>
+		},
+		Actions: props => {
+			return <Fragment>
+				<FormControl variant="outlined" className={classes.formControl}>
+					<InputLabel id="simple-select-outlined-hora"></InputLabel>
+					<Select
+						labelId="simple-select-outlined-actions"
+						id="simple-select-outlined-actions"
+						onChange={(e) => onChangeActions(e, props.data)}
+						label="ACCIONES">
+						{
+							props.actions.map((item, index) => {
+
+								return <MenuItem
+									key={index}
+									value={item.tooltip}
+								>{item.tooltip}</MenuItem>
+							})
+						}
+					</Select>
+				</FormControl>
+			</Fragment>
+		}
+	}
 
 	const handleGuardarModalPagos = async (servicio) => {
 		servicio.pagado = servicio.pagos.length > 0;
@@ -429,10 +471,10 @@ const AgendarEstetica = (props) => {
 
 	const handleChangePaymentMethod = (event) => {
 		setValues({
-		  ...values,
-		  forma_pago: event.target.value,
+			...values,
+			forma_pago: event.target.value,
 		});
-	  }
+	}
 
 	const loadFormasPago = async () => {
 		const response = await showAllMetodoPago();
@@ -440,6 +482,14 @@ const AgendarEstetica = (props) => {
 			setFormasPago(response.data);
 		}
 	}
+
+	const loadMedios = async () => {
+		const response = await showAllMedios();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setMedios(response.data);
+		}
+	}
+
 
 	useEffect(() => {
 		const loadToxinasRellenos = async () => {
@@ -505,6 +555,7 @@ const AgendarEstetica = (props) => {
 		loadHorariosByServicio(new Date(), esteticaServicioId);
 		loadDermatologos();
 		loadMateriales();
+		loadMedios();
 	}, [sucursal]);
 
 	return (
@@ -539,6 +590,7 @@ const AgendarEstetica = (props) => {
 								options={options}
 								esteticas={esteticas}
 								actions={actions}
+								components={components}
 								estetica={estetica}
 								openModal={openModal}
 								empleado={empleado}
@@ -565,6 +617,7 @@ const AgendarEstetica = (props) => {
 								frecuencias={frecuencias}
 								onChangeProductos={(e) => handleChangeProductos(e)}
 								productos={productos}
+								medios={medios}
 								frecuenciaReconsultaId={frecuenciaReconsultaId}
 								{...props} />
 						}

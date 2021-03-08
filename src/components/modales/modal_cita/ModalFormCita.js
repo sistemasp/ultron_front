@@ -148,7 +148,7 @@ const ModalFormCita = (props) => {
                       displayValue="nombre" // Property name to display in the dropdown options
                       onSelect={(e) => onChangeAreas(e, tratamientoValue)} // Function will trigger on select event
                       onRemove={(e) => onChangeAreas(e, tratamientoValue)} // Function will trigger on remove event
-                      placeholder={`AREAS ${tratamientoValue.nombre}`}
+                      placeholder={`ÁREAS ${tratamientoValue.nombre}`}
                       selectedValues={tratamientoValue.areasSeleccionadas} // Preselected value to persist in dropdown
                     />
                   </Grid>
@@ -205,6 +205,7 @@ const ModalFormCita = (props) => {
                           id="simple-select-outlined-hora"
                           value={values.hora}
                           error={Boolean(errors.hora)}
+                          disabled={!values.nueva_fecha_hora}
                           onChange={onChangeHora}
                           label="HORA" >
                           {horarios.sort().map((item, index) => <MenuItem key={index} value={item.hora}>{item.hora}</MenuItem>)}
@@ -309,16 +310,16 @@ const ModalFormCita = (props) => {
               <Grid item xs={12}>
                 {
                   /* values.cosmetologa */ false ?
-                    <h3 className={classes.label}>COSMETOLOGA: {values.cosmetologa.nombre}</h3> :
+                    <h3 className={classes.label}>COSMETÓLOGA: {values.cosmetologa.nombre}</h3> :
                     <FormControl variant="outlined" className={classes.formControl}>
-                      <InputLabel id="simple-select-outlined-cosmetologa">COSMETOLOGA</InputLabel>
+                      <InputLabel id="simple-select-outlined-cosmetologa">COSMETÓLOGA</InputLabel>
                       <Select
                         labelId="simple-select-outlined-cosmetologa"
                         id="simple-select-outlined-cosmetologa"
                         value={values.cosmetologa}
                         error={Boolean(errors.cosmetologa)}
                         onChange={onChangeCosmetologa}
-                        label="COSMETOLOGA" >
+                        label="COSMETÓLOGA" >
                         {cosmetologas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
                       </Select>
                     </FormControl>

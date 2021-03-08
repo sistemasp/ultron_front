@@ -17,7 +17,7 @@ import {
 import {
 	findAreaById, findAreasByTreatmentServicio,
 } from "../../../services/areas";
-import { Backdrop, CircularProgress, Snackbar } from "@material-ui/core";
+import { Backdrop, CircularProgress, FormControl, InputLabel, MenuItem, Select, Snackbar, TablePagination } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
 import { Formik } from 'formik';
 import EditIcon from '@material-ui/icons/Edit';
@@ -46,7 +46,7 @@ const validationSchema = Yup.object({
 		.required("El tratamiento es requerido"),
 	fecha: Yup.string("Ingresa la fecha de nacimiento")
 		.required("Los nombres del pacientes son requeridos"),
-	hora: Yup.string("Ingresa la direccion")
+	hora: Yup.string("Ingresa la domicilio")
 		.required("Los nombres del pacientes son requeridos")
 });
 
@@ -77,6 +77,7 @@ const AgendarDermapen = (props) => {
 	const dermapenAreaId = process.env.REACT_APP_DERMAPEN_AREA_ID;
 	const productoMicropuncionId = process.env.REACT_APP_PRODUCTO_MICROPUNCION_ID;
 	const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
+	const fisicoMedioId = process.env.REACT_APP_MEDIO_FISICO_ID;
 
 	const [openAlert, setOpenAlert] = useState(false);
 	const [message, setMessage] = useState('');
@@ -107,6 +108,7 @@ const AgendarDermapen = (props) => {
 		descuento_clinica: 0,
 		descuento_dermatologo: 0,
 		forma_pago: efectivoMetodoPagoId,
+		medio: fisicoMedioId,
 	});
 	const [dermapens, setDermapens] = useState([]);
 	const [areas, setAreas] = useState([]);
@@ -369,27 +371,71 @@ const AgendarDermapen = (props) => {
 			tooltip: 'IMPRIMIR',
 			onClick: handlePrint
 		},
-		//new Date(anio, mes - 1, dia) < filterDate.fecha_hora  ? 
 		{
 			icon: EditIcon,
 			tooltip: 'EDITAR DERMAPEN',
 			onClick: handleOnClickEditarCita
-		}, //: ''
-		rowData => (
-			rowData.status._id !== pendienteStatusId ? {
-				icon: AttachMoneyIcon,
-				tooltip: rowData.pagado ? 'VER PAGO' : 'PAGAR',
-				onClick: handleClickVerPagos
-			} : ''
-		),
-		rowData => (
-			rowData.status._id === atendidoStatusId ? {
-				icon: EventAvailableIcon,
-				tooltip: 'NUEVO DERMAPEN',
-				onClick: handleOnClickNuevaCita
-			} : ''
-		),
+		},
+		{
+			icon: AttachMoneyIcon,
+			tooltip: 'PAGOS',
+			onClick: handleClickVerPagos
+		},
+		{
+			icon: EventAvailableIcon,
+			tooltip: 'NUEVO DERMAPEN',
+			onClick: handleOnClickNuevaCita
+		},
 	];
+
+	const onChangeActions = (e, rowData) => {
+		const action = e.target.value;
+		switch (action) {
+			case 'IMPRIMIR':
+				handlePrint(e, rowData);
+				break;
+			case 'EDITAR DERMAPEN':
+				handleOnClickEditarCita(e, rowData);
+				break;
+			case 'NUEVA DERMAPEN':
+				handleOnClickNuevaCita(e, rowData);
+				break;
+			case 'PAGOS':
+				handleClickVerPagos(e, rowData);
+				break;
+		}
+	}
+
+	const components = {
+		Pagination: props => {
+			return <TablePagination
+				{...props}
+				rowsPerPageOptions={[5, 10, 20, 30, dermapens.length]}
+			/>
+		},
+		Actions: props => {
+			return <Fragment>
+				<FormControl variant="outlined" className={classes.formControl}>
+					<InputLabel id="simple-select-outlined-hora"></InputLabel>
+					<Select
+						labelId="simple-select-outlined-actions"
+						id="simple-select-outlined-actions"
+						onChange={(e) => onChangeActions(e, props.data)}
+						label="ACCIONES">
+						{
+							props.actions.map((item, index) => {
+
+								return <MenuItem
+									key={index}
+									value={item.tooltip}
+								>{item.tooltip}</MenuItem>
+							})
+						}
+					</Select>
+				</FormControl>
+			</Fragment>
+		}
+	}
 
 	const handleGuardarModalPagos = async (servicio) => {
 		servicio.pagado = servicio.pagos.length > 0;
@@ -474,10 +520,10 @@ const AgendarDermapen = (props) => {
 
 	const handleChangePaymentMethod = (event) => {
 		setValues({
-		  ...values,
-		  forma_pago: event.target.value,
+			...values,
+			forma_pago: event.target.value,
 		});
-	  }
+	}
 
 	const loadFormasPago = async () => {
 		const response = await showAllMetodoPago();
@@ -603,6 +649,7 @@ const AgendarDermapen = (props) => {
 								options={options}
 								dermapens={dermapens}
 								actions={actions}
+								components={components}
 								dermapen={dermapen}
 								openModal={openModal}
 								empleado={empleado}

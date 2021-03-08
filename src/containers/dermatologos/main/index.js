@@ -59,12 +59,14 @@ const MenuMainDermatologos = (props) => {
 
 	return (
 		<Fragment>
-			<MainDermatologosContainer
-				dermatologo={dermatologo}
-				sucursal={sucursal}
-				value={value}
-				onChangeTab={handleChangeTab}
-				onClickLogout={handleLogout} />
+			<Fragment>
+				<MainDermatologosContainer
+					dermatologo={dermatologo}
+					sucursal={sucursal}
+					value={value}
+					onChangeTab={handleChangeTab}
+					onClickLogout={handleLogout} />
+			</Fragment>
 			<Snackbar open={openAlert} autoHideDuration={5000} onClose={handleCloseAlert}>
 				<Alert onClose={handleCloseAlert} severity={severity}>
 					{message}

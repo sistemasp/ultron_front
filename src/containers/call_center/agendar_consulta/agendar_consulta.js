@@ -79,7 +79,7 @@ export const AgendarConsultaContainer = (props) => {
     openModalProxima,
     openModalTraspaso,
   } = props;
-  
+
   return (
     <Fragment>
       {
@@ -144,7 +144,7 @@ export const AgendarConsultaContainer = (props) => {
             setMessage={setMessage}
             setOpenAlert={setOpenAlert}
             tipoServicioId={tipoServicioId}
-            loadConsultas={loadConsultas}/>
+            loadConsultas={loadConsultas} />
           : ''
       }
       {
@@ -157,7 +157,7 @@ export const AgendarConsultaContainer = (props) => {
           : ''
       }
       <Paper>
-      <Grid container spacing={3}>
+        <Grid container spacing={3}>
           <Grid item xs={12} sm={8}>
             <h1>{paciente.nombres ? `${paciente.nombres} ${paciente.apellidos}` : 'SELECCIONA UN PACIENTE'}</h1>
           </Grid>
@@ -266,6 +266,19 @@ export const AgendarConsultaContainer = (props) => {
                 </FormControl>
               </Grid>
           }
+          <Grid item xs={12} sm={2}>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel id="simple-select-outlined-tipo-cita">MEDIO</InputLabel>
+              <Select
+                labelId="simple-select-outlined-tipo-cita"
+                id="simple-select-outlined-tipo-cita"
+                value={values.medio}
+                onChange={onChangeMedio}
+                label="MEDIO" >
+                {medios.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+              </Select>
+            </FormControl>
+          </Grid>
           {
             values.frecuencia === frecuenciaReconsultaId
               ? <Grid item xs={12} sm={2}>
@@ -286,24 +299,7 @@ export const AgendarConsultaContainer = (props) => {
               </Grid>
 
           }
-          {sucursal._id === process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID ?
-            <Fragment>
-              <Grid item xs={12} sm={2}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-tipo-cita">MEDIO</InputLabel>
-                  <Select
-                    labelId="simple-select-outlined-tipo-cita"
-                    id="simple-select-outlined-tipo-cita"
-                    value={values.medio}
-                    onChange={onChangeMedio}
-                    label="MEDIO" >
-                    {medios.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                  </Select>
-                </FormControl>
-              </Grid>
-            </Fragment>
-            : ''}
-            <Grid item xs={12} sm={2}>
+          <Grid item xs={12} sm={2}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="simple-select-outlined-payment">FORMA DE PAGO</InputLabel>
               <Select

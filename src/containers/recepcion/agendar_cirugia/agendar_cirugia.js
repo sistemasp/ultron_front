@@ -277,6 +277,19 @@ export const AgendarCirugiaContainer = (props) => {
 						</FormControl>
 					</Grid>
 					<Grid item xs={12} sm={2}>
+						<FormControl variant="outlined" className={classes.formControl}>
+							<InputLabel id="simple-select-outlined-tipo-dermapen">MEDIO</InputLabel>
+							<Select
+								labelId="simple-select-outlined-tipo-dermapen"
+								id="simple-select-outlined-tipo-dermapen"
+								value={values.medio}
+								onChange={onChangeMedio}
+								label="MEDIO" >
+								{medios.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+							</Select>
+						</FormControl>
+					</Grid>
+					<Grid item xs={12} sm={2}>
 						<MuiPickersUtilsProvider utils={DateFnsUtils}>
 							<Grid
 								container

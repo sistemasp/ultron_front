@@ -15,6 +15,8 @@ const InicioDermatologos = (props) => {
   const [openAlert, setOpenAlert] = useState(false);
   const [message, setMessage] = useState('');
   const [severity, setSeverity] = useState('success');
+  const [openModalPacienteDomicilio, setOpenModalPacienteDomicilio] = useState(false);
+  const [openModalRecetar, setOpenModalRecetar] = useState(false);
 
   const {
     dermatologo,
@@ -22,8 +24,6 @@ const InicioDermatologos = (props) => {
   } = props;
 
   const classes = props;
-
-  console.log("KAOZ", consultorio);
 
   const handleCloseAlert = () => {
     setOpenAlert(false);
@@ -39,6 +39,22 @@ const InicioDermatologos = (props) => {
 
   }
 
+  const handleClickCompletarDatos = (i) => {
+    setOpenModalPacienteDomicilio(true);
+  }
+
+  const handleClickRecetar = () => {
+    setOpenModalRecetar(true);
+  }
+
+  const handleClosePacienteDomicilio = () => {
+    setOpenModalPacienteDomicilio(false);
+  }
+
+  const handleCloseRecetar = () => {
+    setOpenModalRecetar(false);
+  }
+
   useEffect(() => {
     findConsultorio();
   }, []);
@@ -48,14 +64,20 @@ const InicioDermatologos = (props) => {
       {
         !isLoading ?
           <Fragment>
-            <Grid container className={classes.root} justify="center" spacing={3}>
-              <Grid item xs={3}>
-                <InicioContainer
-                  dermatologo={dermatologo}
-                  sucursal={sucursal}
-                  consultorio={consultorio} />
-              </Grid>
-            </Grid>
+            <InicioContainer
+              dermatologo={dermatologo}
+              sucursal={sucursal}
+              consultorio={consultorio}
+              onClickCompletarDatos={handleClickCompletarDatos}
+              onClickRecetar={handleClickRecetar}
+              openModalPacienteDomicilio={openModalPacienteDomicilio}
+              onClosePacienteDomicilio={handleClosePacienteDomicilio}
+              openModalRecetar={openModalRecetar}
+              onCloseRecetar={handleCloseRecetar}
+              setMessage={setMessage}
+              setSeverity={setSeverity}
+              setOpenAlert={setOpenAlert} 
+              findConsultorio={findConsultorio} />
             <Snackbar open={openAlert} autoHideDuration={5000} onClose={handleCloseAlert}>
               <Alert onClose={handleCloseAlert} severity={severity}>
                 {message}

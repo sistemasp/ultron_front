@@ -76,7 +76,7 @@ const Consultorios = (props) => {
 
 	const columnsCabina = [
 		{ title: 'NOMBRE', field: 'nombre' },
-		{ title: 'COSMETOLOGA', field: 'cosmetologa_nombre' },
+		{ title: 'COSMETÓLOGA', field: 'cosmetologa_nombre' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 	];
 

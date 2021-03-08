@@ -224,7 +224,7 @@ export const AgendarDermapenContainer = (props) => {
 							displayValue="nombre" // Property name to display in the dropdown options
 							onSelect={(e) => onChangeAreas(e)} // Function will trigger on select event
 							onRemove={(e) => onChangeAreas(e)} // Function will trigger on remove event
-							placeholder={`AREAS`}
+							placeholder={`ÁREAS`}
 							selectedValues={values.areas} // Preselected value to persist in dropdown
 						/>
 					</Grid>
@@ -281,6 +281,19 @@ export const AgendarDermapenContainer = (props) => {
 					</Grid>
 					<Grid item xs={12} sm={2}>
 						<FormControl variant="outlined" className={classes.formControl}>
+							<InputLabel id="simple-select-outlined-tipo-dermapen">MEDIO</InputLabel>
+							<Select
+								labelId="simple-select-outlined-tipo-dermapen"
+								id="simple-select-outlined-tipo-dermapen"
+								value={values.medio}
+								onChange={onChangeMedio}
+								label="MEDIO" >
+								{medios.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+							</Select>
+						</FormControl>
+					</Grid>
+					<Grid item xs={12} sm={2}>
+						<FormControl variant="outlined" className={classes.formControl}>
 							<InputLabel id="simple-select-outlined-promovendedor">PROMOVENDEDOR</InputLabel>
 							<Select
 								labelId="simple-select-outlined-promovendedor"
@@ -331,19 +344,6 @@ export const AgendarDermapenContainer = (props) => {
 								disabled={!values.fecha_hora}
 								label="HORA" >
 								{horarios.sort().map((item, index) => <MenuItem key={index} value={item.hora}>{item.hora}</MenuItem>)}
-							</Select>
-						</FormControl>
-					</Grid>
-					<Grid item xs={12} sm={2}>
-						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-tipo-dermapen">MEDIO</InputLabel>
-							<Select
-								labelId="simple-select-outlined-tipo-dermapen"
-								id="simple-select-outlined-tipo-dermapen"
-								value={values.medio}
-								onChange={onChangeMedio}
-								label="MEDIO" >
-								{medios.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
 							</Select>
 						</FormControl>
 					</Grid>

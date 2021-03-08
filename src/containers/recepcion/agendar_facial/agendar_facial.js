@@ -185,6 +185,19 @@ export const AgendarFacialContainer = (props) => {
 					</Grid>
 				</Grid>
 				<Grid container spacing={3}>
+					<Grid item xs={12} sm={2}>
+						<FormControl variant="outlined" className={classes.formControl}>
+							<InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
+							<Select
+								labelId="simple-select-outlined-frecuencia"
+								id="simple-select-outlined-frecuencia"
+								value={values.frecuencia}
+								onChange={onChangeFrecuencia}
+								label="FRECUENCIA" >
+								{frecuencias.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+							</Select>
+						</FormControl>
+					</Grid>
 					{
 						true ?
 							<Grid item xs={12} sm={2}>
@@ -219,25 +232,12 @@ export const AgendarFacialContainer = (props) => {
 									displayValue="nombre" // Property name to display in the dropdown options
 									onSelect={(e) => onChangeAreas(e, tratamientoValue)} // Function will trigger on select event
 									onRemove={(e) => onChangeAreas(e, tratamientoValue)} // Function will trigger on remove event
-									placeholder={`AREAS ${tratamientoValue.nombre}`}
+									placeholder={`ÁREAS ${tratamientoValue.nombre}`}
 									selectedValues={tratamientoValue.areasSeleccionadas} // Preselected value to persist in dropdown
 								/>
 							</Grid>
 						})
 					}
-					<Grid item xs={12} sm={2}>
-						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
-							<Select
-								labelId="simple-select-outlined-frecuencia"
-								id="simple-select-outlined-frecuencia"
-								value={values.frecuencia}
-								onChange={onChangeFrecuencia}
-								label="FRECUENCIA" >
-								{frecuencias.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-							</Select>
-						</FormControl>
-					</Grid>
 					<Grid item xs={12} sm={2}>
 						<FormControl variant="outlined" className={classes.formControl}>
 							<InputLabel id="simple-select-outlined-hora">DERMATÓLOGO</InputLabel>
@@ -251,18 +251,31 @@ export const AgendarFacialContainer = (props) => {
 							</Select>
 						</FormControl>
 					</Grid>
+					<Grid item xs={12} sm={2}>
+						<FormControl variant="outlined" className={classes.formControl}>
+							<InputLabel id="simple-select-outlined-tipo-cita">MEDIO</InputLabel>
+							<Select
+								labelId="simple-select-outlined-tipo-cita"
+								id="simple-select-outlined-tipo-cita"
+								value={values.medio}
+								onChange={onChangeMedio}
+								label="MEDIO" >
+								{medios.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+							</Select>
+						</FormControl>
+					</Grid>
 					{
 						dermatologoDirectoId !== values.dermatologo ?
 							<Grid item xs={12} sm={2}>
 								<FormControl variant="outlined" className={classes.formControl}>
-									<InputLabel id="simple-select-outlined-tipo-cita">TIPO CITA</InputLabel>
+									<InputLabel id="simple-select-outlined-tipo-cita">TIPO</InputLabel>
 									<Select
 										labelId="simple-select-outlined-tipo-cita"
 										id="simple-select-outlined-tipo-cita"
 										value={values.tipoCita}
 										error={Boolean(errors.tipoCita)}
 										onChange={onChangeTipoCita}
-										label="TIPO CITA" >
+										label="TIPO" >
 										{tipoCitas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
 									</Select>
 								</FormControl>
@@ -285,14 +298,14 @@ export const AgendarFacialContainer = (props) => {
 					</Grid>
 					<Grid item xs={12} sm={2}>
 						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-cosmetologa">COSMETOLOGA</InputLabel>
+							<InputLabel id="simple-select-outlined-cosmetologa">COSMETÓLOGA</InputLabel>
 							<Select
 								labelId="simple-select-outlined-cosmetologa"
 								id="simple-select-outlined-cosmetologa"
 								value={values.cosmetologa}
 								error={Boolean(errors.cosmetologa)}
 								onChange={onChangeCosmetologa}
-								label="COSMETOLOGA" >
+								label="COSMETÓLOGA" >
 								{cosmetologas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
 							</Select>
 						</FormControl>
@@ -335,19 +348,6 @@ export const AgendarFacialContainer = (props) => {
 								disabled={!values.fecha_hora}
 								label="HORA" >
 								{horarios.sort().map((item, index) => <MenuItem key={index} value={item.hora}>{item.hora}</MenuItem>)}
-							</Select>
-						</FormControl>
-					</Grid>
-					<Grid item xs={12} sm={2}>
-						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-tipo-cita">MEDIO</InputLabel>
-							<Select
-								labelId="simple-select-outlined-tipo-cita"
-								id="simple-select-outlined-tipo-cita"
-								value={values.medio}
-								onChange={onChangeMedio}
-								label="MEDIO" >
-								{medios.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
 							</Select>
 						</FormControl>
 					</Grid>

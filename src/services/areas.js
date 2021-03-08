@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const baseUrl = process.env.REACT_APP_BASE_URL_LOCAL;
 
-// AREAS
+// ÁREAS
 
 export const findAreasByTreatmentServicio = async (servicioId, tratamientoId) => {
     try {

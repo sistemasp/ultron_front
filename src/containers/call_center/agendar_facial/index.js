@@ -49,7 +49,7 @@ const validationSchema = Yup.object({
 		.required("El tratamiento es requerido"),
 	fecha: Yup.string("Ingresa la fecha de nacimiento")
 		.required("Los nombres del pacientes son requeridos"),
-	hora: Yup.string("Ingresa la direccion")
+	hora: Yup.string("Ingresa la domicilio")
 		.required("Los nombres del pacientes son requeridos")
 });
 
@@ -83,6 +83,7 @@ const AgendarFacial = (props) => {
 	const promovendedorSinPromovendedorId = process.env.REACT_APP_PROMOVENDEDOR_SIN_PROMOVENDEDOR_ID;
 	const frecuenciaPrimeraVezId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
 	const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
+	const callCenterMedioId = process.env.REACT_APP_MEDIO_CALL_CENTER_ID;
 	
 	const [openAlert, setOpenAlert] = useState(false);
 	const [message, setMessage] = useState('');
@@ -116,6 +117,7 @@ const AgendarFacial = (props) => {
 		promovendedor: promovendedorSinPromovendedorId,
 		frecuencia: frecuenciaPrimeraVezId,
 		forma_pago: efectivoMetodoPagoId,
+		medio: callCenterMedioId,
 	});
 	const [faciales, setFaciales] = useState([]);
 	const [areas, setAreas] = useState([]);
@@ -144,7 +146,7 @@ const AgendarFacial = (props) => {
 		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
 		{ title: 'HORA SALIDA', field: 'hora_salida' },
 		{ title: 'SERVICIO', field: 'servicio.nombre' },
-		{ title: 'TRATAMIENTOS (AREAS)', field: 'show_tratamientos' },
+		{ title: 'TRATAMIENTOS (ÁREAS)', field: 'show_tratamientos' },
 		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		{ title: 'MEDIO', field: 'medio.nombre' },
 		{ title: 'QUIÉN CONFIRMA LLAMADA', field: 'quien_confirma_llamada.nombre' },
@@ -152,7 +154,7 @@ const AgendarFacial = (props) => {
 		{ title: 'PROMOVENDEDOR', field: 'promovendedor_nombre' },
 		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
 		{ title: 'TIPO CITA', field: 'tipo_cita.nombre' },
-		{ title: 'COSMETOLOGA', field: 'cosmetologa_nombre' },
+		{ title: 'COSMETÓLOGA', field: 'cosmetologa_nombre' },
 		{ title: 'ESTADO', field: 'status.nombre' },
 		{ title: 'PRECIO', field: 'precio_moneda' },
 		{ title: 'TOTAL', field: 'total_moneda' },
