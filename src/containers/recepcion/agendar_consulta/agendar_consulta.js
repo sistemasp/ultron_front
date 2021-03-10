@@ -19,7 +19,7 @@ import ModalCirugia from '../../../components/modales/modal_cirugia';
 import ModalEstetica from '../../../components/modales/modal_estetica';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import ModalProximaConsulta from '../../../components/modales/modal_proxima_consulta';
-import ModalTraspaso from '../../../components/modales/traspaso';
+import ModalTraspasoConsulta from '../../../components/modales/traspaso_consulta';
 import myStyles from '../../../css';
 
 export const AgendarConsultaContainer = (props) => {
@@ -162,7 +162,7 @@ export const AgendarConsultaContainer = (props) => {
       }
       {
         openModalTraspaso ?
-          <ModalTraspaso
+          <ModalTraspasoConsulta
             open={openModalTraspaso}
             onClose={onClickCancel}
             servicio={consulta}

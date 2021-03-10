@@ -14,7 +14,7 @@ import ModalImprimirConsulta from '../../../components/modales/imprimir/consulta
 import { toFormatterCurrency } from '../../../utils/utils';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import ModalProximaConsulta from '../../../components/modales/modal_proxima_consulta';
-import ModalTraspaso from '../../../components/modales/traspaso';
+import ModalTraspasoConsulta from '../../../components/modales/traspaso_consulta';
 import myStyles from '../../../css';
 
 export const AgendarConsultaContainer = (props) => {
@@ -135,7 +135,7 @@ export const AgendarConsultaContainer = (props) => {
       }
       {
         openModalTraspaso ?
-          <ModalTraspaso
+          <ModalTraspasoConsulta
             open={openModalTraspaso}
             onClose={onClickCancel}
             servicio={consulta}

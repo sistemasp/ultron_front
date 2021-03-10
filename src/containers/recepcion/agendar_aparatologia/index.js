@@ -114,13 +114,14 @@ const AgendarAparatologia = (props) => {
 		forma_pago: efectivoMetodoPagoId,
 		medio: fisicoMedioId,
 	});
-	const [aparatologias, setAparatologia] = useState([]);
+	const [aparatologias, setAparatologias] = useState([]);
 	const [areas, setAreas] = useState([]);
 	const [openModal, setOpenModal] = useState(false);
 	const [openModalProxima, setOpenModalProxima] = useState(false);
-	const [cita, setCita] = useState();
+	const [aparatologia, setAparatologia] = useState();
 	const [openModalPagos, setOpenModalPagos] = useState(false);
 	const [openModalImprimirCita, setOpenModalImprimirCita] = useState(false);
+	const [openModalTraspaso, setOpenModalTraspaso] = useState(false);
 	const [datosImpresion, setDatosImpresion] = useState();
 
 	const date = new Date();
@@ -141,17 +142,13 @@ const AgendarAparatologia = (props) => {
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
 		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
 		{ title: 'HORA SALIDA', field: 'hora_salida' },
-		{ title: 'SERVICIO', field: 'servicio.nombre' },
-		{ title: 'TRATAMIENTOS (ÁREAS)', field: 'show_tratamientos' },
+		{ title: 'PRODUCTO (ÁREAS)', field: 'show_tratamientos' },
 		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
-		{ title: 'MEDIO', field: 'medio.nombre' },
-		{ title: 'QUIÉN CONFIRMA LLAMADA', field: 'quien_confirma_llamada.nombre' },
-		{ title: 'QUIÉN CONFIRMA ASISTENCIA', field: 'quien_confirma_asistencia.nombre' },
-		{ title: 'PROMOVENDEDOR', field: 'promovendedor_nombre' },
+		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
+		{ title: 'TIPO', field: 'tipo_cita.nombre' },
 		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
-		{ title: 'TIPO CITA', field: 'tipo_cita.nombre' },
-		{ title: 'COSMETÓLOGA', field: 'cosmetologa_nombre' },
-		{ title: 'ESTADO', field: 'status.nombre' },
+		{ title: 'PROMOVENDEDOR', field: 'promovendedor_nombre' },
+		{ title: 'STATUS', field: 'status.nombre' },
 		{ title: 'PRECIO', field: 'precio_moneda' },
 		{ title: 'TOTAL', field: 'total_moneda' },
 		{ title: 'FORMA DE PAGO', field: 'forma_pago.nombre' },
@@ -324,7 +321,7 @@ const AgendarAparatologia = (props) => {
 					return `►${tratamiento.nombre}(${show_areas}) `;
 				});
 			});
-			setAparatologia(response.data);
+			setAparatologias(response.data);
 		}
 	}
 
@@ -427,9 +424,18 @@ const AgendarAparatologia = (props) => {
 		setOpenModalProxima(false);
 	};
 
+	const handleCloseTraspasos = (event, rowData) => {
+		setOpenModalTraspaso(false);
+	}
+
+	const handleClickTraspaso = (event, rowData) => {
+		setAparatologia(rowData);
+		setOpenModalTraspaso(true);
+	}
+
 	const handleOnClickEditarCita = async (event, rowData) => {
 		setIsLoading(true);
-		setCita(rowData);
+		setAparatologia(rowData);
 		await loadHorariosByServicio(new Date(rowData.fecha_hora), rowData.servicio._id);
 		setOpenModal(true);
 		setIsLoading(false);
@@ -437,14 +443,14 @@ const AgendarAparatologia = (props) => {
 
 	const handleOnClickNuevaCita = async (event, rowData) => {
 		setIsLoading(true);
-		setCita(rowData);
+		setAparatologia(rowData);
 		await loadHorariosByServicio(new Date(rowData.fecha_hora), rowData.servicio._id);
 		setOpenModalProxima(true);
 		setIsLoading(false);
 	}
 
 	const handleClickVerPagos = (event, rowData) => {
-		setCita(rowData);
+		setAparatologia(rowData);
 		setOpenModalPagos(true);
 	}
 
@@ -486,7 +492,7 @@ const AgendarAparatologia = (props) => {
 		{
 			icon: EventAvailableIcon,
 			tooltip: 'TRASPASO',
-			//onClick: handleOnClickNuevaCita
+			onClick: handleClickTraspaso
 		},
 	];
 
@@ -506,7 +512,7 @@ const AgendarAparatologia = (props) => {
 				handleClickVerPagos(e, rowData);
 				break;
 			case 'TRASPASO':
-				//handleClickTraspaso(e, rowData);
+				handleClickTraspaso(e, rowData);
 				break;
 		}
 	}
@@ -593,7 +599,7 @@ const AgendarAparatologia = (props) => {
 						return `►${tratamiento.nombre}(${show_areas}) `;
 					});
 				});
-				setAparatologia(response.data);
+				setAparatologias(response.data);
 			}
 			setIsLoading(false);
 		}
@@ -690,7 +696,7 @@ const AgendarAparatologia = (props) => {
 								aparatologias={aparatologias}
 								actions={actions}
 								components={components}
-								cita={cita}
+								aparatologia={aparatologia}
 								openModal={openModal}
 								openModalProxima={openModalProxima}
 								empleado={empleado}
@@ -723,6 +729,8 @@ const AgendarAparatologia = (props) => {
 								setFilterDate={setFilterDate}
 								dermatologoDirectoId={dermatologoDirectoId}
 								onGuardarModalPagos={handleGuardarModalPagos}
+								openModalTraspaso={openModalTraspaso}
+								onCloseTraspasos={handleCloseTraspasos}
 								{...props} />
 						}
 					</Formik> :

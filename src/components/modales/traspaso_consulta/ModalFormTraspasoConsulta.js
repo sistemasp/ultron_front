@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ModalFormTraspaso = (props) => {
+const ModalFormTraspasoConsulta = (props) => {
   const classes = useStyles();
 
   // getModalStyle is not a pure function, we roll the style only on the first render
@@ -82,7 +82,7 @@ const ModalFormTraspaso = (props) => {
 								onChange={onChangeSucursal}
 								label="SUCURSALES" >
 								{sucursales
-									? sucursales.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)
+									? sucursales.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)
 									: ''}
 							</Select>
 						</FormControl>
@@ -111,4 +111,4 @@ const ModalFormTraspaso = (props) => {
   );
 }
 
-export default ModalFormTraspaso;
+export default ModalFormTraspasoConsulta;

@@ -223,23 +223,19 @@ export const AgendarEsteticaContainer = (props) => {
 								</Select>
 							</FormControl>
 						</Grid>
-						{
-							values.frecuencia === frecuenciaReconsultaId
-								? <Grid item xs={12} sm={4}>
-									<FormControl variant="outlined" className={classes.formControl}>
-										<InputLabel id="simple-select-outlined-hora">PRODUCTO</InputLabel>
-										<Select
-											labelId="simple-select-outlined-producto"
-											id="simple-select-outlined-producto"
-											value={values.producto}
-											onChange={onChangeProductos}
-											label="PRODUCTO" >
-											{productos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-										</Select>
-									</FormControl>
-								</Grid>
-								: ''
-						}
+						<Grid item xs={12} sm={4}>
+							<FormControl variant="outlined" className={classes.formControl}>
+								<InputLabel id="simple-select-outlined-hora">PRODUCTO</InputLabel>
+								<Select
+									labelId="simple-select-outlined-producto"
+									id="simple-select-outlined-producto"
+									value={values.producto}
+									onChange={onChangeProductos}
+									label="PRODUCTO" >
+									{productos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+								</Select>
+							</FormControl>
+						</Grid>
 						<Grid item xs={12} sm={4}>
 							<FormControl variant="outlined" className={classes.formControl}>
 								<InputLabel id="simple-select-outlined-hora">DERMATÓLOGO</InputLabel>
@@ -255,18 +251,18 @@ export const AgendarEsteticaContainer = (props) => {
 							</FormControl>
 						</Grid>
 						<Grid item xs={12} sm={4}>
-						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-tipo-dermapen">MEDIO</InputLabel>
-							<Select
-								labelId="simple-select-outlined-tipo-dermapen"
-								id="simple-select-outlined-tipo-dermapen"
-								value={values.medio}
-								onChange={onChangeMedio}
-								label="MEDIO" >
-								{medios.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-							</Select>
-						</FormControl>
-					</Grid>
+							<FormControl variant="outlined" className={classes.formControl}>
+								<InputLabel id="simple-select-outlined-tipo-dermapen">MEDIO</InputLabel>
+								<Select
+									labelId="simple-select-outlined-tipo-dermapen"
+									id="simple-select-outlined-tipo-dermapen"
+									value={values.medio}
+									onChange={onChangeMedio}
+									label="MEDIO" >
+									{medios.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+								</Select>
+							</FormControl>
+						</Grid>
 						<Grid item xs={12} sm={4}>
 							<Multiselect
 								options={toxinasRellenos} // Options to display in the dropdown

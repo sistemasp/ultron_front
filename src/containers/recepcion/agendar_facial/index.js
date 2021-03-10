@@ -86,6 +86,7 @@ const AgendarFacial = (props) => {
 	const fisicoMedioId = process.env.REACT_APP_MEDIO_FISICO_ID;
 
 	const [openAlert, setOpenAlert] = useState(false);
+	const [openModalTraspaso, setOpenModalTraspaso] = useState(false);
 	const [message, setMessage] = useState('');
 	const [severity, setSeverity] = useState('success');
 	const [tratamientos, setTratamientos] = useState([]);
@@ -124,7 +125,7 @@ const AgendarFacial = (props) => {
 	const [areas, setAreas] = useState([]);
 	const [openModal, setOpenModal] = useState(false);
 	const [openModalProxima, setOpenModalProxima] = useState(false);
-	const [cita, setCita] = useState();
+	const [facial, setFacial] = useState();
 	const [openModalPagos, setOpenModalPagos] = useState(false);
 	const [openModalImprimirCita, setOpenModalImprimirCita] = useState(false);
 	const [datosImpresion, setDatosImpresion] = useState();
@@ -434,7 +435,7 @@ const AgendarFacial = (props) => {
 
 	const handleOnClickEditarCita = async (event, rowData) => {
 		setIsLoading(true);
-		setCita(rowData);
+		setFacial(rowData);
 		await loadHorariosByServicio(new Date(rowData.fecha_hora), rowData.servicio._id);
 		setOpenModal(true);
 		setIsLoading(false);
@@ -442,19 +443,23 @@ const AgendarFacial = (props) => {
 
 	const handleOnClickNuevaCita = async (event, rowData) => {
 		setIsLoading(true);
-		setCita(rowData);
+		setFacial(rowData);
 		await loadHorariosByServicio(new Date(rowData.fecha_hora), rowData.servicio._id);
 		setOpenModalProxima(true);
 		setIsLoading(false);
 	}
 
 	const handleClickVerPagos = (event, rowData) => {
-		setCita(rowData);
+		setFacial(rowData);
 		setOpenModalPagos(true);
 	}
 
 	const handleCloseVerPagos = (event, rowData) => {
 		setOpenModalPagos(false);
+	}
+
+	const handleCloseTraspasos = (event, rowData) => {
+		setOpenModalTraspaso(false);
 	}
 
 	const handleCloseImprimirConsulta = (event, rowData) => {
@@ -464,6 +469,11 @@ const AgendarFacial = (props) => {
 	const handlePrint = async (event, rowData) => {
 		setDatosImpresion(rowData);
 		setOpenModalImprimirCita(true);
+	}
+
+	const handleClickTraspaso = (event, rowData) => {
+		setFacial(rowData);
+		setOpenModalTraspaso(true);
 	}
 
 	const actions = [
@@ -491,7 +501,7 @@ const AgendarFacial = (props) => {
 		{
 			icon: AttachMoneyIcon,
 			tooltip: 'TRASPASO',
-			//onClick: handleClickTraspaso
+			onClick: handleClickTraspaso
 		},
 	];
 
@@ -511,7 +521,7 @@ const AgendarFacial = (props) => {
 				handleClickVerPagos(e, rowData);
 				break;
 			case 'TRASPASO':
-				//handleClickTraspaso(e, rowData);
+				handleClickTraspaso(e, rowData);
 				break;
 		}
 	}
@@ -697,7 +707,7 @@ const AgendarFacial = (props) => {
 								citas={faciales}
 								actions={actions}
 								components={components}
-								cita={cita}
+								facial={facial}
 								frecuencias={frecuencias}
 								productos={productos}
 								onChangeFrecuencia={(e) => handleChangeFrecuencia(e)}
@@ -718,7 +728,9 @@ const AgendarFacial = (props) => {
 								openModalProxima={openModalProxima}
 								openModalImprimirCita={openModalImprimirCita}
 								datosImpresion={datosImpresion}
+								openModalTraspaso={openModalTraspaso}
 								onCloseImprimirConsulta={handleCloseImprimirConsulta}
+								onCloseTraspasos={handleCloseTraspasos}
 								sucursal={sucursal}
 								onChangeItemPrecio={handleChangeItemPrecio}
 								setOpenAlert={setOpenAlert}

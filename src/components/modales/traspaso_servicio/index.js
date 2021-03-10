@@ -1,20 +1,21 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { createConsecutivo, createPago, deletePago, showAllOffices } from '../../../services';
 import { addZero, generateFolio } from '../../../utils/utils';
-import ModalFormTraspaso from './ModalFormTraspaso';
+import ModalFormTraspasoServicio from './ModalFormTraspasoServicio';
 import { createConsult, updateConsult } from '../../../services/consultas';
 import { showAllStatusVisibles } from '../../../services/status';
 import { createIngreso, deleteIngreso, updateIngreso } from '../../../services/ingresos';
+import { createFacial, updateFacial } from '../../../services/faciales';
+import { createAparatologia, updateAparatologia } from '../../../services/aparatolgia';
 
-const ModalTraspaso = (props) => {
+const ModalTraspasoServicio = (props) => {
   const {
     open,
     onClose,
     sucursal,
     servicio,
-    setServicio,
     empleado,
-    loadConsultas,
+    loadServicios,
     tipoServicioId,
     setOpenAlert,
     setMessage,
@@ -23,18 +24,20 @@ const ModalTraspaso = (props) => {
   const consultaServicioId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
   const canceladoSPStatusId = process.env.REACT_APP_CANCELO_SP_STATUS_ID;
   const asistioStatusId = process.env.REACT_APP_ASISTIO_STATUS_ID;
-  const tipoIngresoConsultaId = process.env.REACT_APP_TIPO_INGRESO_CONSULTA_ID;
+  const tipoIngresoServicioId = process.env.REACT_APP_TIPO_INGRESO_CONSULTA_ID;
+  const pendienteStatusId = process.env.REACT_APP_PENDIENTE_STATUS_ID;
+  const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
+  const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
 
   const [isLoading, setIsLoading] = useState(true);
   const [sucursales, setSucursales] = useState([]);
-  const [statements, setStatements] = useState([]);
   const [estadoAsistio, setEstadoAsistio] = useState();
   const [values, setValues] = useState({
     sucursal: sucursal
   });
 
   const confirmacion = () => {
-    setMessage('CONSULTA TRASPASADA CORRECTAMENTE');
+    setMessage('SERVICIO TRASPASADO CORRECTAMENTE');
     setOpenAlert(true);
   }
 
@@ -46,7 +49,7 @@ const ModalTraspaso = (props) => {
 
   const handleClickTraspasar = async (rowData) => {
     setIsLoading(true);
-    servicio.status = canceladoSPStatusId;
+    servicio.status = { _id: canceladoSPStatusId };
     const dateNow = new Date();
     const pagos = [];
     servicio.pagos.forEach(async (pago) => {
@@ -56,21 +59,30 @@ const ModalTraspaso = (props) => {
     });
     servicio.pagado = false;
     servicio.pagos = [];
-    const consul = await updateConsult(servicio._id, servicio);
-    if (`${consul.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+    let servicioResponse;
+    if (servicio.servicio._id === servicioFacialId) {
+      servicioResponse = await updateFacial(servicio._id, servicio);
+    } else if (servicio.servicio._id === servicioAparatologiaId) {
+      servicioResponse = await updateAparatologia(servicio._id, servicio);
+    }
+    if (`${servicioResponse.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       servicio._id = undefined;
       servicio.consecutivo = undefined;
       servicio.quien_agenda = empleado;
       servicio.sucursal = rowData.sucursal;
-      servicio.status = estadoAsistio;
-      servicio.hora_llegada = `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;
+      servicio.status = { _id: pendienteStatusId };
+      servicio.hora_llegada = `--:--`;
       servicio.hora_aplicacion = dateNow.toString();
       servicio.hora_atencion = '--:--';
       servicio.hora_salida = '--:--';
-      servicio.observaciones = `CONSULTA TRASPASADA`;
-      servicio.fecha_hora = dateNow.toString();
+      servicio.observaciones = `SERVICIO TRASPASADO`;
       servicio.pagado = true;
-      const response = await createConsult(servicio);
+      let response;
+      if (servicio.servicio._id === servicioFacialId) {
+        response = await createFacial(servicio);
+      } else if (servicio.servicio._id === servicioAparatologiaId) {
+        response = await createAparatologia(servicio);
+      }
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
         const servicioRes = response.data;
         const consecutivo = {
@@ -97,7 +109,7 @@ const ModalTraspaso = (props) => {
               recepcionista: empleado,
               concepto: `TRASPASO FOLIO: ${generateFolio(servicioRes)}`,
               cantidad: pago.total,
-              tipo_ingreso: tipoIngresoConsultaId,
+              tipo_ingreso: tipoIngresoServicioId,
               sucursal: servicioRes.sucursal,
               forma_pago: pago.forma_pago,
               pago_anticipado: pago.pago_anticipado,
@@ -120,7 +132,7 @@ const ModalTraspaso = (props) => {
         }
       }
     }
-    loadConsultas(dateNow);
+    loadServicios(dateNow);
     setIsLoading(false);
     onClose();
   }
@@ -149,7 +161,7 @@ const ModalTraspaso = (props) => {
 
   return (
     <Fragment>
-      <ModalFormTraspaso
+      <ModalFormTraspasoServicio
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
         values={values}
@@ -169,4 +181,4 @@ const ModalTraspaso = (props) => {
   );
 }
 
-export default ModalTraspaso;
+export default ModalTraspasoServicio;

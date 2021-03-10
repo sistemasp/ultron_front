@@ -18,6 +18,7 @@ import ModalImprimirTratamiento from '../../../components/modales/imprimir/trata
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import ModalProximaCita from '../../../components/modales/modal_proxima_cita';
 import myStyles from '../../../css';
+import ModalTraspasoServicio from '../../../components/modales/traspaso_servicio';
 
 export const AgendarAparatologiaContainer = (props) => {
 
@@ -69,7 +70,7 @@ export const AgendarAparatologiaContainer = (props) => {
 		components,
 		// MODAL PROPERTIES
 		openModal,
-		cita,
+		aparatologia,
 		onClickActualizarCita,
 		onClickCancel,
 		onChangeAsistio,
@@ -89,6 +90,9 @@ export const AgendarAparatologiaContainer = (props) => {
 		openModalImprimirCita,
 		datosImpresion,
 		onCloseImprimirConsulta,
+		// MODAL APARATOLOGIA
+		openModalTraspaso,
+		onCloseTraspasos,
 	} = props;
 
 	return (
@@ -97,7 +101,7 @@ export const AgendarAparatologiaContainer = (props) => {
 				openModal ?
 					<ModalCita
 						open={openModal}
-						cita={cita}
+						cita={aparatologia}
 						onClickActualizarCita={onClickActualizarCita}
 						onClose={onClickCancel}
 						onChangeServicio={onChangeServicio}
@@ -122,7 +126,7 @@ export const AgendarAparatologiaContainer = (props) => {
 				openModalProxima ?
 					<ModalProximaCita
 						open={openModalProxima}
-						cita={cita}
+						cita={aparatologia}
 						onClickActualizarCita={onClickActualizarCita}
 						onClose={onClickCancel}
 						onChangeServicio={onChangeServicio}
@@ -148,13 +152,13 @@ export const AgendarAparatologiaContainer = (props) => {
 					<ModalPagos
 						open={openModalPagos}
 						onClose={onCloseVerPagos}
-						servicio={cita}
+						servicio={aparatologia}
 						empleado={empleado}
 						sucursal={sucursal}
 						setMessage={setMessage}
 						setSeverity={setSeverity}
 						setOpenAlert={setOpenAlert}
-						tipoServicioId={cita.servicio._id}
+						tipoServicioId={aparatologia.servicio._id}
 						onGuardarModalPagos={onGuardarModalPagos} />
 					: ''
 			}
@@ -164,6 +168,19 @@ export const AgendarAparatologiaContainer = (props) => {
 						open={openModalImprimirCita}
 						onClose={onCloseImprimirConsulta}
 						datos={datosImpresion} />
+					: ''
+			}
+			{
+				openModalTraspaso ?
+					<ModalTraspasoServicio
+						open={openModalTraspaso}
+						onClose={onCloseTraspasos}
+						servicio={aparatologia}
+						empleado={empleado}
+						sucursal={sucursal._id}
+						setMessage={setMessage}
+						setOpenAlert={setOpenAlert}
+						loadServicios={loadAparatologias} />
 					: ''
 			}
 			<Paper>

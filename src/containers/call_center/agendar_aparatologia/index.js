@@ -76,6 +76,7 @@ const AgendarAparatologia = (props) => {
 	const frecuenciaPrimeraVezId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
 	const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
 	const callCenterMedioId = process.env.REACT_APP_MEDIO_CALL_CENTER_ID;
+	const fisicoMedioId = process.env.REACT_APP_MEDIO_FISICO_ID;
 	
 	const [openAlert, setOpenAlert] = useState(false);
 	const [message, setMessage] = useState('');
@@ -109,7 +110,7 @@ const AgendarAparatologia = (props) => {
 		promovendedor: promovendedorSinPromovendedorId,
 		frecuencia: frecuenciaPrimeraVezId,
 		forma_pago: efectivoMetodoPagoId,
-		medio: callCenterMedioId,
+		medio: fisicoMedioId,
 	});
 	const [aparatologias, setAparatologia] = useState([]);
 	const [areas, setAreas] = useState([]);
