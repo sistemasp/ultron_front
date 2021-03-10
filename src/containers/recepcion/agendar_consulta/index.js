@@ -502,11 +502,11 @@ const AgendarConsulta = (props) => {
 			tooltip: 'AGENDAR NUEVA CITA',
 			onClick: handleOnClickNuevaConsulta
 		},
-		{
+		/*{
 			icon: AttachMoneyIcon,
-			tooltip: 'AGREGAR PAGOS',
+			tooltip: 'PAGOS',
 			onClick: handleClickVerPagos
-		},
+		},*/
 		{
 			icon: AttachMoneyIcon,
 			tooltip: 'TRASPASO',

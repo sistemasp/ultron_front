@@ -373,11 +373,11 @@ const AgendarDermapen = (props) => {
 			tooltip: 'EDITAR DERMAPEN',
 			onClick: handleOnClickEditarCita
 		},
-		{
+		/*{
 			icon: AttachMoneyIcon,
 			tooltip: 'PAGOS',
 			onClick: handleClickVerPagos
-		},
+		},*/
 		{
 			icon: EventAvailableIcon,
 			tooltip: 'NUEVO DERMAPEN',

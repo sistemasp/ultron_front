@@ -120,7 +120,7 @@ export const MainContainer = props => {
 			}
 		}
 
-		findCorte();
+		//findCorte();
 	}, []);
 
 	return (
@@ -189,7 +189,8 @@ export const MainContainer = props => {
 						<ListItemIcon> <AccessibilityNewIcon /> </ListItemIcon>
 						<ListItemText primary={'PACIENTES'} />
 					</ListItem>
-					<ListItem button key={'DERMATOLÓGOS'} onClick={(e) => onChangeTab(e, 1, handleDrawerClose)}>
+					{/*
+						<ListItem button key={'DERMATOLÓGOS'} onClick={(e) => onChangeTab(e, 1, handleDrawerClose)}>
 						<ListItemIcon> <People /> </ListItemIcon>
 						<ListItemText primary={'DERMATOLÓGOS'} />
 					</ListItem>
@@ -213,6 +214,7 @@ export const MainContainer = props => {
 						<ListItemIcon> <AssignmentIcon /> </ListItemIcon>
 						<ListItemText primary={'REPORTES'} />
 					</ListItem>
+					*/}
 				</List>
 			</Drawer>
 			<main

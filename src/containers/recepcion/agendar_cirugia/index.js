@@ -338,11 +338,11 @@ const AgendarCirugia = (props) => {
 			tooltip: 'EDITAR CIRUGíA',
 			onClick: handleOnClickEditarCita
 		},
-		{
+		/*{
 			icon: AttachMoneyIcon,
 			tooltip: 'PAGOS',
 			onClick: handleClickVerPagos
-		},
+		},*/
 	];
 
 	const onChangeActions = (e, rowData) => {

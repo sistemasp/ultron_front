@@ -332,11 +332,11 @@ const AgendarEstetica = (props) => {
 			tooltip: 'EDITAR ESTÉTICA',
 			onClick: handleOnClickEditarCita
 		},
-		{
+		/*{
 			icon: AttachMoneyIcon,
 			tooltip: 'PAGOS',
 			onClick: handleClickVerPagos
-		},
+		},*/
 	];
 
 

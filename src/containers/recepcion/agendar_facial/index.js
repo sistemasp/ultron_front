@@ -488,11 +488,11 @@ const AgendarFacial = (props) => {
 			tooltip: 'EDITAR CITA',
 			onClick: handleOnClickEditarCita
 		}, //: ''
-		{
+		/*{
 			icon: AttachMoneyIcon,
 			tooltip: 'PAGOS',
 			onClick: handleClickVerPagos
-		},
+		},*/
 		{
 			icon: EventAvailableIcon,
 			tooltip: 'NUEVA CITA',
