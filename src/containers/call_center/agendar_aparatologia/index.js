@@ -112,12 +112,13 @@ const AgendarAparatologia = (props) => {
 		forma_pago: efectivoMetodoPagoId,
 		medio: fisicoMedioId,
 	});
-	const [aparatologias, setAparatologia] = useState([]);
+	const [aparatologias, setAparatologias] = useState([]);
 	const [areas, setAreas] = useState([]);
 	const [openModal, setOpenModal] = useState(false);
 	const [openModalProxima, setOpenModalProxima] = useState(false);
-	const [cita, setCita] = useState();
+	const [aparatologia, setAparatologia] = useState();
 	const [openModalImprimirCita, setOpenModalImprimirCita] = useState(false);
+	const [openModalTraspaso, setOpenModalTraspaso] = useState(false);
 	const [datosImpresion, setDatosImpresion] = useState();
 
 	const date = new Date();
@@ -295,7 +296,7 @@ const AgendarAparatologia = (props) => {
 					return `►${tratamiento.nombre}(${show_areas}) `;
 				});
 			});
-			setAparatologia(response.data);
+			setAparatologias(response.data);
 		}
 	}
 
@@ -400,7 +401,7 @@ const AgendarAparatologia = (props) => {
 
 	const handleOnClickEditarCita = async (event, rowData) => {
 		setIsLoading(true);
-		setCita(rowData);
+		setAparatologia(rowData);
 		await loadHorariosByServicio(new Date(rowData.fecha_hora), rowData.servicio._id);
 		setOpenModal(true);
 		setIsLoading(false);
@@ -408,10 +409,19 @@ const AgendarAparatologia = (props) => {
 
 	const handleOnClickNuevaCita = async (event, rowData) => {
 		setIsLoading(true);
-		setCita(rowData);
+		setAparatologia(rowData);
 		await loadHorariosByServicio(new Date(rowData.fecha_hora), rowData.servicio._id);
 		setOpenModalProxima(true);
 		setIsLoading(false);
+	}
+
+	const handleCloseTraspasos = (event, rowData) => {
+		setOpenModalTraspaso(false);
+	}
+
+	const handleClickTraspaso = (event, rowData) => {
+		setAparatologia(rowData);
+		setOpenModalTraspaso(true);
 	}
 
 	const handleCloseImprimirConsulta = (event, rowData) => {
@@ -445,7 +455,7 @@ const AgendarAparatologia = (props) => {
 		{
 			icon: EditIcon,
 			tooltip: 'TRASPASO',
-			onClick: handleOnClickEditarCita
+			onClick: handleClickTraspaso
 		}, //: ''
 	];
 
@@ -462,7 +472,7 @@ const AgendarAparatologia = (props) => {
 				handleOnClickNuevaCita(e, rowData);
 				break;
 			case 'TRASPASO':
-				//handleClickTraspaso(e, rowData);
+				handleClickTraspaso(e, rowData);
 				break;
 		}
 	}
@@ -542,7 +552,7 @@ const AgendarAparatologia = (props) => {
 						return `►${tratamiento.nombre}(${show_areas}) `;
 					});
 				});
-				setAparatologia(response.data);
+				setAparatologias(response.data);
 			}
 			setIsLoading(false);
 		}
@@ -633,7 +643,7 @@ const AgendarAparatologia = (props) => {
 								options={options}
 								aparatologias={aparatologias}
 								actions={actions}
-								cita={cita}
+								aparatologia={aparatologia}
 								openModal={openModal}
 								openModalProxima={openModalProxima}
 								components={components}
@@ -661,6 +671,8 @@ const AgendarAparatologia = (props) => {
 								setSeverity={setSeverity}
 								setFilterDate={setFilterDate}
 								dermatologoDirectoId={dermatologoDirectoId}
+								openModalTraspaso={openModalTraspaso}
+								onCloseTraspasos={handleCloseTraspasos}
 								{...props} />
 						}
 					</Formik> :
