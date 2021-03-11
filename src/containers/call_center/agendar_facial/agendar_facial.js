@@ -18,6 +18,7 @@ import ModalImprimirTratamiento from '../../../components/modales/imprimir/trata
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import ModalProximaCita from '../../../components/modales/modal_proxima_cita';
 import myStyles from '../../../css';
+import ModalTraspasoServicio from '../../../components/modales/traspaso_servicio';
 
 export const AgendarFacialContainer = (props) => {
 
@@ -68,7 +69,7 @@ export const AgendarFacialContainer = (props) => {
 		components,
 		// MODAL PROPERTIES
 		openModal,
-		cita,
+		facial,
 		onClickActualizarCita,
 		onClickCancel,
 		onChangeAsistio,
@@ -85,6 +86,9 @@ export const AgendarFacialContainer = (props) => {
 		openModalImprimirCita,
 		datosImpresion,
 		onCloseImprimirConsulta,
+		// MODAL TRASPASO
+		openModalTraspaso,
+		onCloseTraspasos,
 	} = props;
 
 	return (
@@ -93,7 +97,7 @@ export const AgendarFacialContainer = (props) => {
 				openModal ?
 					<ModalCita
 						open={openModal}
-						cita={cita}
+						cita={facial}
 						onClickActualizarCita={onClickActualizarCita}
 						onClose={onClickCancel}
 						onChangeServicio={onChangeServicio}
@@ -118,7 +122,7 @@ export const AgendarFacialContainer = (props) => {
 				openModalProxima ?
 					<ModalProximaCita
 						open={openModalProxima}
-						cita={cita}
+						cita={facial}
 						onClickActualizarCita={onClickActualizarCita}
 						onClose={onClickCancel}
 						onChangeServicio={onChangeServicio}
@@ -144,6 +148,19 @@ export const AgendarFacialContainer = (props) => {
 						open={openModalImprimirCita}
 						onClose={onCloseImprimirConsulta}
 						datos={datosImpresion} />
+					: ''
+			}
+			{
+				openModalTraspaso ?
+					<ModalTraspasoServicio
+						open={openModalTraspaso}
+						onClose={onCloseTraspasos}
+						servicio={facial}
+						empleado={empleado}
+						sucursal={sucursal._id}
+						setMessage={setMessage}
+						setOpenAlert={setOpenAlert}
+						loadServicios={loadFaciales} />
 					: ''
 			}
 			<Paper>

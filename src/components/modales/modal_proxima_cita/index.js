@@ -31,6 +31,7 @@ const ModalProximaCita = (props) => {
     cita,
     empleado,
     loadConsultas,
+    tratamientos,
     sucursal,
     setOpenAlert,
     setMessage,
@@ -42,7 +43,6 @@ const ModalProximaCita = (props) => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [horarios, setHorarios] = useState([]);
-  const [tratamientos, setTratamientos] = useState([]);
   const [areas, setAreas] = useState([]);
   const [cosmetologas, setCosmetologas] = useState([]);
 
@@ -205,21 +205,42 @@ const ModalProximaCita = (props) => {
     setValues({ ...values, cosmetologa: e.target.value });
   }
 
-  const handleChangeAreas = async (items) => {
+  const handleChangeTratamientos = (e) => {
+    e.map(async (tratamiento) => {
+      setIsLoading(true);
+      const response = await findAreasByTreatmentServicio(tratamiento.servicio, tratamiento._id);
+      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+        tratamiento.areas = response.data;
+        setIsLoading(false);
+        setValues({
+          ...values,
+          precio: 0,
+          tratamientos: e,
+        });
+      }
+    });
+  };
+
+  const handleChangeAreas = async (items, tratamiento) => {
+
+    tratamiento.areasSeleccionadas = items;
     setIsLoading(true);
     let precio = 0;
-    items.map((item) => {
-      const itemPrecio =
-        sucursal === sucursalManuelAcunaId ? item.precio_ma // Precio Manuel Acuña
-          : (sucursal === sucursalOcciId ? item.precio_oc // Precio Occidental
-            : (sucursal === sucursalFedeId ? item.precio_fe // Precio Federalismo
-              : 0)); // Error
-      precio = Number(precio) + Number(itemPrecio);
+    values.tratamientos.forEach(tratam => {
+      if (tratam.areasSeleccionadas) {
+        tratam.areasSeleccionadas.map((item) => {
+          const itemPrecio =
+            sucursal === sucursalManuelAcunaId ? item.precio_ma // Precio Manuel Acuña
+              : (sucursal === sucursalOcciId ? item.precio_oc // Precio Occidental
+                : (sucursal === sucursalFedeId ? item.precio_fe // Precio Federalismo
+                  : 0)); // Error
+          precio = Number(precio) + Number(itemPrecio);
+        });
+      }
     });
     setValues({
       ...values,
-      precio: precio,
-      areas: items
+      precio: precio
     });
     setIsLoading(false);
   }
@@ -255,8 +276,9 @@ const ModalProximaCita = (props) => {
             onClose={onClose}
             cita={cita}
             empleado={empleado}
+            onChangeTratamientos={(e) => handleChangeTratamientos(e)}
             onClickProximarCita={handleOnClickProximarCita}
-            onChangeAreas={(e) => handleChangeAreas(e)}
+            onChangeAreas={handleChangeAreas}
             onChangeFecha={(e) => handleChangeFecha(e)}
             onChangeHora={(e) => handleChangeHora(e)}
             onChangeTiempo={(e) => handleChangeTiempo(e)}

@@ -146,6 +146,7 @@ const ModalCita = (props) => {
     tratamientos: cita.tratamientos,
     areas: cita.areas,
     frecuencia: cita.frecuencia,
+    forma_pago: cita.forma_pago,
   });
 
   const loadHorarios = async (date) => {

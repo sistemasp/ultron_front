@@ -20,7 +20,7 @@ import {
 import {
 	findAreasByTreatmentServicio,
 } from "../../../services/areas";
-import { Backdrop, CircularProgress, Snackbar } from "@material-ui/core";
+import { Backdrop, CircularProgress, FormControl, InputLabel, MenuItem, Select, Snackbar, TablePagination } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
 import { Formik } from 'formik';
 import EditIcon from '@material-ui/icons/Edit';
@@ -85,7 +85,7 @@ const AgendarFacial = (props) => {
 	const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
 	const callCenterMedioId = process.env.REACT_APP_MEDIO_CALL_CENTER_ID;
 	const fisicoMedioId = process.env.REACT_APP_MEDIO_FISICO_ID;
-	
+
 	const [openAlert, setOpenAlert] = useState(false);
 	const [message, setMessage] = useState('');
 	const [severity, setSeverity] = useState('success');
@@ -123,8 +123,9 @@ const AgendarFacial = (props) => {
 	const [faciales, setFaciales] = useState([]);
 	const [areas, setAreas] = useState([]);
 	const [openModal, setOpenModal] = useState(false);
+	const [openModalTraspaso, setOpenModalTraspaso] = useState(false);
 	const [openModalProxima, setOpenModalProxima] = useState(false);
-	const [cita, setCita] = useState();
+	const [facial, setFacial] = useState();
 	const [openModalImprimirCita, setOpenModalImprimirCita] = useState(false);
 	const [datosImpresion, setDatosImpresion] = useState();
 
@@ -412,7 +413,7 @@ const AgendarFacial = (props) => {
 
 	const handleOnClickEditarCita = async (event, rowData) => {
 		setIsLoading(true);
-		setCita(rowData);
+		setFacial(rowData);
 		await loadHorariosByServicio(new Date(rowData.fecha_hora), rowData.servicio._id);
 		setOpenModal(true);
 		setIsLoading(false);
@@ -420,7 +421,7 @@ const AgendarFacial = (props) => {
 
 	const handleOnClickNuevaCita = async (event, rowData) => {
 		setIsLoading(true);
-		setCita(rowData);
+		setFacial(rowData);
 		await loadHorariosByServicio(new Date(rowData.fecha_hora), rowData.servicio._id);
 		setOpenModalProxima(true);
 		setIsLoading(false);
@@ -435,26 +436,86 @@ const AgendarFacial = (props) => {
 		setOpenModalImprimirCita(true);
 	}
 
+	const handleCloseTraspasos = (event, rowData) => {
+		setOpenModalTraspaso(false);
+	}
+
+	const handleClickTraspaso = (event, rowData) => {
+		setFacial(rowData);
+		setOpenModalTraspaso(true);
+	}
+
 	const actions = [
 		{
 			icon: PrintIcon,
 			tooltip: 'IMPRIMIR',
 			onClick: handlePrint
 		},
-		//new Date(anio, mes - 1, dia) < filterDate.fecha_hora  ? 
 		{
 			icon: EditIcon,
 			tooltip: 'EDITAR',
 			onClick: handleOnClickEditarCita
-		}, //: ''
-		rowData => (
-			rowData.status._id === atendidoStatusId ? {
-				icon: EventAvailableIcon,
-				tooltip: 'NUEVA CITA',
-				onClick: handleOnClickNuevaCita
-			} : ''
-		),
+		},
+		{
+			icon: EventAvailableIcon,
+			tooltip: 'NUEVA CITA',
+			onClick: handleOnClickNuevaCita
+		},
+		{
+			icon: AttachMoneyIcon,
+			tooltip: 'TRASPASO',
+			onClick: handleClickTraspaso
+		},
 	];
+
+	const onChangeActions = (e, rowData) => {
+		const action = e.target.value;
+		switch (action) {
+			case 'IMPRIMIR':
+				handlePrint(e, rowData);
+				break;
+			case 'EDITAR':
+				handleOnClickEditarCita(e, rowData);
+				break;
+			case 'NUEVA CITA':
+				handleOnClickNuevaCita(e, rowData);
+				break;
+			case 'TRASPASO':
+				handleClickTraspaso(e, rowData);
+				break;
+		}
+	}
+
+	const components = {
+		Pagination: props => {
+			return <TablePagination
+				{...props}
+				rowsPerPageOptions={[5, 10, 20, 30, faciales.length]}
+			/>
+		},
+		Actions: props => {
+			return <Fragment>
+				<FormControl variant="outlined" className={classes.formControl}>
+					<InputLabel id="simple-select-outlined-hora"></InputLabel>
+					<Select
+						labelId="simple-select-outlined-actions"
+						id="simple-select-outlined-actions"
+						onChange={(e) => onChangeActions(e, props.data)}
+						label="ACCIONES">
+						{
+							props.actions.map((item, index) => {
+
+								return <MenuItem
+									key={index}
+									value={item.tooltip}
+								>{item.tooltip}</MenuItem>
+							})
+						}
+					</Select>
+				</FormControl>
+			</Fragment>
+		}
+	}
 
 	const handleChangeFrecuencia = (e) => {
 		setValues({
@@ -466,10 +527,10 @@ const AgendarFacial = (props) => {
 
 	const handleChangePaymentMethod = (event) => {
 		setValues({
-		  ...values,
-		  forma_pago: event.target.value,
+			...values,
+			forma_pago: event.target.value,
 		});
-	  }
+	}
 
 	const loadFormasPago = async () => {
 		const response = await showAllMetodoPago();
@@ -591,7 +652,8 @@ const AgendarFacial = (props) => {
 								options={options}
 								citas={faciales}
 								actions={actions}
-								cita={cita}
+								components={components}
+								facial={facial}
 								frecuencias={frecuencias}
 								onChangeFrecuencia={(e) => handleChangeFrecuencia(e)}
 								openModal={openModal}
@@ -609,7 +671,9 @@ const AgendarFacial = (props) => {
 								openModalProxima={openModalProxima}
 								openModalImprimirCita={openModalImprimirCita}
 								datosImpresion={datosImpresion}
+								openModalTraspaso={openModalTraspaso}
 								onCloseImprimirConsulta={handleCloseImprimirConsulta}
+								onCloseTraspasos={handleCloseTraspasos}
 								sucursal={sucursal}
 								onChangeItemPrecio={handleChangeItemPrecio}
 								setOpenAlert={setOpenAlert}

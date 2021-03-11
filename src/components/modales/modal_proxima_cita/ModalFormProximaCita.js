@@ -65,6 +65,7 @@ const ModalFormProximaCita = (props) => {
     tratamientos,
     cosmetologas,
     areas,
+    onChangeTratamientos,
     onChangeAreas,
     onChangeTiempo,
     onChangeCosmetologa,
@@ -86,18 +87,29 @@ const ModalFormProximaCita = (props) => {
                 <h3 className={classes.label}>DERMATÓLOGO: {values.dermatologo.nombre}</h3>
               </Grid>
               <Grid item xs={12}>
-                <h3 className={classes.label}>TRATAMIENTOS: {values.tratamientos[0].nombre}</h3>
-              </Grid>
-              <Grid item xs={12}>
                 <Multiselect
-                  options={areas} // Options to display in the dropdown
+                  options={tratamientos} // Options to display in the dropdown
                   displayValue="nombre" // Property name to display in the dropdown options
-                  onSelect={(e) => onChangeAreas(e)} // Function will trigger on select event
-                  onRemove={(e) => onChangeAreas(e)} // Function will trigger on remove event
-                  placeholder={`Areas`}
-                  selectedValues={values.areas} // Preselected value to persist in dropdown
+                  onSelect={(e) => onChangeTratamientos(e)} // Function will trigger on select event
+                  onRemove={(e) => onChangeTratamientos(e)} // Function will trigger on remove event
+                  placeholder={`TRATAMIENTOS`}
+                  selectedValues={values.tratamientos} // Preselected value to persist in dropdown
                 />
               </Grid>
+              {
+                values.tratamientos.map(tratamientoValue => {
+                  return <Grid item xs={12} sm={12}>
+                    <Multiselect
+                      options={tratamientoValue.areas} // Options to display in the dropdown
+                      displayValue="nombre" // Property name to display in the dropdown options
+                      onSelect={(e) => onChangeAreas(e, tratamientoValue)} // Function will trigger on select event
+                      onRemove={(e) => onChangeAreas(e, tratamientoValue)} // Function will trigger on remove event
+                      placeholder={`ÁREAS ${tratamientoValue.nombre}`}
+                      selectedValues={tratamientoValue.areasSeleccionadas} // Preselected value to persist in dropdown
+                    />
+                  </Grid>
+                })
+              }
               <Grid item xs={12}>
                 <TextField
                   className={classes.textField}
