@@ -197,6 +197,19 @@ export const AgendarEsteticaContainer = (props) => {
 				<Grid container spacing={3}>
 					<Grid container spacing={1} xs={12} sm={6}>
 						<Grid item xs={12} sm={4}>
+							<FormControl variant="outlined" className={classes.formControl}>
+								<InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
+								<Select
+									labelId="simple-select-outlined-frecuencia"
+									id="simple-select-outlined-frecuencia"
+									value={values.frecuencia}
+									onChange={onChangeFrecuencia}
+									label="FRECUENCIA" >
+									{frecuencias.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+								</Select>
+							</FormControl>
+						</Grid>
+						<Grid item xs={12} sm={4}>
 							<TextField
 								className={classes.textField}
 								name="total"
@@ -209,19 +222,6 @@ export const AgendarEsteticaContainer = (props) => {
 									e.target.value = Math.max(0, parseFloat(e.target.value)).toString().slice(0, 6)
 								}}
 								variant="outlined" />
-						</Grid>
-						<Grid item xs={12} sm={4}>
-							<FormControl variant="outlined" className={classes.formControl}>
-								<InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
-								<Select
-									labelId="simple-select-outlined-frecuencia"
-									id="simple-select-outlined-frecuencia"
-									value={values.frecuencia}
-									onChange={onChangeFrecuencia}
-									label="FRECUENCIA" >
-									{frecuencias.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
-								</Select>
-							</FormControl>
 						</Grid>
 						<Grid item xs={12} sm={4}>
 							<FormControl variant="outlined" className={classes.formControl}>
@@ -246,7 +246,7 @@ export const AgendarEsteticaContainer = (props) => {
 									error={Boolean(errors.dermatologo)}
 									onChange={onChangeDoctors}
 									label="DERMATÓLOGO" >
-									{dermatologos.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
+									{dermatologos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
 								</Select>
 							</FormControl>
 						</Grid>

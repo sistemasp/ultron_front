@@ -184,6 +184,19 @@ export const AgendarFacialContainer = (props) => {
 					</Grid>
 				</Grid>
 				<Grid container spacing={3}>
+					<Grid item xs={12} sm={2}>
+						<FormControl variant="outlined" className={classes.formControl}>
+							<InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
+							<Select
+								labelId="simple-select-outlined-frecuencia"
+								id="simple-select-outlined-frecuencia"
+								value={values.frecuencia}
+								onChange={onChangeFrecuencia}
+								label="FRECUENCIA" >
+								{frecuencias.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+							</Select>
+						</FormControl>
+					</Grid>
 					{
 						true ?
 							<Grid item xs={12} sm={2}>
@@ -226,19 +239,6 @@ export const AgendarFacialContainer = (props) => {
 					}
 					<Grid item xs={12} sm={2}>
 						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
-							<Select
-								labelId="simple-select-outlined-frecuencia"
-								id="simple-select-outlined-frecuencia"
-								value={values.frecuencia}
-								onChange={onChangeFrecuencia}
-								label="FRECUENCIA" >
-								{frecuencias.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-							</Select>
-						</FormControl>
-					</Grid>
-					<Grid item xs={12} sm={2}>
-						<FormControl variant="outlined" className={classes.formControl}>
 							<InputLabel id="simple-select-outlined-hora">DERMATÓLOGO</InputLabel>
 							<Select
 								labelId="simple-select-outlined-dermatologo"
@@ -247,19 +247,6 @@ export const AgendarFacialContainer = (props) => {
 								onChange={onChangeDoctors}
 								label="DERMATÓLOGO" >
 								{dermatologos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-							</Select>
-						</FormControl>
-					</Grid>
-					<Grid item xs={12} sm={2}>
-						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-tipo-cita">MEDIO</InputLabel>
-							<Select
-								labelId="simple-select-outlined-tipo-cita"
-								id="simple-select-outlined-tipo-cita"
-								value={values.medio}
-								onChange={onChangeMedio}
-								label="MEDIO" >
-								{medios.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
 							</Select>
 						</FormControl>
 					</Grid>
@@ -281,6 +268,19 @@ export const AgendarFacialContainer = (props) => {
 							</Grid>
 							: ''
 					}
+					<Grid item xs={12} sm={2}>
+						<FormControl variant="outlined" className={classes.formControl}>
+							<InputLabel id="simple-select-outlined-tipo-cita">MEDIO</InputLabel>
+							<Select
+								labelId="simple-select-outlined-tipo-cita"
+								id="simple-select-outlined-tipo-cita"
+								value={values.medio}
+								onChange={onChangeMedio}
+								label="MEDIO" >
+								{medios.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+							</Select>
+						</FormControl>
+					</Grid>
 					<Grid item xs={12} sm={2}>
 						<FormControl variant="outlined" className={classes.formControl}>
 							<InputLabel id="simple-select-outlined-promovendedor">PROMOVENDEDOR</InputLabel>

@@ -78,6 +78,8 @@ const ModalTraspasoServicio = (props) => {
       servicio.observaciones = `SERVICIO TRASPASADO`;
       servicio.pagado = true;
       let response;
+  console.log("KAOZ", servicio);
+
       if (servicio.servicio._id === servicioFacialId) {
         response = await createFacial(servicio);
       } else if (servicio.servicio._id === servicioAparatologiaId) {

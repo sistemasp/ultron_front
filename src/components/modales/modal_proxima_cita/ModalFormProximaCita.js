@@ -62,6 +62,7 @@ const ModalFormProximaCita = (props) => {
     open,
     horarios,
     onChangeObservaciones,
+    onChangeDermatologo,
     tratamientos,
     cosmetologas,
     areas,
@@ -69,6 +70,7 @@ const ModalFormProximaCita = (props) => {
     onChangeAreas,
     onChangeTiempo,
     onChangeCosmetologa,
+    dermatologos,
   } = props;
 
   return (
@@ -84,7 +86,17 @@ const ModalFormProximaCita = (props) => {
                 <h2 className={classes.label}>{values.paciente_nombre} ({values.telefono})</h2>
               </Grid>
               <Grid item xs={12}>
-                <h3 className={classes.label}>DERMATÓLOGO: {values.dermatologo.nombre}</h3>
+              <FormControl variant="outlined" className={classes.formControl}>
+                      <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO</InputLabel>
+                      <Select
+                        labelId="simple-select-outlined-dermatologo"
+                        id="simple-select-outlined-dermatologo"
+                        value={values.dermatologo}
+                        onChange={onChangeDermatologo}
+                        label="DERMATÓLOGO" >
+                        {dermatologos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                      </Select>
+                    </FormControl>
               </Grid>
               <Grid item xs={12}>
                 <Multiselect

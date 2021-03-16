@@ -171,9 +171,9 @@ export const AgendarCirugiaContainer = (props) => {
 					: ''
 			}
 			<Paper>
-			<Grid container spacing={3}>
+				<Grid container spacing={3}>
 					<Grid item xs={12} sm={6} className={classes.grid_center}>
-					<h1>{paciente.nombres ? `${paciente.nombres} ${paciente.apellidos}` : 'SELECCIONA DESDE UNA CONSULTA'}</h1>
+						<h1>{paciente.nombres ? `${paciente.nombres} ${paciente.apellidos}` : 'SELECCIONA DESDE UNA CONSULTA'}</h1>
 					</Grid>
 					<Grid item xs={12} sm={2} className={classes.grid_center}>
 						<h2>APLICACIÓN: {toFormatterCurrency(values.total_aplicacion)}</h2>
@@ -192,22 +192,8 @@ export const AgendarCirugiaContainer = (props) => {
 							text='GUARDAR' />
 					</Grid>
 				</Grid>
-				
+
 				<Grid container spacing={3}>
-					<Grid item xs={12} sm={2}>
-						<TextField
-							className={classes.textField}
-							name="total"
-							label="TOTAL DE LA CIRUGíA"
-							value={values.precio}
-							type='Number'
-							onChange={onChangeTotal}
-							onInput={(e) => {
-								e.target.value = e.target.value < 0 ? 0 : e.target.value;
-								e.target.value = Math.max(0, parseFloat(e.target.value)).toString().slice(0, 6)
-							}}
-							variant="outlined" />
-					</Grid>
 					<Grid item xs={12} sm={2}>
 						<FormControl variant="outlined" className={classes.formControl}>
 							<InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
@@ -217,7 +203,7 @@ export const AgendarCirugiaContainer = (props) => {
 								value={values.frecuencia}
 								onChange={onChangeFrecuencia}
 								label="FRECUENCIA" >
-								{frecuencias.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
+								{frecuencias.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
 							</Select>
 						</FormControl>
 					</Grid>
@@ -238,6 +224,20 @@ export const AgendarCirugiaContainer = (props) => {
 							</Grid>
 							: ''
 					}
+					<Grid item xs={12} sm={2}>
+						<TextField
+							className={classes.textField}
+							name="total"
+							label="TOTAL DE LA CIRUGíA"
+							value={values.precio}
+							type='Number'
+							onChange={onChangeTotal}
+							onInput={(e) => {
+								e.target.value = e.target.value < 0 ? 0 : e.target.value;
+								e.target.value = Math.max(0, parseFloat(e.target.value)).toString().slice(0, 6)
+							}}
+							variant="outlined" />
+					</Grid>
 					<Grid item xs={12} sm={2}>
 						<Multiselect
 							options={materiales} // Options to display in the dropdown
@@ -272,7 +272,7 @@ export const AgendarCirugiaContainer = (props) => {
 								error={Boolean(errors.dermatologo)}
 								onChange={onChangeDoctors}
 								label="DERMATÓLOGO" >
-								{dermatologos.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
+								{dermatologos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
 							</Select>
 						</FormControl>
 					</Grid>

@@ -97,6 +97,8 @@ const AgendarCirugia = (props) => {
 		porcentaje_descuento_clinica: 0,
 		descuento_clinica: 0,
 		descuento_dermatologo: 0,
+		frecuencia: frecuenciaPrimeraVezId,
+		dermatologo: dermatologoDirectoId,
 		forma_pago: efectivoMetodoPagoId,
 		medio: fisicoMedioId,
 	});
@@ -440,7 +442,7 @@ const AgendarCirugia = (props) => {
 	}
 
 	const handleChangeFrecuencia = (e) => {
-		const frecuencia = e.target.value._id;
+		const frecuencia = e.target.value;
 		setValues({
 			...values,
 			frecuencia: frecuencia,
@@ -578,7 +580,6 @@ const AgendarCirugia = (props) => {
 								setOpenAlert={setOpenAlert}
 								setMessage={setMessage}
 								setFilterDate={setFilterDate}
-								dermatologoDirectoId={dermatologoDirectoId}
 								onGuardarModalPagos={handleGuardarModalPagos}
 								materiales={materiales}
 								onChangeFrecuencia={(e) => handleChangeFrecuencia(e)}

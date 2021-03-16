@@ -55,7 +55,6 @@ export const AgendarDermapenContainer = (props) => {
 		onChangeCosmetologa,
 		onChangeMedio,
 		medios,
-		dermatologoDirectoId,
 		materiales,
 		onChangeMateriales,
 		onChangeItemPrecio,
@@ -191,6 +190,19 @@ export const AgendarDermapenContainer = (props) => {
 				</Grid>
 				<Grid container spacing={3}>
 					<Grid item xs={12} sm={2}>
+						<FormControl variant="outlined" className={classes.formControl}>
+							<InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
+							<Select
+								labelId="simple-select-outlined-frecuencia"
+								id="simple-select-outlined-frecuencia"
+								value={values.frecuencia}
+								onChange={onChangeFrecuencia}
+								label="FRECUENCIA" >
+								{frecuencias.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+							</Select>
+						</FormControl>
+					</Grid>
+					<Grid item xs={12} sm={2}>
 						<TextField
 							className={classes.textField}
 							name="total"
@@ -254,19 +266,6 @@ export const AgendarDermapenContainer = (props) => {
 					}
 					<Grid item xs={12} sm={2}>
 						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
-							<Select
-								labelId="simple-select-outlined-frecuencia"
-								id="simple-select-outlined-frecuencia"
-								value={values.frecuencia}
-								onChange={onChangeFrecuencia}
-								label="FRECUENCIA" >
-								{frecuencias.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
-							</Select>
-						</FormControl>
-					</Grid>
-					<Grid item xs={12} sm={2}>
-						<FormControl variant="outlined" className={classes.formControl}>
 							<InputLabel id="simple-select-outlined-hora">DERMATÓLOGO</InputLabel>
 							<Select
 								labelId="simple-select-outlined-dermatologo"
@@ -275,7 +274,7 @@ export const AgendarDermapenContainer = (props) => {
 								error={Boolean(errors.dermatologo)}
 								onChange={onChangeDoctors}
 								label="DERMATÓLOGO" >
-								{dermatologos.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
+								{dermatologos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
 							</Select>
 						</FormControl>
 					</Grid>
@@ -302,7 +301,7 @@ export const AgendarDermapenContainer = (props) => {
 								error={Boolean(errors.promovendedor)}
 								onChange={onChangePromovendedor}
 								label="PROMOVENDEDOR" >
-								{promovendedores.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
+								{promovendedores.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
 							</Select>
 						</FormControl>
 					</Grid>

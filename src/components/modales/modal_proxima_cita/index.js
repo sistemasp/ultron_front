@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import {
   createConsecutivo,
   findEmployeesByRolId,
+  findEmployeesByRolIdAvailable,
   findScheduleByDateAndSucursalAndService,
 } from "../../../services";
 import {
@@ -45,13 +46,14 @@ const ModalProximaCita = (props) => {
   const [horarios, setHorarios] = useState([]);
   const [areas, setAreas] = useState([]);
   const [cosmetologas, setCosmetologas] = useState([]);
-
+  const [dermatologos, setDermatologos] = useState([]);
   const fecha_cita = new Date(cita.fecha_hora);
   const fecha = `${addZero(fecha_cita.getDate())}/${addZero(Number(fecha_cita.getMonth() + 1))}/${addZero(fecha_cita.getFullYear())}`;
   const hora = `${addZero(Number(fecha_cita.getHours()))}:${addZero(fecha_cita.getMinutes())}`;
 
   const promovendedorSinPromovendedorId = process.env.REACT_APP_PROMOVENDEDOR_SIN_PROMOVENDEDOR_ID;
   const cosmetologaRolId = process.env.REACT_APP_COSMETOLOGA_ROL_ID;
+  const dermatologoRolId = process.env.REACT_APP_DERMATOLOGO_ROL_ID;
   const pendienteStatusId = process.env.REACT_APP_PENDIENTE_STATUS_ID;
   const consultaServicioId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
   const reconsultaFrecuenciaId = process.env.REACT_APP_FRECUENCIA_RECONSULTA_ID;
@@ -88,6 +90,7 @@ const ModalProximaCita = (props) => {
     tratamientos: cita.tratamientos,
     areas: cita.areas,
     tiempo: cita.tiempo,
+    dermatologo: cita.dermatologo._id
   });
 
   const loadHorarios = async (date) => {
@@ -205,6 +208,10 @@ const ModalProximaCita = (props) => {
     setValues({ ...values, cosmetologa: e.target.value });
   }
 
+  const handleChangeDermatologo = (e) => {
+    setValues({ ...values, dermatologo: e.target.value });
+  }
+
   const handleChangeTratamientos = (e) => {
     e.map(async (tratamiento) => {
       setIsLoading(true);
@@ -245,6 +252,13 @@ const ModalProximaCita = (props) => {
     setIsLoading(false);
   }
 
+  const loadDermatologos = async () => {
+    const response = await findEmployeesByRolIdAvailable(dermatologoRolId);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setDermatologos(response.data);
+    }
+  }
+
   useEffect(() => {
 
     const loadHorarios = async (date) => {
@@ -261,6 +275,7 @@ const ModalProximaCita = (props) => {
     loadHorarios();
     loadAreas(cita.tratamientos[0]);
     loadCosmetologas();
+    loadDermatologos();
     setIsLoading(false);
   }, [consultaServicioId]);
 
@@ -283,12 +298,14 @@ const ModalProximaCita = (props) => {
             onChangeHora={(e) => handleChangeHora(e)}
             onChangeTiempo={(e) => handleChangeTiempo(e)}
             onChangeCosmetologa={(e) => handleChangeCosmetologa(e)}
+            onChangeDermatologo={(e) => handleChangeDermatologo(e)}
             horarios={horarios}
             onChangeObservaciones={handleChangeObservaciones}
             sucursal={sucursal}
             tipoServicioId={consultaServicioId}
             tratamientos={tratamientos}
             areas={areas}
+            dermatologos={dermatologos}
             cosmetologas={cosmetologas} /> :
           <Backdrop className={classes.backdrop} open={isLoading} >
             <CircularProgress color="inherit" />

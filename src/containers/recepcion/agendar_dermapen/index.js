@@ -76,6 +76,8 @@ const AgendarDermapen = (props) => {
 	const dermapenTratamientoId = process.env.REACT_APP_DERMAPEN_TRATAMIENTO_ID;
 	const dermapenAreaId = process.env.REACT_APP_DERMAPEN_AREA_ID;
 	const productoMicropuncionId = process.env.REACT_APP_PRODUCTO_MICROPUNCION_ID;
+	const promovendedorSinPromovendedorId = process.env.REACT_APP_PROMOVENDEDOR_SIN_PROMOVENDEDOR_ID;
+	const frecuenciaPrimeraVezId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
 	const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
 	const fisicoMedioId = process.env.REACT_APP_MEDIO_FISICO_ID;
 
@@ -107,6 +109,9 @@ const AgendarDermapen = (props) => {
 		porcentaje_descuento_clinica: 0,
 		descuento_clinica: 0,
 		descuento_dermatologo: 0,
+		dermatologo: dermatologoDirectoId,
+		promovendedor: promovendedorSinPromovendedorId,
+		frecuencia: frecuenciaPrimeraVezId,
 		forma_pago: efectivoMetodoPagoId,
 		medio: fisicoMedioId,
 	});
@@ -508,7 +513,7 @@ const AgendarDermapen = (props) => {
 		setIsLoading(false);
 	}
 	const handleChangeFrecuencia = (e) => {
-		const frecuencia = e.target.value._id;
+		const frecuencia = e.target.value;
 		setValues({
 			...values,
 			frecuencia: frecuencia,
@@ -677,7 +682,6 @@ const AgendarDermapen = (props) => {
 								setOpenAlert={setOpenAlert}
 								setMessage={setMessage}
 								setFilterDate={setFilterDate}
-								dermatologoDirectoId={dermatologoDirectoId}
 								onGuardarModalPagos={handleGuardarModalPagos}
 								materiales={materiales}
 								{...props} />
