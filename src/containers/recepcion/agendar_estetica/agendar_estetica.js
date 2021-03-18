@@ -274,47 +274,6 @@ export const AgendarEsteticaContainer = (props) => {
 							/>
 						</Grid>
 						<Grid item xs={12} sm={4}>
-							<MuiPickersUtilsProvider utils={DateFnsUtils}>
-								<Grid
-									container
-									justify="center"
-									alignItems="center" >
-									<KeyboardDatePicker
-										className={classes.button}
-										disableToolbar
-										//disablePast
-										autoOk
-										disabled={disableDate}
-										variant="inline"
-										format="dd/MM/yyyy"
-										margin="normal"
-										id="date-picker-inline"
-										label="FECHA"
-										value={values.fecha_hora}
-										onChange={onChangeFecha}
-										KeyboardButtonProps={{
-											'aria-label': 'change date',
-										}}
-										invalidDateMessage='Selecciona una fecha' />
-								</Grid>
-							</MuiPickersUtilsProvider>
-						</Grid>
-						<Grid item xs={12} sm={4}>
-							<FormControl variant="outlined" className={classes.formControl}>
-								<InputLabel id="simple-select-outlined-hora">HORA</InputLabel>
-								<Select
-									labelId="simple-select-outlined-hora"
-									id="simple-select-outlined-hora"
-									value={values.hora}
-									error={Boolean(errors.hora)}
-									onChange={onChangeHora}
-									disabled={!values.fecha_hora}
-									label="HORA" >
-									{horarios.sort().map((item, index) => <MenuItem key={index} value={item.hora}>{item.hora}</MenuItem>)}
-								</Select>
-							</FormControl>
-						</Grid>
-						<Grid item xs={12} sm={4}>
 							<Multiselect
 								options={materiales} // Options to display in the dropdown
 								displayValue="nombre" // Property name to display in the dropdown options
@@ -360,6 +319,47 @@ export const AgendarEsteticaContainer = (props) => {
 								value={values.observaciones}
 								onChange={onChangeObservaciones}
 								variant="outlined" />
+						</Grid>
+						<Grid item xs={12} sm={4}>
+							<MuiPickersUtilsProvider utils={DateFnsUtils}>
+								<Grid
+									container
+									justify="center"
+									alignItems="center" >
+									<KeyboardDatePicker
+										className={classes.button}
+										disableToolbar
+										//disablePast
+										autoOk
+										disabled={disableDate}
+										variant="inline"
+										format="dd/MM/yyyy"
+										margin="normal"
+										id="date-picker-inline"
+										label="FECHA"
+										value={values.fecha_hora}
+										onChange={onChangeFecha}
+										KeyboardButtonProps={{
+											'aria-label': 'change date',
+										}}
+										invalidDateMessage='Selecciona una fecha' />
+								</Grid>
+							</MuiPickersUtilsProvider>
+						</Grid>
+						<Grid item xs={12} sm={4}>
+							<FormControl variant="outlined" className={classes.formControl}>
+								<InputLabel id="simple-select-outlined-hora">HORA</InputLabel>
+								<Select
+									labelId="simple-select-outlined-hora"
+									id="simple-select-outlined-hora"
+									value={values.hora}
+									error={Boolean(errors.hora)}
+									onChange={onChangeHora}
+									disabled={!values.fecha_hora}
+									label="HORA" >
+									{horarios.sort().map((item, index) => <MenuItem key={index} value={item.hora}>{item.hora}</MenuItem>)}
+								</Select>
+							</FormControl>
 						</Grid>
 					</Grid>
 					<Grid container spacing={2} xs={12} sm={6}>

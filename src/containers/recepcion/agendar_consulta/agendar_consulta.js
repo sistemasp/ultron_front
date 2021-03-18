@@ -314,6 +314,29 @@ export const AgendarConsultaContainer = (props) => {
                 </FormControl>
               </Grid>
           }
+          <Grid item xs={12} sm={2}>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel id="simple-select-outlined-payment">FORMA DE PAGO</InputLabel>
+              <Select
+                labelId="simple-select-outlined-payment"
+                id="simple-select-outlined-payment"
+                value={values.forma_pago}
+                onChange={onChangePaymentMethod}
+                label="FORMA DE PAGO" >
+                {formasPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={2}>
+            <TextField
+              className={classes.button}
+              name="observaciones"
+              //helperText={touched.observaciones ? errors.observaciones : ""}
+              label="OBSERVACIONES"
+              value={values.observaciones}
+              onChange={onChangeObservaciones}
+              variant="outlined" />
+          </Grid>
           {sucursal._id === process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID ?
             <Fragment>
               <Grid item xs={12} sm={2}>
@@ -355,29 +378,6 @@ export const AgendarConsultaContainer = (props) => {
                 </FormControl>
               </Grid>
             </Fragment> : ''}
-          <Grid item xs={12} sm={2}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="simple-select-outlined-payment">FORMA DE PAGO</InputLabel>
-              <Select
-                labelId="simple-select-outlined-payment"
-                id="simple-select-outlined-payment"
-                value={values.forma_pago}
-                onChange={onChangePaymentMethod}
-                label="FORMA DE PAGO" >
-                {formasPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={2}>
-            <TextField
-              className={classes.button}
-              name="observaciones"
-              //helperText={touched.observaciones ? errors.observaciones : ""}
-              label="OBSERVACIONES"
-              value={values.observaciones}
-              onChange={onChangeObservaciones}
-              variant="outlined" />
-          </Grid>
         </Grid>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <Grid

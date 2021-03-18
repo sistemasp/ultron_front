@@ -3,6 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { TextField, Button, Grid, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 import { ButtonCustom } from '../../basic/ButtonCustom';
+import myStyles from '../../../css';
+import { CheckCustom } from '../../basic/CheckCustom';
 
 function getModalStyle() {
   const top = 50;
@@ -49,6 +51,7 @@ const ModalFormPaciente = (props) => {
     onChange,
     onChangeSexo,
     onChangeEmail,
+    onChangeFamiliar,
     dataComplete,
     onClickCancel,
     onClickGuardar,
@@ -65,6 +68,14 @@ const ModalFormPaciente = (props) => {
         <div style={modalStyle} className={classes.paper}>
           <form onSubmit={handleSubmit}>
             <Grid container spacing={3}>
+            <Grid item xs={12} sm={12} className={classes.grid_center}>
+              <CheckCustom
+                checked={values.factura}
+                onChange={onChangeFamiliar}
+                name="checkedF"
+                label="ES FAMILIAR"
+              />
+            </Grid>
               <Grid item xs={12}>
                 <TextField
                   className={classes.textField}

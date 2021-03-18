@@ -110,16 +110,19 @@ const Pacientes = (props) => {
 
 	const handleOnClickGuardar = async (e, val) => {
 		setIsLoading(true);
-		const existPatient = paciente._id ? '' : await findPatientByPhoneNumber(val.telefono);
-		setOpenAlert(true);
 
-		if (`${existPatient.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			if (existPatient.data.length > 0) {
-				setSeverity('warning');
-				setMessage('YA EXISTE UN REGISTRO CON EL MISMO NUMERO DE TELÉFONO');
-				setIsLoading(false);
-				handleClose();
-				return;
+		if (!val.familiar) {
+			const existPatient = paciente._id ? '' : await findPatientByPhoneNumber(val.telefono);
+
+			if (`${existPatient.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+				if (existPatient.data.length > 0) {
+					setSeverity('warning');
+					setOpenAlert(true);
+					setMessage('YA EXISTE UN REGISTRO CON EL MISMO NUMERO DE TELÉFONO');
+					setIsLoading(false);
+					handleClose();
+					return;
+				}
 			}
 		}
 
@@ -127,11 +130,13 @@ const Pacientes = (props) => {
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
 			|| `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			setSeverity('success');
+			setOpenAlert(true);
 			loadPacientes();
 			setMessage(paciente._id ? 'PACIENTE ACTUALIZADO' : 'PACIENTE CREADO');
 		}
 
 		handleClose();
+
 		setIsLoading(false);
 	}
 
