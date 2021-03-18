@@ -172,7 +172,6 @@ export const AgendarEsteticaContainer = (props) => {
 					: ''
 			}
 			<Paper>
-
 				<Grid container spacing={3}>
 					<Grid item xs={12} sm={6} className={classes.grid_center}>
 						<h1>{paciente.nombres ? `${paciente.nombres} ${paciente.apellidos}` : 'SELECCIONA DESDE UNA CONSULTA'}</h1>
@@ -194,8 +193,8 @@ export const AgendarEsteticaContainer = (props) => {
 							text='GUARDAR' />
 					</Grid>
 				</Grid>
-				<Grid container spacing={3}>
-					<Grid container spacing={1} xs={12} sm={6}>
+				<Grid container>
+					<Grid container spacing={2} xs={12} sm={6}>
 						<Grid item xs={12} sm={4}>
 							<FormControl variant="outlined" className={classes.formControl}>
 								<InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>

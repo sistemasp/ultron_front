@@ -205,12 +205,12 @@ const GeneralCitas = (props) => {
 
 	const loadAll = async (date) => {
 		setIsLoading(true);
-		loadConsultas(date);
-		loadFaciales(date);
-		loadAparatologias(date);
-		loadDermapens(date);
-		loadCirugias(date);
-		loadEsteticas(date);
+		await loadConsultas(date);
+		await loadFaciales(date);
+		await loadAparatologias(date);
+		await loadDermapens(date);
+		await loadCirugias(date);
+		await loadEsteticas(date);
 		setIsLoading(false);
 	}
 

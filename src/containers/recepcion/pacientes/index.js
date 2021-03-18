@@ -47,7 +47,7 @@ const Pacientes = (props) => {
 	const [openHistoric, setOpenHistoric] = useState(false);
 	const [openAlert, setOpenAlert] = useState(false);
 	const [paciente, setPaciente] = useState({});
-	const [isLoading, setIsLoading] = useState(true);
+	const [isLoading, setIsLoading] = useState(false);
 	const [message, setMessage] = useState('');
 	const [severity, setSeverity] = useState('success');
 
@@ -100,14 +100,6 @@ const Pacientes = (props) => {
 		setOpenAlert(false);
 	};
 
-	const loadPacientes = async () => {
-		/*const response = await getAllPatients();
-		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			setPacientes(response.data);
-		}*/
-		setIsLoading(false);
-	}
-
 	const handleOnClickGuardar = async (e, val) => {
 		setIsLoading(true);
 
@@ -131,7 +123,6 @@ const Pacientes = (props) => {
 			|| `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			setSeverity('success');
 			setOpenAlert(true);
-			loadPacientes();
 			setMessage(paciente._id ? 'PACIENTE ACTUALIZADO' : 'PACIENTE CREADO');
 		}
 
@@ -159,7 +150,6 @@ const Pacientes = (props) => {
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
 			|| `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			setSeverity('success');
-			loadPacientes();
 			onClickAgendar(e, val);
 			setMessage(paciente._id ? 'PACIENTE ACTUALIZADO' : 'PACIENTE CREADO');
 		}
@@ -237,38 +227,29 @@ const Pacientes = (props) => {
 
 	const components = {
 		Actions: props => {
-			return <Fragment>
-				<FormControl variant="outlined" className={classes.formControl}>
-					<InputLabel id="simple-select-outlined-hora"></InputLabel>
-					<Select
-						labelId="simple-select-outlined-actions"
-						id="simple-select-outlined-actions"
-						onChange={(e) => onChangeActions(e, props.data)}
-						label="ACCIONES">
-						{
-							props.actions.map((item, index) => {
-								return <MenuItem
-									key={index}
-									value={item.tooltip}
-								>{item.tooltip}</MenuItem>
-							})
-						}
-					</Select>
-				</FormControl>
-			</Fragment>
+			return props.actions.length > 0
+				? <Fragment>
+					<FormControl variant="outlined" className={classes.formControl}>
+						<InputLabel id="simple-select-outlined-hora"></InputLabel>
+						<Select
+							labelId="simple-select-outlined-actions"
+							id="simple-select-outlined-actions"
+							onChange={(e) => onChangeActions(e, props.data)}
+							label="ACCIONES">
+							{
+								props.actions.map((item, index) => {
+									return <MenuItem
+										key={index}
+										value={item.tooltip}
+									>{item.tooltip}</MenuItem>
+								})
+							}
+						</Select>
+					</FormControl>
+				</Fragment>
+				: ''
 		}
 	};
-
-	useEffect(() => {
-		const loadPacientes = async () => {
-			/*const response = await getAllPatients();
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				setPacientes(response.data);
-			}*/
-			setIsLoading(false);
-		}
-		loadPacientes();
-	}, []);
 
 	return (
 		<Fragment>
