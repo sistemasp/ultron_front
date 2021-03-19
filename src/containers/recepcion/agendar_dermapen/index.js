@@ -77,11 +77,13 @@ const AgendarDermapen = (props) => {
 	const dermapenAreaId = process.env.REACT_APP_DERMAPEN_AREA_ID;
 	const productoMicropuncionId = process.env.REACT_APP_PRODUCTO_MICROPUNCION_ID;
 	const promovendedorSinPromovendedorId = process.env.REACT_APP_PROMOVENDEDOR_SIN_PROMOVENDEDOR_ID;
+	const cosmetologaSinAsignarId = process.env.REACT_APP_COSMETOLOGA_SIN_ASIGNAR_ID;
 	const frecuenciaPrimeraVezId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
 	const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
 	const fisicoMedioId = process.env.REACT_APP_MEDIO_FISICO_ID;
 
 	const [openAlert, setOpenAlert] = useState(false);
+	const [openModalTraspaso, setOpenModalTraspaso] = useState(false);
 	const [message, setMessage] = useState('');
 	const [tratamientos, setTratamientos] = useState([]);
 	const [horarios, setHorarios] = useState([]);
@@ -110,6 +112,7 @@ const AgendarDermapen = (props) => {
 		descuento_clinica: 0,
 		descuento_dermatologo: 0,
 		dermatologo: dermatologoDirectoId,
+		cosmetologa: cosmetologaSinAsignarId,
 		promovendedor: promovendedorSinPromovendedorId,
 		frecuencia: frecuenciaPrimeraVezId,
 		forma_pago: efectivoMetodoPagoId,
@@ -327,6 +330,10 @@ const AgendarDermapen = (props) => {
 		setOpenAlert(false);
 	};
 
+	const handleCloseTraspasos = (event, rowData) => {
+		setOpenModalTraspaso(false);
+	}
+
 	const handleCloseModal = () => {
 		setOpenModal(false);
 		setTratamientos([]);
@@ -367,6 +374,11 @@ const AgendarDermapen = (props) => {
 		setOpenModalImprimirCita(true);
 	}
 
+	const handleClickTraspaso = (event, rowData) => {
+		setDermapen(rowData);
+		setOpenModalTraspaso(true);
+	}
+
 	const actions = [
 		{
 			icon: PrintIcon,
@@ -375,7 +387,7 @@ const AgendarDermapen = (props) => {
 		},
 		{
 			icon: EditIcon,
-			tooltip: 'EDITAR DERMAPEN',
+			tooltip: 'EDITAR',
 			onClick: handleOnClickEditarCita
 		},
 		/*{
@@ -385,8 +397,13 @@ const AgendarDermapen = (props) => {
 		},*/
 		{
 			icon: EventAvailableIcon,
-			tooltip: 'NUEVO DERMAPEN',
+			tooltip: 'NUEVA CITA',
 			onClick: handleOnClickNuevaCita
+		},
+		{
+			icon: AttachMoneyIcon,
+			tooltip: 'TRASPASO',
+			onClick: handleClickTraspaso
 		},
 	];
 
@@ -396,14 +413,17 @@ const AgendarDermapen = (props) => {
 			case 'IMPRIMIR':
 				handlePrint(e, rowData);
 				break;
-			case 'EDITAR DERMAPEN':
+			case 'EDITAR':
 				handleOnClickEditarCita(e, rowData);
 				break;
-			case 'NUEVA DERMAPEN':
+			case 'NUEVA CITA':
 				handleOnClickNuevaCita(e, rowData);
 				break;
 			case 'PAGOS':
 				handleClickVerPagos(e, rowData);
+				break;
+			case 'TRASPASO':
+				handleClickTraspaso(e, rowData);
 				break;
 		}
 	}
@@ -472,7 +492,7 @@ const AgendarDermapen = (props) => {
 
 	const handleChangeTotal = (event) => {
 		const precio = event.target.value;
-		let total_aplicacion = precio - values.costo;
+		let total_aplicacion = precio;
 		setValues({
 			...values,
 			precio: event.target.value,
@@ -532,6 +552,13 @@ const AgendarDermapen = (props) => {
 		const response = await showAllMetodoPago();
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setFormasPago(response.data);
+		}
+	}
+
+	const loadCosmetologas = async () => {
+		const response = await findEmployeesByRolId(cosmetologaRolId);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setCosmetologas(response.data);
 		}
 	}
 
@@ -619,6 +646,7 @@ const AgendarDermapen = (props) => {
 		loadMateriales();
 		loadFormasPago();
 		loadMedios();
+		loadCosmetologas();
 	}, [sucursal]);
 
 	return (
@@ -675,10 +703,12 @@ const AgendarDermapen = (props) => {
 								openModalPagos={openModalPagos}
 								openModalProxima={openModalProxima}
 								openModalImprimirCita={openModalImprimirCita}
+								openModalTraspaso={openModalTraspaso}
 								datosImpresion={datosImpresion}
 								onChangeTotal={handleChangeTotal}
 								onChangeCosto={handleChangeCosto}
 								onCloseImprimirConsulta={handleCloseImprimirConsulta}
+								onCloseTraspasos={handleCloseTraspasos}
 								sucursal={sucursal}
 								setOpenAlert={setOpenAlert}
 								setMessage={setMessage}

@@ -18,6 +18,7 @@ import ModalProximaCita from '../../../components/modales/modal_proxima_cita';
 import ModalCirugia from '../../../components/modales/modal_cirugia';
 import ModalImprimirCirugia from '../../../components/modales/imprimir/cirugia';
 import myStyles from '../../../css';
+import ModalProximaCirugia from '../../../components/modales/modal_proxima_cirugia';
 
 export const AgendarCirugiaContainer = (props) => {
 
@@ -125,7 +126,7 @@ export const AgendarCirugiaContainer = (props) => {
 			}
 			{
 				openModalProxima ?
-					<ModalProximaCita
+					<ModalProximaCirugia
 						open={openModalProxima}
 						cirugia={cirugia}
 						onClickActualizarCita={onClickActualizarCita}
@@ -172,14 +173,11 @@ export const AgendarCirugiaContainer = (props) => {
 			}
 			<Paper>
 				<Grid container spacing={3}>
-					<Grid item xs={12} sm={6} className={classes.grid_center}>
+					<Grid item xs={12} sm={8} className={classes.grid_center}>
 						<h1>{paciente.nombres ? `${paciente.nombres} ${paciente.apellidos}` : 'SELECCIONA DESDE UNA CONSULTA'}</h1>
 					</Grid>
 					<Grid item xs={12} sm={2} className={classes.grid_center}>
-						<h2>APLICACIÓN: {toFormatterCurrency(values.total_aplicacion)}</h2>
-					</Grid>
-					<Grid item xs={12} sm={2} className={classes.grid_center}>
-						<h1>TOTAL A COBRAR: {toFormatterCurrency(values.precio)}</h1>
+						<h1>{toFormatterCurrency(values.precio)}</h1>
 					</Grid>
 					<Grid item xs={12} sm={2} className={classes.grid_center}>
 						<ButtonCustom
@@ -223,44 +221,6 @@ export const AgendarCirugiaContainer = (props) => {
 								</FormControl>
 							</Grid>
 							: ''
-					}
-					<Grid item xs={12} sm={2}>
-						<TextField
-							className={classes.textField}
-							name="total"
-							label="TOTAL DE LA CIRUGíA"
-							value={values.precio}
-							type='Number'
-							onChange={onChangeTotal}
-							onInput={(e) => {
-								e.target.value = e.target.value < 0 ? 0 : e.target.value;
-								e.target.value = Math.max(0, parseFloat(e.target.value)).toString().slice(0, 6)
-							}}
-							variant="outlined" />
-					</Grid>
-					<Grid item xs={12} sm={2}>
-						<Multiselect
-							options={materiales} // Options to display in the dropdown
-							displayValue="nombre" // Property name to display in the dropdown options
-							onSelect={(e) => onChangeMateriales(e)} // Function will trigger on select event
-							onRemove={(e) => onChangeMateriales(e)} // Function will trigger on remove event
-							placeholder="SELECCIONA MATERIALES"
-							selectedValues={values.materiales} // Preselected value to persist in dropdown
-						/>
-					</Grid>
-
-					{
-						values.materiales.map((item, index) =>
-							<Grid item xs={12} sm={2}>
-								<TextField
-									className={classes.button}
-									name={item.precio}
-									label={`PRECIO: ${item.nombre}`}
-									value={item.precio}
-									type='Number'
-									onChange={(e) => onChangeItemPrecio(e, index)}
-									variant="outlined" />
-							</Grid>)
 					}
 					<Grid item xs={12} sm={2}>
 						<FormControl variant="outlined" className={classes.formControl}>
@@ -339,20 +299,29 @@ export const AgendarCirugiaContainer = (props) => {
 						</MuiPickersUtilsProvider>
 					</Grid>
 					<Grid item xs={12} sm={2}>
-						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-hora">HORA</InputLabel>
-							<Select
-								labelId="simple-select-outlined-hora"
-								id="simple-select-outlined-hora"
-								value={values.hora}
-								error={Boolean(errors.hora)}
-								onChange={onChangeHora}
-								disabled={!values.fecha_hora}
-								label="HORA" >
-								{horarios.sort().map((item, index) => <MenuItem key={index} value={item.hora}>{item.hora}</MenuItem>)}
-							</Select>
-						</FormControl>
+						<TextField
+							className={classes.textField}
+							name="hora"
+							label="HORA"
+							value={values.hora}
+							type='text'
+							onChange={onChangeHora}
+							variant="outlined" />
 					</Grid>
+					<Grid item xs={12} sm={2}>
+						<TextField
+							className={classes.textField}
+							name="total"
+							label="TOTAL CIRUGíA"
+							value={values.precio}
+							type='Number'
+							onChange={onChangeTotal}
+							onInput={(e) => {
+								e.target.value = e.target.value < 0 ? 0 : e.target.value;
+								e.target.value = Math.max(0, parseFloat(e.target.value)).toString().slice(0, 6)
+							}}
+							variant="outlined" />
+					</Grid>					
 				</Grid>
 				<MuiPickersUtilsProvider utils={DateFnsUtils}>
 					<Grid

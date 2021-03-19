@@ -109,10 +109,13 @@ const ModalFormDermapen = (props) => {
                 <h2 className={classes.label}>{values.paciente_nombre} ({values.telefono})</h2>
               </Grid>
               <Grid item xs={12}>
-                <h3 className={classes.label}>Servicio: {values.servicio.nombre}</h3>
+                <h3 className={classes.label}>SERVICIO: {values.servicio.nombre}</h3>
+              </Grid>
+              <Grid item xs={12}>
+                <h2 className={classes.label}>PRECIO DE LA APLICACIÓN: {toFormatterCurrency(values.total_aplicacion)}</h2>
               </Grid>
               <Grid item xs={12} className={classes.label}>
-                <h1 className={classes.label}>Total: {toFormatterCurrency(values.total)}</h1>
+                <h1 className={classes.label}>TOTAL: {toFormatterCurrency(values.total)}</h1>
               </Grid>
               <Grid item xs={12}>
                 <FormControl variant="outlined" className={classes.formControl}>

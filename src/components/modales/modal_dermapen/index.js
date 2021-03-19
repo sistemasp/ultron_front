@@ -101,6 +101,7 @@ const ModalDermapen = (props) => {
     hora_aplicacion: dermapen.hora_aplicacion,
     tratamientos: dermapen.tratamientos,
     areas: dermapen.areas,
+    total_aplicacion: dermapen.total_aplicacion,
   });
 
   const loadHorarios = async () => {
@@ -305,14 +306,14 @@ const ModalDermapen = (props) => {
   const handleChangeItemPrecio = (e, index) => {
     const newMateriales = values.materiales;
     newMateriales[index].precio = e.target.value;
-    let total = Number(values.precio);
+    let total_aplicacion = Number(values.precio);
     newMateriales.map((item) => {
-      total += Number(item.precio);
+      total_aplicacion -= Number(item.precio);
     });
     setValues({
       ...values,
       materiales: newMateriales,
-      total: total,
+      total_aplicacion: total_aplicacion,
     });
   }
 

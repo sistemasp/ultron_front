@@ -63,6 +63,7 @@ const ModalCirugia = (props) => {
     patologo: cirugia.patologo ? cirugia.patologo._id : undefined,
     hora_aplicacion: cirugia.hora_aplicacion,
     total_aplicacion: cirugia.total_aplicacion,
+    patologo: cirugia.patologo,
   });
 
   const promovendedorRolId = process.env.REACT_APP_PROMOVENDEDOR_ROL_ID;

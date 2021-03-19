@@ -48,10 +48,13 @@ export const AgendarEsteticaContainer = (props) => {
 		disableDate,
 		dermatologos,
 		promovendedores,
+		cosmetologas,
 		onChangeToxinasRellenos,
 		onChangeDoctors,
 		onChangeTipoCita,
 		onChangeTotal,
+		onChangePromovendedor,
+		onChangeCosmetologa,
 		onChangeItemUnidades,
 		onChangeMedio,
 		medios,
@@ -173,14 +176,11 @@ export const AgendarEsteticaContainer = (props) => {
 			}
 			<Paper>
 				<Grid container spacing={3}>
-					<Grid item xs={12} sm={6} className={classes.grid_center}>
+					<Grid item xs={12} sm={8} className={classes.grid_center}>
 						<h1>{paciente.nombres ? `${paciente.nombres} ${paciente.apellidos}` : 'SELECCIONA DESDE UNA CONSULTA'}</h1>
 					</Grid>
 					<Grid item xs={12} sm={2} className={classes.grid_center}>
-						<h2>APLICACIÓN: {toFormatterCurrency(values.total_aplicacion)}</h2>
-					</Grid>
-					<Grid item xs={12} sm={2} className={classes.grid_center}>
-						<h1>TOTAL: {toFormatterCurrency(values.precio)}</h1>
+						<h1>{toFormatterCurrency(values.precio)}</h1>
 					</Grid>
 					<Grid item xs={12} sm={2} className={classes.grid_center}>
 						<ButtonCustom
@@ -194,8 +194,8 @@ export const AgendarEsteticaContainer = (props) => {
 					</Grid>
 				</Grid>
 				<Grid container>
-					<Grid container spacing={2} xs={12} sm={6}>
-						<Grid item xs={12} sm={4}>
+					<Grid container spacing={2} xs={12} sm={12}>
+						<Grid item xs={12} sm={2}>
 							<FormControl variant="outlined" className={classes.formControl}>
 								<InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
 								<Select
@@ -208,34 +208,17 @@ export const AgendarEsteticaContainer = (props) => {
 								</Select>
 							</FormControl>
 						</Grid>
-						<Grid item xs={12} sm={4}>
-							<TextField
-								className={classes.textField}
-								name="total"
-								label="TOTAL DE LA ESTÉTICA"
-								value={values.precio}
-								type='Number'
-								onChange={onChangeTotal}
-								onInput={(e) => {
-									e.target.value = e.target.value < 0 ? 0 : e.target.value;
-									e.target.value = Math.max(0, parseFloat(e.target.value)).toString().slice(0, 6)
-								}}
-								variant="outlined" />
+						<Grid item xs={12} sm={2}>
+							<Multiselect
+								options={productos} // Options to display in the dropdown
+								displayValue="nombre" // Property name to display in the dropdown options
+								onSelect={(e) => onChangeProductos(e)} // Function will trigger on select event
+								onRemove={(e) => onChangeProductos(e)} // Function will trigger on remove event
+								placeholder={`PRODUCTO`}
+								selectedValues={values.producto} // Preselected value to persist in dropdown
+							/>
 						</Grid>
-						<Grid item xs={12} sm={4}>
-							<FormControl variant="outlined" className={classes.formControl}>
-								<InputLabel id="simple-select-outlined-hora">PRODUCTO</InputLabel>
-								<Select
-									labelId="simple-select-outlined-producto"
-									id="simple-select-outlined-producto"
-									value={values.producto}
-									onChange={onChangeProductos}
-									label="PRODUCTO" >
-									{productos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-								</Select>
-							</FormControl>
-						</Grid>
-						<Grid item xs={12} sm={4}>
+						<Grid item xs={12} sm={2}>
 							<FormControl variant="outlined" className={classes.formControl}>
 								<InputLabel id="simple-select-outlined-hora">DERMATÓLOGO</InputLabel>
 								<Select
@@ -249,7 +232,7 @@ export const AgendarEsteticaContainer = (props) => {
 								</Select>
 							</FormControl>
 						</Grid>
-						<Grid item xs={12} sm={4}>
+						<Grid item xs={12} sm={2}>
 							<FormControl variant="outlined" className={classes.formControl}>
 								<InputLabel id="simple-select-outlined-tipo-dermapen">MEDIO</InputLabel>
 								<Select
@@ -262,41 +245,35 @@ export const AgendarEsteticaContainer = (props) => {
 								</Select>
 							</FormControl>
 						</Grid>
-						<Grid item xs={12} sm={4}>
-							<Multiselect
-								options={toxinasRellenos} // Options to display in the dropdown
-								displayValue="nombre" // Property name to display in the dropdown options
-								onSelect={(e) => onChangeToxinasRellenos(e)} // Function will trigger on select event
-								onRemove={(e) => onChangeToxinasRellenos(e)} // Function will trigger on remove event
-								placeholder="TOXINAS Y RELLENOS"
-								selectedValues={values.toxinas_rellenos} // Preselected value to persist in dropdown
-							/>
+						<Grid item xs={12} sm={2}>
+							<FormControl variant="outlined" className={classes.formControl}>
+								<InputLabel id="simple-select-outlined-promovendedor">PROMOVENDEDOR</InputLabel>
+								<Select
+									labelId="simple-select-outlined-promovendedor"
+									id="simple-select-outlined-promovendedor"
+									value={values.promovendedor}
+									error={Boolean(errors.promovendedor)}
+									onChange={onChangePromovendedor}
+									label="PROMOVENDEDOR" >
+									{promovendedores.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+								</Select>
+							</FormControl>
 						</Grid>
-						<Grid item xs={12} sm={4}>
-							<Multiselect
-								options={materiales} // Options to display in the dropdown
-								displayValue="nombre" // Property name to display in the dropdown options
-								onSelect={(e) => onChangeMateriales(e)} // Function will trigger on select event
-								onRemove={(e) => onChangeMateriales(e)} // Function will trigger on remove event
-								placeholder="SELECCIONA MATERIALES"
-								selectedValues={values.materiales} // Preselected value to persist in dropdown
-							/>
+						<Grid item xs={12} sm={2}>
+							<FormControl variant="outlined" className={classes.formControl}>
+								<InputLabel id="simple-select-outlined-cosmetologa">COSMETÓLOGA</InputLabel>
+								<Select
+									labelId="simple-select-outlined-cosmetologa"
+									id="simple-select-outlined-cosmetologa"
+									value={values.cosmetologa}
+									error={Boolean(errors.cosmetologa)}
+									onChange={onChangeCosmetologa}
+									label="COSMETÓLOGA" >
+									{cosmetologas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+								</Select>
+							</FormControl>
 						</Grid>
-
-						{
-							values.materiales.map((item, index) =>
-								<Grid item xs={12} sm={4}>
-									<TextField
-										className={classes.button}
-										name={item.precio}
-										label={`PRECIO: ${item.nombre}`}
-										value={item.precio}
-										type='Number'
-										onChange={(e) => onChangeItemPrecio(e, index)}
-										variant="outlined" />
-								</Grid>)
-						}
-						<Grid item xs={12} sm={4}>
+						<Grid item xs={12} sm={2}>
 							<FormControl variant="outlined" className={classes.formControl}>
 								<InputLabel id="simple-select-outlined-payment">FORMA DE PAGO</InputLabel>
 								<Select
@@ -309,7 +286,7 @@ export const AgendarEsteticaContainer = (props) => {
 								</Select>
 							</FormControl>
 						</Grid>
-						<Grid item xs={12} sm={4}>
+						<Grid item xs={12} sm={2}>
 							<TextField
 								className={classes.button}
 								name="observaciones"
@@ -319,7 +296,7 @@ export const AgendarEsteticaContainer = (props) => {
 								onChange={onChangeObservaciones}
 								variant="outlined" />
 						</Grid>
-						<Grid item xs={12} sm={4}>
+						<Grid item xs={12} sm={2}>
 							<MuiPickersUtilsProvider utils={DateFnsUtils}>
 								<Grid
 									container
@@ -345,7 +322,7 @@ export const AgendarEsteticaContainer = (props) => {
 								</Grid>
 							</MuiPickersUtilsProvider>
 						</Grid>
-						<Grid item xs={12} sm={4}>
+						<Grid item xs={12} sm={2}>
 							<FormControl variant="outlined" className={classes.formControl}>
 								<InputLabel id="simple-select-outlined-hora">HORA</InputLabel>
 								<Select
@@ -360,7 +337,22 @@ export const AgendarEsteticaContainer = (props) => {
 								</Select>
 							</FormControl>
 						</Grid>
+						<Grid item xs={12} sm={2}>
+							<TextField
+								className={classes.textField}
+								name="total"
+								label="TOTAL ESTÉTICA"
+								value={values.precio}
+								type='Number'
+								onChange={onChangeTotal}
+								onInput={(e) => {
+									e.target.value = e.target.value < 0 ? 0 : e.target.value;
+									e.target.value = Math.max(0, parseFloat(e.target.value)).toString().slice(0, 6)
+								}}
+								variant="outlined" />
+						</Grid>
 					</Grid>
+					{/*
 					<Grid container spacing={2} xs={12} sm={6}>
 						<Grid item xs={3} className={classes.grid_center}>
 							<h3 className={classes.labelItemLeft}>{`NOMBRE`}</h3>
@@ -404,8 +396,9 @@ export const AgendarEsteticaContainer = (props) => {
 									</Fragment>) : ''
 						}
 					</Grid>
-
+*/}
 				</Grid>
+
 				<MuiPickersUtilsProvider utils={DateFnsUtils}>
 					<Grid
 						container

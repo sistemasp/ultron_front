@@ -24,6 +24,7 @@ import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import PrintIcon from '@material-ui/icons/Print';
 import { AgendarCirugiaContainer } from "./agendar_cirugia";
 import { findProductoByServicio } from "../../../services/productos";
+import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -76,6 +77,7 @@ const AgendarCirugia = (props) => {
 	const fisicoMedioId = process.env.REACT_APP_MEDIO_FISICO_ID;
 
 	const [openAlert, setOpenAlert] = useState(false);
+	const [openModalTraspaso, setOpenModalTraspaso] = useState(false);
 	const [message, setMessage] = useState('');
 	const [horarios, setHorarios] = useState([]);
 	const [dermatologos, setDermatologos] = useState([]);
@@ -135,6 +137,7 @@ const AgendarCirugia = (props) => {
 		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
 		{ title: 'TIPO', field: 'tipo_cita.nombre' },
 		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
+		{ title: 'PROMOVENDEDOR', field: 'promovendedor_nombre' },
 		{ title: 'STATUS', field: 'status.nombre' },
 		{ title: 'PRECIO', field: 'precio_moneda' },
 		{ title: 'TOTAL', field: 'total_moneda' },
@@ -158,23 +161,12 @@ const AgendarCirugia = (props) => {
 		paging: false,
 	}
 
-	const loadHorariosByServicio = async (date, servicio) => {
-		const dia = date ? date.getDate() : values.fecha_hora.getDate();
-		const mes = Number(date ? date.getMonth() : values.fecha_hora.getMonth());
-		const anio = date ? date.getFullYear() : values.fecha_hora.getFullYear();
-		const response = await findScheduleByDateAndSucursalAndService(dia, mes, anio, sucursal, servicio);
-		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			setHorarios(response.data);
-		}
-	}
-
 	const handleChangeFecha = (date) => {
 		setIsLoading(true);
 		setValues({
 			...values,
 			fecha_hora: date,
 		});
-		loadHorariosByServicio(date, cirugiaServicioId);
 		setIsLoading(false);
 	};
 
@@ -185,7 +177,11 @@ const AgendarCirugia = (props) => {
 		date.setHours(Number(hora[0]));
 		date.setMinutes(hora[1]);
 		date.setSeconds(0);
-		setValues({ ...values, hora: e.target.value, fecha_hora: date });
+		setValues({
+			...values,
+			hora: e.target.value,
+			fecha_hora: date
+		});
 		setIsLoading(false);
 	};
 
@@ -216,7 +212,7 @@ const AgendarCirugia = (props) => {
 				item.precio_moneda = toFormatterCurrency(item.precio);
 				item.total_moneda = toFormatterCurrency(item.total);
 				item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
-				item.promovendedor_nombre = item.promovendedor ? item.promovendedor.nombre : 'SIN ASIGNAR';
+				item.promovendedor_nombre = 'SIN PROMOVENDEDOR';
 				item.cosmetologa_nombre = item.cosmetologa ? item.cosmetologa.nombre : 'SIN ASIGNAR';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
 			});
@@ -295,10 +291,13 @@ const AgendarCirugia = (props) => {
 		setOpenModalProxima(false);
 	};
 
+	const handleCloseTraspasos = (event, rowData) => {
+		setOpenModalTraspaso(false);
+	}
+
 	const handleOnClickEditarCita = async (event, rowData) => {
 		setIsLoading(true);
 		setCirugia(rowData);
-		await loadHorariosByServicio(new Date(rowData.fecha_hora), rowData.servicio._id);
 		setOpenModal(true);
 		setIsLoading(false);
 	}
@@ -306,7 +305,6 @@ const AgendarCirugia = (props) => {
 	const handleOnClickNuevaCita = async (event, rowData) => {
 		setIsLoading(true);
 		setCirugia(rowData);
-		await loadHorariosByServicio(new Date(rowData.fecha_hora), rowData.servicio._id);
 		setOpenModalProxima(true);
 		setIsLoading(false);
 	}
@@ -329,6 +327,11 @@ const AgendarCirugia = (props) => {
 		setOpenModalImprimirCita(true);
 	}
 
+	const handleClickTraspaso = (event, rowData) => {
+		setCirugia(rowData);
+		setOpenModalTraspaso(true);
+	}
+
 	const actions = [
 		{
 			icon: PrintIcon,
@@ -337,7 +340,7 @@ const AgendarCirugia = (props) => {
 		},
 		{
 			icon: EditIcon,
-			tooltip: 'EDITAR CIRUGíA',
+			tooltip: 'EDITAR',
 			onClick: handleOnClickEditarCita
 		},
 		/*{
@@ -345,6 +348,16 @@ const AgendarCirugia = (props) => {
 			tooltip: 'PAGOS',
 			onClick: handleClickVerPagos
 		},*/
+		{
+			icon: EventAvailableIcon,
+			tooltip: 'NUEVA CITA',
+			onClick: handleOnClickNuevaCita
+		},
+		{
+			icon: AttachMoneyIcon,
+			tooltip: 'TRASPASO',
+			onClick: handleClickTraspaso
+		},
 	];
 
 	const onChangeActions = (e, rowData) => {
@@ -353,11 +366,16 @@ const AgendarCirugia = (props) => {
 			case 'IMPRIMIR':
 				handlePrint(e, rowData);
 				break;
-			case 'EDITAR CIRUGíA':
+			case 'EDITAR':
 				handleOnClickEditarCita(e, rowData);
 				break;
 			case 'PAGOS':
 				handleClickVerPagos(e, rowData);
+				break;
+			case 'NUEVA CITA':
+				handleOnClickNuevaCita(e, rowData);
+			case 'TRASPASO':
+				handleClickTraspaso(e, rowData);
 				break;
 		}
 	}
@@ -483,7 +501,7 @@ const AgendarCirugia = (props) => {
 					item.precio_moneda = toFormatterCurrency(item.precio);
 					item.total_moneda = toFormatterCurrency(item.total);
 					item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
-					item.promovendedor_nombre = item.promovendedor ? item.promovendedor.nombre : 'SIN ASIGNAR';
+					item.promovendedor_nombre = 'SIN PROMOVENDEDOR';
 					item.cosmetologa_nombre = item.cosmetologa ? item.cosmetologa.nombre : 'SIN ASIGNAR';
 					item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
 				});
@@ -524,7 +542,6 @@ const AgendarCirugia = (props) => {
 		loadCirugias();
 		loadFrecuencias();
 		loadProductos();
-		loadHorariosByServicio(new Date(), cirugiaServicioId);
 		loadDermatologos();
 		loadMateriales();
 		loadFormasPago();
@@ -575,8 +592,10 @@ const AgendarCirugia = (props) => {
 								openModalPagos={openModalPagos}
 								openModalProxima={openModalProxima}
 								openModalImprimirCita={openModalImprimirCita}
+								openModalTraspaso={openModalTraspaso}
 								datosImpresion={datosImpresion}
 								onCloseImprimirConsulta={handleCloseImprimirConsulta}
+								onCloseTraspasos={handleCloseTraspasos}
 								sucursal={sucursal}
 								setOpenAlert={setOpenAlert}
 								setMessage={setMessage}

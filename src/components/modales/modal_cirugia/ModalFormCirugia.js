@@ -177,7 +177,7 @@ const ModalFormCirugia = (props) => {
                   displayValue="nombre" // Property name to display in the dropdown options
                   onSelect={(e) => onChangeMateriales(e)} // Function will trigger on select event
                   onRemove={(e) => onChangeMateriales(e)} // Function will trigger on remove event
-                  placeholder="Selecciona materiales"
+                  placeholder="SELECCIONA MATERIALES"
                   selectedValues={values.materiales} // Preselected value to persist in dropdown
                 />
               </Grid>
@@ -204,7 +204,7 @@ const ModalFormCirugia = (props) => {
                       checked={values.hasBiopsia}
                       onChange={onChangeBiopsia}
                       name="checkedG"
-                      label="BIOPSIAS" />
+                      label="BIOPSIA" />
                   </Grid>
                   : ''
               }
@@ -214,8 +214,8 @@ const ModalFormCirugia = (props) => {
                   <Grid item xs={12} sm={3}>
                     <TextField
                       className={classes.textField}
-                      name="cantidad_biopsias"
-                      label="CANTIDAD BIOPSIAS"
+                      name="cantidad_biopsia"
+                      label="CANTIDAD BIOPSIA"
                       value={values.cantidad_biopsias}
                       type='Number'
                       onChange={onChange}
@@ -229,8 +229,8 @@ const ModalFormCirugia = (props) => {
                   <Grid item xs={12} sm={3}>
                     <TextField
                       className={classes.textField}
-                      name="costo_biopsias"
-                      label="COSTO BIOPSIAS"
+                      name="costo_biopsia"
+                      label="COSTO BIOPSIA"
                       value={values.costo_biopsias}
                       type='Number'
                       onChange={onChangeCostoBiopsias}

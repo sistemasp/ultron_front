@@ -227,17 +227,6 @@ const ModalFormEstetica = (props) => {
                   </Grid>)
               }
 
-              {
-                values._id ?
-                  <Grid item xs={12}>
-                    <CheckCustom
-                      checked={values.pagado}
-                      onChange={onChangePagado}
-                      disabled={values.pagado}
-                      name="checkedG"
-                      label="PAGADO" />
-                  </Grid> : ''
-              }
               <Grid item xs={12}>
                 <h2 className={classes.labelItemRight}>PRECIO ACPLICACIÓN: {toFormatterCurrency(values.total_aplicacion)}</h2>
               </Grid>
