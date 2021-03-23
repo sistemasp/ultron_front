@@ -11,6 +11,8 @@ import {
 } from "../../../services/esteticas";
 import { Backdrop, CircularProgress, makeStyles } from '@material-ui/core';
 import ModalFormEstetica from './ModalFormEstetica';
+import { findProductoByServicio } from '../../../services/productos';
+import { showMaterialEsteticasByProducto } from '../../../services/material_estetica';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -36,6 +38,7 @@ const ModalEstetica = (props) => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [toxinasRellenos, setToxinaRellenos] = useState([]);
+  const [productos, setProductos] = useState([]);
 
   const [openModalPagos, setOpenModalPagos] = useState(false);
 
@@ -53,6 +56,7 @@ const ModalEstetica = (props) => {
     paciente: estetica.paciente,
     dermatologo: estetica.dermatologo,
     hora_aplicacion: estetica.hora_aplicacion,
+    producto: estetica.producto,
   });
   const [materiales, setMateriales] = useState([]);
 
@@ -69,26 +73,41 @@ const ModalEstetica = (props) => {
 
   const dataComplete = values.pagado;
 
-  useEffect(() => {
-
-    const loadToxinasRellenos = async () => {
-      const response = await showAllMaterialEsteticas();
-      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-        setToxinaRellenos(response.data);
-      }
+  const loadProductos = async () => {
+    const response = await findProductoByServicio(esteticaServicioId);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setProductos(response.data);
     }
+  }
 
-    const loadMateriales = async () => {
-      const response = await showAllMaterials();
-      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-        setMateriales(response.data);
-      }
+  const loadToxinasRellenos = async () => {
+    const productosIds = estetica.producto.map(pro => {
+      return pro._id;
+    });
+    console.log("KAOZ", productosIds);
+    const response = await showMaterialEsteticasByProducto(productosIds);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setToxinaRellenos(response.data);
     }
+  }
 
+  const loadMateriales = async () => {
+    const response = await showAllMaterials();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setMateriales(response.data);
+    }
+  }
+
+  const loadAll = async () => {
     setIsLoading(true);
-    loadToxinasRellenos();
-    loadMateriales();
+    await loadToxinasRellenos();
+    await loadProductos();
+    await loadMateriales();
     setIsLoading(false);
+  }
+
+  useEffect(() => {
+    loadAll();
   }, []);
 
   const handleChangeToxinasRellenos = async (items) => {
@@ -194,6 +213,16 @@ const ModalEstetica = (props) => {
     });
   }
 
+  const handleChangeProductos = (items) => {
+		setIsLoading(true);
+		setValues({
+			...values,
+			producto: items
+		});
+    loadToxinasRellenos();
+		setIsLoading(false);
+	}
+
   const handleChangeItemPrecio = (e, index) => {
     const newMateriales = values.materiales;
     newMateriales[index].precio = e.target.value;
@@ -246,7 +275,9 @@ const ModalEstetica = (props) => {
             onChangeMateriales={handleChangeMateriales}
             values={values}
             dataComplete={dataComplete}
+            productos={productos}
             onChangePagado={(e) => handleChangePagado(e)}
+            onChangeProductos={(e) => handleChangeProductos(e)}
             tipoServicioId={esteticaServicioId}
             estetica={estetica} />
           :

@@ -946,20 +946,6 @@ export const showAllTipoEsteticas = async () => {
     }
 }
 
-// MATERIALES ESTÉTICA
-
-export const showAllMaterialEsteticas = async () => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/materialestetica`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('showAllMaterialEsteticas', error);
-    }
-}
-
 // TIPO INGRESO
 
 export const showAllTipoIngresos = async () => {

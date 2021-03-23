@@ -132,13 +132,13 @@ const AgendarAparatologia = (props) => {
 	});
 
 	const columns = [
-		{ title: 'FOLIO', field: 'folio' },
+		//{ title: 'FOLIO', field: 'folio' },
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'TELÉFONO', field: 'paciente.telefono' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
-		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
-		{ title: 'HORA SALIDA', field: 'hora_salida' },
+		//{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
+		//{ title: 'HORA SALIDA', field: 'hora_salida' },
 		{ title: 'PRODUCTO (ÁREAS)', field: 'show_tratamientos' },
 		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
@@ -314,7 +314,7 @@ const AgendarAparatologia = (props) => {
 		data.tipo_cita = data.dermatologo._id === dermatologoDirectoId ? directoTipoCitaId : data.tipo_cita;
 		const response = await createAparatologia(data);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-			const consecutivo = {
+			/*const consecutivo = {
 				consecutivo: response.data.consecutivo,
 				tipo_servicio: response.data.servicio,
 				servicio: response.data._id,
@@ -323,7 +323,7 @@ const AgendarAparatologia = (props) => {
 				status: response.data.status,
 			}
 			const responseConsecutivo = await createConsecutivo(consecutivo);
-			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
 				setOpenAlert(true);
 				setSeverity('success');
 				setMessage('APARATOLOGIA AGREGADA CORRECTAMENTE');
@@ -344,7 +344,7 @@ const AgendarAparatologia = (props) => {
 				setDisableDate(true);
 				setPacienteAgendado({});
 				loadAparatologias(new Date());
-			}
+			//}
 		}
 
 		setIsLoading(false);

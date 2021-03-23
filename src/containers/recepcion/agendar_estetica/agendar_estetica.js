@@ -18,6 +18,7 @@ import ModalProximaCita from '../../../components/modales/modal_proxima_cita';
 import ModalEstetica from '../../../components/modales/modal_estetica';
 import ModalImprimirCirugia from '../../../components/modales/imprimir/cirugia';
 import myStyles from '../../../css';
+import ModalTraspasoServicio from '../../../components/modales/traspaso_servicio';
 
 export const AgendarEsteticaContainer = (props) => {
 
@@ -36,6 +37,7 @@ export const AgendarEsteticaContainer = (props) => {
 		onChangeAreas,
 		onChangeFecha,
 		onChangeHora,
+		onChangeMinutos,
 		onChangeFilterDate,
 		filterDate,
 		paciente,
@@ -98,6 +100,9 @@ export const AgendarEsteticaContainer = (props) => {
 		openModalImprimirCita,
 		datosImpresion,
 		onCloseImprimirConsulta,
+		// MODAL TRASPASOS
+		openModalTraspaso,
+		onCloseTraspasos,
 	} = props;
 
 	return (
@@ -131,7 +136,7 @@ export const AgendarEsteticaContainer = (props) => {
 				openModalProxima ?
 					<ModalProximaCita
 						open={openModalProxima}
-						estetica={estetica}
+						cita={estetica}
 						onClickActualizarCita={onClickActualizarCita}
 						onClose={onClickCancel}
 						onChangeServicio={onChangeServicio}
@@ -172,6 +177,19 @@ export const AgendarEsteticaContainer = (props) => {
 						onClose={onCloseImprimirConsulta}
 						servicio="TOXINAS Y RELLENOS"
 						datos={datosImpresion} />
+					: ''
+			}
+			{
+				openModalTraspaso ?
+					<ModalTraspasoServicio
+						open={openModalTraspaso}
+						onClose={onCloseTraspasos}
+						servicio={estetica}
+						empleado={empleado}
+						sucursal={sucursal._id}
+						setMessage={setMessage}
+						setOpenAlert={setOpenAlert}
+						loadServicios={loadEsteticas} />
 					: ''
 			}
 			<Paper>
@@ -323,19 +341,33 @@ export const AgendarEsteticaContainer = (props) => {
 							</MuiPickersUtilsProvider>
 						</Grid>
 						<Grid item xs={12} sm={2}>
-							<FormControl variant="outlined" className={classes.formControl}>
-								<InputLabel id="simple-select-outlined-hora">HORA</InputLabel>
-								<Select
-									labelId="simple-select-outlined-hora"
-									id="simple-select-outlined-hora"
-									value={values.hora}
-									error={Boolean(errors.hora)}
-									onChange={onChangeHora}
-									disabled={!values.fecha_hora}
-									label="HORA" >
-									{horarios.sort().map((item, index) => <MenuItem key={index} value={item.hora}>{item.hora}</MenuItem>)}
-								</Select>
-							</FormControl>
+							<TextField
+								className={classes.textField}
+								name="hora"
+								label="HORA"
+								value={values.hora}
+								type='Text'
+								onChange={onChangeHora}
+								onInput={(e) => {
+									e.target.value = e.target.value < 0 ? 0 : (e.target.value > 24 ? 24 : e.target.value);
+									e.target.value = (e.target.value).toString().slice(0, 2)
+								}}
+								variant="outlined" />
+						</Grid>
+
+						<Grid item xs={12} sm={2}>
+							<TextField
+								className={classes.textField}
+								name="minutos"
+								label="MINUTOS"
+								value={values.minutos}
+								type='Text'
+								onChange={onChangeMinutos}
+								onInput={(e) => {
+									e.target.value = e.target.value < 0 ? 0 : (e.target.value > 60 ? 60 : e.target.value);
+									e.target.value = (e.target.value).toString().slice(0, 2)
+								}}
+								variant="outlined" />
 						</Grid>
 						<Grid item xs={12} sm={2}>
 							<TextField

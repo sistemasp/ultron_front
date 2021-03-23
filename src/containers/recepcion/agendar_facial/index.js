@@ -141,13 +141,13 @@ const AgendarFacial = (props) => {
 	});
 
 	const columns = [
-		{ title: 'FOLIO', field: 'folio' },
+		//{ title: 'FOLIO', field: 'folio' },
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'TELÉFONO', field: 'paciente.telefono' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
-		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
-		{ title: 'HORA SALIDA', field: 'hora_salida' },
+		//{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
+		//{ title: 'HORA SALIDA', field: 'hora_salida' },
 		{ title: 'PRODUCTO (ÁREAS)', field: 'show_tratamientos' },
 		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
@@ -347,7 +347,7 @@ const AgendarFacial = (props) => {
 
 		const response = await createFacial(data);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-			const consecutivo = {
+			/*const consecutivo = {
 				consecutivo: response.data.consecutivo,
 				tipo_servicio: response.data.servicio,
 				servicio: response.data._id,
@@ -356,7 +356,7 @@ const AgendarFacial = (props) => {
 				status: response.data.status,
 			}
 			const responseConsecutivo = await createConsecutivo(consecutivo);
-			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
 				setOpenAlert(true);
 				setSeverity('success');
 				setMessage('EL FACIAL SE AGREGO CORRECTAMENTE');
@@ -370,8 +370,6 @@ const AgendarFacial = (props) => {
 					precio: '',
 					tipo_cita: {},
 				});
-				setTratamientos([]);
-				setAreas([]);
 				setDisableDate(true);
 				setPacienteAgendado({});
 				loadFaciales(data.fecha_hora);
@@ -379,7 +377,7 @@ const AgendarFacial = (props) => {
 					fecha_show: data.fecha_hora,
 					fecha: dateToString(data.fecha_hora),
 				});
-			}
+			//}
 		}
 
 		setIsLoading(false);
@@ -429,7 +427,6 @@ const AgendarFacial = (props) => {
 
 	const handleCloseModal = () => {
 		setOpenModal(false);
-		setTratamientos([]);
 		setOpenModalProxima(false);
 	};
 

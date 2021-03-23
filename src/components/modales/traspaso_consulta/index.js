@@ -74,7 +74,7 @@ const ModalTraspasoConsulta = (props) => {
       const response = await createConsult(servicio);
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
         const servicioRes = response.data;
-        const consecutivo = {
+        /*const consecutivo = {
           consecutivo: response.data.consecutivo,
           tipo_servicio: consultaServicioId,
           servicio: response.data._id,
@@ -84,7 +84,7 @@ const ModalTraspasoConsulta = (props) => {
         }
 
         const responseConsecutivo = await createConsecutivo(consecutivo);
-        if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+        if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
           pagos.forEach(async (pago) => {
             pago.fecha_pago = dateNow;
             pago.observaciones = "TRASPASO";
@@ -118,7 +118,7 @@ const ModalTraspasoConsulta = (props) => {
               }
             }
           });
-        }
+        //}
       }
     }
     loadConsultas(dateNow);

@@ -157,19 +157,16 @@ const ModalFormCita = (props) => {
               <Grid item xs={12} className={classes.label}>
                 <h1 className={classes.label}>PRECIO: {toFormatterCurrency(values.precio)}</h1>
               </Grid>
-              <Grid item xs={12} className={classes.label}>
-                <h1 className={classes.label}>TOTAL: {toFormatterCurrency(values.total)}</h1>
-              </Grid>
               <Grid item xs={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-statements">ESTADO</InputLabel>
+                  <InputLabel id="simple-select-outlined-statements">STATUS</InputLabel>
                   <Select
                     labelId="simple-select-outlined-statements"
                     id="simple-select-outlined-statements"
                     value={values.status}
                     error={Boolean(errors.statements)}
                     onChange={onChangeStatus}
-                    label="ESTADO" >
+                    label="STATUS" >
                     {statements.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
                   </Select>
                 </FormControl>

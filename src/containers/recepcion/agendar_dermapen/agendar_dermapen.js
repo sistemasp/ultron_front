@@ -18,6 +18,7 @@ import ModalProximaCita from '../../../components/modales/modal_proxima_cita';
 import ModalDermapen from '../../../components/modales/modal_dermapen';
 import ModalImprimirDermapen from '../../../components/modales/imprimir/dermapen';
 import myStyles from '../../../css';
+import ModalTraspasoServicio from '../../../components/modales/traspaso_servicio';
 
 export const AgendarDermapenContainer = (props) => {
 
@@ -92,6 +93,9 @@ export const AgendarDermapenContainer = (props) => {
 		openModalImprimirCita,
 		datosImpresion,
 		onCloseImprimirConsulta,
+		// MODAL TRASPASOS
+		openModalTraspaso,
+		onCloseTraspasos,
 	} = props;
 
 	return (
@@ -124,7 +128,7 @@ export const AgendarDermapenContainer = (props) => {
 				openModalProxima ?
 					<ModalProximaCita
 						open={openModalProxima}
-						dermapen={dermapen}
+						cita={dermapen}
 						onClickActualizarCita={onClickActualizarCita}
 						onClose={onClickCancel}
 						onChangeServicio={onChangeServicio}
@@ -164,6 +168,19 @@ export const AgendarDermapenContainer = (props) => {
 						open={openModalImprimirCita}
 						onClose={onCloseImprimirConsulta}
 						datos={datosImpresion} />
+					: ''
+			}
+			{
+				openModalTraspaso ?
+					<ModalTraspasoServicio
+						open={openModalTraspaso}
+						onClose={onCloseTraspasos}
+						servicio={dermapen}
+						empleado={empleado}
+						sucursal={sucursal._id}
+						setMessage={setMessage}
+						setOpenAlert={setOpenAlert}
+						loadServicios={loadDermapens} />
 					: ''
 			}
 			<Paper>

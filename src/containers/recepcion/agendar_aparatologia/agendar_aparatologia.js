@@ -394,18 +394,7 @@ export const AgendarAparatologiaContainer = (props) => {
 						</FormControl>
 					</Grid>
 					<Grid item xs={12} sm={2}>
-						<TextField
-							className={classes.button}
-							name="tiempo"
-							error={Boolean(errors.tiempo)}
-							label="TIEMPO"
-							value={values.tiempo}
-							type='Number'
-							onChange={onChangeTiempo}
-							onInput={(e) => {
-								e.target.value = Math.max(0, parseInt(e.target.value)).toString().slice(0, 3)
-							}}
-							variant="outlined" />
+						<h2>{`TIEMPO: ${values.tiempo} MINUTOS`}</h2>
 					</Grid>
 				</Grid>
 				<MuiPickersUtilsProvider utils={DateFnsUtils}>

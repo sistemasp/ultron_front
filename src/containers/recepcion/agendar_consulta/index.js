@@ -148,13 +148,13 @@ const AgendarConsulta = (props) => {
 	});
 
 	const columns = [
-		{ title: 'FOLIO', field: 'consecutivo' },
+		//{ title: 'FOLIO', field: 'consecutivo' },
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'TELÉFONO', field: 'paciente.telefono' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
-		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
-		{ title: 'HORA SALIDA', field: 'hora_salida' },
+		//{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
+		//{ title: 'HORA SALIDA', field: 'hora_salida' },
 		{ title: 'PRODUCTO', field: 'producto.nombre' },
 		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
@@ -297,7 +297,7 @@ const AgendarConsulta = (props) => {
 
 		const response = await createConsult(data);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-			const consecutivo = {
+			/*const consecutivo = {
 				consecutivo: response.data.consecutivo,
 				tipo_servicio: consultaServicioId,
 				servicio: response.data._id,
@@ -306,7 +306,7 @@ const AgendarConsulta = (props) => {
 				status: response.data.status,
 			}
 			const responseConsecutivo = await createConsecutivo(consecutivo);
-			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
 				setOpenAlert(true);
 				setSeverity('success');
 				setMessage('LA CONSULTA SE AGENDO CORRECTAMENTE');
@@ -325,7 +325,7 @@ const AgendarConsulta = (props) => {
 				setDisableDate(true);
 				setPacienteAgendado({});
 				loadConsultas(new Date());
-			}
+			//}
 		}
 		setIsLoading(false);
 	};
@@ -469,7 +469,7 @@ const AgendarConsulta = (props) => {
 		},
 		{
 			icon: EditIcon,
-			tooltip: 'EDITAR CONSULTA',
+			tooltip: 'EDITAR',
 			onClick: handleOnClickEditarConsulta
 		},
 		{
@@ -553,7 +553,7 @@ const AgendarConsulta = (props) => {
 			case 'IMPRIMIR':
 				handlePrint(e, rowData);
 				break;
-			case 'EDITAR CONSULTA':
+			case 'EDITAR':
 				handleOnClickEditarConsulta(e, rowData);
 				break;
 			case 'AGREGAR CIRUGíA':

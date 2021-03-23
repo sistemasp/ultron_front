@@ -14,6 +14,9 @@ import { createLaser } from '../../../services/laser';
 import { Backdrop, CircularProgress, makeStyles } from '@material-ui/core';
 import { addZero } from '../../../utils/utils';
 import ModalFormProximaCita from './ModalFormProximaCita';
+import { createCirugia } from '../../../services/cirugias';
+import { createEstetica } from '../../../services/esteticas';
+import { createDermapen } from '../../../services/dermapens';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -40,7 +43,9 @@ const ModalProximaCita = (props) => {
     loadAparatologias,
     loadFaciales,
     loadLaser,
+    loadDermapens,
   } = props;
+  console.log("KAOZ", cita);
 
   const [isLoading, setIsLoading] = useState(true);
   const [horarios, setHorarios] = useState([]);
@@ -65,6 +70,9 @@ const ModalProximaCita = (props) => {
   const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
   const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
   const servicioLaserId = process.env.REACT_APP_LASER_SERVICIO_ID;
+  const servicioCirugiaId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID;
+  const servicioEsteticaId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
+  const servicioDermapenId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID;
 
   const [values, setValues] = useState({
     fecha_show: fecha_cita,
@@ -76,6 +84,7 @@ const ModalProximaCita = (props) => {
     paciente_nombre: `${cita.paciente.nombres} ${cita.paciente.apellidos}`,
     telefono: cita.paciente.telefono,
     precio: cita.precio,
+    total: cita.total,
     cosmetologa: cita.cosmetologa ? cita.cosmetologa._id : '',
     quien_agenda: empleado,
     tipo_cita: tipoCitaDerivadaId,
@@ -90,7 +99,9 @@ const ModalProximaCita = (props) => {
     tratamientos: cita.tratamientos,
     areas: cita.areas,
     tiempo: cita.tiempo,
-    dermatologo: cita.dermatologo._id
+    dermatologo: cita.dermatologo._id,
+    forma_pago: cita.forma_pago,
+    producto: cita.producto,
   });
 
   const loadHorarios = async (date) => {
@@ -149,8 +160,6 @@ const ModalProximaCita = (props) => {
   const handleOnClickProximarCita = async (data) => {
     setIsLoading(true);
     data.hora_llegada = '--:--';
-    data.hora_atencion = '--:--';
-    data.hora_salida = '--:--';
     let response;
     switch (cita.servicio._id) {
       case servicioAparatologiaId:
@@ -162,9 +171,18 @@ const ModalProximaCita = (props) => {
       case servicioLaserId:
         response = await createLaser(data);
         break;
+      case servicioCirugiaId:
+        response = await createCirugia(data);
+        break;
+      case servicioEsteticaId:
+        response = await createEstetica(data);
+        break;
+      case servicioDermapenId:
+        response = await createDermapen(data);
+        break;
     }
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-      const consecutivo = {
+      /*const consecutivo = {
         consecutivo: response.data.consecutivo,
         tipo_servicio: cita.servicio._id,
         servicio: response.data._id,
@@ -173,17 +191,17 @@ const ModalProximaCita = (props) => {
         status: response.data.status,
       }
       const responseConsecutivo = await createConsecutivo(consecutivo);
-      if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-        setOpenAlert(true);
-        setMessage('CITA AGREGADA CORRECTAMENTE');
-        const dia = addZero(data.fecha_show.getDate());
-        const mes = addZero(data.fecha_show.getMonth() + 1);
-        const anio = data.fecha_show.getFullYear();
-        setFilterDate({
-          fecha_show: data.fecha_hora,
-          fecha: `${dia}/${mes}/${anio}`
-        });
-      }
+      if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
+      setOpenAlert(true);
+      setMessage('CITA AGREGADA CORRECTAMENTE');
+      const dia = addZero(data.fecha_show.getDate());
+      const mes = addZero(data.fecha_show.getMonth() + 1);
+      const anio = data.fecha_show.getFullYear();
+      setFilterDate({
+        fecha_show: data.fecha_hora,
+        fecha: `${dia}/${mes}/${anio}`
+      });
+      //}
     }
 
     switch (cita.servicio._id) {
@@ -195,6 +213,15 @@ const ModalProximaCita = (props) => {
         break;
       case servicioLaserId:
         await loadLaser(data.fecha_hora);
+        break;
+      case servicioCirugiaId:
+        await createCirugia(data.fecha_hora);
+        break;
+      case servicioEsteticaId:
+        await createEstetica(data.fecha_hora);
+        break;
+      case servicioDermapenId:
+        await loadDermapens(data.fecha_hora);
         break;
     }
     onClose();

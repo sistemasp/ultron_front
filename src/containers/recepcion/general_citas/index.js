@@ -62,7 +62,7 @@ const GeneralCitas = (props) => {
 		rowStyle: rowData => {
 			return {
 				color: rowData.status.color,
-				backgroundColor: rowData.servicio.color,
+				//backgroundColor: rowData.servicio.color,
 			};
 		},
 		headerStyle: {

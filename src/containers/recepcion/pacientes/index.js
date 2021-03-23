@@ -186,7 +186,7 @@ const Pacientes = (props) => {
 		},*/
 		{
 			icon: EventAvailableIcon,
-			tooltip: 'AGREGAR APARATOLOGIA',
+			tooltip: 'AGREGAR APARATOLOGÍA',
 			onClick: onClickAgendarAparatologia
 		},
 		{
@@ -213,7 +213,7 @@ const Pacientes = (props) => {
 			/*case 'AGREGAR LÁSER':
 				onClickAgendarLaser(e, rowData);
 				break;*/
-			case 'AGREGAR APARATOLOGIA':
+			case 'AGREGAR APARATOLOGÍA':
 				onClickAgendarAparatologia(e, rowData);
 				break;
 			case 'ACTUALIZAR REGISTRO':

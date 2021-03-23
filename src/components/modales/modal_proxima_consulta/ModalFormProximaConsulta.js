@@ -6,6 +6,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import { CheckCustom } from '../../basic/CheckCustom';
 import ModalPagos from '../modal_pagos';
+import myStyles from '../../../css';
 
 function getModalStyle() {
   const top = 50;
@@ -47,7 +48,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ModalFormProximaConsulta = (props) => {
-  const classes = useStyles();
+  const classes = myStyles();
 
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
@@ -62,6 +63,8 @@ const ModalFormProximaConsulta = (props) => {
     open,
     horarios,
     onChangeObservaciones,
+    onChangeDermatologo,
+    dermatologos,
   } = props;
 
   return (
@@ -74,10 +77,20 @@ const ModalFormProximaConsulta = (props) => {
           <form onSubmit={handleSubmit}>
             <Grid container spacing={1}>
               <Grid item xs={12}>
-                <h2 className={classes.label}>{values.paciente_nombre} ({values.telefono})</h2>
+                <h2 className={classes.label_left}>{values.paciente_nombre} ({values.telefono})</h2>
               </Grid>
               <Grid item xs={12}>
-                <h3 className={classes.label}>DERMATÓLOGO: {values.dermatologo.nombre}</h3>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-dermatologo"
+                    id="simple-select-outlined-dermatologo"
+                    value={values.dermatologo}
+                    onChange={onChangeDermatologo}
+                    label="DERMATÓLOGO" >
+                    {dermatologos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
               </Grid>
 
               <Grid item xs={12} sm={6}>
@@ -115,7 +128,7 @@ const ModalFormProximaConsulta = (props) => {
               </Grid>
 
               <Grid item xs={12}>
-                <h3 className={classes.label}>PRECIO: {values.precio}</h3>
+                <h3 className={classes.label_left}>PRECIO: {values.precio}</h3>
               </Grid>
 
               <Grid item xs={12}>

@@ -199,19 +199,19 @@ const ModalFormProximaCita = (props) => {
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
                   className={classes.button}
-                  color="primary"
+                  color="secondary"
                   variant="contained"
-                  onClick={() => onClickProximarCita(values)}
-                  text='REAGENDAR' />
+                  onClick={onClose}
+                  text='CANCELAR' />
               </Grid>
 
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
                   className={classes.button}
-                  color="secondary"
+                  color="primary"
                   variant="contained"
-                  onClick={onClose}
-                  text='CANCELAR' />
+                  onClick={() => onClickProximarCita(values)}
+                  text='REAGENDAR' />
               </Grid>
             </Grid>
           </form>

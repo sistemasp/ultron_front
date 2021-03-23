@@ -109,6 +109,8 @@ const AgendarEstetica = (props) => {
 		frecuencia: frecuenciaPrimeraVezId,
 		forma_pago: efectivoMetodoPagoId,
 		medio: fisicoMedioId,
+		hora: 0,
+		minutos: 0,
 	});
 	const [esteticas, setEsteticas] = useState([]);
 	const [openModal, setOpenModal] = useState(false);
@@ -130,14 +132,14 @@ const AgendarEstetica = (props) => {
 	});
 
 	const columns = [
-		{ title: 'FOLIO', field: 'folio' },
+		//{ title: 'FOLIO', field: 'folio' },
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'TELÉFONO', field: 'paciente.telefono' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
-		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
-		{ title: 'HORA SALIDA', field: 'hora_salida' },
-		{ title: 'PRODUCTO', field: 'producto.nombre' },
+		//{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
+		//{ title: 'HORA SALIDA', field: 'hora_salida' },
+		{ title: 'PRODUCTO', field: 'producto_nombre' },
 		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
 		{ title: 'TIPO', field: 'tipo_cita.nombre' },
@@ -188,12 +190,32 @@ const AgendarEstetica = (props) => {
 
 	const handleChangeHora = e => {
 		setIsLoading(true);
-		const hora = (e.target.value).split(':');
-		const date = values.fecha_hora;
-		date.setHours(Number(hora[0]));
-		date.setMinutes(hora[1]);
+		const hora = (e.target.value);
+		const date = new Date(values.fecha_hora);
+		date.setHours(Number(hora));
+		date.setMinutes(Number(values.minutos));
 		date.setSeconds(0);
-		setValues({ ...values, hora: e.target.value, fecha_hora: date });
+		setValues({
+			...values,
+			fecha_hora: date,
+			hora: hora,
+		});
+		setIsLoading(false);
+	};
+
+	const handleChangeMinutos = e => {
+		setIsLoading(true);
+		const minutos = e.target.value;
+		const date = new Date(values.fecha_hora);
+		date.setHours(Number(values.hora));
+		date.setMinutes(minutos);
+		date.setSeconds(0);
+		setValues({
+			...values,
+			fecha_hora: date,
+			minutos: minutos,
+		});
+
 		setIsLoading(false);
 	};
 
@@ -226,6 +248,7 @@ const AgendarEstetica = (props) => {
 				item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
 				item.promovendedor_nombre = 'SIN PROMOVENDEDOR';
+				console.log("KAOZ", item);
 			});
 			setEsteticas(response.data);
 		}
@@ -243,11 +266,9 @@ const AgendarEstetica = (props) => {
 		data.status = asistioStatusId;
 		data.hora_aplicacion = dateNow;
 		data.hora_llegada = `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;;
-		data.hora_atencion = '--:--';
-		data.hora_salida = '--:--';
 		const response = await createEstetica(data);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-			const consecutivo = {
+			/*const consecutivo = {
 				consecutivo: response.data.consecutivo,
 				tipo_servicio: response.data.servicio,
 				servicio: response.data._id,
@@ -256,25 +277,25 @@ const AgendarEstetica = (props) => {
 				status: response.data.status,
 			}
 			const responseConsecutivo = await createConsecutivo(consecutivo);
-			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-				setOpenAlert(true);
-				setMessage('EL ESTÉTICA SE AGREGO CORRECTAMENTE');
-				setValues({
-					materiales: [],
-					dermatologo: '',
-					promovendedor: '',
-					cosmetologa: '',
-					paciente: `${paciente._id}`,
-					precio: '',
-					total: '',
-					tipo_cita: {},
-				});
-				loadEsteticas(data.fecha_hora);
-				setFilterDate({
-					fecha_show: data.fecha_hora,
-					fecha: dateToString(data.fecha_hora),
-				});
-			}
+			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
+			setOpenAlert(true);
+			setMessage('EL ESTÉTICA SE AGREGO CORRECTAMENTE');
+			setValues({
+				materiales: [],
+				dermatologo: '',
+				promovendedor: '',
+				cosmetologa: '',
+				paciente: `${paciente._id}`,
+				precio: '',
+				total: '',
+				tipo_cita: {},
+			});
+			loadEsteticas(data.fecha_hora);
+			setFilterDate({
+				fecha_show: data.fecha_hora,
+				fecha: dateToString(data.fecha_hora),
+			});
+			//}
 		}
 
 		setIsLoading(false);
@@ -560,13 +581,6 @@ const AgendarEstetica = (props) => {
 	}
 
 	useEffect(() => {
-		const loadToxinasRellenos = async () => {
-			const response = await showAllMaterialEsteticas();
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				setToxinaRellenos(response.data);
-			}
-		}
-
 		const loadEsteticas = async () => {
 			const response = await findEsteticaByDateAndSucursal(date.getDate(), date.getMonth(), date.getFullYear(), sucursal);
 			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
@@ -580,6 +594,9 @@ const AgendarEstetica = (props) => {
 					item.promovendedor_nombre = item.promovendedor ? item.promovendedor.nombre : 'SIN ASIGNAR';
 					item.cosmetologa_nombre = item.cosmetologa ? item.cosmetologa.nombre : 'SIN ASIGNAR';
 					item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
+					item.producto_nombre = item.producto.map(product => {
+						return `►${product.nombre} `;
+					});
 				});
 				setEsteticas(response.data);
 			}
@@ -615,7 +632,7 @@ const AgendarEstetica = (props) => {
 		}
 
 		setIsLoading(true);
-		loadToxinasRellenos();
+		//loadToxinasRellenos();
 		loadEsteticas();
 		loadFrecuencias();
 		loadProductos();
@@ -642,6 +659,7 @@ const AgendarEstetica = (props) => {
 								onChangeFecha={(e) => handleChangeFecha(e)}
 								onChangeFilterDate={(e) => handleChangeFilterDate(e)}
 								onChangeHora={(e) => handleChangeHora(e)}
+								onChangeMinutos={(e) => handleChangeMinutos(e)}
 								onChangeMateriales={(e) => handleChangeMateriales(e)}
 								onChangeItemPrecio={handleChangeItemPrecio}
 								onChangeObservaciones={(e) => handleChangeObservaciones(e)}

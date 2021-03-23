@@ -103,6 +103,8 @@ const AgendarCirugia = (props) => {
 		dermatologo: dermatologoDirectoId,
 		forma_pago: efectivoMetodoPagoId,
 		medio: fisicoMedioId,
+		hora: 0,
+		minutos: 0,
 	});
 	const [cirugias, setCirugias] = useState([]);
 	const [openModal, setOpenModal] = useState(false);
@@ -125,13 +127,13 @@ const AgendarCirugia = (props) => {
 	});
 
 	const columns = [
-		{ title: 'FOLIO', field: 'folio' },
+		//{ title: 'FOLIO', field: 'folio' },
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'TELÉFONO', field: 'paciente.telefono' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
-		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
-		{ title: 'HORA SALIDA', field: 'hora_salida' },
+		//{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
+		//{ title: 'HORA SALIDA', field: 'hora_salida' },
 		{ title: 'PRODUCTO', field: 'producto.nombre' },
 		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
@@ -172,16 +174,32 @@ const AgendarCirugia = (props) => {
 
 	const handleChangeHora = e => {
 		setIsLoading(true);
-		const hora = (e.target.value).split(':');
-		const date = values.fecha_hora;
-		date.setHours(Number(hora[0]));
-		date.setMinutes(hora[1]);
+		const hora = (e.target.value);
+		const date = new Date(values.fecha_hora);
+		date.setHours(Number(hora));
+		date.setMinutes(Number(values.minutos));
 		date.setSeconds(0);
 		setValues({
 			...values,
-			hora: e.target.value,
-			fecha_hora: date
+			fecha_hora: date,
+			hora: hora,
 		});
+		setIsLoading(false);
+	};
+
+	const handleChangeMinutos = e => {
+		setIsLoading(true);
+		const minutos = e.target.value;
+		const date = new Date(values.fecha_hora);
+		date.setHours(Number(values.hora));
+		date.setMinutes(minutos);
+		date.setSeconds(0);
+		setValues({
+			...values,
+			fecha_hora: date,
+			minutos: minutos,
+		});
+
 		setIsLoading(false);
 	};
 
@@ -236,7 +254,7 @@ const AgendarCirugia = (props) => {
 		data.hora_salida = '--:--';
 		const response = await createCirugia(data);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-			const consecutivo = {
+			/*const consecutivo = {
 				consecutivo: response.data.consecutivo,
 				tipo_servicio: response.data.servicio,
 				servicio: response.data._id,
@@ -245,7 +263,7 @@ const AgendarCirugia = (props) => {
 				status: response.data.status,
 			}
 			const responseConsecutivo = await createConsecutivo(consecutivo);
-			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
 				setOpenAlert(true);
 				setMessage('EL CIRUGíA SE AGREGO CORRECTAMENTE');
 				setValues({
@@ -264,7 +282,7 @@ const AgendarCirugia = (props) => {
 					fecha_show: data.fecha_hora,
 					fecha: dateToString(data.fecha_hora),
 				});
-			}
+			//}
 		}
 
 		setIsLoading(false);
@@ -374,6 +392,7 @@ const AgendarCirugia = (props) => {
 				break;
 			case 'NUEVA CITA':
 				handleOnClickNuevaCita(e, rowData);
+				break;
 			case 'TRASPASO':
 				handleClickTraspaso(e, rowData);
 				break;
@@ -562,6 +581,7 @@ const AgendarCirugia = (props) => {
 								onChangeFecha={(e) => handleChangeFecha(e)}
 								onChangeFilterDate={(e) => handleChangeFilterDate(e)}
 								onChangeHora={(e) => handleChangeHora(e)}
+								onChangeMinutos={(e) => handleChangeMinutos(e)}
 								onChangeMateriales={(e) => handleChangeMateriales(e)}
 								onChangeItemPrecio={handleChangeItemPrecio}
 								onChangeObservaciones={(e) => handleChangeObservaciones(e)}

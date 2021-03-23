@@ -57,10 +57,11 @@ const ModalFormProximaCirugia = (props) => {
     handleSubmit,
     onChangeFecha,
     onChangeHora,
+    onChangeMinutos,
     onClose,
     onClickProximarCita,
     open,
-    horarios,
+    onChangeTotal,
     onChangeObservaciones,
     onChangeDermatologo,
     cosmetologas,
@@ -132,19 +133,49 @@ const ModalFormProximaCirugia = (props) => {
                 </MuiPickersUtilsProvider>
               </Grid>
 
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={6} sm={3}>
                 <TextField
                   className={classes.textField}
                   name="hora"
                   label="HORA"
                   value={values.hora}
-                  type='text'
+                  type='Text'
                   onChange={onChangeHora}
+                  onInput={(e) => {
+                    e.target.value = e.target.value < 0 ? 0 : (e.target.value > 24 ? 24 : e.target.value);
+                    e.target.value = (e.target.value).toString().slice(0, 2)
+                  }}
                   variant="outlined" />
               </Grid>
 
-              <Grid item xs={12}>
-                <h3 className={classes.label}>PRECIO: {values.precio}</h3>
+              <Grid item xs={6} sm={3}>
+                <TextField
+                  className={classes.textField}
+                  name="minutos"
+                  label="MINUTOS"
+                  value={values.minutos}
+                  type='Text'
+                  onChange={onChangeMinutos}
+                  onInput={(e) => {
+                    e.target.value = e.target.value < 0 ? 0 : (e.target.value > 60 ? 60 : e.target.value);
+                    e.target.value = (e.target.value).toString().slice(0, 2)
+                  }}
+                  variant="outlined" />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  className={classes.textField}
+                  name="total"
+                  label="TOTAL CIRUGíA"
+                  value={values.total}
+                  type='Number'
+                  onChange={onChangeTotal}
+                  onInput={(e) => {
+                    e.target.value = e.target.value < 0 ? 0 : e.target.value;
+                    e.target.value = Math.max(0, parseFloat(e.target.value)).toString().slice(0, 6)
+                  }}
+                  variant="outlined" />
               </Grid>
 
               <Grid item xs={12}>
@@ -160,20 +191,21 @@ const ModalFormProximaCirugia = (props) => {
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
                   className={classes.button}
+                  color="secondary"
+                  variant="contained"
+                  onClick={onClose}
+                  text='CANCELAR' />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <ButtonCustom
+                  className={classes.button}
                   color="primary"
                   variant="contained"
                   onClick={() => onClickProximarCita(values)}
                   text='REAGENDAR' />
               </Grid>
 
-              <Grid item xs={12} sm={6}>
-                <ButtonCustom
-                  className={classes.button}
-                  color="secondary"
-                  variant="contained"
-                  onClick={onClose}
-                  text='CANCELAR' />
-              </Grid>
             </Grid>
           </form>
         </div>

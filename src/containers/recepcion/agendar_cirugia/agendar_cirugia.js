@@ -19,6 +19,7 @@ import ModalCirugia from '../../../components/modales/modal_cirugia';
 import ModalImprimirCirugia from '../../../components/modales/imprimir/cirugia';
 import myStyles from '../../../css';
 import ModalProximaCirugia from '../../../components/modales/modal_proxima_cirugia';
+import ModalTraspasoServicio from '../../../components/modales/traspaso_servicio';
 
 export const AgendarCirugiaContainer = (props) => {
 
@@ -37,6 +38,7 @@ export const AgendarCirugiaContainer = (props) => {
 		onChangeAreas,
 		onChangeFecha,
 		onChangeHora,
+		onChangeMinutos,
 		onChangeFilterDate,
 		filterDate,
 		paciente,
@@ -95,6 +97,9 @@ export const AgendarCirugiaContainer = (props) => {
 		openModalImprimirCita,
 		datosImpresion,
 		onCloseImprimirConsulta,
+		// MODAL TRASPASO
+		openModalTraspaso,
+		onCloseTraspasos,
 	} = props;
 
 	return (
@@ -169,6 +174,19 @@ export const AgendarCirugiaContainer = (props) => {
 						onClose={onCloseImprimirConsulta}
 						servicio="CIRUGÍA"
 						datos={datosImpresion} />
+					: ''
+			}
+			{
+				openModalTraspaso ?
+					<ModalTraspasoServicio
+						open={openModalTraspaso}
+						onClose={onCloseTraspasos}
+						servicio={cirugia}
+						empleado={empleado}
+						sucursal={sucursal._id}
+						setMessage={setMessage}
+						setOpenAlert={setOpenAlert}
+						loadServicios={loadCirugias} />
 					: ''
 			}
 			<Paper>
@@ -304,8 +322,27 @@ export const AgendarCirugiaContainer = (props) => {
 							name="hora"
 							label="HORA"
 							value={values.hora}
-							type='text'
+							type='Text'
 							onChange={onChangeHora}
+							onInput={(e) => {
+								e.target.value = e.target.value < 0 ? 0 : (e.target.value > 24 ? 24 : e.target.value);
+								e.target.value = (e.target.value).toString().slice(0, 2)
+							}}
+							variant="outlined" />
+					</Grid>
+
+					<Grid item xs={12} sm={2}>
+						<TextField
+							className={classes.textField}
+							name="minutos"
+							label="MINUTOS"
+							value={values.minutos}
+							type='Text'
+							onChange={onChangeMinutos}
+							onInput={(e) => {
+								e.target.value = e.target.value < 0 ? 0 : (e.target.value > 60 ? 60 : e.target.value);
+								e.target.value = (e.target.value).toString().slice(0, 2)
+							}}
 							variant="outlined" />
 					</Grid>
 					<Grid item xs={12} sm={2}>
@@ -321,7 +358,7 @@ export const AgendarCirugiaContainer = (props) => {
 								e.target.value = Math.max(0, parseFloat(e.target.value)).toString().slice(0, 6)
 							}}
 							variant="outlined" />
-					</Grid>					
+					</Grid>
 				</Grid>
 				<MuiPickersUtilsProvider utils={DateFnsUtils}>
 					<Grid

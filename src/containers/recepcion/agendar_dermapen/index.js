@@ -139,13 +139,13 @@ const AgendarDermapen = (props) => {
 	});
 
 	const columns = [
-		{ title: 'FOLIO', field: 'folio' },
+		//{ title: 'FOLIO', field: 'folio' },
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'TELÉFONO', field: 'paciente.telefono' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
-		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
-		{ title: 'HORA SALIDA', field: 'hora_salida' },
+		//{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
+		//{ title: 'HORA SALIDA', field: 'hora_salida' },
 		{ title: 'PRODUCTO', field: 'producto.nombre' },
 		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
@@ -267,7 +267,7 @@ const AgendarDermapen = (props) => {
 
 		const response = await createDermapen(data);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-			const consecutivo = {
+			/*const consecutivo = {
 				consecutivo: response.data.consecutivo,
 				tipo_servicio: response.data.servicio,
 				servicio: response.data._id,
@@ -276,7 +276,7 @@ const AgendarDermapen = (props) => {
 				status: response.data.status,
 			}
 			const responseConsecutivo = await createConsecutivo(consecutivo);
-			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
 				setOpenAlert(true);
 				setMessage('EL DERMAPEN SE AGREGO CORRECTAMENTE');
 				setValues({
@@ -289,14 +289,12 @@ const AgendarDermapen = (props) => {
 					total: '',
 					tipo_cita: {},
 				});
-				setTratamientos([]);
-				setAreas([]);
 				loadDermapens(data.fecha_hora);
 				setFilterDate({
 					fecha_show: data.fecha_hora,
 					fecha: dateToString(data.fecha_hora),
 				});
-			}
+			//}
 		}
 
 		setIsLoading(false);
@@ -336,7 +334,6 @@ const AgendarDermapen = (props) => {
 
 	const handleCloseModal = () => {
 		setOpenModal(false);
-		setTratamientos([]);
 		setOpenModalProxima(false);
 	};
 
@@ -526,6 +523,7 @@ const AgendarDermapen = (props) => {
 					_id: dermapenTratamientoId,
 					nombre: "DERMAPEN",
 					areasSeleccionadas: items,
+					servicio: dermapenServicioId,
 				}
 			],
 			fecha_hora: '',

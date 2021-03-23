@@ -113,6 +113,7 @@ const AgendarAparatologia = (props) => {
 		frecuencia: frecuenciaPrimeraVezId,
 		forma_pago: efectivoMetodoPagoId,
 		medio: fisicoMedioId,
+		tiempo: 0,
 	});
 	const [aparatologias, setAparatologias] = useState([]);
 	const [areas, setAreas] = useState([]);
@@ -135,13 +136,13 @@ const AgendarAparatologia = (props) => {
 	});
 
 	const columns = [
-		{ title: 'FOLIO', field: 'folio' },
+		//{ title: 'FOLIO', field: 'folio' },
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'TELÉFONO', field: 'paciente.telefono' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
-		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
-		{ title: 'HORA SALIDA', field: 'hora_salida' },
+		//{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
+		//{ title: 'HORA SALIDA', field: 'hora_salida' },
 		{ title: 'PRODUCTO (ÁREAS)', field: 'show_tratamientos' },
 		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
@@ -220,12 +221,30 @@ const AgendarAparatologia = (props) => {
 		setIsLoading(false);
 	};
 
+	const getTimeToTratamiento = () => {
+		let tiempo = 0;
+		values.tratamientos.forEach(tratamiento => {
+			tratamiento.areasSeleccionadas.sort((a, b) => {
+				if (a.tiempo < b.tiempo) return 1;
+				if (a.tiempo > b.tiempo) return -1;
+				return 0;
+			});
+			
+			tratamiento.areasSeleccionadas.forEach((item, index) => {
+				tiempo += Number(item.tiempo);
+			});
+		});
+		
+		return tiempo;
+	}
+
 	const handleChangeTratamientos = (e) => {
 		e.map(async (tratamiento) => {
 			setIsLoading(true);
 			const response = await findAreasByTreatmentServicio(tratamiento.servicio, tratamiento._id);
 			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 				tratamiento.areas = response.data;
+				tratamiento.areasSeleccionadas = tratamiento.areasSeleccionadas ? tratamiento.areasSeleccionadas : [];
 				setIsLoading(false);
 				setValues({
 					...values,
@@ -236,6 +255,7 @@ const AgendarAparatologia = (props) => {
 				});
 			}
 		});
+		values.tiempo = getTimeToTratamiento();
 	};
 
 	const handleChangeAreas = async (items, tratamiento) => {
@@ -249,7 +269,8 @@ const AgendarAparatologia = (props) => {
 						sucursal === sucursalManuelAcunaId ? item.precio_ma // Precio Manuel Acuña
 							: (sucursal === sucursalOcciId ? item.precio_oc // Precio Occidental
 								: (sucursal === sucursalFedeId ? item.precio_fe // Precio Federalismo
-									: 0)); // Error
+									: (sucursal === sucursalFedeId ? item.precio_rd // Precio Ruben Dario
+										: 0))); // Error
 					precio = Number(precio) + Number(itemPrecio);
 				});
 			}
@@ -259,10 +280,12 @@ const AgendarAparatologia = (props) => {
 			fecha_hora: '',
 			precio: precio,
 			total: precio,
+			tiempo: getTimeToTratamiento(),
 		});
 		setDisableDate(false);
 		setIsLoading(false);
 	}
+
 	const handleChangeFecha = (date) => {
 		setIsLoading(true);
 		setValues({
@@ -334,12 +357,10 @@ const AgendarAparatologia = (props) => {
 		data.sucursal = sucursal;
 		data.status = pendienteStatusId;
 		data.hora_llegada = '--:--';
-		data.hora_atencion = '--:--';
-		data.hora_salida = '--:--';
 		data.tipo_cita = data.dermatologo._id === dermatologoDirectoId ? directoTipoCitaId : data.tipo_cita;
 		const response = await createAparatologia(data);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-			const consecutivo = {
+			/*const consecutivo = {
 				consecutivo: response.data.consecutivo,
 				tipo_servicio: response.data.servicio,
 				servicio: response.data._id,
@@ -348,7 +369,7 @@ const AgendarAparatologia = (props) => {
 				status: response.data.status,
 			}
 			const responseConsecutivo = await createConsecutivo(consecutivo);
-			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
 				setOpenAlert(true);
 				setSeverity('success');
 				setMessage('APARATOLOGIA AGREGADA CORRECTAMENTE');
@@ -364,12 +385,10 @@ const AgendarAparatologia = (props) => {
 					tipo_cita: {},
 					tiempo: '30',
 				});
-				setTratamientos([]);
-				setAreas([]);
 				setDisableDate(true);
 				setPacienteAgendado({});
 				loadAparatologias(new Date());
-			}
+			//}
 		}
 
 		setIsLoading(false);
@@ -420,7 +439,6 @@ const AgendarAparatologia = (props) => {
 
 	const handleCloseModal = () => {
 		setOpenModal(false);
-		setTratamientos([]);
 		setOpenModalProxima(false);
 	};
 

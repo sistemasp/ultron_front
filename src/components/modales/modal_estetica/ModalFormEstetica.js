@@ -92,6 +92,8 @@ const ModalFormEstetica = (props) => {
     sucursal,
     toxinasRellenos,
     materiales,
+    productos,
+    onChangeProductos,
     onChangeToxinasRellenos,
     onChangeMateriales,
     onChangeItemUnidades,
@@ -134,6 +136,17 @@ const ModalFormEstetica = (props) => {
               </Grid>
               <Grid item xs={12}>
                 <h2 className={classes.label}>DERMATÓLOGO: {estetica.dermatologo.nombre}</h2>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Multiselect
+                  options={productos} // Options to display in the dropdown
+                  displayValue="nombre" // Property name to display in the dropdown options
+                  onSelect={(e) => onChangeProductos(e)} // Function will trigger on select event
+                  onRemove={(e) => onChangeProductos(e)} // Function will trigger on remove event
+                  placeholder={`PRODUCTO`}
+                  selectedValues={values.producto} // Preselected value to persist in dropdown
+                />
               </Grid>
 
               <Grid item xs={12}>
