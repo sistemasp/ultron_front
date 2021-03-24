@@ -189,14 +189,11 @@ const ModalCita = (props) => {
 
   const loadAreas = () => {
     cita.tratamientos.map(async (tratamiento) => {
-      setIsLoading(true);
       const response = await findAreasByTreatmentServicio(tratamiento.servicio, tratamiento._id);
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
         tratamiento.areas = response.data;
-        setIsLoading(false);
       }
     });
-
   }
 
   const handleChangeTratamientos = (e) => {

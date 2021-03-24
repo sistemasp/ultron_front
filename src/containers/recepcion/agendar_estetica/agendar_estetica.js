@@ -14,11 +14,11 @@ import { Multiselect } from 'multiselect-react-dropdown';
 import ModalPagos from '../../../components/modales/modal_pagos';
 import { toFormatterCurrency } from '../../../utils/utils';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
-import ModalProximaCita from '../../../components/modales/modal_proxima_cita';
 import ModalEstetica from '../../../components/modales/modal_estetica';
 import ModalImprimirCirugia from '../../../components/modales/imprimir/cirugia';
 import myStyles from '../../../css';
 import ModalTraspasoServicio from '../../../components/modales/traspaso_servicio';
+import ModalProximaEstetica from '../../../components/modales/modal_proxima_estetica';
 
 export const AgendarEsteticaContainer = (props) => {
 
@@ -60,7 +60,6 @@ export const AgendarEsteticaContainer = (props) => {
 		onChangeItemUnidades,
 		onChangeMedio,
 		medios,
-		toxinasRellenos,
 		materiales,
 		onChangeMateriales,
 		onChangeItemPrecio,
@@ -134,9 +133,9 @@ export const AgendarEsteticaContainer = (props) => {
 			}
 			{
 				openModalProxima ?
-					<ModalProximaCita
+					<ModalProximaEstetica
 						open={openModalProxima}
-						cita={estetica}
+						estetica={estetica}
 						onClickActualizarCita={onClickActualizarCita}
 						onClose={onClickCancel}
 						onChangeServicio={onChangeServicio}

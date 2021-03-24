@@ -87,7 +87,6 @@ const AgendarEstetica = (props) => {
 	const [frecuencias, setFrecuencias] = useState([]);
 	const [productos, setProductos] = useState([]);
 	const [medios, setMedios] = useState([]);
-	const [toxinasRellenos, setToxinaRellenos] = useState([]);
 	const [formasPago, setFormasPago] = useState([]);
 
 	const [values, setValues] = useState({
@@ -248,6 +247,16 @@ const AgendarEstetica = (props) => {
 				item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
 				item.promovendedor_nombre = 'SIN PROMOVENDEDOR';
+				item.producto_nombre = item.producto.map(product => {
+					const toxinasRellenos = item.toxinas_rellenos.filter(toxina_relleno => {
+						return toxina_relleno.producto._id === product._id;
+					});
+					const show_toxinas = toxinasRellenos.map(toxinaRelleno => {
+						return `${toxinaRelleno.nombre}`;
+					});
+					console.log("KAOZ", toxinasRellenos);
+					return `►${product.nombre}(${show_toxinas}) `;
+				});
 				console.log("KAOZ", item);
 			});
 			setEsteticas(response.data);
@@ -580,70 +589,54 @@ const AgendarEstetica = (props) => {
 		}
 	}
 
-	useEffect(() => {
-		const loadEsteticas = async () => {
-			const response = await findEsteticaByDateAndSucursal(date.getDate(), date.getMonth(), date.getFullYear(), sucursal);
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				await response.data.forEach(item => {
-					item.folio = generateFolio(item);
-					const fecha = new Date(item.fecha_hora);
-					item.hora = `${addZero(fecha.getHours())}:${addZero(fecha.getMinutes())}`;
-					item.precio_moneda = toFormatterCurrency(item.precio);
-					item.total_moneda = toFormatterCurrency(item.total);
-					item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
-					item.promovendedor_nombre = item.promovendedor ? item.promovendedor.nombre : 'SIN ASIGNAR';
-					item.cosmetologa_nombre = item.cosmetologa ? item.cosmetologa.nombre : 'SIN ASIGNAR';
-					item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
-					item.producto_nombre = item.producto.map(product => {
-						return `►${product.nombre} `;
-					});
-				});
-				setEsteticas(response.data);
-			}
-			setIsLoading(false);
+	const loadDermatologos = async () => {
+		const response = await findEmployeesByRolId(dermatologoRolId);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setDermatologos(response.data);
 		}
+	}
 
-		const loadDermatologos = async () => {
-			const response = await findEmployeesByRolId(dermatologoRolId);
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				setDermatologos(response.data);
-			}
+	const loadMateriales = async () => {
+		const response = await showAllMaterials();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setMateriales(response.data);
 		}
+	}
 
-		const loadMateriales = async () => {
-			const response = await showAllMaterials();
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				setMateriales(response.data);
-			}
+	const loadFrecuencias = async () => {
+		const response = await showAllFrecuencias();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setFrecuencias(response.data);
 		}
+	}
 
-		const loadFrecuencias = async () => {
-			const response = await showAllFrecuencias();
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				setFrecuencias(response.data);
-			}
+	const loadProductos = async () => {
+		const response = await findProductoByServicio(esteticaServicioId);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setProductos(response.data);
 		}
+	}
 
-		const loadProductos = async () => {
-			const response = await findProductoByServicio(esteticaServicioId);
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				setProductos(response.data);
-			}
-		}
-
+	const loadAll = async () => {
 		setIsLoading(true);
 		//loadToxinasRellenos();
-		loadEsteticas();
-		loadFrecuencias();
-		loadProductos();
-		loadFormasPago();
-		loadHorariosByServicio(new Date(), esteticaServicioId);
-		loadDermatologos();
-		loadMateriales();
-		loadCosmetologas();
-		loadPromovendedores();
-		loadMedios();
-	}, [sucursal]);
+		await loadEsteticas(new Date());
+		await loadFrecuencias();
+		await loadProductos();
+		await loadFormasPago();
+		await loadHorariosByServicio(new Date(), esteticaServicioId);
+		await loadDermatologos();
+		await loadMateriales();
+		await loadCosmetologas();
+		await loadPromovendedores();
+		await loadMedios();
+		setIsLoading(false);
+
+	}
+
+	useEffect(() => {
+		loadAll();
+	}, []);
 
 	return (
 		<Fragment>
@@ -686,7 +679,6 @@ const AgendarEstetica = (props) => {
 								empleado={empleado}
 								promovendedores={promovendedores}
 								cosmetologas={cosmetologas}
-								toxinasRellenos={toxinasRellenos}
 								onClickCancel={handleCloseModal}
 								loadEsteticas={loadEsteticas}
 								dermatologos={dermatologos}

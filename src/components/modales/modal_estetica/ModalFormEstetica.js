@@ -16,6 +16,7 @@ function getModalStyle() {
     top: `${top}%`,
     left: `${left}%`,
     transform: `translate(-${top}%, -${left}%)`,
+    overflow: 'scroll',
   };
 }
 
@@ -25,6 +26,7 @@ const useStyles = makeStyles(theme => ({
     width: 700,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
+    height: '90%',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },

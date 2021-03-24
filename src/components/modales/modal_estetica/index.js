@@ -34,10 +34,11 @@ const ModalEstetica = (props) => {
     setOpenAlert,
     setMessage,
     estetica,
+    loadEsteticas,
   } = props;
 
   const [isLoading, setIsLoading] = useState(true);
-  const [toxinasRellenos, setToxinaRellenos] = useState([]);
+  const [toxinasRellenos, setToxinasRellenos] = useState([]);
   const [productos, setProductos] = useState([]);
 
   const [openModalPagos, setOpenModalPagos] = useState(false);
@@ -80,15 +81,19 @@ const ModalEstetica = (props) => {
     }
   }
 
-  const loadToxinasRellenos = async () => {
-    const productosIds = estetica.producto.map(pro => {
+  const loadToxinasRellenos = async (productos) => {
+    const productosIds = productos.map(pro => {
       return pro._id;
     });
-    console.log("KAOZ", productosIds);
-    const response = await showMaterialEsteticasByProducto(productosIds);
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setToxinaRellenos(response.data);
+    if (productosIds.length > 0) {
+      const response = await showMaterialEsteticasByProducto(productosIds);
+      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+        setToxinasRellenos(response.data);
+      }
+    } else {
+      setToxinasRellenos([]);
     }
+
   }
 
   const loadMateriales = async () => {
@@ -100,7 +105,7 @@ const ModalEstetica = (props) => {
 
   const loadAll = async () => {
     setIsLoading(true);
-    await loadToxinasRellenos();
+    await loadToxinasRellenos(values.producto);
     await loadProductos();
     await loadMateriales();
     setIsLoading(false);
@@ -119,37 +124,15 @@ const ModalEstetica = (props) => {
     setIsLoading(false);
   }
 
-  const handleClickCrearEstetica = async (event, data) => {
-    const fecha_actual = new Date();
-    fecha_actual.setHours(fecha_actual.getHours());
-    data.fecha_hora = fecha_actual;
-    data.servicio = esteticaServicioId;
-    if (!data._id) {
-      data.status = asistioStatusId;
-    }
-    const update = data._id ? {} : await updateConsult(consulta._id, { ...consulta, status: enProcedimientoStatusId });
-    const response = data._id ? await updateEstetica(data._id, data) : await createEstetica(data);
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
-      || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-      if (data._id) {
+  const handleClickGuardarEstetica = async (event, data) => {
+
+    //const update = data._id ? {} : await updateConsult(consulta._id, { ...consulta, status: enProcedimientoStatusId });
+    const response = await updateEstetica(data._id, data);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
         setOpenAlert(true);
         setMessage('ESTÉTICA ACTUALIZADA CORRECTAMENTE.');
-      } else {
-        const consecutivo = {
-          consecutivo: response.data.consecutivo,
-          tipo_servicio: esteticaServicioId,
-          servicio: response.data._id,
-          sucursal: data.sucursal,
-          fecha_hora: new Date(),
-          status: response.data.status,
-        }
-        const responseConsecutivo = await createConsecutivo(consecutivo);
-        if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-          setOpenAlert(true);
-          setMessage('ESTÉTICA GUARDADA CORRECTAMENTE.');
-        }
-      }
     }
+    loadEsteticas(new Date(data.fecha_hora));
     onClose();
   }
 
@@ -213,15 +196,15 @@ const ModalEstetica = (props) => {
     });
   }
 
-  const handleChangeProductos = (items) => {
-		setIsLoading(true);
-		setValues({
-			...values,
-			producto: items
-		});
-    loadToxinasRellenos();
-		setIsLoading(false);
-	}
+  const handleChangeProductos = items => {
+    setIsLoading(true);
+    setValues({
+      ...values,
+      producto: items
+    });
+    loadToxinasRellenos(items);
+    setIsLoading(false);
+  }
 
   const handleChangeItemPrecio = (e, index) => {
     const newMateriales = values.materiales;
@@ -260,7 +243,7 @@ const ModalEstetica = (props) => {
             onClose={onClose}
             consulta={consulta}
             empleado={empleado}
-            onClickCrearEstetica={handleClickCrearEstetica}
+            onClickCrearEstetica={handleClickGuardarEstetica}
             onChange={handleChange}
             onChangeTotal={handleChangeTotal}
             openModalPagos={openModalPagos}
