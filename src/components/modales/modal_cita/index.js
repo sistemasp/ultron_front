@@ -7,6 +7,9 @@ import {
   updatePago,
   deletePago,
   createConsecutivo,
+  showAllFrecuencias,
+  showAllMedios,
+  showAllMetodoPago,
 } from "../../../services";
 import {
   updateIngreso,
@@ -97,6 +100,8 @@ const ModalCita = (props) => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [areas, setAreas] = useState([]);
+  const [frecuencias, setFrecuencias] = useState([]);
+  const [formasPago, setFormasPago] = useState([]);
   const [horarios, setHorarios] = useState([]);
   const [promovendedores, setPromovendedores] = useState([]);
   const [cosmetologas, setCosmetologas] = useState([]);
@@ -104,6 +109,7 @@ const ModalCita = (props) => {
   const [tipoCitas, setTipoCitas] = useState([]);
   const [statements, setStatements] = useState([]);
   const [previousState, setPreviousState] = useState();
+  const [medios, setMedios] = useState([]);
 
   const [openModalPagos, setOpenModalPagos] = useState(false);
   const [openModalConfirmacion, setOpenModalConfirmacion] = useState(false);
@@ -145,9 +151,31 @@ const ModalCita = (props) => {
     hora_aplicacion: cita.hora_aplicacion,
     tratamientos: cita.tratamientos,
     areas: cita.areas,
-    frecuencia: cita.frecuencia,
-    forma_pago: cita.forma_pago,
+    frecuencia: cita.frecuencia._id,
+    forma_pago: cita.forma_pago._id,
+    medio: cita.medio._id,
   });
+
+  const loadMedios = async () => {
+		const response = await showAllMedios();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setMedios(response.data);
+		}
+	}
+
+  const loadFrecuencias = async () => {
+		const response = await showAllFrecuencias();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setFrecuencias(response.data);
+		}
+	}
+
+  const loadFormasPago = async () => {
+		const response = await showAllMetodoPago();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setFormasPago(response.data);
+		}
+	}
 
   const loadHorarios = async (date) => {
     const dia = date ? date.getDate() : values.fecha_hora.getDate();
@@ -186,6 +214,17 @@ const ModalCita = (props) => {
       }
     });
   };
+
+  const handleChangeMedio = (e) => {
+		setValues({ ...values, medio: e.target.value });
+	}
+
+  const handleChangePaymentMethod = (event) => {
+		setValues({
+			...values,
+			forma_pago: event.target.value,
+		});
+	}
 
   const handleChangeFecha = async (date) => {
     setIsLoading(true);
@@ -319,7 +358,6 @@ const ModalCita = (props) => {
       rowData.observaciones = `TRATAMIENTO REAGENDADO ${values.fecha_actual} - ${values.hora_actual} HRS`;
       rowData.fecha_hora = rowData.nueva_fecha_hora;
       let response;
-      console.log("KAOZ", rowData);
       switch (cita.servicio._id) {
         case servicioAparatologiaId:
           response = await createAparatologia(rowData);
@@ -431,6 +469,13 @@ const ModalCita = (props) => {
     setOpenModalConfirmacion(false);
   }
 
+  const handleChangeFrecuencia = (e) => {
+		setValues({
+			...values,
+			frecuencia: e.target.value,
+		});
+	}
+
   const handleGuardarModalPagos = (pagos) => {
     setValues({
       ...values,
@@ -462,55 +507,61 @@ const ModalCita = (props) => {
     setIsLoading(false);
   }
 
-  useEffect(() => {
-
-    const loadPromovendedores = async () => {
-      const response = await findEmployeesByRolId(promovendedorRolId);
-      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-        setPromovendedores(response.data);
-      }
+  const loadPromovendedores = async () => {
+    const response = await findEmployeesByRolId(promovendedorRolId);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setPromovendedores(response.data);
     }
+  }
 
-    const loadCosmetologas = async () => {
-      const response = await findEmployeesByRolId(cosmetologaRolId);
-      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-        setCosmetologas(response.data);
-      }
+  const loadCosmetologas = async () => {
+    const response = await findEmployeesByRolId(cosmetologaRolId);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setCosmetologas(response.data);
     }
+  }
 
-    const loadDoctores = async () => {
-      const response = await findEmployeesByRolId(dermatologoRolId);
-      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-        setDoctores(response.data);
-      }
+  const loadDoctores = async () => {
+    const response = await findEmployeesByRolId(dermatologoRolId);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setDoctores(response.data);
     }
+  }
 
-    const loadTipoCitas = async () => {
-      const response = await showAllTipoCitas();
-      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-        setTipoCitas(response.data);
-      }
-      setIsLoading(false);
+  const loadTipoCitas = async () => {
+    const response = await showAllTipoCitas();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setTipoCitas(response.data);
     }
-
-    const loadStaus = async () => {
-      const response = await showAllStatusVisibles();
-      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-        setStatements(response.data);
-      }
-      setIsLoading(false);
-    }
-
-    setIsLoading(true);
-    loadAreas(cita);
-    loadHorarios(new Date());
-    loadPromovendedores();
-    loadCosmetologas();
-    loadDoctores();
-    loadTipoCitas();
-    loadStaus();
     setIsLoading(false);
-  }, [cita, promovendedorRolId, cosmetologaRolId, dermatologoRolId]);
+  }
+
+  const loadStaus = async () => {
+    const response = await showAllStatusVisibles();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setStatements(response.data);
+    }
+    setIsLoading(false);
+  }
+
+  const loadAll = async () => {
+    setIsLoading(true);
+    await loadAreas(cita);
+    await loadHorarios(new Date());
+    await loadPromovendedores();
+    await loadCosmetologas();
+    await loadDoctores();
+    await loadTipoCitas();
+    await loadStaus();
+    await loadFrecuencias();
+    await loadMedios();
+    await loadFormasPago();
+    setIsLoading(false);
+  }
+
+  useEffect(() => {
+    loadAll();
+  }, []);
 
   return (
     <Fragment>
@@ -538,18 +589,24 @@ const ModalCita = (props) => {
                 onChangeCosmetologa={(e) => handleChangeCosmetologa(e)}
                 onChangeDermatologo={(e) => handleChangeDermatologo(e)}
                 onChangeTiempo={(e) => handleChangeTiempo(e)}
+                frecuencias={frecuencias}
+								onChangeFrecuencia={(e) => handleChangeFrecuencia(e)}
                 tratamientos={tratamientos}
                 areas={areas}
+                medios={medios}
                 horarios={horarios}
                 promovendedores={promovendedores}
                 cosmetologas={cosmetologas}
                 doctores={doctores}
                 tipoCitas={tipoCitas}
+                formasPago={formasPago}
                 statements={statements}
                 onChangeSesion={handleChangeSesion}
                 onChangePrecio={handleChangePrecio}
                 onChangeMotivos={handleChangeMotivos}
                 onChangeObservaciones={handleChangeObservaciones}
+                onChangeMedio={(e) => handleChangeMedio(e)}
+                onChangePaymentMethod={(e) => handleChangePaymentMethod(e)}
                 onChangePagado={(e) => handleChangePagado(e)}
                 openModalPagos={openModalPagos}
                 onCloseModalPagos={handleCloseModalPagos}

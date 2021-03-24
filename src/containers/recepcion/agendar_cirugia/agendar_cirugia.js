@@ -52,7 +52,7 @@ export const AgendarCirugiaContainer = (props) => {
 		dermatologos,
 		promovendedores,
 		cosmetologas,
-		onChangeDoctors,
+		onChangeDermatologos,
 		onChangeTipoCita,
 		onChangeTotal,
 		onChangeCosmetologa,
@@ -248,7 +248,7 @@ export const AgendarCirugiaContainer = (props) => {
 								id="simple-select-outlined-dermatologo"
 								value={values.dermatologo}
 								error={Boolean(errors.dermatologo)}
-								onChange={onChangeDoctors}
+								onChange={onChangeDermatologos}
 								label="DERMATÓLOGO" >
 								{dermatologos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
 							</Select>

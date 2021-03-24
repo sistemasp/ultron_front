@@ -4,6 +4,9 @@ import {
   showAllMaterials,
   createConsecutivo,
   findSchedulesBySucursalAndServicio,
+  showAllMetodoPago,
+  showAllMedios,
+  showAllFrecuencias,
 } from "../../../services";
 import {
   createCirugia,
@@ -13,6 +16,7 @@ import { Backdrop, CircularProgress, makeStyles } from '@material-ui/core';
 import { addZero } from '../../../utils/utils';
 import ModalFormCirugia from './ModalFormCirugia';
 import { createBiopsia } from '../../../services/biopsias';
+import { findProductoByServicio } from '../../../services/productos';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -37,12 +41,30 @@ const ModalCirugia = (props) => {
     cirugia,
   } = props;
 
+  const promovendedorRolId = process.env.REACT_APP_PROMOVENDEDOR_ROL_ID;
+  const dermatologoRolId = process.env.REACT_APP_DERMATOLOGO_ROL_ID;
+  const pendienteStatusId = process.env.REACT_APP_PENDIENTE_STATUS_ID;
+  const asistioStatusId = process.env.REACT_APP_ASISTIO_STATUS_ID;
+  const reagendoStatusId = process.env.REACT_APP_REAGENDO_STATUS_ID;
+  const enProcedimientoStatusId = process.env.REACT_APP_EN_PROCEDIMIENTO_STATUS_ID;
+  const patologoRolId = process.env.REACT_APP_PATOLOGO_ROL_ID;
+  const cirugiaServicioId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID;
+  const biopsiaServicioId = process.env.REACT_APP_BIOPSIA_SERVICIO_ID;
+  const frecuenciaPrimeraVezId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
+  const frecuenciaReconsultaId = process.env.REACT_APP_FRECUENCIA_RECONSULTA_ID;
+  const productoCirugiaId = process.env.REACT_APP_PRODUCTO_CIRUGIA_ID;
+
   const [isLoading, setIsLoading] = useState(true);
   const [materiales, setMateriales] = useState([]);
   const [patologos, setPatologos] = useState([]);
+  const [dermatologos, setDermatologos] = useState([]);
 
   const [openModalPagos, setOpenModalPagos] = useState(false);
   const [horarios, setHorarios] = useState([]);
+  const [formasPago, setFormasPago] = useState([]);
+  const [frecuencias, setFrecuencias] = useState([]);
+  const [productos, setProductos] = useState([]);
+  const [medios, setMedios] = useState([]);
 
   const [values, setValues] = useState({
     _id: cirugia._id,
@@ -56,7 +78,7 @@ const ModalCirugia = (props) => {
     biopsias: cirugia.biopsias,
     pagado: cirugia.pagado,
     paciente: cirugia.paciente,
-    dermatologo: cirugia.dermatologo,
+    dermatologo: cirugia.dermatologo._id,
     hasBiopsia: cirugia.hasBiopsia,
     cantidad_biopsias: cirugia.biopsias ? cirugia.biopsias.length : 0,
     costo_biopsias: cirugia.costo_biopsias ? cirugia.costo_biopsias : 0,
@@ -64,17 +86,11 @@ const ModalCirugia = (props) => {
     hora_aplicacion: cirugia.hora_aplicacion,
     total_aplicacion: cirugia.total_aplicacion,
     patologo: cirugia.patologo,
+    frecuencia: cirugia.frecuencia._id,
+    medio: cirugia.medio._id,
+    forma_pago: cirugia.forma_pago._id,
+    producto: cirugia.producto._id,
   });
-
-  const promovendedorRolId = process.env.REACT_APP_PROMOVENDEDOR_ROL_ID;
-  const dermatologoRolId = process.env.REACT_APP_DERMATOLOGO_ROL_ID;
-  const pendienteStatusId = process.env.REACT_APP_PENDIENTE_STATUS_ID;
-  const asistioStatusId = process.env.REACT_APP_ASISTIO_STATUS_ID;
-  const reagendoStatusId = process.env.REACT_APP_REAGENDO_STATUS_ID;
-  const enProcedimientoStatusId = process.env.REACT_APP_EN_PROCEDIMIENTO_STATUS_ID;
-  const patologoRolId = process.env.REACT_APP_PATOLOGO_ROL_ID;
-  const cirugiaServicioId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID;
-  const biopsiaServicioId = process.env.REACT_APP_BIOPSIA_SERVICIO_ID;
 
   const dataComplete = values.pagado;
 
@@ -232,6 +248,11 @@ const ModalCirugia = (props) => {
     });
   }
 
+  const handleChangeDermatologos = (e) => {
+		setValues({ ...values, dermatologo: e.target.value });
+	}
+
+
   const loadHorariosByServicio = async () => {
     const response = await findSchedulesBySucursalAndServicio(cirugia.sucursal._id, cirugia.servicio._id);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
@@ -251,29 +272,97 @@ const ModalCirugia = (props) => {
     await loadHorariosByServicio();
     setIsLoading(false);
   };
-  
+
+  const handleChangeMedio = (e) => {
+    setValues({ ...values, medio: e.target.value });
+  }
+
+
+  const handleChangeProductos = (e) => {
+    setValues({ ...values, producto: e.target.value });
+  }
+
+  const handleChangeFrecuencia = (e) => {
+    const frecuencia = e.target.value;
+    setValues({
+      ...values,
+      frecuencia: frecuencia,
+      producto: frecuencia === frecuenciaPrimeraVezId ? productoCirugiaId : values.producto,
+    });
+  }
+
+  const handleChangePaymentMethod = (event) => {
+    setValues({
+      ...values,
+      forma_pago: event.target.value,
+    });
+  }
+
+  const loadFormasPago = async () => {
+    const response = await showAllMetodoPago();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setFormasPago(response.data);
+    }
+  }
+
+  const loadMedios = async () => {
+    const response = await showAllMedios();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setMedios(response.data);
+    }
+  }
+
+  const loadFrecuencias = async () => {
+    const response = await showAllFrecuencias();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setFrecuencias(response.data);
+    }
+  }
+
+  const loadProductos = async () => {
+    const response = await findProductoByServicio(cirugiaServicioId);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setProductos(response.data);
+    }
+  }
+
+  const loadMateriales = async () => {
+    const response = await showAllMaterials();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setMateriales(response.data);
+    }
+  }
+
+  const loadDermatologos = async () => {
+    const response = await findEmployeesByRolId(dermatologoRolId);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setDermatologos(response.data);
+    }
+  }
+
+
+  const loadPatologos = async () => {
+    const response = await findEmployeesByRolId(patologoRolId);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setPatologos(response.data);
+    }
+  }
+
+  const loadAll = async () => {
+    setIsLoading(true);
+    await loadMateriales();
+    await loadPatologos();
+    await loadHorariosByServicio();
+    await loadFormasPago();
+    await loadMedios();
+    await loadFrecuencias();
+    await loadProductos();
+    await loadDermatologos();
+    setIsLoading(false);
+  }
 
   useEffect(() => {
-
-    const loadMateriales = async () => {
-      const response = await showAllMaterials();
-      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-        setMateriales(response.data);
-      }
-    }
-
-    const loadPatologos = async () => {
-      const response = await findEmployeesByRolId(patologoRolId);
-      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-        setPatologos(response.data);
-      }
-    }
-
-    setIsLoading(true);
-    loadMateriales();
-    loadPatologos();
-    loadHorariosByServicio();
-    setIsLoading(false);
+    loadAll();
   }, []);
 
   return (
@@ -303,8 +392,19 @@ const ModalCirugia = (props) => {
             onChangePagado={(e) => handleChangePagado(e)}
             onChangeBiopsia={(e) => handleChangeBiopsia(e)}
             onChangeCostoBiopsias={handleChangeCostoBiopsias}
+            onChangeFrecuencia={(e) => handleChangeFrecuencia(e)}
+            frecuencias={frecuencias}
+            onChangeProductos={(e) => handleChangeProductos(e)}
+            onChangeDermatologos={(e) => handleChangeDermatologos(e)}
+            medios={medios}
+            formasPago={formasPago}
+            dermatologos={dermatologos}
+            onChangeMedio={(e) => handleChangeMedio(e)}
+            onChangePaymentMethod={(e) => handleChangePaymentMethod(e)}
+            productos={productos}
             patologos={patologos}
             tipoServicioId={cirugiaServicioId}
+            frecuenciaReconsultaId={frecuenciaReconsultaId}
             cirugia={cirugia} />
           :
           <Backdrop className={classes.backdrop} open={isLoading} >

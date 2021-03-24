@@ -531,6 +531,7 @@ const AgendarDermapen = (props) => {
 		setDisableDate(false);
 		setIsLoading(false);
 	}
+	
 	const handleChangeFrecuencia = (e) => {
 		const frecuencia = e.target.value;
 		setValues({

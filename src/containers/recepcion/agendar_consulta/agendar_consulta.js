@@ -280,21 +280,19 @@ export const AgendarConsultaContainer = (props) => {
                 </FormControl>
               </Grid>
           }
-          {true ?
-            <Grid item xs={12} sm={2}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="simple-select-outlined-tipo-cita">MEDIO</InputLabel>
-                <Select
-                  labelId="simple-select-outlined-tipo-cita"
-                  id="simple-select-outlined-tipo-cita"
-                  value={values.medio}
-                  onChange={onChangeMedio}
-                  label="MEDIO" >
-                  {medios.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                </Select>
-              </FormControl>
-            </Grid>
-            : ''}
+          <Grid item xs={12} sm={2}>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel id="simple-select-outlined-tipo-cita">MEDIO</InputLabel>
+              <Select
+                labelId="simple-select-outlined-tipo-cita"
+                id="simple-select-outlined-tipo-cita"
+                value={values.medio}
+                onChange={onChangeMedio}
+                label="MEDIO" >
+                {medios.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+              </Select>
+            </FormControl>
+          </Grid>
           {
             values.frecuencia === frecuenciaReconsultaId
               ? <Grid item xs={12} sm={2}>

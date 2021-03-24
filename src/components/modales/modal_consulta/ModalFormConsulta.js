@@ -68,6 +68,10 @@ const ModalFormConsulta = (props) => {
     onClose,
     onClickActualizarCita,
     open,
+    frecuencias,
+    productos,
+    medios,
+    formasPago,
     empleado,
     consulta,
     horarios,
@@ -79,6 +83,10 @@ const ModalFormConsulta = (props) => {
     onChangeMotivos,
     onChangeObservaciones,
     onChangeDermatologo,
+    onChangeFrecuencia,
+    onChangeProductos,
+    onChangeMedio,
+    onChangePaymentMethod,
     onCloseModalConfirmacion,
     onConfirmModalConfirmacion,
     openModalConfirmacion,
@@ -117,75 +125,18 @@ const ModalFormConsulta = (props) => {
                 <h2 className={classes.label}>{values.fecha_actual} - {values.hora_actual} hrs</h2>
               </Grid>
               <Grid item xs={12}>
-                <h3 className={classes.label}>FRECUENCIA: {values.frecuencia.nombre}</h3>
-              </Grid>
-              <Grid item xs={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-statements">ESTADO</InputLabel>
+                  <InputLabel id="simple-select-outlined-statements">STATUS</InputLabel>
                   <Select
                     labelId="simple-select-outlined-statements"
                     id="simple-select-outlined-statements"
                     value={values.status}
                     onChange={onChangeStatus}
-                    label="ESTADO" >
+                    label="STATUS" >
                     {statements.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12}>
-                {
-                  /* values.dermatologo*/ false ?
-                    <h3 className={classes.label}>DERMATÓLOGO : {values.dermatologo.nombre}</h3> :
-                    <FormControl variant="outlined" className={classes.formControl}>
-                      <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO</InputLabel>
-                      <Select
-                        labelId="simple-select-outlined-dermatologo"
-                        id="simple-select-outlined-dermatologo"
-                        value={values.dermatologo}
-                        onChange={onChangeDermatologo}
-                        label="DERMATÓLOGO" >
-                        {doctores.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                      </Select>
-                    </FormControl>
-                }
-              </Grid>
-
-              <Grid item xs={12}>
-                {
-                  /* values.tipo_cita */ false ?
-                    <h3 className={classes.label}>TIPO CITA: {values.tipo_cita.nombre}</h3> :
-                    <FormControl variant="outlined" className={classes.formControl}>
-                      <InputLabel id="simple-select-outlined-tipo-cita">TIPO CITA</InputLabel>
-                      <Select
-                        labelId="simple-select-outlined-tipo-cita"
-                        id="simple-select-outlined-tipo-cita"
-                        value={values.tipo_cita}
-                        onChange={onChangeTipoCita}
-                        label="Tipo cita" >
-                        {tipoCitas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                      </Select>
-                    </FormControl>
-                }
-              </Grid>
-
-              <Grid item xs={12}>
-                {
-                  /* values.promovendedor */ false ?
-                    <h3 className={classes.label}>PROMOVENDEDOR: {values.promovendedor.nombre}</h3> :
-                    <FormControl variant="outlined" className={classes.formControl}>
-                      <InputLabel id="simple-select-outlined-promovendedor">PROMOVENDEDOR</InputLabel>
-                      <Select
-                        labelId="simple-select-outlined-promovendedor"
-                        id="simple-select-outlined-promovendedor"
-                        value={values.promovendedor}
-                        onChange={onChangePromovendedor}
-                        label="PROMOVENDEDOR" >
-                        {promovendedores.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                      </Select>
-                    </FormControl>
-                }
-              </Grid>
-
               {
                 values.status === reagendoStatusId ?
                   <Fragment>
@@ -238,18 +189,102 @@ const ModalFormConsulta = (props) => {
                       variant="outlined" />
                   </Grid> : ''
               }
-
               <Grid item xs={12}>
-                <TextField
-                  className={classes.textField}
-                  name="precio"
-                  label="PRECIO"
-                  value={values.precio}
-                  type='Number'
-                  onChange={onChangePrecio}
-                  variant="outlined" />
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-tipo-cita">TIPO CITA</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-tipo-cita"
+                    id="simple-select-outlined-tipo-cita"
+                    value={values.tipo_cita}
+                    onChange={onChangeTipoCita}
+                    label="Tipo cita" >
+                    {tipoCitas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item sm={12}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-frecuencia"
+                    id="simple-select-outlined-frecuencia"
+                    value={values.frecuencia}
+                    onChange={onChangeFrecuencia}
+                    label="FRECUENCIA" >
+                    {frecuencias.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item sm={12}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-hora">PRODUCTO</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-producto"
+                    id="simple-select-outlined-producto"
+                    value={values.producto}
+                    onChange={onChangeProductos}
+                    label="PRODUCTO" >
+                    {productos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-dermatologo"
+                    id="simple-select-outlined-dermatologo"
+                    value={values.dermatologo}
+                    onChange={onChangeDermatologo}
+                    label="DERMATÓLOGO" >
+                    {doctores.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-tipo-cita">MEDIO</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-tipo-cita"
+                    id="simple-select-outlined-tipo-cita"
+                    value={values.medio}
+                    onChange={onChangeMedio}
+                    label="MEDIO" >
+                    {medios.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-promovendedor">PROMOVENDEDOR</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-promovendedor"
+                    id="simple-select-outlined-promovendedor"
+                    value={values.promovendedor}
+                    onChange={onChangePromovendedor}
+                    label="PROMOVENDEDOR" >
+                    {promovendedores.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
               </Grid>
 
+              <Grid item xs={12}>
+                <h2 className={classes.label}>{`PRECIO: ${values.precio}`}</h2>
+              </Grid>
+
+              <Grid item xs={12}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-payment">FORMA DE PAGO</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-payment"
+                    id="simple-select-outlined-payment"
+                    value={values.forma_pago}
+                    onChange={onChangePaymentMethod}
+                    label="FORMA DE PAGO" >
+                    {formasPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   className={classes.textField}

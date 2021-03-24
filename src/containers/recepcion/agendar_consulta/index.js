@@ -307,24 +307,24 @@ const AgendarConsulta = (props) => {
 			}
 			const responseConsecutivo = await createConsecutivo(consecutivo);
 			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
-				setOpenAlert(true);
-				setSeverity('success');
-				setMessage('LA CONSULTA SE AGENDO CORRECTAMENTE');
-				setValues({
-					servicio: '',
-					tratamiento: '',
-					fecha_show: '',
-					fecha: '',
-					hora: '',
-					paciente: {},
-					precio: '',
-					tipo_cita: '',
-					citado: '',
-					pagado: false,
-				});
-				setDisableDate(true);
-				setPacienteAgendado({});
-				loadConsultas(new Date());
+			setOpenAlert(true);
+			setSeverity('success');
+			setMessage('LA CONSULTA SE AGENDO CORRECTAMENTE');
+			setValues({
+				servicio: '',
+				tratamiento: '',
+				fecha_show: '',
+				fecha: '',
+				hora: '',
+				paciente: {},
+				precio: '',
+				tipo_cita: '',
+				citado: '',
+				pagado: false,
+			});
+			setDisableDate(true);
+			setPacienteAgendado({});
+			loadConsultas(new Date());
 			//}
 		}
 		setIsLoading(false);
@@ -617,10 +617,10 @@ const AgendarConsulta = (props) => {
 
 	const handleChangePaymentMethod = (event) => {
 		setValues({
-		  ...values,
-		  forma_pago: event.target.value,
+			...values,
+			forma_pago: event.target.value,
 		});
-	  }
+	}
 
 	const loadFormasPago = async () => {
 		const response = await showAllMetodoPago();
@@ -630,7 +630,6 @@ const AgendarConsulta = (props) => {
 	}
 
 	useEffect(() => {
-
 		const loadConsultas = async () => {
 			const response = await findConsultsByDateAndSucursal(date.getDate(), date.getMonth(), date.getFullYear(), sucursal._id);
 			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
