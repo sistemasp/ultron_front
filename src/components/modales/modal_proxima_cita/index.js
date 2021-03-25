@@ -67,6 +67,7 @@ const ModalProximaCita = (props) => {
   const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
   const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
   const sucursalFedeId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
+  const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
   const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
   const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
   const servicioLaserId = process.env.REACT_APP_LASER_SERVICIO_ID;
@@ -267,7 +268,8 @@ const ModalProximaCita = (props) => {
             sucursal === sucursalManuelAcunaId ? item.precio_ma // Precio Manuel Acuña
               : (sucursal === sucursalOcciId ? item.precio_oc // Precio Occidental
                 : (sucursal === sucursalFedeId ? item.precio_fe // Precio Federalismo
-                  : 0)); // Error
+                  : (sucursal._id === sucursalRubenDarioId ? item.precio_rd // PRECIO RUBEN DARIO
+                  : 0))); // Error
           precio = Number(precio) + Number(itemPrecio);
         });
       }

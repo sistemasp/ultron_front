@@ -561,91 +561,78 @@ const AgendarDermapen = (props) => {
 		}
 	}
 
-	useEffect(() => {
-		const loadDermapens = async () => {
-			const response = await findDermapenByDateAndSucursal(date.getDate(), date.getMonth(), date.getFullYear(), sucursal);
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				await response.data.forEach(item => {
-					item.folio = generateFolio(item);
-					const fecha = new Date(item.fecha_hora);
-					item.hora = `${addZero(fecha.getHours())}:${addZero(fecha.getMinutes())}`;
-					item.precio_moneda = toFormatterCurrency(item.precio);
-					item.total_moneda = toFormatterCurrency(item.total);
-					item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
-					item.promovendedor_nombre = item.promovendedor ? item.promovendedor.nombre : 'SIN ASIGNAR';
-					item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
-				});
-				setDermapens(response.data);
-			}
-			setIsLoading(false);
+	const findDermapen = async () => {
+		const response = await findAreaById(dermapenAreaId);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			const dermapen = response.data;
+			const precio =
+				sucursal === sucursalManuelAcunaId ? dermapen.precio_ma // Precio Manuel Acuña
+					: (sucursal === sucursalOcciId ? dermapen.precio_oc // Precio Occidental
+						: (sucursal === sucursalFedeId ? dermapen.precio_fe // Precio Federalismo}
+							: (sucursal === sucursalRubenDarioId ? dermapen.precio_rd // PRECIO RUBEN DARIO
+								: 0))); // Error
+			setValues({
+				...values,
+				total: 0,
+				precio: 0 - Number(precio),
+				costo: precio,
+			});
 		}
+	}
 
-		const findDermapen = async () => {
-			const response = await findAreaById(dermapenAreaId);
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				const dermapen = response.data;
-				const precio =
-					sucursal === sucursalManuelAcunaId ? dermapen.precio_ma // Precio Manuel Acuña
-						: (sucursal === sucursalOcciId ? dermapen.precio_oc // Precio Occidental
-							: (sucursal === sucursalFedeId ? dermapen.precio_fe // Precio Federalismo}
-								: (sucursal === sucursalRubenDarioId ? dermapen.precio_rd // PRECIO RUBEN DARIO
-									: 0))); // Error
-				setValues({
-					...values,
-					total: 0,
-					precio: 0 - Number(precio),
-					costo: precio,
-				});
-			}
+	const loadPromovendedores = async () => {
+		const response = await findEmployeesByRolId(promovendedorRolId);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setPromovendedores(response.data);
 		}
+	}
 
-		const loadPromovendedores = async () => {
-			const response = await findEmployeesByRolId(promovendedorRolId);
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				setPromovendedores(response.data);
-			}
+	const loadFrecuencias = async () => {
+		const response = await showAllFrecuencias();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setFrecuencias(response.data);
 		}
+	}
 
-		const loadFrecuencias = async () => {
-			const response = await showAllFrecuencias();
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				setFrecuencias(response.data);
-			}
+	const loadDermatologos = async () => {
+		const response = await findEmployeesByRolId(dermatologoRolId);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setDermatologos(response.data);
 		}
+	}
 
-		const loadDermatologos = async () => {
-			const response = await findEmployeesByRolId(dermatologoRolId);
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				setDermatologos(response.data);
-			}
+	const loadMedios = async () => {
+		const response = await showAllMedios();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setMedios(response.data);
 		}
+	}
 
-		const loadMedios = async () => {
-			const response = await showAllMedios();
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				setMedios(response.data);
-			}
+	const loadMateriales = async () => {
+		const response = await showAllMaterials();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setMateriales(response.data);
 		}
+	}
 
-		const loadMateriales = async () => {
-			const response = await showAllMaterials();
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				setMateriales(response.data);
-			}
-		}
-
+	const loadAll = async () => {
 		setIsLoading(true);
-		findDermapen();
-		loadDermapens();
-		loadFrecuencias();
-		loadAreas();
-		loadHorariosByServicio(new Date(), dermapenServicioId);
-		loadPromovendedores();
-		loadDermatologos();
-		loadMateriales();
-		loadFormasPago();
-		loadMedios();
-		loadCosmetologas();
+		await findDermapen();
+		await loadDermapens(new Date());
+		await loadFrecuencias();
+		await loadAreas();
+		await loadHorariosByServicio(new Date(), dermapenServicioId);
+		await loadPromovendedores();
+		await loadDermatologos();
+		await loadMateriales();
+		await loadFormasPago();
+		await loadMedios();
+		await loadCosmetologas();
+		setIsLoading(false);
+	}
+
+	useEffect(() => {
+		loadAll();
 	}, [sucursal]);
 
 	return (

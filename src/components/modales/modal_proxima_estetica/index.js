@@ -73,6 +73,7 @@ const ModalProximaEstetica = (props) => {
     telefono: estetica.paciente.telefono,
     precio: estetica.precio,
     total: estetica.total,
+    total_aplicacion: estetica.total_aplicacion,
     cosmetologa: cosmetologaSinAsignarId,
     quien_agenda: empleado,
     tipo_cita: tipoCitaDerivadaId,

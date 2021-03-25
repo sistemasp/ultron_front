@@ -18,6 +18,7 @@ import ModalFormEstetica from './ModalFormEstetica';
 import { findProductoByServicio } from '../../../services/productos';
 import { showMaterialEsteticasByProducto } from '../../../services/material_estetica';
 import { showAllStatusVisibles } from '../../../services/status';
+import { addZero } from '../../../utils/utils';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -52,6 +53,8 @@ const ModalEstetica = (props) => {
   const [medios, setMedios] = useState([]);
   const [formasPago, setFormasPago] = useState([]);
   const [statements, setStatements] = useState([]);
+  const [openModalConfirmacion, setOpenModalConfirmacion] = useState(false);
+  const [previousState, setPreviousState] = useState();
 
   const [openModalPagos, setOpenModalPagos] = useState(false);
 
@@ -217,6 +220,11 @@ const ModalEstetica = (props) => {
 
   const handleClickGuardarEstetica = async (event, data) => {
 
+    if (data.status === asistioStatusId) {
+      const dateNow = new Date();
+      data.hora_aplicacion = data.hora_aplicacion ? data.hora_aplicacion : dateNow;
+      data.hora_llegada = (data.hora_llegada && data.hora_llegada !== '--:--') ? data.hora_llegada : `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;
+    }
     //const update = data._id ? {} : await updateConsult(consulta._id, { ...consulta, status: enProcedimientoStatusId });
     const response = await updateEstetica(data._id, data);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
@@ -261,6 +269,20 @@ const ModalEstetica = (props) => {
       pagos: pagos,
     });
     setOpenModalPagos(false);
+  }
+
+  const handleChangeStatus = e => {
+    setPreviousState(values.status);
+    const estado = statements.find(statement => {
+      return statement._id === e.target.value;
+    });
+    setOpenModalConfirmacion(estado.confirmacion);
+    setValues({ ...values, status: e.target.value });
+  }
+
+  const handleCloseModalConfirmacion = () => {
+    setOpenModalConfirmacion(false);
+    setValues({ ...values, status: previousState });
   }
 
   const handleChangePagado = (e) => {
@@ -368,6 +390,7 @@ const ModalEstetica = (props) => {
             productos={productos}
             onChangePagado={(e) => handleChangePagado(e)}
             onChangeProductos={(e) => handleChangeProductos(e)}
+            onChangeStatus={(e) => handleChangeStatus(e)}
             tipoServicioId={esteticaServicioId}
             formasPago={formasPago}
             statements={statements}
@@ -383,6 +406,8 @@ const ModalEstetica = (props) => {
             frecuencias={frecuencias}
             productos={productos}
             medios={medios}
+            openModalConfirmacion={openModalConfirmacion}
+                onCloseModalConfirmacion={handleCloseModalConfirmacion}
             estetica={estetica} />
           :
           <Backdrop className={classes.backdrop} open={isLoading} >

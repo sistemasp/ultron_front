@@ -151,7 +151,7 @@ const ModalFormEstetica = (props) => {
                 <h2 className={classes.label}>{estetica.paciente_nombre} ({estetica.paciente.telefono})</h2>
               </Grid>
               <Grid item xs={12}>
-                <h2 className={classes.labelItemRight}>PRECIO ACPLICACIÓN: {toFormatterCurrency(values.total_aplicacion)}</h2>
+                <h2 className={classes.labelItemRight}>TOTAL APLICACIÓN: {toFormatterCurrency(values.total_aplicacion)}</h2>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <FormControl variant="outlined" className={classes.formControl}>

@@ -69,6 +69,7 @@ const AgendarAparatologia = (props) => {
 	const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
 	const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
 	const sucursalFedeId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
+	const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
 	const dermatologoDirectoId = process.env.REACT_APP_DERMATOLOGO_DIRECTO_ID;
 	const directoTipoCitaId = process.env.REACT_APP_TIPO_CITA_DIRECTO_ID;
 	const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
@@ -229,12 +230,12 @@ const AgendarAparatologia = (props) => {
 				if (a.tiempo > b.tiempo) return -1;
 				return 0;
 			});
-			
+
 			tratamiento.areasSeleccionadas.forEach((item, index) => {
 				tiempo += Number(item.tiempo);
 			});
 		});
-		
+
 		return tiempo;
 	}
 
@@ -269,7 +270,7 @@ const AgendarAparatologia = (props) => {
 						sucursal === sucursalManuelAcunaId ? item.precio_ma // Precio Manuel Acuña
 							: (sucursal === sucursalOcciId ? item.precio_oc // Precio Occidental
 								: (sucursal === sucursalFedeId ? item.precio_fe // Precio Federalismo
-									: (sucursal === sucursalFedeId ? item.precio_rd // Precio Ruben Dario
+									: (sucursal._id === sucursalRubenDarioId ? item.precio_rd // PRECIO RUBEN DARIO
 										: 0))); // Error
 					precio = Number(precio) + Number(itemPrecio);
 				});
@@ -370,24 +371,24 @@ const AgendarAparatologia = (props) => {
 			}
 			const responseConsecutivo = await createConsecutivo(consecutivo);
 			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
-				setOpenAlert(true);
-				setSeverity('success');
-				setMessage('APARATOLOGIA AGREGADA CORRECTAMENTE');
-				setValues({
-					servicio: '',
-					tratamientos: [],
-					dermatologo: '',
-					promovendedor: '',
-					cosmetologa: '',
-					paciente: `${paciente._id}`,
-					precio: 0,
-					total: 0,
-					tipo_cita: {},
-					tiempo: '30',
-				});
-				setDisableDate(true);
-				setPacienteAgendado({});
-				loadAparatologias(new Date());
+			setOpenAlert(true);
+			setSeverity('success');
+			setMessage('APARATOLOGIA AGREGADA CORRECTAMENTE');
+			setValues({
+				servicio: '',
+				tratamientos: [],
+				dermatologo: '',
+				promovendedor: '',
+				cosmetologa: '',
+				paciente: `${paciente._id}`,
+				precio: 0,
+				total: 0,
+				tipo_cita: {},
+				tiempo: '30',
+			});
+			setDisableDate(true);
+			setPacienteAgendado({});
+			loadAparatologias(new Date());
 			//}
 		}
 
@@ -596,93 +597,72 @@ const AgendarAparatologia = (props) => {
 		}
 	}
 
-	useEffect(() => {
-
-		const loadAparatologias = async () => {
-			const response = await findAparatologiaByDateAndSucursal(date.getDate(), date.getMonth(), date.getFullYear(), sucursal);
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				await response.data.forEach(item => {
-					item.folio = generateFolio(item);
-					const fecha = new Date(item.fecha_hora);
-					item.hora = `${addZero(fecha.getHours())}:${addZero(fecha.getMinutes())}`;
-					item.precio_moneda = toFormatterCurrency(item.precio);
-					item.total_moneda = toFormatterCurrency(item.total);
-					item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
-					item.promovendedor_nombre = item.promovendedor ? item.promovendedor.nombre : 'SIN ASIGNAR';
-					item.cosmetologa_nombre = item.cosmetologa ? item.cosmetologa.nombre : 'SIN ASIGNAR';
-					item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
-					item.show_tratamientos = item.tratamientos.map(tratamiento => {
-						const show_areas = tratamiento.areasSeleccionadas.map(area => {
-							return `${area.nombre}`;
-						});
-						return `►${tratamiento.nombre}(${show_areas}) `;
-					});
-				});
-				setAparatologias(response.data);
-			}
-			setIsLoading(false);
+	const loadPromovendedores = async () => {
+		const response = await findEmployeesByRolId(promovendedorRolId);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setPromovendedores(response.data);
 		}
+	}
 
-		const loadPromovendedores = async () => {
-			const response = await findEmployeesByRolId(promovendedorRolId);
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				setPromovendedores(response.data);
-			}
+	const loadCosmetologas = async () => {
+		const response = await findEmployeesByRolId(cosmetologaRolId);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setCosmetologas(response.data);
 		}
+	}
 
-		const loadCosmetologas = async () => {
-			const response = await findEmployeesByRolId(cosmetologaRolId);
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				setCosmetologas(response.data);
-			}
+	const loadDermatologos = async () => {
+		const response = await findEmployeesByRolId(dermatologoRolId);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setDermatologos(response.data);
 		}
+	}
 
-		const loadDermatologos = async () => {
-			const response = await findEmployeesByRolId(dermatologoRolId);
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				setDermatologos(response.data);
-			}
+	const loadTipoCitas = async () => {
+		const response = await showAllTipoCitas();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setTipoCitas(response.data);
 		}
+	}
 
-		const loadTipoCitas = async () => {
-			const response = await showAllTipoCitas();
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				setTipoCitas(response.data);
-			}
+	const loadMedios = async () => {
+		const response = await showAllMedios();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setMedios(response.data);
 		}
+	}
 
-		const loadMedios = async () => {
-			const response = await showAllMedios();
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				setMedios(response.data);
-			}
+	const loadFrecuencias = async () => {
+		const response = await showAllFrecuencias();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setFrecuencias(response.data);
 		}
+	}
 
-		const loadFrecuencias = async () => {
-			const response = await showAllFrecuencias();
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				setFrecuencias(response.data);
-			}
-		}
+	const loadProductos = async () => {
+		/*const response = await findProductoByServicio(consultaServicioId);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setProductos(response.data);
+		}*/
+	}
 
-		const loadProductos = async () => {
-			/*const response = await findProductoByServicio(consultaServicioId);
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				setProductos(response.data);
-			}*/
-		}
-
+	const loadAll = async () => {
 		setIsLoading(true);
-		loadTratamientos();
-		loadAparatologias();
-		loadPromovendedores();
-		loadCosmetologas();
-		loadDermatologos();
-		loadTipoCitas();
-		loadFrecuencias();
-		loadFormasPago();
-		loadMedios();
-	}, [sucursal]);
+		await loadTratamientos();
+		await loadAparatologias(new Date());
+		await loadPromovendedores();
+		await loadCosmetologas();
+		await loadDermatologos();
+		await loadTipoCitas();
+		await loadFrecuencias();
+		await loadFormasPago();
+		await loadMedios();
+		setIsLoading(false);
+	}
+
+	useEffect(() => {
+		loadAll();
+	}, []);
 
 	return (
 		<Fragment>

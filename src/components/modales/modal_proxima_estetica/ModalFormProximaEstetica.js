@@ -241,6 +241,10 @@ const ModalFormProximaEstetica = (props) => {
                   }}
                   variant="outlined" />
               </Grid>
+
+              <Grid item xs={12}>
+              </Grid>
+
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
                   className={classes.button}
