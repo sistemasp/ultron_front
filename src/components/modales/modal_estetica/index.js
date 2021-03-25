@@ -3,6 +3,10 @@ import {
   showAllMaterialEsteticas,
   createConsecutivo,
   showAllMaterials,
+  showAllFrecuencias,
+  findEmployeesByRolIdAvailable,
+  showAllMedios,
+  showAllMetodoPago,
 } from "../../../services";
 import { updateConsult } from '../../../services/consultas';
 import {
@@ -13,6 +17,7 @@ import { Backdrop, CircularProgress, makeStyles } from '@material-ui/core';
 import ModalFormEstetica from './ModalFormEstetica';
 import { findProductoByServicio } from '../../../services/productos';
 import { showMaterialEsteticasByProducto } from '../../../services/material_estetica';
+import { showAllStatusVisibles } from '../../../services/status';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -39,7 +44,14 @@ const ModalEstetica = (props) => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [toxinasRellenos, setToxinasRellenos] = useState([]);
+  const [dermatologos, setDermatologos] = useState([]);
+  const [promovendedores, setPromovendedores] = useState([]);
+  const [cosmetologas, setCosmetologas] = useState([]);
+  const [frecuencias, setFrecuencias] = useState([]);
   const [productos, setProductos] = useState([]);
+  const [medios, setMedios] = useState([]);
+  const [formasPago, setFormasPago] = useState([]);
+  const [statements, setStatements] = useState([]);
 
   const [openModalPagos, setOpenModalPagos] = useState(false);
 
@@ -55,9 +67,15 @@ const ModalEstetica = (props) => {
     materiales: estetica.materiales ? estetica.materiales : [],
     pagado: estetica.pagado,
     paciente: estetica.paciente,
-    dermatologo: estetica.dermatologo,
+    dermatologo: estetica.dermatologo._id,
+    medio: estetica.medio._id,
+    promovendedor: estetica.promovendedor._id,
+    cosmetologa: estetica.cosmetologa._id,
+    forma_pago: estetica.forma_pago._id,
     hora_aplicacion: estetica.hora_aplicacion,
     producto: estetica.producto,
+    status: estetica.status._id,
+    frecuencia: estetica.frecuencia._id,
   });
   const [materiales, setMateriales] = useState([]);
 
@@ -71,6 +89,7 @@ const ModalEstetica = (props) => {
   const enProcedimientoStatusId = process.env.REACT_APP_EN_PROCEDIMIENTO_STATUS_ID;
   const esteticaServicioId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
   const biopsiaServicioId = process.env.REACT_APP_BIOPSIA_SERVICIO_ID;
+  const cosmetologaRolId = process.env.REACT_APP_COSMETOLOGA_ROL_ID;
 
   const dataComplete = values.pagado;
 
@@ -103,11 +122,83 @@ const ModalEstetica = (props) => {
     }
   }
 
+  const handleChangeFrecuencia = (e) => {
+    const frecuencia = e.target.value;
+    setValues({
+      ...values,
+      frecuencia: frecuencia,
+    });
+  }
+
+  const handleChangePaymentMethod = (event) => {
+    setValues({
+      ...values,
+      forma_pago: event.target.value,
+    });
+  }
+
+  const loadFormasPago = async () => {
+    const response = await showAllMetodoPago();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setFormasPago(response.data);
+    }
+  }
+
+  const loadMedios = async () => {
+    const response = await showAllMedios();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setMedios(response.data);
+    }
+  }
+
+  const loadCosmetologas = async () => {
+    const response = await findEmployeesByRolIdAvailable(cosmetologaRolId);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setCosmetologas(response.data);
+    }
+  }
+
+  const loadPromovendedores = async () => {
+    const response = await findEmployeesByRolIdAvailable(promovendedorRolId);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setPromovendedores(response.data);
+    }
+  }
+
+  const loadDermatologos = async () => {
+    const response = await findEmployeesByRolIdAvailable(dermatologoRolId);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setDermatologos(response.data);
+    }
+  }
+
+  const loadFrecuencias = async () => {
+    const response = await showAllFrecuencias();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setFrecuencias(response.data);
+    }
+  }
+
+  const loadStaus = async () => {
+    const response = await showAllStatusVisibles();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setStatements(response.data);
+    }
+    setIsLoading(false);
+  }
+
   const loadAll = async () => {
     setIsLoading(true);
     await loadToxinasRellenos(values.producto);
     await loadProductos();
     await loadMateriales();
+    await loadFormasPago();
+    await loadMedios();
+    await loadCosmetologas();
+    await loadPromovendedores();
+    await loadDermatologos();
+    await loadFrecuencias();
+    await loadStaus();
     setIsLoading(false);
   }
 
@@ -129,8 +220,8 @@ const ModalEstetica = (props) => {
     //const update = data._id ? {} : await updateConsult(consulta._id, { ...consulta, status: enProcedimientoStatusId });
     const response = await updateEstetica(data._id, data);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-        setOpenAlert(true);
-        setMessage('ESTÉTICA ACTUALIZADA CORRECTAMENTE.');
+      setOpenAlert(true);
+      setMessage('ESTÉTICA ACTUALIZADA CORRECTAMENTE.');
     }
     loadEsteticas(new Date(data.fecha_hora));
     onClose();
@@ -175,6 +266,22 @@ const ModalEstetica = (props) => {
   const handleChangePagado = (e) => {
     //setValues({ ...values, pagado: !values.pagado });
     setOpenModalPagos(!values.pagado);
+  }
+
+  const handleChangeDermatologos = (e) => {
+    setValues({ ...values, dermatologo: e.target.value });
+  }
+
+  const handleChangePromovendedor = (e) => {
+    setValues({ ...values, promovendedor: e.target.value });
+  }
+
+  const handleChangeCosmetologa = (e) => {
+    setValues({ ...values, cosmetologa: e.target.value });
+  }
+
+  const handleChangeMedio = (e) => {
+    setValues({ ...values, medio: e.target.value });
   }
 
   const handleChangeItemUnidades = (e, index) => {
@@ -262,6 +369,20 @@ const ModalEstetica = (props) => {
             onChangePagado={(e) => handleChangePagado(e)}
             onChangeProductos={(e) => handleChangeProductos(e)}
             tipoServicioId={esteticaServicioId}
+            formasPago={formasPago}
+            statements={statements}
+            onChangePaymentMethod={(e) => handleChangePaymentMethod(e)}
+            onChangePromovendedor={(e) => handleChangePromovendedor(e)}
+            onChangeCosmetologa={(e) => handleChangeCosmetologa(e)}
+            dermatologos={dermatologos}
+            onChangeMedio={(e) => handleChangeMedio(e)}
+            onChangeDermatologos={(e) => handleChangeDermatologos(e)}
+            onChangeFrecuencia={(e) => handleChangeFrecuencia(e)}
+            promovendedores={promovendedores}
+            cosmetologas={cosmetologas}
+            frecuencias={frecuencias}
+            productos={productos}
+            medios={medios}
             estetica={estetica} />
           :
           <Backdrop className={classes.backdrop} open={isLoading} >

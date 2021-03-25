@@ -9,6 +9,7 @@ import {
 	showAllFrecuencias,
 	showAllMetodoPago,
 	showAllMedios,
+	findEmployeesByRolIdAvailable,
 } from "../../../services";
 import {
 	createEstetica,
@@ -314,7 +315,7 @@ const AgendarEstetica = (props) => {
 		setValues({ ...values, tiempo: e.target.value });
 	}
 
-	const handleChangeDoctors = (e) => {
+	const handleChangeDermatologos = (e) => {
 		setValues({ ...values, dermatologo: e.target.value });
 	}
 
@@ -427,6 +428,7 @@ const AgendarEstetica = (props) => {
 				break;
 			case 'NUEVA CITA':
 				handleOnClickNuevaCita(e, rowData);
+				break;
 			case 'TRASPASO':
 				handleClickTraspaso(e, rowData);
 				break;
@@ -550,7 +552,6 @@ const AgendarEstetica = (props) => {
 		setValues({
 			...values,
 			frecuencia: frecuencia,
-			producto: frecuencia === frecuenciaPrimeraVezId ? productoAplicacionToxinaBotulinicaDituroxalId : values.producto,
 		});
 	}
 
@@ -576,21 +577,21 @@ const AgendarEstetica = (props) => {
 	}
 
 	const loadCosmetologas = async () => {
-		const response = await findEmployeesByRolId(cosmetologaRolId);
+		const response = await findEmployeesByRolIdAvailable(cosmetologaRolId);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setCosmetologas(response.data);
 		}
 	}
 
 	const loadPromovendedores = async () => {
-		const response = await findEmployeesByRolId(promovendedorRolId);
+		const response = await findEmployeesByRolIdAvailable(promovendedorRolId);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setPromovendedores(response.data);
 		}
 	}
 
 	const loadDermatologos = async () => {
-		const response = await findEmployeesByRolId(dermatologoRolId);
+		const response = await findEmployeesByRolIdAvailable(dermatologoRolId);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setDermatologos(response.data);
 		}
@@ -683,7 +684,7 @@ const AgendarEstetica = (props) => {
 								loadEsteticas={loadEsteticas}
 								dermatologos={dermatologos}
 								onChangeMedio={(e) => handleChangeMedio(e)}
-								onChangeDoctors={(e) => handleChangeDoctors(e)}
+								onChangeDermatologos={(e) => handleChangeDermatologos(e)}
 								onCloseVerPagos={handleCloseVerPagos}
 								openModalPagos={openModalPagos}
 								openModalProxima={openModalProxima}

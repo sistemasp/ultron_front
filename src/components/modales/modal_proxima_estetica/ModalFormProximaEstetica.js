@@ -59,7 +59,7 @@ const ModalFormProximaEstetica = (props) => {
     onChangeHora,
     onChangeMinutos,
     onClose,
-    onClickProximarCita,
+    onClickProximarEstetica,
     open,
     onChangeTotal,
     onChangeObservaciones,
@@ -71,6 +71,12 @@ const ModalFormProximaEstetica = (props) => {
     onChangeTiempo,
     onChangeCosmetologa,
     onChangeProductos,
+    onChangeMedio,
+    medios,
+    onChangePromovendedor,
+    promovendedores,
+    onChangePaymentMethod,
+    formasPago,
     productos,
     dermatologos,
   } = props;
@@ -87,18 +93,15 @@ const ModalFormProximaEstetica = (props) => {
               <Grid item xs={12}>
                 <h2 className={classes.label}>{values.paciente_nombre} ({values.telefono})</h2>
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-hora">PRODUCTO</InputLabel>
-                  <Select
-                    labelId="simple-select-outlined-producto"
-                    id="simple-select-outlined-producto"
-                    value={values.producto}
-                    onChange={onChangeProductos}
-                    label="PRODUCTO" >
-                    {productos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                  </Select>
-                </FormControl>
+              <Grid item xs={12}>
+                <Multiselect
+                  options={productos} // Options to display in the dropdown
+                  displayValue="nombre" // Property name to display in the dropdown options
+                  onSelect={(e) => onChangeProductos(e)} // Function will trigger on select event
+                  onRemove={(e) => onChangeProductos(e)} // Function will trigger on remove event
+                  placeholder={`PRODUCTO`}
+                  selectedValues={values.producto} // Preselected value to persist in dropdown
+                />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <FormControl variant="outlined" className={classes.formControl}>
@@ -112,6 +115,67 @@ const ModalFormProximaEstetica = (props) => {
                     {dermatologos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
                   </Select>
                 </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-tipo-dermapen">MEDIO</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-tipo-dermapen"
+                    id="simple-select-outlined-tipo-dermapen"
+                    value={values.medio}
+                    onChange={onChangeMedio}
+                    label="MEDIO" >
+                    {medios.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-promovendedor">PROMOVENDEDOR</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-promovendedor"
+                    id="simple-select-outlined-promovendedor"
+                    value={values.promovendedor}
+                    onChange={onChangePromovendedor}
+                    label="PROMOVENDEDOR" >
+                    {promovendedores.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-cosmetologa">COSMETÓLOGA</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-cosmetologa"
+                    id="simple-select-outlined-cosmetologa"
+                    value={values.cosmetologa}
+                    onChange={onChangeCosmetologa}
+                    label="COSMETÓLOGA" >
+                    {cosmetologas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-payment">FORMA DE PAGO</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-payment"
+                    id="simple-select-outlined-payment"
+                    value={values.forma_pago}
+                    onChange={onChangePaymentMethod}
+                    label="FORMA DE PAGO" >
+                    {formasPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  className={classes.textField}
+                  name="observaciones"
+                  label="OBSERVACIONES"
+                  value={values.observaciones}
+                  onChange={onChangeObservaciones}
+                  variant="outlined" />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -177,17 +241,6 @@ const ModalFormProximaEstetica = (props) => {
                   }}
                   variant="outlined" />
               </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  className={classes.textField}
-                  name="observaciones"
-                  label="OBSERVACIONES"
-                  value={values.observaciones}
-                  onChange={onChangeObservaciones}
-                  variant="outlined" />
-              </Grid>
-
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
                   className={classes.button}
@@ -202,7 +255,7 @@ const ModalFormProximaEstetica = (props) => {
                   className={classes.button}
                   color="primary"
                   variant="contained"
-                  onClick={() => onClickProximarCita(values)}
+                  onClick={() => onClickProximarEstetica(values)}
                   text='REAGENDAR' />
               </Grid>
 

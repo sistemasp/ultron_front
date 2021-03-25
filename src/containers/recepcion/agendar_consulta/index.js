@@ -474,8 +474,13 @@ const AgendarConsulta = (props) => {
 		},
 		{
 			icon: LocalHospitalIcon,
-			tooltip: 'AGREGAR CIRUGíA',
-			onClick: onClickAgendarCirugia
+			tooltip: 'AGREGAR FACIAL',
+			onClick: onClickAgendarFaciales
+		},
+		{
+			icon: LocalHospitalIcon,
+			tooltip: 'AGREGAR APARATOLOGÍA',
+			onClick: onClickAgendarAparatologia
 		},
 		{
 			icon: LocalHospitalIcon,
@@ -484,13 +489,8 @@ const AgendarConsulta = (props) => {
 		},
 		{
 			icon: LocalHospitalIcon,
-			tooltip: 'AGREGAR FACIAL',
-			onClick: onClickAgendarFaciales
-		},
-		{
-			icon: LocalHospitalIcon,
-			tooltip: 'AGREGAR APARATOLOGÍA',
-			onClick: onClickAgendarAparatologia
+			tooltip: 'AGREGAR CIRUGíA',
+			onClick: onClickAgendarCirugia
 		},
 		{
 			icon: FaceIcon,

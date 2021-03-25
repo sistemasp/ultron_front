@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
-import { TextField, Grid } from '@material-ui/core';
+import { TextField, Grid, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 import { Multiselect } from 'multiselect-react-dropdown';
 import { toFormatterCurrency } from '../../../utils/utils';
 import { ButtonCustom } from '../../basic/ButtonCustom';
@@ -103,6 +103,20 @@ const ModalFormEstetica = (props) => {
     openModalPagos,
     onCloseModalPagos,
     onGuardarModalPagos,
+    onChangeStatus,
+    statements,
+    onChangeFrecuencia,
+    frecuencias,
+    onChangeDermatologos,
+    dermatologos,
+    onChangeMedio,
+    medios,
+    onChangePromovendedor,
+    promovendedores,
+    onChangeCosmetologa,
+    cosmetologas,
+    onChangePaymentMethod,
+    formasPago,
     consulta,
     empleado,
     tipoServicioId,
@@ -137,7 +151,33 @@ const ModalFormEstetica = (props) => {
                 <h2 className={classes.label}>{estetica.paciente_nombre} ({estetica.paciente.telefono})</h2>
               </Grid>
               <Grid item xs={12}>
-                <h2 className={classes.label}>DERMATÓLOGO: {estetica.dermatologo.nombre}</h2>
+                <h2 className={classes.labelItemRight}>PRECIO ACPLICACIÓN: {toFormatterCurrency(values.total_aplicacion)}</h2>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-statements">STATUS</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-statements"
+                    id="simple-select-outlined-statements"
+                    value={values.status}
+                    onChange={onChangeStatus}
+                    label="STATUS" >
+                    {statements.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-frecuencia"
+                    id="simple-select-outlined-frecuencia"
+                    value={values.frecuencia}
+                    onChange={onChangeFrecuencia}
+                    label="FRECUENCIA" >
+                    {frecuencias.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
               </Grid>
 
               <Grid item xs={12}>
@@ -151,7 +191,73 @@ const ModalFormEstetica = (props) => {
                 />
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-dermatologo"
+                    id="simple-select-outlined-dermatologo"
+                    value={values.dermatologo}
+                    onChange={onChangeDermatologos}
+                    label="DERMATÓLOGO" >
+                    {dermatologos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-tipo-dermapen">MEDIO</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-tipo-dermapen"
+                    id="simple-select-outlined-tipo-dermapen"
+                    value={values.medio}
+                    onChange={onChangeMedio}
+                    label="MEDIO" >
+                    {medios.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-promovendedor">PROMOVENDEDOR</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-promovendedor"
+                    id="simple-select-outlined-promovendedor"
+                    value={values.promovendedor}
+                    onChange={onChangePromovendedor}
+                    label="PROMOVENDEDOR" >
+                    {promovendedores.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-cosmetologa">COSMETÓLOGA</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-cosmetologa"
+                    id="simple-select-outlined-cosmetologa"
+                    value={values.cosmetologa}
+                    onChange={onChangeCosmetologa}
+                    label="COSMETÓLOGA" >
+                    {cosmetologas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-payment">FORMA DE PAGO</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-payment"
+                    id="simple-select-outlined-payment"
+                    value={values.forma_pago}
+                    onChange={onChangePaymentMethod}
+                    label="FORMA DE PAGO" >
+                    {formasPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
                 <TextField
                   className={classes.textField}
                   name="total"
@@ -243,10 +349,6 @@ const ModalFormEstetica = (props) => {
               }
 
               <Grid item xs={12}>
-                <h2 className={classes.labelItemRight}>PRECIO ACPLICACIÓN: {toFormatterCurrency(values.total_aplicacion)}</h2>
-              </Grid>
-              <Grid item xs={12}>
-                <h1 className={classes.labelItemRight}>TOTAL: {toFormatterCurrency(values.total)}</h1>
               </Grid>
 
               <Grid item xs={12} sm={6}>
