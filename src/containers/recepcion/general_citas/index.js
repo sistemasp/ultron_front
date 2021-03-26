@@ -37,13 +37,13 @@ const GeneralCitas = (props) => {
 	});
 
 	const columns = [
-		{ title: 'FOLIO', field: 'folio' },
+		//{ title: 'FOLIO', field: 'folio' },
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'TELÉFONO', field: 'paciente.telefono' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
-		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
-		{ title: 'HORA SALIDA', field: 'hora_salida' },
+		//{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
+		//{ title: 'HORA SALIDA', field: 'hora_salida' },
 		{ title: 'SERVICIO', field: 'servicio.nombre' },
 		{ title: 'PRODUCTO (ÁREAS)', field: 'show_tratamientos' },
 		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
@@ -163,6 +163,7 @@ const GeneralCitas = (props) => {
 				item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
 				item.promovendedor_nombre = item.promovendedor ? item.promovendedor.nombre : 'SIN ASIGNAR';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
+				item.show_tratamientos = `►${item.producto.nombre}`;
 			});
 			setDermapens(response.data);
 		}
@@ -197,7 +198,17 @@ const GeneralCitas = (props) => {
 				item.precio_moneda = toFormatterCurrency(item.precio);
 				item.total_moneda = toFormatterCurrency(item.total);
 				item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
-				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
+				item.dermatologo_nombre = item.dermatologo.nombre;
+				item.promovendedor_nombre = item.promovendedor.nombre;
+				item.show_tratamientos = item.producto.map(product => {
+					const toxinasRellenos = item.toxinas_rellenos.filter(toxina_relleno => {
+						return toxina_relleno.producto._id === product._id;
+					});
+					const show_toxinas = toxinasRellenos.map(toxinaRelleno => {
+						return `${toxinaRelleno.nombre}`;
+					});
+					return `►${product.nombre}(${show_toxinas}) `;
+				});
 			});
 			setEsteticas(response.data);
 		}

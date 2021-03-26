@@ -256,7 +256,7 @@ frecuenciaReconsultaId,
                   <Grid item xs={12} sm={3}>
                     <TextField
                       className={classes.textField}
-                      name="cantidad_biopsia"
+                      name="cantidad_biopsias"
                       label="CANTIDAD BIOPSIA"
                       value={values.cantidad_biopsias}
                       type='Number'

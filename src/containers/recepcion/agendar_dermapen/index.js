@@ -172,6 +172,12 @@ const AgendarDermapen = (props) => {
 			fontWeight: 'bolder',
 			fontSize: '18px'
 		},
+		cellStyle: {
+			fontWeight: 'bolder',
+			fontSize: '16px',
+			padding: '5px',
+			textAlign: 'center',
+		},
 		paging: false,
 	}
 

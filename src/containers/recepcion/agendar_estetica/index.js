@@ -165,6 +165,12 @@ const AgendarEstetica = (props) => {
 			fontWeight: 'bolder',
 			fontSize: '18px'
 		},
+		cellStyle: {
+			fontWeight: 'bolder',
+			fontSize: '16px',
+			padding: '5px',
+			textAlign: 'center',
+		},
 		paging: false,
 	}
 
@@ -247,7 +253,7 @@ const AgendarEstetica = (props) => {
 				item.total_moneda = toFormatterCurrency(item.total);
 				item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
-				item.promovendedor_nombre = 'SIN PROMOVENDEDOR';
+				item.promovendedor_nombre = item.promovendedor.nombre;
 				item.producto_nombre = item.producto.map(product => {
 					const toxinasRellenos = item.toxinas_rellenos.filter(toxina_relleno => {
 						return toxina_relleno.producto._id === product._id;
@@ -255,10 +261,8 @@ const AgendarEstetica = (props) => {
 					const show_toxinas = toxinasRellenos.map(toxinaRelleno => {
 						return `${toxinaRelleno.nombre}`;
 					});
-					console.log("KAOZ", toxinasRellenos);
 					return `►${product.nombre}(${show_toxinas}) `;
 				});
-				console.log("KAOZ", item);
 			});
 			setEsteticas(response.data);
 		}
