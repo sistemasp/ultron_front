@@ -134,7 +134,7 @@ const ModalCita = (props) => {
     areas: cita.areas,
     numero_sesion: cita.numero_sesion,
     quien_agenda: cita.quien_agenda,
-    tipo_cita: cita.tipo_cita ? cita.tipo_cita._id : '',
+    tipo_cita: cita.tipo_cita ? cita.tipo_cita : '',
     confirmo: cita.confirmo,
     quien_confirma: cita.quien_confirma,
     promovendedor: cita.promovendedor ? cita.promovendedor._id : '',
@@ -280,7 +280,7 @@ const ModalCita = (props) => {
   }
 
   const handleChangeObservaciones = e => {
-    setValues({ ...values, observaciones: e.target.value });
+    setValues({ ...values, observaciones: e.target.value.toUpperCase() });
   }
 
   const getTimeToTratamiento = (tratamientos) => {
@@ -437,7 +437,7 @@ const ModalCita = (props) => {
   };
 
   const handleChangeMotivos = e => {
-    setValues({ ...values, motivos: e.target.value });
+    setValues({ ...values, motivos: e.target.value.toUpperCase() });
   }
 
   const handleChangeDermatologo = (e) => {

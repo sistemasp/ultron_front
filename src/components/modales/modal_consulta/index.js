@@ -78,7 +78,7 @@ const ModalConsulta = (props) => {
     paciente_nombre: `${consulta.paciente.nombres} ${consulta.paciente.apellidos}`,
     telefono: consulta.paciente.telefono,
     quien_agenda: consulta.quien_agenda,
-    tipo_cita: consulta.tipo_cita ? consulta.tipo_cita._id : '',
+    tipo_cita: consulta.tipo_cita,
     quien_confirma_llamada: consulta.quien_confirma_llamada,
     quien_confirma_asistencia: consulta.quien_confirma_asistencia,
     promovendedor: consulta.promovendedor ? consulta.promovendedor._id : '',
@@ -264,7 +264,7 @@ const ModalConsulta = (props) => {
     }
   */
   const handleChangeObservaciones = e => {
-    setValues({ ...values, observaciones: e.target.value });
+    setValues({ ...values, observaciones: e.target.value.toUpperCase() });
   }
 
   const handleChangePagado = (e) => {
@@ -359,7 +359,7 @@ const ModalConsulta = (props) => {
   };
 
   const handleChangeMotivos = e => {
-    setValues({ ...values, motivos: e.target.value });
+    setValues({ ...values, motivos: e.target.value.toUpperCase() });
   }
 
   const handleChangeDermatologo = (e) => {
@@ -402,7 +402,7 @@ const ModalConsulta = (props) => {
 			...values,
 			frecuencia: frecuencia,
 			//dermatologo: frecuencia === frecuenciaPrimeraVezId ? dermatologo._id : dermatologoDirectoId,
-			promovendedor: frecuencia === frecuenciaReconsultaId ? promovendedor : promovendedorSinPromovendedorId,
+			promovendedor: frecuencia === frecuenciaReconsultaId ? promovendedor._id : promovendedorSinPromovendedorId,
 			producto: frecuencia === frecuenciaPrimeraVezId ? productoConsultaId : values.producto,
 		});
 	}

@@ -119,26 +119,23 @@ const ModalFormDermapen = (props) => {
             }
             <Grid container spacing={1}>
               <Grid item xs={12}>
-                <h2 className={classes.label}>{values.paciente_nombre} ({values.telefono})</h2>
-              </Grid>
-              <Grid item xs={12}>
-                <h2 className={classes.label}>SERVICIO: {values.servicio.nombre}</h2>
+                <h1 className={classes.label}> {values.servicio.nombre} {toFormatterCurrency(values.total)}</h1>
               </Grid>
               <Grid item xs={12}>
                 <h2 className={classes.label}>{values.fecha_actual} - {values.hora_actual} HRS</h2>
               </Grid>
               <Grid item xs={12}>
-                <h2 className={classes.label}>PRECIO DE LA APLICACIÓN: {toFormatterCurrency(values.total_aplicacion)}</h2>
+                <h2 className={classes.label}>{values.paciente_nombre}</h2>
               </Grid>
               <Grid item xs={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-statements">ESTADO</InputLabel>
+                  <InputLabel id="simple-select-outlined-statements">STATUS</InputLabel>
                   <Select
                     labelId="simple-select-outlined-statements"
                     id="simple-select-outlined-statements"
                     value={values.status}
                     onChange={onChangeStatus}
-                    label="ESTADO" >
+                    label="STATUS" >
                     {statements.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
                   </Select>
                 </FormControl>
@@ -209,6 +206,13 @@ const ModalFormDermapen = (props) => {
                   </Select>
                 </FormControl>
               </Grid>
+              <Grid item xs={12}>
+                <h2 className={classes.label}>{`TIPO: ${values.tipo_cita.nombre}`}</h2>
+              </Grid>
+
+              <Grid item xs={12}>
+                <h2 className={classes.label}>{`PRODUCTO: ${values.producto.nombre}`}</h2>
+              </Grid>
 
               <Grid item xs={12}>
                 <Multiselect
@@ -221,43 +225,18 @@ const ModalFormDermapen = (props) => {
                 />
               </Grid>
 
-              <Grid item xs={12} >
-                <Multiselect
-                  options={materiales} // Options to display in the dropdown
-                  displayValue="nombre" // Property name to display in the dropdown options
-                  onSelect={(e) => onChangeMateriales(e)} // Function will trigger on select event
-                  onRemove={(e) => onChangeMateriales(e)} // Function will trigger on remove event
-                  placeholder="SELECCIONA MATERIALES"
-                  selectedValues={values.materiales} // Preselected value to persist in dropdown
-                />
-              </Grid>
-
-              {
-                values.materiales.map((item, index) =>
-                  <Grid item xs={12}>
-                    <TextField
-                      className={classes.button}
-                      name={item.precio}
-                      label={`PRECIO: ${item.nombre}`}
-                      value={item.precio}
-                      type='Number'
-                      onChange={(e) => onChangeItemPrecio(e, index)}
-                      variant="outlined" />
-                  </Grid>)
-              }
-
               <Grid item xs={12}>
                 {
                   /* values.dermatologo*/ false ?
-                    <h3 className={classes.label}>DERMATÓLOGO: {values.dermatologo.nombre}</h3> :
+                    <h3 className={classes.label}>DERMATÓLOGO (A): {values.dermatologo.nombre}</h3> :
                     <FormControl variant="outlined" className={classes.formControl}>
-                      <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO</InputLabel>
+                      <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO (A)</InputLabel>
                       <Select
                         labelId="simple-select-outlined-dermatologo"
                         id="simple-select-outlined-dermatologo"
                         value={values.dermatologo}
                         onChange={onChangeDermatologo}
-                        label="DERMATÓLOGO" >
+                        label="DERMATÓLOGO (A)" >
                         {dermatologos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
                       </Select>
                     </FormControl>
@@ -280,27 +259,13 @@ const ModalFormDermapen = (props) => {
 
               <Grid item xs={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-tipo-cita">TIPO CITA</InputLabel>
-                  <Select
-                    labelId="simple-select-outlined-tipo-cita"
-                    id="simple-select-outlined-tipo-cita"
-                    value={values.tipo_cita}
-                    onChange={onChangeTipoCita}
-                    label="TIPO CITA" >
-                    {tipoCitas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={12}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-promovendedor">PROMOVENDEDOR</InputLabel>
+                  <InputLabel id="simple-select-outlined-promovendedor">PROMOVENDEDOR (A)</InputLabel>
                   <Select
                     labelId="simple-select-outlined-promovendedor"
                     id="simple-select-outlined-promovendedor"
                     value={values.promovendedor}
                     onChange={onChangePromovendedor}
-                    label="PROMOVENDEDOR" >
+                    label="PROMOVENDEDOR (A)" >
                     {promovendedores.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
                   </Select>
                 </FormControl>
@@ -362,7 +327,7 @@ const ModalFormDermapen = (props) => {
                 <TextField
                   className={classes.textField}
                   name="total"
-                  label="TOTAL DERMAPEN"
+                  label="PRECIO"
                   value={values.precio}
                   type='Number'
                   onChange={onChangeTotal}
@@ -372,6 +337,31 @@ const ModalFormDermapen = (props) => {
                   }}
                   variant="outlined" />
               </Grid>
+
+              <Grid item xs={12} >
+                <Multiselect
+                  options={materiales} // Options to display in the dropdown
+                  displayValue="nombre" // Property name to display in the dropdown options
+                  onSelect={(e) => onChangeMateriales(e)} // Function will trigger on select event
+                  onRemove={(e) => onChangeMateriales(e)} // Function will trigger on remove event
+                  placeholder="SELECCIONA MATERIALES"
+                  selectedValues={values.materiales} // Preselected value to persist in dropdown
+                />
+              </Grid>
+
+              {
+                values.materiales.map((item, index) =>
+                  <Grid item xs={12}>
+                    <TextField
+                      className={classes.button}
+                      name={item.precio}
+                      label={`PRECIO: ${item.nombre}`}
+                      value={item.precio}
+                      type='Number'
+                      onChange={(e) => onChangeItemPrecio(e, index)}
+                      variant="outlined" />
+                  </Grid>)
+              }
 
               <Grid item xs={12} sm={6}>
                 <ButtonCustom

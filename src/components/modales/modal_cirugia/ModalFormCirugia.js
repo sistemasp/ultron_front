@@ -16,6 +16,7 @@ function getModalStyle() {
     top: `${top}%`,
     left: `${left}%`,
     transform: `translate(-${top}%, -${left}%)`,
+    overflow: 'scroll',
   };
 }
 
@@ -23,6 +24,7 @@ const useStyles = makeStyles(theme => ({
   paper: {
     position: 'absolute',
     width: 700,
+    height: '90%',
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
@@ -77,16 +79,19 @@ const ModalFormCirugia = (props) => {
     onChangeCantidadBiopsias,
     onChange,
     onChangeFrecuencia,
-frecuencias,
-onChangeProductos,
-productos,
-onChangeDermatologos,
-dermatologos,
-onChangeMedio,
-medios,
-onChangePaymentMethod,
-formasPago,
-frecuenciaReconsultaId,
+    frecuencias,
+    onChangeProductos,
+    productos,
+    onChangeDermatologos,
+    dermatologos,
+    onChangeMedio,
+    medios,
+    onChangePaymentMethod,
+    formasPago,
+    frecuenciaReconsultaId,
+    onChangeStatus,
+    statements,
+    onChangeObservaciones,
     patologos,
     onChangeCostoBiopsias,
     openModalPagos,
@@ -122,12 +127,27 @@ frecuenciaReconsultaId,
             }
             <Grid container spacing={1}>
               <Grid item xs={12}>
-                <h1 className={classes.label}>CIRUGíA</h1>
+                <h1 className={classes.label}>CIRUGíA {toFormatterCurrency(values.total)}</h1>
               </Grid>
               <Grid item xs={12}>
-                <h2 className={classes.label}>{cirugia.paciente_nombre} ({cirugia.paciente.telefono})</h2>
+                <h2 className={classes.label}>{values.fecha_actual} - {values.hora_actual} hrs</h2>
               </Grid>
-
+              <Grid item xs={12}>
+                <h2 className={classes.label}>{cirugia.paciente_nombre}</h2>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-statements">STATUS</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-statements"
+                    id="simple-select-outlined-statements"
+                    value={values.status}
+                    onChange={onChangeStatus}
+                    label="STATUS" >
+                    {statements.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
               <Grid item xs={12} >
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
@@ -140,6 +160,9 @@ frecuenciaReconsultaId,
                     {frecuencias.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
                   </Select>
                 </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <h2 className={classes.label}>{`TIPO: ${values.tipo_cita.nombre}`}</h2>
               </Grid>
               {
                 values.frecuencia === frecuenciaReconsultaId
@@ -158,15 +181,16 @@ frecuenciaReconsultaId,
                   </Grid>
                   : ''
               }
+
               <Grid item xs={12} >
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO</InputLabel>
+                  <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO (A)</InputLabel>
                   <Select
                     labelId="simple-select-outlined-dermatologo"
                     id="simple-select-outlined-dermatologo"
                     value={values.dermatologo}
                     onChange={onChangeDermatologos}
-                    label="DERMATÓLOGO" >
+                    label="DERMATÓLOGO  (A)" >
                     {dermatologos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
                   </Select>
                 </FormControl>
@@ -197,12 +221,20 @@ frecuenciaReconsultaId,
                   </Select>
                 </FormControl>
               </Grid>
-
+              <Grid item xs={12}>
+                <TextField
+                  className={classes.textField}
+                  name="observaciones"
+                  label="OBSERVACIONES"
+                  value={values.observaciones}
+                  onChange={onChangeObservaciones}
+                  variant="outlined" />
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   className={classes.textField}
                   name="precio"
-                  label="TOTAL CIRUGíA"
+                  label="PRECIO"
                   value={values.total}
                   type='Number'
                   onChange={onChangeTotal}
@@ -257,7 +289,7 @@ frecuenciaReconsultaId,
                     <TextField
                       className={classes.textField}
                       name="cantidad_biopsias"
-                      label="CANTIDAD BIOPSIA"
+                      label="CANTIDAD"
                       value={values.cantidad_biopsias}
                       type='Number'
                       onChange={onChange}
@@ -272,7 +304,7 @@ frecuenciaReconsultaId,
                     <TextField
                       className={classes.textField}
                       name="costo_biopsia"
-                      label="COSTO BIOPSIA"
+                      label="PRECIO"
                       value={values.costo_biopsias}
                       type='Number'
                       onChange={onChangeCostoBiopsias}
@@ -313,11 +345,8 @@ frecuenciaReconsultaId,
                       label="PAGADO" />
                   </Grid> : ''*/
               }
+
               <Grid item xs={12}>
-                <h2 className={classes.labelItemRight}>PRECIO DE LA APLICACIÓN: {toFormatterCurrency(values.total_aplicacion)}</h2>
-              </Grid>
-              <Grid item xs={12}>
-                <h1 className={classes.labelItemRight}>TOTAL DE LA CIRUGíA: {toFormatterCurrency(values.total)}</h1>
               </Grid>
 
               <Grid item xs={12} sm={6}>

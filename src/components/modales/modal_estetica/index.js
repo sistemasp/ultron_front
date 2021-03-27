@@ -58,9 +58,15 @@ const ModalEstetica = (props) => {
 
   const [openModalPagos, setOpenModalPagos] = useState(false);
 
+  const fecha_estetica = new Date(estetica.fecha_hora);
+  const fecha = `${addZero(fecha_estetica.getDate())}/${addZero(Number(fecha_estetica.getMonth()) + 1)}/${addZero(fecha_estetica.getFullYear())}`;
+  const hora = `${addZero(Number(fecha_estetica.getHours()))}:${addZero(fecha_estetica.getMinutes())}`;
+
   const [values, setValues] = useState({
     _id: estetica._id,
     fecha_hora: estetica.fecha_hora,
+    fecha_actual: fecha,
+    hora_actual: hora,
     consulta: estetica.consulta,
     consecutivo: estetica.consecutivo,
     sucursal: estetica.sucursal,
@@ -73,6 +79,7 @@ const ModalEstetica = (props) => {
     dermatologo: estetica.dermatologo._id,
     medio: estetica.medio._id,
     promovendedor: estetica.promovendedor._id,
+    tipo_cita: estetica.tipo_cita,
     cosmetologa: estetica.cosmetologa._id,
     forma_pago: estetica.forma_pago._id,
     hora_aplicacion: estetica.hora_aplicacion,
@@ -242,6 +249,10 @@ const ModalEstetica = (props) => {
     });
   }
 
+  const handleChangeObservaciones = e => {
+    setValues({ ...values, observaciones: e.target.value.toUpperCase() });
+  }
+
   const handleChangeTotal = e => {
     let total_aplicacion = e.target.value;
     values.toxinas_rellenos.map(item => {
@@ -390,6 +401,7 @@ const ModalEstetica = (props) => {
             productos={productos}
             onChangePagado={(e) => handleChangePagado(e)}
             onChangeProductos={(e) => handleChangeProductos(e)}
+            onChangeObservaciones={handleChangeObservaciones}
             onChangeStatus={(e) => handleChangeStatus(e)}
             tipoServicioId={esteticaServicioId}
             formasPago={formasPago}
@@ -407,7 +419,7 @@ const ModalEstetica = (props) => {
             productos={productos}
             medios={medios}
             openModalConfirmacion={openModalConfirmacion}
-                onCloseModalConfirmacion={handleCloseModalConfirmacion}
+            onCloseModalConfirmacion={handleCloseModalConfirmacion}
             estetica={estetica} />
           :
           <Backdrop className={classes.backdrop} open={isLoading} >

@@ -104,6 +104,7 @@ const ModalFormEstetica = (props) => {
     onCloseModalPagos,
     onGuardarModalPagos,
     onChangeStatus,
+    onChangeObservaciones,
     statements,
     onChangeFrecuencia,
     frecuencias,
@@ -145,15 +146,15 @@ const ModalFormEstetica = (props) => {
             }
             <Grid container spacing={1}>
               <Grid item xs={12}>
-                <h1 className={classes.label}>TOXINAS Y RELLENOS</h1>
+                <h1 className={classes.label}>ESTÉTICA {toFormatterCurrency(values.total)}</h1>
               </Grid>
               <Grid item xs={12}>
-                <h2 className={classes.label}>{estetica.paciente_nombre} ({estetica.paciente.telefono})</h2>
+                <h2 className={classes.label}>{values.fecha_actual} - {values.hora_actual} HRS</h2>
               </Grid>
               <Grid item xs={12}>
-                <h2 className={classes.labelItemRight}>TOTAL APLICACIÓN: {toFormatterCurrency(values.total_aplicacion)}</h2>
+                <h2 className={classes.label}>{estetica.paciente_nombre}</h2>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="simple-select-outlined-statements">STATUS</InputLabel>
                   <Select
@@ -166,7 +167,7 @@ const ModalFormEstetica = (props) => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
                   <Select
@@ -179,7 +180,9 @@ const ModalFormEstetica = (props) => {
                   </Select>
                 </FormControl>
               </Grid>
-
+              <Grid item xs={12}>
+                <h2 className={classes.label}>{`TIPO: ${values.tipo_cita.nombre}`}</h2>
+              </Grid>
               <Grid item xs={12}>
                 <Multiselect
                   options={productos} // Options to display in the dropdown
@@ -191,20 +194,20 @@ const ModalFormEstetica = (props) => {
                 />
               </Grid>
 
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO</InputLabel>
+                  <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO (A)</InputLabel>
                   <Select
                     labelId="simple-select-outlined-dermatologo"
                     id="simple-select-outlined-dermatologo"
                     value={values.dermatologo}
                     onChange={onChangeDermatologos}
-                    label="DERMATÓLOGO" >
+                    label="DERMATÓLOGO (A)">
                     {dermatologos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="simple-select-outlined-tipo-dermapen">MEDIO</InputLabel>
                   <Select
@@ -217,20 +220,20 @@ const ModalFormEstetica = (props) => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-promovendedor">PROMOVENDEDOR</InputLabel>
+                  <InputLabel id="simple-select-outlined-promovendedor">PROMOVENDEDOR (A)</InputLabel>
                   <Select
                     labelId="simple-select-outlined-promovendedor"
                     id="simple-select-outlined-promovendedor"
                     value={values.promovendedor}
                     onChange={onChangePromovendedor}
-                    label="PROMOVENDEDOR" >
+                    label="PROMOVENDEDOR (A)" >
                     {promovendedores.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="simple-select-outlined-cosmetologa">COSMETÓLOGA</InputLabel>
                   <Select
@@ -243,7 +246,7 @@ const ModalFormEstetica = (props) => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="simple-select-outlined-payment">FORMA DE PAGO</InputLabel>
                   <Select
@@ -256,12 +259,22 @@ const ModalFormEstetica = (props) => {
                   </Select>
                 </FormControl>
               </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  className={classes.textField}
+                  name="observaciones"
+                  //helperText={touched.observaciones ? errors.observaciones : ""}
+                  label="OBSERVACIONES"
+                  value={values.observaciones}
+                  onChange={onChangeObservaciones}
+                  variant="outlined" />
+              </Grid>
 
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={12}>
                 <TextField
                   className={classes.textField}
                   name="total"
-                  label="PRECIO TOTAL"
+                  label="PRECIO"
                   value={values.total}
                   type='Number'
                   onChange={onChangeTotal}
@@ -282,23 +295,12 @@ const ModalFormEstetica = (props) => {
                   selectedValues={values.toxinas_rellenos} // Preselected value to persist in dropdown
                 />
               </Grid>
-              <Grid item xs={3} >
-                <h3 className={classes.labelItemLeft}>{`NOMBRE`}</h3>
-              </Grid>
-              <Grid item xs={3} >
-                <h3 className={classes.labelItemCenter}> {`CANTIDAD UNIDADES`} </h3>
-              </Grid>
-              <Grid className={classes.labelItemLeft} item xs={3} >
-                <h3 className={classes.labelItemCenter}>{`PRECIO POR UNIDAD`}</h3>
-              </Grid>
-              <Grid item xs={3} >
-                <h3 className={classes.labelItemRight}> {`TOTAL`} </h3>
-              </Grid>
+
               {
                 values.toxinas_rellenos ?
                   values.toxinas_rellenos.map((item, index) =>
                     <Fragment>
-                      <Grid item xs={3} >
+                      <Grid item xs={9} >
                         <h3 className={classes.labelItemLeft}>{item.nombre}</h3>
                       </Grid>
                       <Grid item xs={12} sm={3}>
@@ -315,12 +317,7 @@ const ModalFormEstetica = (props) => {
                           }}
                           variant="outlined" />
                       </Grid>
-                      <Grid item xs={3} >
-                        <h3 className={classes.labelItemCenter}>{toFormatterCurrency(item.precio)}</h3>
-                      </Grid>
-                      <Grid item xs={3} >
-                        <h3 className={classes.labelItemRight}>{toFormatterCurrency(item.unidades * item.precio)}</h3>
-                      </Grid>
+                      
                     </Fragment>) : ''
               }
 

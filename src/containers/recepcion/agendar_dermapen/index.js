@@ -146,7 +146,7 @@ const AgendarDermapen = (props) => {
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
 		//{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
 		//{ title: 'HORA SALIDA', field: 'hora_salida' },
-		{ title: 'PRODUCTO', field: 'producto.nombre' },
+		{ title: 'PRODUCTO (ÁREAS)', field: 'producto_nombre' },
 		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
 		{ title: 'TIPO', field: 'tipo_cita.nombre' },
@@ -241,6 +241,12 @@ const AgendarDermapen = (props) => {
 				item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
 				item.promovendedor_nombre = item.promovendedor ? item.promovendedor.nombre : 'SIN ASIGNAR';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
+				item.producto_nombre = item.tratamientos.map(tratamiento => {
+					const show_areas = tratamiento.areasSeleccionadas.map(area => {
+						return `${area.nombre}`;
+					});
+					return `►${tratamiento.nombre}(${show_areas}) `;
+				});
 			});
 			setDermapens(response.data);
 		}

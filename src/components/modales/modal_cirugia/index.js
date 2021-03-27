@@ -17,6 +17,7 @@ import { addZero } from '../../../utils/utils';
 import ModalFormCirugia from './ModalFormCirugia';
 import { createBiopsia } from '../../../services/biopsias';
 import { findProductoByServicio } from '../../../services/productos';
+import { showAllStatusVisibles } from '../../../services/status';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -59,16 +60,25 @@ const ModalCirugia = (props) => {
   const [patologos, setPatologos] = useState([]);
   const [dermatologos, setDermatologos] = useState([]);
 
+  const [previousState, setPreviousState] = useState();
   const [openModalPagos, setOpenModalPagos] = useState(false);
   const [horarios, setHorarios] = useState([]);
   const [formasPago, setFormasPago] = useState([]);
   const [frecuencias, setFrecuencias] = useState([]);
   const [productos, setProductos] = useState([]);
+  const [statements, setStatements] = useState([]);
   const [medios, setMedios] = useState([]);
+  const [openModalConfirmacion, setOpenModalConfirmacion] = useState(false);
+
+  const fecha_cita = new Date(cirugia.fecha_hora);
+  const fecha = `${addZero(fecha_cita.getDate())}/${addZero(Number(fecha_cita.getMonth()) + 1)}/${addZero(fecha_cita.getFullYear())}`;
+  const hora = `${addZero(Number(fecha_cita.getHours()))}:${addZero(fecha_cita.getMinutes())}`;
 
   const [values, setValues] = useState({
     _id: cirugia._id,
     fecha_hora: cirugia.fecha_hora,
+    fecha_actual: fecha,
+    hora_actual: hora,
     consulta: cirugia.consulta,
     consecutivo: cirugia.consecutivo,
     sucursal: cirugia.sucursal,
@@ -77,6 +87,8 @@ const ModalCirugia = (props) => {
     materiales: cirugia.materiales,
     biopsias: cirugia.biopsias,
     pagado: cirugia.pagado,
+    status: cirugia.status._id,
+    tipo_cita: cirugia.tipo_cita,
     paciente: cirugia.paciente,
     dermatologo: cirugia.dermatologo._id,
     hasBiopsia: cirugia.hasBiopsia,
@@ -90,6 +102,7 @@ const ModalCirugia = (props) => {
     medio: cirugia.medio._id,
     forma_pago: cirugia.forma_pago._id,
     producto: cirugia.producto._id,
+    observaciones: cirugia.observaciones,
   });
 
   const dataComplete = values.pagado;
@@ -277,6 +290,9 @@ const ModalCirugia = (props) => {
     setValues({ ...values, medio: e.target.value });
   }
 
+  const handleChangeObservaciones = e => {
+    setValues({ ...values, observaciones: e.target.value.toUpperCase() });
+  }
 
   const handleChangeProductos = (e) => {
     setValues({ ...values, producto: e.target.value });
@@ -298,6 +314,15 @@ const ModalCirugia = (props) => {
     });
   }
 
+  const handleChangeStatus = e => {
+    setPreviousState(values.status);
+    const estado = statements.find(statement => {
+      return statement._id === e.target.value;
+    });
+    setOpenModalConfirmacion(estado.confirmacion);
+    setValues({ ...values, status: e.target.value });
+  }
+
   const loadFormasPago = async () => {
     const response = await showAllMetodoPago();
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
@@ -317,6 +342,14 @@ const ModalCirugia = (props) => {
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setFrecuencias(response.data);
     }
+  }
+
+  const loadStaus = async () => {
+    const response = await showAllStatusVisibles();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setStatements(response.data);
+    }
+    setIsLoading(false);
   }
 
   const loadProductos = async () => {
@@ -358,6 +391,7 @@ const ModalCirugia = (props) => {
     await loadFrecuencias();
     await loadProductos();
     await loadDermatologos();
+    await loadStaus();
     setIsLoading(false);
   }
 
@@ -394,8 +428,11 @@ const ModalCirugia = (props) => {
             onChangeCostoBiopsias={handleChangeCostoBiopsias}
             onChangeFrecuencia={(e) => handleChangeFrecuencia(e)}
             frecuencias={frecuencias}
+            onChangeStatus={(e) => handleChangeStatus(e)}
+            statements={statements}
             onChangeProductos={(e) => handleChangeProductos(e)}
             onChangeDermatologos={(e) => handleChangeDermatologos(e)}
+            onChangeObservaciones={handleChangeObservaciones}
             medios={medios}
             formasPago={formasPago}
             dermatologos={dermatologos}

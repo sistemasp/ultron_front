@@ -131,15 +131,14 @@ const ModalFormCita = (props) => {
             }
             <Grid container spacing={1}>
               <Grid item xs={12}>
-                <h2 className={classes.label}>{values.paciente_nombre} ({values.telefono})</h2>
-              </Grid>
-              <Grid item xs={12}>
-                <h2 className={classes.label}>SERVICIO: {values.servicio.nombre}</h2>
+                <h1 className={classes.label}>{values.servicio.nombre} {toFormatterCurrency(values.precio)}</h1>
               </Grid>
               <Grid item xs={12}>
                 <h2 className={classes.label}>{values.fecha_actual} - {values.hora_actual} hrs</h2>
               </Grid>
-
+              <Grid item xs={12}>
+                <h2 className={classes.label}>{values.paciente_nombre}</h2>
+              </Grid>
               <Grid item xs={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="simple-select-outlined-statements">STATUS</InputLabel>
@@ -224,6 +223,9 @@ const ModalFormCita = (props) => {
                   </Grid> : ''
               }
               <Grid item xs={12}>
+                <h2 className={classes.label}>{`TIPO: ${values.tipo_cita.nombre}`}</h2>
+              </Grid>
+              <Grid item xs={12}>
                 <Multiselect
                   options={tratamientos} // Options to display in the dropdown
                   displayValue="nombre" // Property name to display in the dropdown options
@@ -247,23 +249,20 @@ const ModalFormCita = (props) => {
                   </Grid>
                 })
               }
-              <Grid item xs={12} className={classes.label}>
-                <h1 className={classes.label}>PRECIO: {toFormatterCurrency(values.precio)}</h1>
-              </Grid>
 
               <Grid item xs={12}>
                 {
                   /* values.dermatologo*/ false ?
-                    <h3 className={classes.label}>DERMATÓLOGO: {values.dermatologo.nombre}</h3> :
+                    <h3 className={classes.label}>DERMATÓLOGO (A): {values.dermatologo.nombre}</h3> :
                     <FormControl variant="outlined" className={classes.formControl}>
-                      <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO</InputLabel>
+                      <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO (A)</InputLabel>
                       <Select
                         labelId="simple-select-outlined-dermatologo"
                         id="simple-select-outlined-dermatologo"
                         value={values.dermatologo}
                         error={Boolean(errors.dermatologo)}
                         onChange={onChangeDermatologo}
-                        label="DERMATÓLOGO" >
+                        label="DERMATÓLOGO (A)" >
                         {doctores.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
                       </Select>
                     </FormControl>
@@ -283,32 +282,18 @@ const ModalFormCita = (props) => {
                 </FormControl>
               </Grid>
               <Grid item xs={12}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-tipo-cita">TIPO CITA</InputLabel>
-                  <Select
-                    labelId="simple-select-outlined-tipo-cita"
-                    id="simple-select-outlined-tipo-cita"
-                    value={values.tipo_cita}
-                    error={Boolean(errors.tipo_cita)}
-                    onChange={onChangeTipoCita}
-                    label="TIPO CITA" >
-                    {tipoCitas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12}>
                 {
                   /* values.promovendedor */ false ?
-                    <h3 className={classes.label}>PROMOVENDEDOR: {values.promovendedor.nombre}</h3> :
+                    <h3 className={classes.label}>PROMOVENDEDOR (A): {values.promovendedor.nombre}</h3> :
                     <FormControl variant="outlined" className={classes.formControl}>
-                      <InputLabel id="simple-select-outlined-promovendedor">PROMOVENDEDOR</InputLabel>
+                      <InputLabel id="simple-select-outlined-promovendedor">PROMOVENDEDOR (A)</InputLabel>
                       <Select
                         labelId="simple-select-outlined-promovendedor"
                         id="simple-select-outlined-promovendedor"
                         value={values.promovendedor}
                         error={Boolean(errors.promovendedor)}
                         onChange={onChangePromovendedor}
-                        label="PROMOVENDEDOR" >
+                        label="PROMOVENDEDOR (A)" >
                         {promovendedores.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
                       </Select>
                     </FormControl>

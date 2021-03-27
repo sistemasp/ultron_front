@@ -95,7 +95,7 @@ const ModalDermapen = (props) => {
     areas: dermapen.tratamientos[0].areasSeleccionadas,
     numero_sesion: dermapen.numero_sesion,
     quien_agenda: dermapen.quien_agenda,
-    tipo_cita: dermapen.tipo_cita ? dermapen.tipo_cita._id : '',
+    tipo_cita: dermapen.tipo_cita,
     confirmo: dermapen.confirmo,
     quien_confirma: dermapen.quien_confirma,
     promovendedor: dermapen.promovendedor ? dermapen.promovendedor._id : '',
@@ -115,6 +115,7 @@ const ModalDermapen = (props) => {
     frecuencia: dermapen.frecuencia._id,
     medio: dermapen.medio._id,
     forma_pago: dermapen.forma_pago._id,
+    producto: dermapen.producto,
   });
 
   const loadHorarios = async () => {
@@ -175,7 +176,7 @@ const ModalDermapen = (props) => {
   }
 
   const handleChangeObservaciones = e => {
-    setValues({ ...values, observaciones: e.target.value });
+    setValues({ ...values, observaciones: e.target.value.toUpperCase() });
   }
 
   const handleOnClickActualizarDermapen = async (event, rowData) => {
@@ -269,7 +270,7 @@ const ModalDermapen = (props) => {
   };
 
   const handleChangeMotivos = e => {
-    setValues({ ...values, motivos: e.target.value });
+    setValues({ ...values, motivos: e.target.value.toUpperCase() });
   }
 
   const handleChangeDermatologo = (e) => {
