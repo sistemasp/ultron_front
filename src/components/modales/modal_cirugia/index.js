@@ -82,11 +82,12 @@ const ModalCirugia = (props) => {
     consulta: cirugia.consulta,
     consecutivo: cirugia.consecutivo,
     sucursal: cirugia.sucursal,
-    precio: cirugia.precio ? cirugia.precio : 0,
-    total: cirugia.total ? cirugia.total : 0,
+    precio: cirugia.precio,
+    total: cirugia.total,
     materiales: cirugia.materiales,
     biopsias: cirugia.biopsias,
     pagado: cirugia.pagado,
+    servicio: cirugia.servicio,
     status: cirugia.status._id,
     tipo_cita: cirugia.tipo_cita,
     paciente: cirugia.paciente,
@@ -103,8 +104,11 @@ const ModalCirugia = (props) => {
     forma_pago: cirugia.forma_pago._id,
     producto: cirugia.producto._id,
     observaciones: cirugia.observaciones,
+    hora: 0,
+    minutos: 0,
   });
-
+  console.log("KAOZ", values);
+  
   const dataComplete = values.pagado;
 
   const handleChangeMateriales = async (items) => {
@@ -118,11 +122,8 @@ const ModalCirugia = (props) => {
 
   const handleClickCrearCirugia = async (event, data) => {
     const fecha_actual = new Date();
-    data.fecha_hora = fecha_actual;
     data.servicio = cirugiaServicioId;
-    if (!data._id) {
-      data.status = asistioStatusId;
-    }
+
     const idBiopsias = [];
     if (data.hasBiopsia) {
       const biopsias = [];
@@ -148,29 +149,39 @@ const ModalCirugia = (props) => {
       }
     }
     data.biopsias = idBiopsias;
-    const response = data._id ? await updateCirugia(data._id, data) : await createCirugia(data);
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
-      || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-      if (data._id) {
+    if (data.status === reagendoStatusId) {
+      await updateCirugia(data._id, data);
+      data.quien_agenda = empleado._id;
+      data.sucursal = sucursal;
+      data.status = pendienteStatusId;
+      data.hora_llegada = '--:--';
+      data.observaciones = `CIRUGíA REAGENDADA ${values.fecha_actual} - ${values.hora}:${values.minutos} HRS`;
+      data.fecha_hora = data.nueva_fecha_hora;
+      data._id = undefined;
+      const response = await createCirugia(data);
+      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
         setOpenAlert(true);
-        setMessage('CIRUGíA ACTUALIZADA CORRECTAMENTE');
-      } else {
-        const consecutivo = {
-          consecutivo: response.data.consecutivo,
-          tipo_servicio: cirugiaServicioId,
-          servicio: response.data._id,
-          sucursal: data.sucursal,
-          fecha_hora: new Date(),
-          status: response.data.status,
-        }
-        const responseConsecutivo = await createConsecutivo(consecutivo);
-        if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-          setOpenAlert(true);
-          setMessage('CIRUGíA AGREGADA CORRECTAMENTE');
-        }
+        setMessage('CIRUGíA REAGENDADA CORRECTAMENTE');
+        const dia = addZero(data.fecha_hora.getDate());
+        const mes = addZero(data.fecha_hora.getMonth() + 1);
+        const anio = data.fecha_hora.getFullYear();
+        setFilterDate({
+          fecha_show: data.fecha_hora,
+          fecha: `${dia}/${mes}/${anio}`
+        });
+        await loadCirugias(data.fecha_hora);
       }
+    } else {
+      const dia = addZero(data.fecha_hora.getDate());
+      const mes = addZero(data.fecha_hora.getMonth() + 1);
+      const anio = data.fecha_hora.getFullYear();
+      setFilterDate({
+        fecha_show: data.fecha_hora,
+        fecha: `${dia}/${mes}/${anio}`
+      });
+      await updateCirugia(data._id, data)
+      await loadCirugias(data.fecha_hora);
     }
-    loadCirugias(data.fecha_hora);
     onClose();
   }
 
@@ -262,8 +273,8 @@ const ModalCirugia = (props) => {
   }
 
   const handleChangeDermatologos = (e) => {
-		setValues({ ...values, dermatologo: e.target.value });
-	}
+    setValues({ ...values, dermatologo: e.target.value });
+  }
 
 
   const loadHorariosByServicio = async () => {
@@ -276,13 +287,12 @@ const ModalCirugia = (props) => {
 
   const handleChangeFecha = async (date) => {
     setIsLoading(true);
-    const fechaObservaciones = `${addZero(date.getDate())}/${addZero(Number(date.getMonth() + 1))}/${date.getFullYear()} - ${values.hora} hrs`;
+    const fechaObservaciones = `${addZero(date.getDate())}/${addZero(Number(date.getMonth() + 1))}/${date.getFullYear()} - ${values.hora}:${values.minutos} HRS`;
     await setValues({
       ...values,
-      fecha_hora: date,
+      nueva_fecha_hora: date,
       observaciones: fechaObservaciones,
     });
-    await loadHorariosByServicio();
     setIsLoading(false);
   };
 
@@ -297,6 +307,45 @@ const ModalCirugia = (props) => {
   const handleChangeProductos = (e) => {
     setValues({ ...values, producto: e.target.value });
   }
+
+  const handleChangeMotivos = e => {
+    setValues({ ...values, motivos: e.target.value.toUpperCase() });
+  }
+
+  const handleChangeHora = e => {
+    setIsLoading(true);
+    const hora = (e.target.value);
+    const date = new Date(values.nueva_fecha_hora);
+    date.setHours(Number(hora));
+    date.setMinutes(Number(values.minutos));
+    date.setSeconds(0);
+    const fechaObservaciones = `${addZero(date.getDate())}/${addZero(Number(date.getMonth() + 1))}/${date.getFullYear()} - ${hora}:${values.minutos} HRS`;
+    setValues({
+      ...values,
+      nueva_fecha_hora: date,
+      hora: hora,
+      observaciones: fechaObservaciones,
+    });
+    setIsLoading(false);
+  };
+
+  const handleChangeMinutos = e => {
+    setIsLoading(true);
+    const minutos = e.target.value;
+    const date = new Date(values.nueva_fecha_hora);
+    date.setHours(Number(values.hora));
+    date.setMinutes(minutos);
+    date.setSeconds(0);
+    const fechaObservaciones = `${addZero(date.getDate())}/${addZero(Number(date.getMonth() + 1))}/${date.getFullYear()} - ${values.hora}:${minutos} HRS`;
+    setValues({
+      ...values,
+      nueva_fecha_hora: date,
+      minutos: minutos,
+      observaciones: fechaObservaciones,
+    });
+
+    setIsLoading(false);
+  };
 
   const handleChangeFrecuencia = (e) => {
     const frecuencia = e.target.value;
@@ -442,6 +491,9 @@ const ModalCirugia = (props) => {
             patologos={patologos}
             tipoServicioId={cirugiaServicioId}
             frecuenciaReconsultaId={frecuenciaReconsultaId}
+            onChangeMotivos={handleChangeMotivos}
+            onChangeHora={(e) => handleChangeHora(e)}
+            onChangeMinutos={(e) => handleChangeMinutos(e)}
             cirugia={cirugia} />
           :
           <Backdrop className={classes.backdrop} open={isLoading} >

@@ -21,6 +21,7 @@ import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import ModalProximaConsulta from '../../../components/modales/modal_proxima_consulta';
 import ModalTraspasoConsulta from '../../../components/modales/traspaso_consulta';
 import myStyles from '../../../css';
+import { CheckCustom } from '../../../components/basic/CheckCustom';
 
 export const AgendarConsultaContainer = (props) => {
 
@@ -28,6 +29,8 @@ export const AgendarConsultaContainer = (props) => {
 
   const {
     values,
+    isHoliDay,
+    onChangeHoliDay,
     servicios,
     tratamientos,
     productos,
@@ -213,11 +216,19 @@ export const AgendarConsultaContainer = (props) => {
       }
       <Paper>
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={8}>
+          <Grid item xs={12} sm={6}>
             <h1>{paciente.nombres ? `${paciente.nombres} ${paciente.apellidos}` : 'SELECCIONA UN PACIENTE'}</h1>
           </Grid>
           <Grid item xs={12} sm={2}>
             <h1>{toFormatterCurrency(values.precio)}</h1>
+          </Grid>
+          <Grid item xs={12} sm={2} className={classes.grid_center}>
+            <CheckCustom
+              checked={isHoliDay}
+              onChange={onChangeHoliDay}
+              name="checkedF"
+              label="ES FESTIVO"
+            />
           </Grid>
           <Grid item xs={12} sm={2} className={classes.grid_center}>
             <ButtonCustom

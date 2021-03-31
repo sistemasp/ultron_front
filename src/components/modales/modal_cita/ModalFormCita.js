@@ -134,7 +134,7 @@ const ModalFormCita = (props) => {
                 <h1 className={classes.label}>{values.servicio.nombre} {toFormatterCurrency(values.precio)}</h1>
               </Grid>
               <Grid item xs={12}>
-                <h2 className={classes.label}>{values.fecha_actual} - {values.hora_actual} hrs</h2>
+                <h2 className={classes.label}>{values.fecha_actual} - {values.hora_actual} HRS</h2>
               </Grid>
               <Grid item xs={12}>
                 <h2 className={classes.label}>{values.paciente_nombre}</h2>

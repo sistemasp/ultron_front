@@ -94,6 +94,7 @@ const ModalFormConsulta = (props) => {
     setOpenAlert,
     setMessage,
     setSeverity,
+    frecuenciaReconsultaId,
   } = props;
 
   return (
@@ -123,12 +124,12 @@ const ModalFormConsulta = (props) => {
                 <h1 className={classes.label}>{`CONSULTA ${toFormatterCurrency(values.precio)}`}</h1>
               </Grid>
               <Grid item xs={12}>
-                <h2 className={classes.label}>{values.fecha_actual} - {values.hora_actual} hrs</h2>
+                <h2 className={classes.label}>{values.fecha_actual} - {values.hora_actual} HRS</h2>
               </Grid>
               <Grid item xs={12}>
                 <h2 className={classes.label}>{values.paciente_nombre}</h2>
               </Grid>
-              
+
               <Grid item xs={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="simple-select-outlined-statements">STATUS</InputLabel>
@@ -210,19 +211,25 @@ const ModalFormConsulta = (props) => {
               <Grid item xs={12}>
                 <h2 className={classes.label}>{`TIPO: ${values.tipo_cita.nombre}`}</h2>
               </Grid>
-              <Grid item sm={12}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-hora">PRODUCTO</InputLabel>
-                  <Select
-                    labelId="simple-select-outlined-producto"
-                    id="simple-select-outlined-producto"
-                    value={values.producto}
-                    onChange={onChangeProductos}
-                    label="PRODUCTO" >
-                    {productos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                  </Select>
-                </FormControl>
-              </Grid>
+              {
+                values.frecuencia === frecuenciaReconsultaId
+                  ?
+                  <Grid item sm={12}>
+                    <FormControl variant="outlined" className={classes.formControl}>
+                      <InputLabel id="simple-select-outlined-hora">PRODUCTO</InputLabel>
+                      <Select
+                        labelId="simple-select-outlined-producto"
+                        id="simple-select-outlined-producto"
+                        value={values.producto}
+                        onChange={onChangeProductos}
+                        label="PRODUCTO" >
+                        {productos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  : ''
+              }
+
               <Grid item xs={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO (A)</InputLabel>
@@ -236,6 +243,7 @@ const ModalFormConsulta = (props) => {
                   </Select>
                 </FormControl>
               </Grid>
+
               <Grid item xs={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="simple-select-outlined-tipo-cita">MEDIO</InputLabel>

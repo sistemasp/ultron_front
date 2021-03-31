@@ -127,7 +127,7 @@ const ModalDermapen = (props) => {
 
   const handleChangeFecha = async (date) => {
     setIsLoading(true);
-    const fechaObservaciones = `${addZero(date.getDate())}/${addZero(Number(date.getMonth() + 1))}/${date.getFullYear()} - ${values.hora} hrs`;
+    const fechaObservaciones = `${addZero(date.getDate())}/${addZero(Number(date.getMonth() + 1))}/${date.getFullYear()} - ${values.hora} HRS`;
     await setValues({
       ...values,
       nueva_fecha_hora: date,
@@ -144,7 +144,7 @@ const ModalDermapen = (props) => {
     date.setHours(Number(hora[0]));
     date.setMinutes(hora[1]);
     date.setSeconds(0);
-    const fechaObservaciones = `${addZero(date.getDate())}/${addZero(Number(date.getMonth() + 1))}/${date.getFullYear()} - ${e.target.value} hrs`;
+    const fechaObservaciones = `${addZero(date.getDate())}/${addZero(Number(date.getMonth() + 1))}/${date.getFullYear()} - ${e.target.value} HRS`;
     setValues({
       ...values,
       nueva_fecha_hora: date,

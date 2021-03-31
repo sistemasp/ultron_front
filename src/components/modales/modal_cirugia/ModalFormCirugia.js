@@ -4,6 +4,8 @@ import Modal from '@material-ui/core/Modal';
 import { TextField, FormControl, InputLabel, Select, MenuItem, Grid } from '@material-ui/core';
 import { CheckCustom } from '../../basic/CheckCustom';
 import ModalPagos from '../modal_pagos';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import { Multiselect } from 'multiselect-react-dropdown';
 import { toFormatterCurrency } from '../../../utils/utils';
 import { ButtonCustom } from '../../basic/ButtonCustom';
@@ -78,6 +80,7 @@ const ModalFormCirugia = (props) => {
     onChangeBiopsia,
     onChangeCantidadBiopsias,
     onChange,
+    onChangeMotivos,
     onChangeFrecuencia,
     frecuencias,
     onChangeProductos,
@@ -102,6 +105,7 @@ const ModalFormCirugia = (props) => {
     tipoServicioId,
     onChangeFecha,
     onChangeHora,
+    onChangeMinutos,
     horarios,
   } = props;
 
@@ -130,7 +134,7 @@ const ModalFormCirugia = (props) => {
                 <h1 className={classes.label}>CIRUGíA {toFormatterCurrency(values.total)}</h1>
               </Grid>
               <Grid item xs={12}>
-                <h2 className={classes.label}>{values.fecha_actual} - {values.hora_actual} hrs</h2>
+                <h2 className={classes.label}>{values.fecha_actual} - {values.hora_actual} HRS</h2>
               </Grid>
               <Grid item xs={12}>
                 <h2 className={classes.label}>{cirugia.paciente_nombre}</h2>
@@ -148,6 +152,75 @@ const ModalFormCirugia = (props) => {
                   </Select>
                 </FormControl>
               </Grid>
+              {
+                values.status === reagendoStatusId ?
+                  <Fragment>
+                    <Grid item xs={12} sm={6}>
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                          disableToolbar
+                          disablePast
+                          autoOk
+                          variant="inline"
+                          format="dd/MM/yyyy"
+                          margin="normal"
+                          id="date-picker-inline"
+                          label="FECHA"
+                          value={values.nueva_fecha_hora}
+                          onChange={onChangeFecha}
+                          KeyboardButtonProps={{
+                            'aria-label': 'change date',
+                          }}
+                          invalidDateMessage='Selecciona una fecha' />
+                      </MuiPickersUtilsProvider>
+                    </Grid>
+
+                    <Grid item xs={12} sm={3}>
+                      <TextField
+                        className={classes.textField}
+                        name="hora"
+                        label="HORA"
+                        value={values.hora}
+                        type='Text'
+                        onChange={onChangeHora}
+                        onInput={(e) => {
+                          e.target.value = e.target.value < 0 ? 0 : (e.target.value > 24 ? 24 : e.target.value);
+                          e.target.value = (e.target.value).toString().slice(0, 2)
+                        }}
+                        variant="outlined" />
+                    </Grid>
+
+                    <Grid item xs={12} sm={3}>
+                      <TextField
+                        className={classes.textField}
+                        name="minutos"
+                        label="MINUTOS"
+                        value={values.minutos}
+                        type='Text'
+                        onChange={onChangeMinutos}
+                        onInput={(e) => {
+                          e.target.value = e.target.value < 0 ? 0 : (e.target.value > 60 ? 60 : e.target.value);
+                          e.target.value = (e.target.value).toString().slice(0, 2)
+                        }}
+                        variant="outlined" />
+                    </Grid>
+                  </Fragment>
+                  : ''
+              }
+
+              {
+                values.status === canceloStatusId || values.status === noAsistioStatusId || values.status === reagendoStatusId ?
+                  <Grid item xs={12}>
+                    <TextField
+                      className={classes.textField}
+                      name="motivos"
+                      //helperText={touched.numero_sesion ? errors.numero_sesion : ""}
+                      label="MOTIVOS"
+                      value={values.motivos}
+                      onChange={onChangeMotivos}
+                      variant="outlined" />
+                  </Grid> : ''
+              }
               <Grid item xs={12} >
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>

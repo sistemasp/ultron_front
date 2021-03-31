@@ -70,7 +70,7 @@ const ModalFormPaciente = (props) => {
             <Grid container spacing={3}>
             <Grid item xs={12} sm={12} className={classes.grid_center}>
               <CheckCustom
-                checked={values.factura}
+                checked={values.familiar}
                 onChange={onChangeFamiliar}
                 name="checkedF"
                 label="ES FAMILIAR"

@@ -41,6 +41,7 @@ const ModalEstetica = (props) => {
     setMessage,
     estetica,
     loadEsteticas,
+    setFilterDate,
   } = props;
 
   const [isLoading, setIsLoading] = useState(true);
@@ -72,6 +73,8 @@ const ModalEstetica = (props) => {
     sucursal: estetica.sucursal,
     total_aplicacion: estetica.total_aplicacion ? estetica.total_aplicacion : 0,
     total: estetica.total ? estetica.total : 0,
+    precio: estetica.precio,
+    servicio: estetica.servicio,
     toxinas_rellenos: estetica.toxinas_rellenos ? estetica.toxinas_rellenos : [],
     materiales: estetica.materiales ? estetica.materiales : [],
     pagado: estetica.pagado,
@@ -86,7 +89,10 @@ const ModalEstetica = (props) => {
     producto: estetica.producto,
     status: estetica.status._id,
     frecuencia: estetica.frecuencia._id,
+    hora: 0,
+    minutos: 0,
   });
+
   const [materiales, setMateriales] = useState([]);
 
   const promovendedorRolId = process.env.REACT_APP_PROMOVENDEDOR_ROL_ID;
@@ -103,35 +109,6 @@ const ModalEstetica = (props) => {
 
   const dataComplete = values.pagado;
 
-  const loadProductos = async () => {
-    const response = await findProductoByServicio(esteticaServicioId);
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setProductos(response.data);
-    }
-  }
-
-  const loadToxinasRellenos = async (productos) => {
-    const productosIds = productos.map(pro => {
-      return pro._id;
-    });
-    if (productosIds.length > 0) {
-      const response = await showMaterialEsteticasByProducto(productosIds);
-      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-        setToxinasRellenos(response.data);
-      }
-    } else {
-      setToxinasRellenos([]);
-    }
-
-  }
-
-  const loadMateriales = async () => {
-    const response = await showAllMaterials();
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setMateriales(response.data);
-    }
-  }
-
   const handleChangeFrecuencia = (e) => {
     const frecuencia = e.target.value;
     setValues({
@@ -146,75 +123,6 @@ const ModalEstetica = (props) => {
       forma_pago: event.target.value,
     });
   }
-
-  const loadFormasPago = async () => {
-    const response = await showAllMetodoPago();
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setFormasPago(response.data);
-    }
-  }
-
-  const loadMedios = async () => {
-    const response = await showAllMedios();
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setMedios(response.data);
-    }
-  }
-
-  const loadCosmetologas = async () => {
-    const response = await findEmployeesByRolIdAvailable(cosmetologaRolId);
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setCosmetologas(response.data);
-    }
-  }
-
-  const loadPromovendedores = async () => {
-    const response = await findEmployeesByRolIdAvailable(promovendedorRolId);
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setPromovendedores(response.data);
-    }
-  }
-
-  const loadDermatologos = async () => {
-    const response = await findEmployeesByRolIdAvailable(dermatologoRolId);
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setDermatologos(response.data);
-    }
-  }
-
-  const loadFrecuencias = async () => {
-    const response = await showAllFrecuencias();
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setFrecuencias(response.data);
-    }
-  }
-
-  const loadStaus = async () => {
-    const response = await showAllStatusVisibles();
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setStatements(response.data);
-    }
-    setIsLoading(false);
-  }
-
-  const loadAll = async () => {
-    setIsLoading(true);
-    await loadToxinasRellenos(values.producto);
-    await loadProductos();
-    await loadMateriales();
-    await loadFormasPago();
-    await loadMedios();
-    await loadCosmetologas();
-    await loadPromovendedores();
-    await loadDermatologos();
-    await loadFrecuencias();
-    await loadStaus();
-    setIsLoading(false);
-  }
-
-  useEffect(() => {
-    loadAll();
-  }, []);
 
   const handleChangeToxinasRellenos = async (items) => {
     setIsLoading(true);
@@ -232,13 +140,41 @@ const ModalEstetica = (props) => {
       data.hora_aplicacion = data.hora_aplicacion ? data.hora_aplicacion : dateNow;
       data.hora_llegada = (data.hora_llegada && data.hora_llegada !== '--:--') ? data.hora_llegada : `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;
     }
-    //const update = data._id ? {} : await updateConsult(consulta._id, { ...consulta, status: enProcedimientoStatusId });
-    const response = await updateEstetica(data._id, data);
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setOpenAlert(true);
-      setMessage('ESTÉTICA ACTUALIZADA CORRECTAMENTE.');
+
+    if (data.status === reagendoStatusId) {
+      await updateEstetica(data._id, data);
+      data.quien_agenda = empleado._id;
+      data.sucursal = sucursal;
+      data.status = pendienteStatusId;
+      data.hora_llegada = '--:--';
+      data.observaciones = `ESTÉTICA REAGENDADA ${values.fecha_actual} - ${values.hora}:${values.minutos} HRS`;
+      data.fecha_hora = data.nueva_fecha_hora;
+      data._id = undefined;
+      const response = await createEstetica(data);
+      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+        setOpenAlert(true);
+        setMessage('ESTÉTICA REAGENDADA CORRECTAMENTE');
+        const dia = addZero(data.fecha_hora.getDate());
+        const mes = addZero(data.fecha_hora.getMonth() + 1);
+        const anio = data.fecha_hora.getFullYear();
+        setFilterDate({
+          fecha_show: data.fecha_hora,
+          fecha: `${dia}/${mes}/${anio}`
+        });
+        await loadEsteticas(data.fecha_hora);
+      }
+    } else {
+      const dia = addZero(data.fecha_hora.getDate());
+      const mes = addZero(data.fecha_hora.getMonth() + 1);
+      const anio = data.fecha_hora.getFullYear();
+      setFilterDate({
+        fecha_show: data.fecha_hora,
+        fecha: `${dia}/${mes}/${anio}`
+      });
+      await updateEstetica(data._id, data)
+      await loadEsteticas(data.fecha_hora);
     }
-    loadEsteticas(new Date(data.fecha_hora));
+
     onClose();
   }
 
@@ -372,6 +308,153 @@ const ModalEstetica = (props) => {
     setIsLoading(false);
   }
 
+  const handleChangeFecha = async (date) => {
+    setIsLoading(true);
+    const fechaObservaciones = `${addZero(date.getDate())}/${addZero(Number(date.getMonth() + 1))}/${date.getFullYear()} - ${values.hora}:${values.minutos} HRS`;
+    await setValues({
+      ...values,
+      nueva_fecha_hora: date,
+      observaciones: fechaObservaciones,
+    });
+    setIsLoading(false);
+  };
+
+  const handleChangeMotivos = e => {
+    setValues({ ...values, motivos: e.target.value.toUpperCase() });
+  }
+
+  const handleChangeHora = e => {
+    setIsLoading(true);
+    const hora = (e.target.value);
+    const date = new Date(values.nueva_fecha_hora);
+    date.setHours(Number(hora));
+    date.setMinutes(Number(values.minutos));
+    date.setSeconds(0);
+    const fechaObservaciones = `${addZero(date.getDate())}/${addZero(Number(date.getMonth() + 1))}/${date.getFullYear()} - ${hora}:${values.minutos} HRS`;
+    setValues({
+      ...values,
+      nueva_fecha_hora: date,
+      hora: hora,
+      observaciones: fechaObservaciones,
+    });
+    setIsLoading(false);
+  };
+
+  const handleChangeMinutos = e => {
+    setIsLoading(true);
+    const minutos = e.target.value;
+    const date = new Date(values.nueva_fecha_hora);
+    date.setHours(Number(values.hora));
+    date.setMinutes(minutos);
+    date.setSeconds(0);
+    const fechaObservaciones = `${addZero(date.getDate())}/${addZero(Number(date.getMonth() + 1))}/${date.getFullYear()} - ${values.hora}:${minutos} HRS`;
+    setValues({
+      ...values,
+      nueva_fecha_hora: date,
+      minutos: minutos,
+      observaciones: fechaObservaciones,
+    });
+
+    setIsLoading(false);
+  };
+
+  const loadProductos = async () => {
+    const response = await findProductoByServicio(esteticaServicioId);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setProductos(response.data);
+    }
+  }
+
+  const loadToxinasRellenos = async (productos) => {
+    const productosIds = productos.map(pro => {
+      return pro._id;
+    });
+    if (productosIds.length > 0) {
+      const response = await showMaterialEsteticasByProducto(productosIds);
+      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+        setToxinasRellenos(response.data);
+      }
+    } else {
+      setToxinasRellenos([]);
+    }
+
+  }
+
+  const loadMateriales = async () => {
+    const response = await showAllMaterials();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setMateriales(response.data);
+    }
+  }
+  const loadFormasPago = async () => {
+    const response = await showAllMetodoPago();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setFormasPago(response.data);
+    }
+  }
+
+  const loadMedios = async () => {
+    const response = await showAllMedios();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setMedios(response.data);
+    }
+  }
+
+  const loadCosmetologas = async () => {
+    const response = await findEmployeesByRolIdAvailable(cosmetologaRolId);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setCosmetologas(response.data);
+    }
+  }
+
+  const loadPromovendedores = async () => {
+    const response = await findEmployeesByRolIdAvailable(promovendedorRolId);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setPromovendedores(response.data);
+    }
+  }
+
+  const loadDermatologos = async () => {
+    const response = await findEmployeesByRolIdAvailable(dermatologoRolId);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setDermatologos(response.data);
+    }
+  }
+
+  const loadFrecuencias = async () => {
+    const response = await showAllFrecuencias();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setFrecuencias(response.data);
+    }
+  }
+
+  const loadStaus = async () => {
+    const response = await showAllStatusVisibles();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setStatements(response.data);
+    }
+    setIsLoading(false);
+  }
+
+  const loadAll = async () => {
+    setIsLoading(true);
+    await loadToxinasRellenos(values.producto);
+    await loadProductos();
+    await loadMateriales();
+    await loadFormasPago();
+    await loadMedios();
+    await loadCosmetologas();
+    await loadPromovendedores();
+    await loadDermatologos();
+    await loadFrecuencias();
+    await loadStaus();
+    setIsLoading(false);
+  }
+
+  useEffect(() => {
+    loadAll();
+  }, []);
+
   return (
     <Fragment>
       {
@@ -420,6 +503,10 @@ const ModalEstetica = (props) => {
             medios={medios}
             openModalConfirmacion={openModalConfirmacion}
             onCloseModalConfirmacion={handleCloseModalConfirmacion}
+            onChangeFecha={(e) => handleChangeFecha(e)}
+            onChangeMotivos={handleChangeMotivos}
+            onChangeHora={(e) => handleChangeHora(e)}
+            onChangeMinutos={(e) => handleChangeMinutos(e)}
             estetica={estetica} />
           :
           <Backdrop className={classes.backdrop} open={isLoading} >

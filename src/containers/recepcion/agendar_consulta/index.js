@@ -348,6 +348,16 @@ const AgendarConsulta = (props) => {
 		setValues({ ...values, dermatologo: e.target.value });
 	}
 
+	const handleChangeHoliDay = (e) => {
+		setValues({
+			...values,
+			precio: !isHoliDay ? sucursal.precio_festivo : // Dia Festivo
+				date.getDay() === 6 ? (date.getHours() >= 13 ? sucursal.precio_sabado_vespertino : sucursal.precio_sabado_matutino) // SABADO
+					: (date.getHours() >= 14 ? sucursal.precio_vespertino : sucursal.precio_matutino), // L-V
+		})
+		setIsHoliDay(!isHoliDay);
+	}
+
 	const handleChangeObservaciones = e => {
 		setValues({ ...values, observaciones: e.target.value.toUpperCase() });
 	}
@@ -724,6 +734,7 @@ const AgendarConsulta = (props) => {
 						openModal={openModal}
 						empleado={empleado}
 						sucursal={sucursal}
+						isHoliDay={isHoliDay}
 						onClickCancel={handleCloseModal}
 						loadConsultas={loadConsultas}
 						tipoCitas={tipoCitas}
@@ -735,6 +746,7 @@ const AgendarConsulta = (props) => {
 						promovendedores={promovendedores}
 						onChangeDermatologos={(e) => handleChangeDermatologos(e)}
 						onChangePromovendedor={(e) => handleChangePromovendedor(e)}
+						onChangeHoliDay={(e) => handleChangeHoliDay(e)}
 						setOpenAlert={setOpenAlert}
 						setMessage={setMessage}
 						setSeverity={setSeverity}

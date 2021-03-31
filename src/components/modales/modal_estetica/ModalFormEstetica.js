@@ -7,6 +7,8 @@ import { toFormatterCurrency } from '../../../utils/utils';
 import { ButtonCustom } from '../../basic/ButtonCustom';
 import ModalPagos from '../modal_pagos';
 import { CheckCustom } from '../../basic/CheckCustom';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 
 function getModalStyle() {
   const top = 50;
@@ -117,6 +119,10 @@ const ModalFormEstetica = (props) => {
     onChangeCosmetologa,
     cosmetologas,
     onChangePaymentMethod,
+    onChangeFecha,
+    onChangeHora,
+    onChangeMinutos,
+    onChangeMotivos,
     formasPago,
     consulta,
     empleado,
@@ -167,6 +173,75 @@ const ModalFormEstetica = (props) => {
                   </Select>
                 </FormControl>
               </Grid>
+              {
+                values.status === reagendoStatusId ?
+                  <Fragment>
+                    <Grid item xs={12} sm={6}>
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                          disableToolbar
+                          disablePast
+                          autoOk
+                          variant="inline"
+                          format="dd/MM/yyyy"
+                          margin="normal"
+                          id="date-picker-inline"
+                          label="FECHA"
+                          value={values.nueva_fecha_hora}
+                          onChange={onChangeFecha}
+                          KeyboardButtonProps={{
+                            'aria-label': 'change date',
+                          }}
+                          invalidDateMessage='Selecciona una fecha' />
+                      </MuiPickersUtilsProvider>
+                    </Grid>
+
+                    <Grid item xs={12} sm={3}>
+                      <TextField
+                        className={classes.textField}
+                        name="hora"
+                        label="HORA"
+                        value={values.hora}
+                        type='Text'
+                        onChange={onChangeHora}
+                        onInput={(e) => {
+                          e.target.value = e.target.value < 0 ? 0 : (e.target.value > 24 ? 24 : e.target.value);
+                          e.target.value = (e.target.value).toString().slice(0, 2)
+                        }}
+                        variant="outlined" />
+                    </Grid>
+
+                    <Grid item xs={12} sm={3}>
+                      <TextField
+                        className={classes.textField}
+                        name="minutos"
+                        label="MINUTOS"
+                        value={values.minutos}
+                        type='Text'
+                        onChange={onChangeMinutos}
+                        onInput={(e) => {
+                          e.target.value = e.target.value < 0 ? 0 : (e.target.value > 60 ? 60 : e.target.value);
+                          e.target.value = (e.target.value).toString().slice(0, 2)
+                        }}
+                        variant="outlined" />
+                    </Grid>
+                  </Fragment>
+                  : ''
+              }
+
+              {
+                values.status === canceloStatusId || values.status === noAsistioStatusId || values.status === reagendoStatusId ?
+                  <Grid item xs={12}>
+                    <TextField
+                      className={classes.textField}
+                      name="motivos"
+                      //helperText={touched.numero_sesion ? errors.numero_sesion : ""}
+                      label="MOTIVOS"
+                      value={values.motivos}
+                      onChange={onChangeMotivos}
+                      variant="outlined" />
+                  </Grid> : ''
+              }
               <Grid item xs={12} sm={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
@@ -317,7 +392,7 @@ const ModalFormEstetica = (props) => {
                           }}
                           variant="outlined" />
                       </Grid>
-                      
+
                     </Fragment>) : ''
               }
 

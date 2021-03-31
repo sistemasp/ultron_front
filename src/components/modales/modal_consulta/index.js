@@ -198,7 +198,7 @@ const ModalConsulta = (props) => {
 
   const handleChangeFecha = async (date) => {
     setIsLoading(true);
-    const fechaObservaciones = `${addZero(date.getDate())}/${addZero(Number(date.getMonth() + 1))}/${date.getFullYear()} - ${values.hora} hrs`;
+    const fechaObservaciones = `${addZero(date.getDate())}/${addZero(Number(date.getMonth() + 1))}/${date.getFullYear()} - ${values.hora} HRS`;
     await setValues({
       ...values,
       nueva_fecha_hora: date,
@@ -215,7 +215,7 @@ const ModalConsulta = (props) => {
     date.setHours(Number(hora[0]));
     date.setMinutes(hora[1]);
     date.setSeconds(0);
-    const fechaObservaciones = `${addZero(date.getDate())}/${addZero(Number(date.getMonth() + 1))}/${date.getFullYear()} - ${e.target.value} hrs`;
+    const fechaObservaciones = `${addZero(date.getDate())}/${addZero(Number(date.getMonth() + 1))}/${date.getFullYear()} - ${e.target.value} HRS`;
     setValues({
       ...values,
       nueva_fecha_hora: date,
@@ -307,13 +307,11 @@ const ModalConsulta = (props) => {
       rowData.sucursal = sucursal;
       rowData.status = pendienteStatusId;
       rowData.hora_llegada = '--:--';
-      rowData.hora_atencion = '--:--';
-      rowData.hora_salida = '--:--';
-      rowData.observaciones = `Consulta reagendada ${values.fecha_actual} - ${values.hora_actual} hrs`;
+      rowData.observaciones = `CONSULTA REAGENDADA ${values.fecha_actual} - ${values.hora_actual} HRS`;
       rowData.fecha_hora = rowData.nueva_fecha_hora;
       const response = await createConsult(rowData);
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-        const consecutivo = {
+        /*const consecutivo = {
           consecutivo: response.data.consecutivo,
           tipo_servicio: consultaServicioId,
           servicio: response.data._id,
@@ -322,10 +320,10 @@ const ModalConsulta = (props) => {
           status: response.data.status,
         }
         const responseConsecutivo = await createConsecutivo(consecutivo);
-        if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+        if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
           setOpenAlert(true);
           setMessage('CONSULTA REAGENDADA CORRECTAMENTE');
-        }
+        //}
       }
 
       const dia = addZero(rowData.fecha_hora.getDate());
@@ -463,7 +461,8 @@ const ModalConsulta = (props) => {
             setMessage={setMessage}
             setSeverity={setSeverity}
             sucursal={sucursal}
-            tipoServicioId={consultaServicioId} /> :
+            tipoServicioId={consultaServicioId}
+            frecuenciaReconsultaId={frecuenciaReconsultaId} /> :
           <Backdrop className={classes.backdrop} open={isLoading} >
             <CircularProgress color="inherit" />
           </Backdrop>
