@@ -590,7 +590,7 @@ const AgendarConsulta = (props) => {
 			case 'AGENDAR NUEVA CITA':
 				handleOnClickNuevaConsulta(e, rowData);
 				break;
-			case 'AGREGAR PAGOS':
+			case 'PAGOS':
 				handleClickVerPagos(e, rowData);
 				break;
 			case 'TRASPASO':

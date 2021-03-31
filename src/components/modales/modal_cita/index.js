@@ -368,7 +368,7 @@ const ModalCita = (props) => {
           break;
       }
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-        const consecutivo = {
+        /*const consecutivo = {
           consecutivo: response.data.consecutivo,
           tipo_servicio: cita.servicio._id,
           servicio: response.data._id,
@@ -377,10 +377,10 @@ const ModalCita = (props) => {
           status: response.data.status,
         }
         const responseConsecutivo = await createConsecutivo(consecutivo);
-        if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+        if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
           setOpenAlert(true);
           setMessage('TRATAMIENTO REAGENDADO CORRECTAMENTE');
-        }
+        //}
       }
       const dia = addZero(rowData.fecha_hora.getDate());
       const mes = addZero(rowData.fecha_hora.getMonth());
