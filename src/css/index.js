@@ -1,8 +1,13 @@
 import { makeStyles } from "@material-ui/core";
 
 const drawerWidth = 250;
+const marginBase = 10;
 
 const myStyles = makeStyles(theme => ({
+    backdrop: {
+		zIndex: theme.zIndex.drawer + 1,
+		color: '#fff',
+	},
     paper: {
         position: 'absolute',
         width: 400,
@@ -148,6 +153,14 @@ const myStyles = makeStyles(theme => ({
     fragment: {
         width: '100%',
         padding: '0px',
+    },
+    container_main: {
+        width: `calc(100% - ${marginBase * 2}px)`,
+        height: `calc(100% - ${marginBase * 2}px)`,
+        margin: '10px',
+    },
+    container_child: {
+        height: `calc(100% - ${marginBase * 2}px)`,
     },
 }));
 

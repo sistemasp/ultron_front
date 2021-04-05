@@ -1,20 +1,15 @@
 import React, { Fragment } from 'react';
 import TableComponent from '../../../components/table/TableComponent';
-import { makeStyles } from '@material-ui/core';
+import { Grid, makeStyles } from '@material-ui/core';
 import ModalPaciente from '../../../components/modales/modal_paciente';
 import MenuHistoricos from '../../../components/modales/modal_historico';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import { baseUrl } from '../../../services';
-
-const useStyles = makeStyles(theme => ({
-  button: {
-    color: '#FFFFFF'
-  }
-}));
+import myStyles from '../../../css';
 
 export const PacientesContainer = (props) => {
 
-  const classes = useStyles();
+  const classes = myStyles();
 
   const {
     titulo,
@@ -63,21 +58,23 @@ export const PacientesContainer = (props) => {
             onClose={handleClose}
             paciente={paciente} /> : ''
       }
-
-      <ButtonCustom
-        className={classes.button}
-        color="primary"
-        variant="contained"
-        onClick={handleOpen}
-        text='NUEVO PACIENTE' />
-
-      <TableComponent
-        titulo={titulo}
-        columns={columns}
-        data={pacientes}
-        actions={actions}
-        options={options}
-        components={components} />
+      <Grid container>
+        <Grid item xs={12} sm={4}>
+          <ButtonCustom
+            className={classes.button}
+            color="primary"
+            variant="contained"
+            onClick={handleOpen}
+            text='NUEVO PACIENTE' />
+        </Grid>
+        <TableComponent
+          titulo={titulo}
+          columns={columns}
+          data={pacientes}
+          actions={actions}
+          options={options}
+          components={components} />
+      </Grid>
     </Fragment>
   );
 }

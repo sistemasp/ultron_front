@@ -22,6 +22,7 @@ import People from '@material-ui/icons/People';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import AirlineSeatReclineNormalIcon from '@material-ui/icons/AirlineSeatReclineNormal';
+import AndroidIcon from '@material-ui/icons/Android';
 import { Button, Grid } from '@material-ui/core';
 import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
 import ModalPassword from '../../../components/modales/modal_password';
@@ -38,6 +39,7 @@ import {
 	showCorteTodayBySucursalAndTurno
 } from '../../../services/corte';
 import myStyles from '../../../css';
+import MenuSuperAdmin from '../../menu_super_admin';
 
 const TabPanel = (props) => {
 	const { children, value, index, ...other } = props;
@@ -215,6 +217,14 @@ export const MainContainer = props => {
 						<ListItemText primary={'REPORTES'} />
 					</ListItem>
 					*/}
+					{
+						empleado.super_admin 
+						? <ListItem button key={'SUPER ADMINISTRADOR'} onClick={(e) => onChangeTab(e, 7, handleDrawerClose)}>
+							<ListItemIcon> <AndroidIcon /> </ListItemIcon>
+							<ListItemText primary={'SUPER ADMINISTRADOR'} />
+						</ListItem>
+						: ''
+					}
 				</List>
 			</Drawer>
 			<main
@@ -269,6 +279,12 @@ export const MainContainer = props => {
 							setPacienteAgendado={setPacienteAgendado}
 							empleado={empleado}
 							sucursal={sucursal._id} />
+					</TabPanel>
+					<TabPanel value={value} index={7}>
+						<MenuSuperAdmin
+							empleado={empleado}
+							sucursal={sucursal}
+							history={history} />
 					</TabPanel>
 				</Fragment>
 			</main>
