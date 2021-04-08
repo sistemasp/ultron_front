@@ -74,16 +74,18 @@ const Pacientes = (props) => {
 			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
 			color: '#FFF',
 			fontWeight: 'bolder',
-			fontSize: '18px'
+			fontSize: '18px',
+			textAlign: 'center',
+		},
+		cellStyle: {
+			fontWeight: 'bolder',
+			fontSize: '16px',
+			padding: '5px',
+			textAlign: 'center',
 		},
 		exportAllData: true,
 		exportButton: false,
 		exportDelimiter: ';',
-		cellStyle: {
-			fontWeight: 'bolder',
-			fontSize: '16px',
-			padding: '0px',
-		},
 	}
 
 	const handleOpen = () => {

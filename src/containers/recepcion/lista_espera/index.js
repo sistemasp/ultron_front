@@ -464,7 +464,7 @@ const ListaEspera = (props) => {
 		//new Date(anio, mes - 1, dia) < filterDate.fecha_show  ? 
 		{
 			icon: InputIcon,
-			tooltip: 'Asiganar a consultorio',
+			tooltip: 'ASIGNAR A CONSULTORIO',
 			onClick: handleOnClickConsultorioAsignarPaciente
 		} //: ''
 	];
@@ -473,7 +473,7 @@ const ListaEspera = (props) => {
 		//new Date(anio, mes - 1, dia) < filterDate.fecha_show  ? 
 		{
 			icon: InputIcon,
-			tooltip: 'Asiganar a cabina',
+			tooltip: 'ASIGNAR A CABINA',
 			onClick: handleOnClickCabinaAsignarPaciente
 		} //: ''
 	];
@@ -482,7 +482,7 @@ const ListaEspera = (props) => {
 		//new Date(anio, mes - 1, dia) < filterDate.fecha_show  ? 
 		{
 			icon: InputIcon,
-			tooltip: 'Asiganar a sala de cirugias',
+			tooltip: 'ASIGNAR A SALA DE CIRUDIAS cirugias',
 			onClick: handleOnClickSalaCirugiaAsignarPaciente
 		} //: ''
 	];
@@ -490,16 +490,16 @@ const ListaEspera = (props) => {
 	const actionsConsultorio = [
 		//new Date(anio, mes - 1, dia) < filterDate.fecha_show  ? 
 		rowData => {
-			return (!rowData.disponible && rowData.consulta.status !== enProcedimientoStatusId) ? {
+			return (!rowData.disponible && rowData.consultaId) ? {
 				icon: DirectionsWalkIcon,
-				tooltip: 'Salida paciente',
+				tooltip: 'SALIDA PACIENTE',
 				onClick: handleOnClickLiberarConsultorio
 			} : ''
 		},
 		rowData => (
-			(!rowData.disponible && rowData.consulta.status !== enProcedimientoStatusId) ? {
+			(!rowData.disponible && rowData.consultaId) ? {
 				icon: InputIcon,
-				tooltip: 'Cambiar de consultorio',
+				tooltip: 'CAMBIAR DE CONSULTORIO',
 				onClick: handleOnConsultorioCambiarPaciente
 			} : ''),
 	];
@@ -507,10 +507,10 @@ const ListaEspera = (props) => {
 	const onChangeActionsConsultorio = (e, rowData) => {
 		const action = e.target.value;
 		switch (action) {
-			case 'Salida paciente':
+			case 'SALIDA PACIENTE':
 				handleOnClickLiberarConsultorio(e, rowData);
 				break;
-			case 'Cambiar de consultorio':
+			case 'CAMBIAR DE CONSULTORIO':
 				handleOnConsultorioCambiarPaciente(e, rowData);
 				break;
 		}

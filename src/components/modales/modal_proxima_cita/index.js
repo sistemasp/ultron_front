@@ -45,7 +45,6 @@ const ModalProximaCita = (props) => {
     loadLaser,
     loadDermapens,
   } = props;
-  console.log("KAOZ", cita);
 
   const [isLoading, setIsLoading] = useState(true);
   const [horarios, setHorarios] = useState([]);

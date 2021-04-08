@@ -16,6 +16,30 @@ export const showAllProductoComercials = async () => {
     }
 }
 
+export const findProductoComercialById = async (idProductoComercial) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/productocomercial/${idProductoComercial}`,
+            method: 'GET'
+        });
+        return response;
+    } catch (error) {
+        console.log('findProductoComercialById', error);
+    }
+}
+
+export const showProductoComercialByLaboratorioId = async (idLaboratorio) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/productocomercial/laboratorio/${idLaboratorio}`,
+            method: 'GET'
+        });
+        return response;
+    } catch (error) {
+        console.log('showProductoComercialByLaboratorioId', error);
+    }
+}
+
 export const createProductoComercial = async (productocomercial) => {
     try {
         const response = await axios({

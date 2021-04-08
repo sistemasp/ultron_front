@@ -111,18 +111,18 @@ export const MainContainer = props => {
 		}
 	}
 
-	useEffect(() => {
-		const findCorte = async () => {
-			const response = await showCorteTodayBySucursalAndTurno(sucursal._id, 'm');
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				const corte = response.data;
-				if (!corte) {
-					generateCorteMatutino();
-				}
+	const findCorte = async () => {
+		const response = await showCorteTodayBySucursalAndTurno(sucursal._id, 'm');
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			const corte = response.data;
+			if (!corte) {
+				generateCorteMatutino();
 			}
 		}
+	}
 
-		//findCorte();
+	useEffect(() => {
+		findCorte();
 	}, []);
 
 	return (
@@ -191,8 +191,8 @@ export const MainContainer = props => {
 						<ListItemIcon> <AccessibilityNewIcon /> </ListItemIcon>
 						<ListItemText primary={'PACIENTES'} />
 					</ListItem>
-					{/*
-						<ListItem button key={'DERMATOLÓGOS'} onClick={(e) => onChangeTab(e, 1, handleDrawerClose)}>
+
+					<ListItem button key={'DERMATOLÓGOS'} onClick={(e) => onChangeTab(e, 1, handleDrawerClose)}>
 						<ListItemIcon> <People /> </ListItemIcon>
 						<ListItemText primary={'DERMATOLÓGOS'} />
 					</ListItem>
@@ -216,14 +216,14 @@ export const MainContainer = props => {
 						<ListItemIcon> <AssignmentIcon /> </ListItemIcon>
 						<ListItemText primary={'REPORTES'} />
 					</ListItem>
-					*/}
+
 					{
-						empleado.super_admin 
-						? <ListItem button key={'SUPER ADMINISTRADOR'} onClick={(e) => onChangeTab(e, 7, handleDrawerClose)}>
-							<ListItemIcon> <AndroidIcon /> </ListItemIcon>
-							<ListItemText primary={'SUPER ADMINISTRADOR'} />
-						</ListItem>
-						: ''
+						empleado.super_admin
+							? <ListItem button key={'SUPER ADMINISTRADOR'} onClick={(e) => onChangeTab(e, 7, handleDrawerClose)}>
+								<ListItemIcon> <AndroidIcon /> </ListItemIcon>
+								<ListItemText primary={'SUPER ADMINISTRADOR'} />
+							</ListItem>
+							: ''
 					}
 				</List>
 			</Drawer>

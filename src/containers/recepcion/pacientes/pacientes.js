@@ -67,13 +67,16 @@ export const PacientesContainer = (props) => {
             onClick={handleOpen}
             text='NUEVO PACIENTE' />
         </Grid>
-        <TableComponent
-          titulo={titulo}
-          columns={columns}
-          data={pacientes}
-          actions={actions}
-          options={options}
-          components={components} />
+        <Grid item xs={12}>
+          <TableComponent
+            titulo={titulo}
+            columns={columns}
+            data={pacientes}
+            actions={actions}
+            options={options}
+            components={components} />
+        </Grid>
+
       </Grid>
     </Fragment>
   );

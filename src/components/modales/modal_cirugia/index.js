@@ -107,7 +107,6 @@ const ModalCirugia = (props) => {
     hora: 0,
     minutos: 0,
   });
-  console.log("KAOZ", values);
   
   const dataComplete = values.pagado;
 

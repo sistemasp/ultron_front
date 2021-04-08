@@ -1,14 +1,20 @@
+import { Backdrop, CircularProgress } from '@material-ui/core';
 import React, { useState, useEffect, Fragment } from 'react';
+import myStyles from '../../../css';
+import { updatePatient } from '../../../services';
+import { showAllOcupacions } from '../../../services/ocupacion';
 import {
   sepomexGetEstados,
   sepomexGetMunicipos,
   sepomexGetColonia,
   sepomexGetAllInfoByCP,
-  updatePatient,
-} from '../../../services';
+} from '../../../services/sepomex';
 import ModalFormPacienteDomicilio from './ModalFormPacienteDomicilio';
 
 const ModalPacienteDomicilio = (props) => {
+
+  const classes = myStyles();
+
   const {
     open,
     onClose,
@@ -20,10 +26,12 @@ const ModalPacienteDomicilio = (props) => {
     findConsultorio,
   } = props;
 
+  const [ocupaciones, setOcupaciones] = useState([]);
   const [estados, setEstados] = useState([]);
   const [municipios, setMunicipios] = useState([]);
   const [ciudades, setCiudades] = useState([]);
   const [colonias, setColonias] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [values, setValues] = useState({
     _id: paciente._id,
@@ -57,12 +65,28 @@ const ModalPacienteDomicilio = (props) => {
     }
   }
 
+  const loadOcupaciones = async () => {
+    const response = await showAllOcupacions();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setOcupaciones(response.data);
+    }
+  }
+
   const handleChange = (e) => {
     setValues({
       ...values,
       [e.target.name]: e.target.value.toUpperCase()
     });
   }
+
+  const handleChangeSelect = (event) => {
+    setValues({
+      ...values,
+      [event.target.name]: event.target.value
+    });
+  }
+
+  console.log("KAOZ", values);
 
   const handleClickBuscar = async () => {
     const response = await sepomexGetAllInfoByCP(values.codigo_postal);
@@ -101,46 +125,63 @@ const ModalPacienteDomicilio = (props) => {
   const handleClickGuardar = async (e) => {
     values.codigo_postal = values.codigo_postal ? values.codigo_postal : 'SCP';
 
-		const response = await updatePatient(paciente._id, values) ;
-		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			setSeverity('success');
+    const response = await updatePatient(paciente._id, values);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setSeverity('success');
       setOpenAlert(true);
-			findConsultorio();
-			setMessage('PACIENTE ACTUALIZADO CORRECTAMENTE');
-		}
+      findConsultorio();
+      setMessage('PACIENTE ACTUALIZADO CORRECTAMENTE');
+    }
 
-		onClose();
+    onClose();
+  }
+
+  const loadEstados = async () => {
+    const response = await sepomexGetEstados();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setEstados(response.data.response.estado);
+    }
+  }
+
+  const loadAll = async () => {
+    setIsLoading(true);
+    await loadEstados();
+    await loadOcupaciones();
+    setIsLoading(false);
   }
 
   useEffect(() => {
-    const loadEstados = async () => {
-      const response = await sepomexGetEstados();
-      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-        setEstados(response.data.response.estado);
-      }
-    }
-    loadEstados();
+    loadAll();
   }, []);
 
   return (
     <Fragment>
-      <ModalFormPacienteDomicilio
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-        open={open}
-        values={values}
-        onClickCancel={onClose}
-        paciente={paciente}
-        estados={estados}
-        municipios={municipios}
-        ciudades={ciudades}
-        colonias={colonias}
-        onChange={handleChange}
-        onChangeEstado={handleChangeEstado}
-        onChangeMunicipio={handleChangeMunicipio}
-        onChangeColonia={handleChangeColonia}
-        onClickBuscar={handleClickBuscar}
-        onClickGuardar={handleClickGuardar} />
+      {
+        !isLoading ?
+          <ModalFormPacienteDomicilio
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+            open={open}
+            values={values}
+            onClickCancel={onClose}
+            paciente={paciente}
+            estados={estados}
+            municipios={municipios}
+            ciudades={ciudades}
+            colonias={colonias}
+            onChangeSelect={handleChangeSelect}
+            ocupaciones={ocupaciones}
+            onChange={handleChange}
+            onChangeEstado={handleChangeEstado}
+            onChangeMunicipio={handleChangeMunicipio}
+            onChangeColonia={handleChangeColonia}
+            onClickBuscar={handleClickBuscar}
+            onClickGuardar={handleClickGuardar} />
+          :
+          <Backdrop className={classes.backdrop} open={isLoading} >
+            <CircularProgress color="inherit" />
+          </Backdrop>
+      }
     </Fragment>
   );
 }

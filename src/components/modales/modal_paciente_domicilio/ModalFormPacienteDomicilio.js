@@ -29,6 +29,8 @@ const ModalFormPacienteDomicilio = (props) => {
     touched,
     handleSubmit,
     onClickCancel,
+    onChangeSelect,
+    ocupaciones,
     estados,
     municipios,
     ciudades,
@@ -81,6 +83,20 @@ const ModalFormPacienteDomicilio = (props) => {
                     placeholder: "dd/mm/aaaa"
                   }}
                   variant="outlined" />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-ocupacion">OCUPACIÓN</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-ocupacion"
+                    id="simple-select-outlined-ocupacion"
+                    name="ocupacion"
+                    value={values.ocupacion}
+                    onChange={onChangeSelect}
+                    label="OCUPACIÓN" >
+                    {ocupaciones.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
               </Grid>
               <Grid item xs={12}>
                 <TextField

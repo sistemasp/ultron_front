@@ -64,3 +64,16 @@ export const dateToString = (date) => {
     const parseDate = new Date(date);
     return `${addZero(parseDate.getDate())}/${addZero(parseDate.getMonth() + 1)}/${parseDate.getFullYear()}`;
 }
+
+export const culcularEdad = (fecha_nacimiento) => {
+    const today = new Date();
+
+    const fechaNacimiento = fecha_nacimiento.split('/');
+    const anioNacimiento = Number(fechaNacimiento[2]);
+    const mesNacimiento = Number(fechaNacimiento[1]);
+    const diaNacimiento = Number(fechaNacimiento[0]);
+
+    const edad = (today.getFullYear() - anioNacimiento) - (mesNacimiento >= (today.getMonth() + 1) ? 1 : 0);
+    
+    return edad;
+}

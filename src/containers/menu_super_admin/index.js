@@ -6,6 +6,7 @@ import { showAllCatalogos } from "../../services/catalogos";
 import myStyles from "../../css";
 import { showAllLaboratorios } from "../../services/laboratorios";
 import { showAllProductoComercials } from "../../services/productos_comerciales";
+import { showAllOcupacions } from "../../services/ocupacion";
 
 const Alert = (props) => {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -17,6 +18,7 @@ const MenuSuperAdmin = (props) => {
 
     const laboratoriosCatalogoId = process.env.REACT_APP_LABORATORIOS_CATALOGO_ID;
     const productoComercialCatalogoId = process.env.REACT_APP_PRODUCTO_COMERCIAL_CATALOGO_ID;
+    const ocupacionCatalogoId = process.env.REACT_APP_OCUPACION_CATALOGO_ID;
 
     const [catalogos, setCatalogos] = useState([]);
     const [data, setData] = useState([]);
@@ -46,6 +48,13 @@ const MenuSuperAdmin = (props) => {
         }
     }
 
+    const loadOcupaciones = async () => {
+        const response = await showAllOcupacions();
+        if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+            setData(response.data);
+        }
+    }
+
     const searchData = async (catalogo) => {
         setIsLoading(true);
         switch (catalogo._id) {
@@ -54,6 +63,9 @@ const MenuSuperAdmin = (props) => {
                 break;
             case productoComercialCatalogoId:
                 await loadProductosComerciales();
+                break;
+            case ocupacionCatalogoId:
+                await loadOcupaciones();
                 break;
         }
         setIsLoading(false);

@@ -71,7 +71,7 @@ const ModalConsultorioAgregarPaciente = (props) => {
 
       setValues({ consultorio: { paciente: consulta.paciente._id } });
       let consul = values.consultorio;
-      consul.consulta = consulta._id;
+      consul.consultaId = consulta._id;
       consul.paciente = paciente._id;
       consul.tipo_servicio = tipo_servicio;
       consul.servicio = servicio;

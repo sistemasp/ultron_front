@@ -16,6 +16,18 @@ export const showAllLaboratorios = async () => {
     }
 }
 
+export const findLaboratorioById = async (idLaboratorio) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/laboratorio/${idLaboratorio}`,
+            method: 'GET'
+        });
+        return response;
+    } catch (error) {
+        console.log('findLaboratorioById', error);
+    }
+}
+
 export const createLaboratorio = async (laboratorio) => {
     try {
         const response = await axios({

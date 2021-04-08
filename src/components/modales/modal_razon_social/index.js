@@ -5,7 +5,7 @@ import {
   sepomexGetMunicipos,
   sepomexGetColonia,
   sepomexGetAllInfoByCP,
-} from '../../../services';
+} from '../../../services/sepomex';
 import { Formik } from 'formik';
 import { Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
