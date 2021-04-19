@@ -162,6 +162,9 @@ const myStyles = makeStyles(theme => ({
     container_child: {
         height: `calc(100% - ${marginBase * 2}px)`,
     },
+    select: {
+        height: '100%'
+    }
 }));
 
 export default myStyles;

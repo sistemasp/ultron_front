@@ -70,7 +70,7 @@ const Consultorios = (props) => {
 
 	const columnsConsultorio = [
 		{ title: 'NOMBRE', field: 'nombre' },
-		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
+		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 	];
 
@@ -82,7 +82,7 @@ const Consultorios = (props) => {
 
 	const columnsSalaCirugia = [
 		{ title: 'NOMBRE', field: 'nombre' },
-		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
+		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 	];
 

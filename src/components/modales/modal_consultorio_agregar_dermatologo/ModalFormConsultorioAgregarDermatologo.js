@@ -84,7 +84,7 @@ const ModalFormConsultorioAgregarDermatologo = (props) => {
                     value={values.dermatologo}
                     error={Boolean(errors.dermatologo)}
                     onChange={onChangeDermatologos}
-                    label="DERMATÓLOGO" >
+                    label="DERMATÓLOGO (A)" >
                     {dermatologos.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
                   </Select>
                 </FormControl>

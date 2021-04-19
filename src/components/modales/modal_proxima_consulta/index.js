@@ -3,6 +3,8 @@ import {
   createConsecutivo,
   findEmployeesByRolIdAvailable,
   findScheduleInConsultByDateAndSucursal,
+  showAllMetodoPago,
+  showAllOffices,
 } from "../../../services";
 import {
   createConsult,
@@ -10,6 +12,7 @@ import {
 import { Backdrop, CircularProgress, makeStyles } from '@material-ui/core';
 import { addZero } from '../../../utils/utils';
 import ModalFormProximaConsulta from './ModalFormProximaConsulta';
+import { findProductoByServicio } from '../../../services/productos';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -35,8 +38,11 @@ const ModalProximaConsulta = (props) => {
   } = props;
 
   const [isLoading, setIsLoading] = useState(true);
+  const [sucursales, setSucursales] = useState([]);
   const [horarios, setHorarios] = useState([]);
   const [dermatologos, setDermatologos] = useState([]);
+  const [productos, setProductos] = useState([]);
+  const [formasPago, setFormasPago] = useState([]);
 
   const fecha_cita = new Date(consulta.fecha_hora);
   const fecha = `${addZero(fecha_cita.getDate())}/${addZero(Number(fecha_cita.getMonth() + 1))}/${addZero(fecha_cita.getFullYear())}`;
@@ -69,10 +75,10 @@ const ModalProximaConsulta = (props) => {
     dermatologo: consulta.dermatologo._id,
     frecuencia: reconsultaFrecuenciaId,
     servicio: consulta.servicio,
-    sucursal: consulta.sucursal,
-    producto: consulta.producto,
+    sucursal: consulta.sucursal._id,
+    producto: consulta.producto._id,
     medio: citadoMedioId,
-    forma_pago: consulta.forma_pago,
+    forma_pago: consulta.forma_pago._id,
   });
 
   const loadHorarios = async (date) => {
@@ -84,6 +90,24 @@ const ModalProximaConsulta = (props) => {
       setHorarios(response.data);
     }
   }
+
+  const handleChangeSucursal = item => {
+    setValues({ 
+      ...values,
+      sucursal: item.target.value
+    });
+  };
+
+  const handleChangeProductos = (e) => {
+		setValues({ ...values, producto: e.target.value });
+	}
+
+  const handleChangePaymentMethod = (event) => {
+		setValues({
+			...values,
+			forma_pago: event.target.value,
+		});
+	}
 
   const handleChangeFecha = async (date) => {
     setIsLoading(true);
@@ -116,7 +140,7 @@ const ModalProximaConsulta = (props) => {
   }
 
   const handleChangeObservaciones = e => {
-    setValues({ ...values, observaciones: e.target.value });
+    setValues({ ...values, observaciones: e.target.value.toUpperCase() });
   }
 
   const handleOnClickProximarCita = async (data) => {
@@ -163,10 +187,35 @@ const ModalProximaConsulta = (props) => {
     }
   }
 
+  const loadSucursales = async () => {
+    const response = await showAllOffices();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      const sucursales = response.data;
+      setSucursales(sucursales);
+    }
+  }
+
+  const loadProductos = async () => {
+    const response = await findProductoByServicio(consultaServicioId);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setProductos(response.data);
+    }
+  }
+
+  const loadFormasPago = async () => {
+		const response = await showAllMetodoPago();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setFormasPago(response.data);
+		}
+	}
+
   const  loadAll = async () => {
     setIsLoading(true);
+    await loadSucursales();
     await loadHorarios();
     await loadDermatologos();
+    await loadProductos();
+    await loadFormasPago();
     setIsLoading(false);
   }
 
@@ -186,6 +235,9 @@ const ModalProximaConsulta = (props) => {
             onClose={onClose}
             consulta={consulta}
             empleado={empleado}
+            productos={productos}
+            sucursales={sucursales}
+            onChangeSucursal={(e) => handleChangeSucursal(e)}
             onClickProximarCita={handleOnClickProximarCita}
             onChangeFecha={(e) => handleChangeFecha(e)}
             onChangeHora={(e) => handleChangeHora(e)}
@@ -195,6 +247,9 @@ const ModalProximaConsulta = (props) => {
             dermatologos={dermatologos}
             onChangeObservaciones={handleChangeObservaciones}
             sucursal={sucursal}
+            onChangeProductos={(e) => handleChangeProductos(e)}
+            onChangePaymentMethod={(e) => handleChangePaymentMethod(e)}
+            formasPago={formasPago}
             tipoServicioId={consultaServicioId} /> :
           <Backdrop className={classes.backdrop} open={isLoading} >
             <CircularProgress color="inherit" />

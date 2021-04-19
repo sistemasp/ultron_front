@@ -15,9 +15,10 @@ import { createFacial } from '../../../services/faciales';
 import { createLaser } from '../../../services/laser';
 import { Backdrop, CircularProgress, makeStyles } from '@material-ui/core';
 import { addZero } from '../../../utils/utils';
-import ModalFormProximaCirugia from './ModalFormProximaCirugia';
-import { findProductoByServicio } from '../../../services/productos';
+import ModalFormProximaDermapen from './ModalFormProximaDermapen';
 import { createCirugia } from '../../../services/cirugias';
+import { createEstetica } from '../../../services/esteticas';
+import { createDermapen } from '../../../services/dermapens';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -26,20 +27,25 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const ModalProximaCirugia = (props) => {
+const ModalProximaDermapen = (props) => {
 
   const classes = useStyles();
 
   const {
     open,
     onClose,
-    cirugia,
+    cita,
     empleado,
+    loadConsultas,
+    tratamientos,
     sucursal,
     setOpenAlert,
     setMessage,
     setFilterDate,
-    loadCirugias,
+    loadAparatologias,
+    loadFaciales,
+    loadLaser,
+    loadDermapens,
   } = props;
 
   const [isLoading, setIsLoading] = useState(true);
@@ -47,9 +53,9 @@ const ModalProximaCirugia = (props) => {
   const [horarios, setHorarios] = useState([]);
   const [areas, setAreas] = useState([]);
   const [cosmetologas, setCosmetologas] = useState([]);
-  const [formasPago, setFormasPago] = useState([]);
   const [dermatologos, setDermatologos] = useState([]);
-  const fecha_cita = new Date(cirugia.fecha_hora);
+  const [formasPago, setFormasPago] = useState([]);
+  const fecha_cita = new Date(cita.fecha_hora);
   const fecha = `${addZero(fecha_cita.getDate())}/${addZero(Number(fecha_cita.getMonth() + 1))}/${addZero(fecha_cita.getFullYear())}`;
   const hora = `${addZero(Number(fecha_cita.getHours()))}:${addZero(fecha_cita.getMinutes())}`;
 
@@ -64,43 +70,43 @@ const ModalProximaCirugia = (props) => {
   const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
   const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
   const sucursalFedeId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
+  const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
   const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
   const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
   const servicioLaserId = process.env.REACT_APP_LASER_SERVICIO_ID;
-  const cirugiaServicioId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID;
-  const productoCirugiaId = process.env.REACT_APP_PRODUCTO_CIRUGIA_ID;
+  const servicioCirugiaId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID;
+  const servicioEsteticaId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
+  const servicioDermapenId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID;
 
-  const [productos, setProductos] = useState([]);
   const [values, setValues] = useState({
     fecha_show: fecha_cita,
     fecha: fecha,
     hora: 0,
     fecha_actual: fecha,
-    fecha_hora: new Date(),
     hora_actual: 0,
-    paciente: cirugia.paciente,
-    paciente_nombre: `${cirugia.paciente.nombres} ${cirugia.paciente.apellidos}`,
-    telefono: cirugia.paciente.telefono,
-    precio: cirugia.precio,
-    total: cirugia.total,
-    cosmetologa: cirugia.cosmetologa ? cirugia.cosmetologa._id : '',
+    paciente: cita.paciente,
+    paciente_nombre: `${cita.paciente.nombres} ${cita.paciente.apellidos}`,
+    telefono: cita.paciente.telefono,
+    precio: cita.precio,
+    total: cita.total,
+    materiales: cita.materiales,
+    cosmetologa: cita.cosmetologa ? cita.cosmetologa._id : '',
     quien_agenda: empleado,
     tipo_cita: tipoCitaDerivadaId,
     promovendedor: promovendedorSinPromovendedorId,
     status: pendienteStatusId,
     observaciones: '',
-    dermatologo: cirugia.dermatologo ? cirugia.dermatologo : '',
+    dermatologo: cita.dermatologo ? cita.dermatologo : '',
     frecuencia: reconsultaFrecuenciaId,
-    producto: productoCirugiaId,
-    servicio: cirugia.servicio,
-    sucursal: cirugia.sucursal._id,
+    servicio: cita.servicio,
+    sucursal: cita.sucursal._id,
     medio: citadoMedioId,
-    areas: cirugia.areas,
-    forma_pago: cirugia.forma_pago._id,
-    tiempo: cirugia.tiempo,
-    dermatologo: cirugia.dermatologo._id,
-    hora: 0,
-    minutos: 0,
+    tratamientos: cita.tratamientos,
+    areas: cita.areas,
+    tiempo: cita.tiempo,
+    dermatologo: cita.dermatologo._id,
+    forma_pago: cita.forma_pago._id,
+    producto: cita.producto,
   });
 
   const loadHorarios = async (date) => {
@@ -113,6 +119,13 @@ const ModalProximaCirugia = (props) => {
     }
   }
 
+  const loadAreas = async (tratamiento) => {
+    const response = await findAreasByTreatmentServicio(tratamiento.servicio, tratamiento._id);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setAreas(response.data);
+    }
+  }
+
   const loadCosmetologas = async () => {
     const response = await findEmployeesByRolId(cosmetologaRolId);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
@@ -122,9 +135,6 @@ const ModalProximaCirugia = (props) => {
 
   const handleChangeFecha = async (date) => {
     setIsLoading(true);
-    date.setHours(Number(values.hora));
-    date.setMinutes(Number(values.minutos));
-    date.setSeconds(0);
     await setValues({
       ...values,
       fecha_hora: date,
@@ -135,32 +145,16 @@ const ModalProximaCirugia = (props) => {
 
   const handleChangeHora = e => {
     setIsLoading(true);
-    const hora = (e.target.value);
+    const hora = (e.target.value).split(':');
     const date = new Date(values.fecha_hora);
-    date.setHours(Number(hora));
-    date.setMinutes(Number(values.minutos));
+    date.setHours(Number(hora[0]));
+    date.setMinutes(hora[1]);
     date.setSeconds(0);
     setValues({
       ...values,
       fecha_hora: date,
-      hora: hora,
+      hora: e.target.value,
     });
-    setIsLoading(false);
-  };
-
-  const handleChangeMinutos = e => {
-    setIsLoading(true);
-    const minutos = e.target.value;
-    const date = new Date(values.fecha_hora);
-    date.setHours(Number(values.hora));
-    date.setMinutes(minutos);
-    date.setSeconds(0);
-    setValues({
-      ...values,
-      fecha_hora: date,
-      minutos: minutos,
-    });
-
     setIsLoading(false);
   };
 
@@ -171,8 +165,8 @@ const ModalProximaCirugia = (props) => {
   const handleOnClickProximarCita = async (data) => {
     setIsLoading(true);
     data.hora_llegada = '--:--';
-    const response = await createCirugia(data);;
-    /*switch (cirugia.servicio._id) {
+    let response;
+    switch (cita.servicio._id) {
       case servicioAparatologiaId:
         response = await createAparatologia(data);
         break;
@@ -182,11 +176,20 @@ const ModalProximaCirugia = (props) => {
       case servicioLaserId:
         response = await createLaser(data);
         break;
-    }*/
+      case servicioCirugiaId:
+        response = await createCirugia(data);
+        break;
+      case servicioEsteticaId:
+        response = await createEstetica(data);
+        break;
+      case servicioDermapenId:
+        response = await createDermapen(data);
+        break;
+    }
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
       /*const consecutivo = {
         consecutivo: response.data.consecutivo,
-        tipo_servicio: cirugia.servicio._id,
+        tipo_servicio: cita.servicio._id,
         servicio: response.data._id,
         sucursal: sucursal._id,
         fecha_hora: new Date(),
@@ -195,7 +198,7 @@ const ModalProximaCirugia = (props) => {
       const responseConsecutivo = await createConsecutivo(consecutivo);
       if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
       setOpenAlert(true);
-      setMessage('CIRUGIA AGREGADA CORRECTAMENTE');
+      setMessage('CITA AGREGADA CORRECTAMENTE');
       const dia = addZero(data.fecha_show.getDate());
       const mes = addZero(data.fecha_show.getMonth() + 1);
       const anio = data.fecha_show.getFullYear();
@@ -206,9 +209,69 @@ const ModalProximaCirugia = (props) => {
       //}
     }
 
-    await loadCirugias(data.fecha_hora);
+    switch (cita.servicio._id) {
+      case servicioAparatologiaId:
+        await loadAparatologias(data.fecha_hora);
+        break;
+      case servicioFacialId:
+        await loadFaciales(data.fecha_hora);
+        break;
+      case servicioLaserId:
+        await loadLaser(data.fecha_hora);
+        break;
+      case servicioCirugiaId:
+        await createCirugia(data.fecha_hora);
+        break;
+      case servicioEsteticaId:
+        await createEstetica(data.fecha_hora);
+        break;
+      case servicioDermapenId:
+        await loadDermapens(data.fecha_hora);
+        break;
+    }
     onClose();
   };
+
+  const handleChangeTiempo = e => {
+    setValues({ ...values, tiempo: e.target.value });
+  };
+
+  const handleChangeCosmetologa = e => {
+    setValues({ ...values, cosmetologa: e.target.value });
+  }
+
+  const handleChangeDermatologo = (e) => {
+    setValues({ ...values, dermatologo: e.target.value });
+  }
+
+  const handleChangeTratamientos = (e) => {
+    e.map(async (tratamiento) => {
+      setIsLoading(true);
+      const response = await findAreasByTreatmentServicio(tratamiento.servicio, tratamiento._id);
+      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+        tratamiento.areas = response.data;
+        setIsLoading(false);
+        setValues({
+          ...values,
+          precio: 0,
+          tratamientos: e,
+        });
+      }
+    });
+  };
+
+  const handleChangeTotal = (event) => {
+    const precio = event.target.value;
+    let total_aplicacion = precio;
+
+    setValues({
+      ...values,
+      precio: precio,
+      total: precio,
+      total_aplicacion: total_aplicacion,
+    })
+
+  }
 
   const handleChangeSucursal = item => {
     setValues({
@@ -224,31 +287,30 @@ const ModalProximaCirugia = (props) => {
     });
   }
 
-  const handleChangeTiempo = e => {
-    setValues({ ...values, tiempo: e.target.value });
-  };
+  const handleChangeAreas = async (items, tratamiento) => {
 
-  const handleChangeCosmetologa = e => {
-    setValues({ ...values, cosmetologa: e.target.value });
+    tratamiento.areasSeleccionadas = items;
+    setIsLoading(true);
+    let precio = 0;
+    values.tratamientos.forEach(tratam => {
+      if (tratam.areasSeleccionadas) {
+        tratam.areasSeleccionadas.map((item) => {
+          const itemPrecio =
+            sucursal === sucursalManuelAcunaId ? item.precio_ma // Precio Manuel Acuña
+              : (sucursal === sucursalOcciId ? item.precio_oc // Precio Occidental
+                : (sucursal === sucursalFedeId ? item.precio_fe // Precio Federalismo
+                  : (sucursal._id === sucursalRubenDarioId ? item.precio_rd // PRECIO RUBEN DARIO
+                    : 0))); // Error
+          precio = Number(precio) + Number(itemPrecio);
+        });
+      }
+    });
+    setValues({
+      ...values,
+      precio: precio
+    });
+    setIsLoading(false);
   }
-
-  const handleChangeDermatologo = (e) => {
-    setValues({ ...values, dermatologo: e.target.value });
-  }
-
-  const handleChangeProductos = (e) => {
-    setValues({ ...values, producto: e.target.value });
-  }
-
-  const handleChangeTotal = e => {
-		let total_aplicacion = Number(e.target.value);
-		setValues({
-			...values,
-			precio: e.target.value,
-			total: e.target.value,
-			total_aplicacion: total_aplicacion,
-		});
-	};
 
   const loadSucursales = async () => {
     const response = await showAllOffices();
@@ -265,13 +327,6 @@ const ModalProximaCirugia = (props) => {
     }
   }
 
-  const loadProductos = async () => {
-    const response = await findProductoByServicio(cirugiaServicioId);
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setProductos(response.data);
-    }
-  }
-
   const loadFormasPago = async () => {
     const response = await showAllMetodoPago();
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
@@ -282,48 +337,51 @@ const ModalProximaCirugia = (props) => {
   const loadAll = async () => {
     setIsLoading(true);
     await loadSucursales();
+    await loadHorarios(new Date);
+    await loadAreas(cita.tratamientos[0]);
+    await loadCosmetologas();
     await loadDermatologos();
-    await loadProductos();
     await loadFormasPago();
     setIsLoading(false);
   }
 
   useEffect(() => {
     loadAll();
-  }, [consultaServicioId]);
+  }, []);
 
   return (
     <Fragment>
       {
         !isLoading ?
-          <ModalFormProximaCirugia
+          <ModalFormProximaDermapen
             aria-labelledby="simple-modal-title"
             aria-describedby="simple-modal-description"
             open={open}
             values={values}
             onClose={onClose}
-            cita={cirugia}
+            cita={cita}
             empleado={empleado}
             sucursales={sucursales}
             onChangeSucursal={(e) => handleChangeSucursal(e)}
+            onChangeTratamientos={(e) => handleChangeTratamientos(e)}
             onClickProximarCita={handleOnClickProximarCita}
+            onChangeAreas={handleChangeAreas}
             onChangeFecha={(e) => handleChangeFecha(e)}
             onChangeHora={(e) => handleChangeHora(e)}
-            onChangeMinutos={(e) => handleChangeMinutos(e)}
             onChangeTiempo={(e) => handleChangeTiempo(e)}
             onChangeCosmetologa={(e) => handleChangeCosmetologa(e)}
             onChangeDermatologo={(e) => handleChangeDermatologo(e)}
-            onChangeTotal={handleChangeTotal}
             horarios={horarios}
             onChangeObservaciones={handleChangeObservaciones}
             sucursal={sucursal}
             tipoServicioId={consultaServicioId}
+            tratamientos={tratamientos}
+            areas={areas}
             dermatologos={dermatologos}
-            productos={productos}
+            cosmetologas={cosmetologas}
             onChangePaymentMethod={(e) => handleChangePaymentMethod(e)}
             formasPago={formasPago}
-
-            onChangeProductos={(e) => handleChangeProductos(e)} /> :
+            onChangeTotal={handleChangeTotal} /> :
           <Backdrop className={classes.backdrop} open={isLoading} >
             <CircularProgress color="inherit" />
           </Backdrop>
@@ -333,4 +391,4 @@ const ModalProximaCirugia = (props) => {
   );
 }
 
-export default ModalProximaCirugia;
+export default ModalProximaDermapen;

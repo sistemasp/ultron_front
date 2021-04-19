@@ -29,14 +29,18 @@ const TabCirugias = (props) => {
   const columns = [
     { title: 'FECHA', field: 'fecha_show' },
     { title: 'HORA', field: 'hora' },
-    { title: 'CONSECUTIVO', field: 'consecutivo' },
-    { title: 'DERMATÓLOGO', field: 'dermatologo.nombre' },
+    { title: 'DERMATÓLOGO (A)', field: 'dermatologo.nombre' },
     { title: 'SUCURSAL', field: 'sucursal.nombre' },
-    { title: 'PRECIO', field: 'precio_moneda' },
     { title: 'TOTAL', field: 'total_moneda' },
   ];
 
   const options = {
+    rowStyle: rowData => {
+      return {
+        color: rowData.status.color,
+        backgroundColor: rowData.pagado ? process.env.REACT_APP_PAGADO_COLOR : ''
+      };
+    },
     headerStyle: {
       backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
       color: '#FFF',

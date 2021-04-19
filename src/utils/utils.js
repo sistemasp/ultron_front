@@ -15,27 +15,27 @@ export const exportTableToExcel = (tableID, filename = '') => {
     var dataType = 'application/vnd.ms-excel';
     var tableSelect = document.getElementById(tableID);
     var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
-    
+
     // Specify file name
     filename = filename ? filename + '.xls' : 'excel_data.xls';
-    
+
     // Create download link element
     downloadLink = document.createElement("a");
-    
+
     document.body.appendChild(downloadLink);
-    
+
     if (navigator.msSaveOrOpenBlob) {
         var blob = new Blob(['ufeff', tableHTML], {
             type: dataType
         });
-        navigator.msSaveOrOpenBlob( blob, filename);
+        navigator.msSaveOrOpenBlob(blob, filename);
     } else {
         // Create a link to the file
         downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
-    
+
         // Setting the file name
         downloadLink.download = filename;
-        
+
         //triggering the function
         downloadLink.click();
     }
@@ -74,6 +74,30 @@ export const culcularEdad = (fecha_nacimiento) => {
     const diaNacimiento = Number(fechaNacimiento[0]);
 
     const edad = (today.getFullYear() - anioNacimiento) - (mesNacimiento >= (today.getMonth() + 1) ? 1 : 0);
-    
+
     return edad;
 }
+
+export const optionSelect = (items) => {
+    return items.map(item => {
+        item = {
+            ...item,
+            value: item._id,
+            label: item.nombre,
+        };
+        return item;
+    });
+}
+
+export const optionSelectHorario = (items) => {
+    return items.map(item => {
+        item = {
+            ...item,
+            value: item._id,
+            label: item.hora,
+        };
+        return item;
+    });
+}
+
+

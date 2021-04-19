@@ -4,6 +4,8 @@ import {
   findEmployeesByRolId,
   findEmployeesByRolIdAvailable,
   findScheduleByDateAndSucursalAndService,
+  showAllMetodoPago,
+  showAllOffices,
 } from "../../../services";
 import {
   findAreasByTreatmentServicio,
@@ -47,10 +49,12 @@ const ModalProximaCita = (props) => {
   } = props;
 
   const [isLoading, setIsLoading] = useState(true);
+  const [sucursales, setSucursales] = useState([]);
   const [horarios, setHorarios] = useState([]);
   const [areas, setAreas] = useState([]);
   const [cosmetologas, setCosmetologas] = useState([]);
   const [dermatologos, setDermatologos] = useState([]);
+  const [formasPago, setFormasPago] = useState([]);
   const fecha_cita = new Date(cita.fecha_hora);
   const fecha = `${addZero(fecha_cita.getDate())}/${addZero(Number(fecha_cita.getMonth() + 1))}/${addZero(fecha_cita.getFullYear())}`;
   const hora = `${addZero(Number(fecha_cita.getHours()))}:${addZero(fecha_cita.getMinutes())}`;
@@ -94,13 +98,13 @@ const ModalProximaCita = (props) => {
     dermatologo: cita.dermatologo ? cita.dermatologo : '',
     frecuencia: reconsultaFrecuenciaId,
     servicio: cita.servicio,
-    sucursal: cita.sucursal,
+    sucursal: cita.sucursal._id,
     medio: citadoMedioId,
     tratamientos: cita.tratamientos,
     areas: cita.areas,
     tiempo: cita.tiempo,
     dermatologo: cita.dermatologo._id,
-    forma_pago: cita.forma_pago,
+    forma_pago: cita.forma_pago._id,
     producto: cita.producto,
   });
 
@@ -255,6 +259,33 @@ const ModalProximaCita = (props) => {
     });
   };
 
+  const handleChangeTotal = (event) => {
+    const precio = event.target.value;
+    let total_aplicacion = precio;
+
+    setValues({
+      ...values,
+      precio: precio,
+      total: precio,
+      total_aplicacion: total_aplicacion,
+    })
+
+  }
+
+  const handleChangeSucursal = item => {
+    setValues({
+      ...values,
+      sucursal: item.target.value
+    });
+  };
+
+  const handleChangePaymentMethod = (event) => {
+    setValues({
+      ...values,
+      forma_pago: event.target.value,
+    });
+  }
+
   const handleChangeAreas = async (items, tratamiento) => {
 
     tratamiento.areasSeleccionadas = items;
@@ -268,7 +299,7 @@ const ModalProximaCita = (props) => {
               : (sucursal === sucursalOcciId ? item.precio_oc // Precio Occidental
                 : (sucursal === sucursalFedeId ? item.precio_fe // Precio Federalismo
                   : (sucursal._id === sucursalRubenDarioId ? item.precio_rd // PRECIO RUBEN DARIO
-                  : 0))); // Error
+                    : 0))); // Error
           precio = Number(precio) + Number(itemPrecio);
         });
       }
@@ -280,6 +311,14 @@ const ModalProximaCita = (props) => {
     setIsLoading(false);
   }
 
+  const loadSucursales = async () => {
+    const response = await showAllOffices();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      const sucursales = response.data;
+      setSucursales(sucursales);
+    }
+  }
+
   const loadDermatologos = async () => {
     const response = await findEmployeesByRolIdAvailable(dermatologoRolId);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
@@ -287,25 +326,27 @@ const ModalProximaCita = (props) => {
     }
   }
 
-  useEffect(() => {
-
-    const loadHorarios = async (date) => {
-      const dia = date ? date.getDate() : values.fecha_show.getDate();
-      const mes = Number(date ? date.getMonth() : values.fecha_show.getMonth()) + 1;
-      const anio = date ? date.getFullYear() : values.fecha_show.getFullYear();
-      const response = await findScheduleByDateAndSucursalAndService(dia, mes, anio, sucursal, values.servicio._id);
-      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-        setHorarios(response.data);
-      }
+  const loadFormasPago = async () => {
+    const response = await showAllMetodoPago();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setFormasPago(response.data);
     }
+  }
 
+  const loadAll = async () => {
     setIsLoading(true);
-    loadHorarios();
-    loadAreas(cita.tratamientos[0]);
-    loadCosmetologas();
-    loadDermatologos();
+    await loadSucursales();
+    await loadHorarios(new Date);
+    await loadAreas(cita.tratamientos[0]);
+    await loadCosmetologas();
+    await loadDermatologos();
+    await loadFormasPago();
     setIsLoading(false);
-  }, [consultaServicioId]);
+  }
+
+  useEffect(() => {
+    loadAll();
+  }, []);
 
   return (
     <Fragment>
@@ -319,6 +360,8 @@ const ModalProximaCita = (props) => {
             onClose={onClose}
             cita={cita}
             empleado={empleado}
+            sucursales={sucursales}
+            onChangeSucursal={(e) => handleChangeSucursal(e)}
             onChangeTratamientos={(e) => handleChangeTratamientos(e)}
             onClickProximarCita={handleOnClickProximarCita}
             onChangeAreas={handleChangeAreas}
@@ -334,7 +377,10 @@ const ModalProximaCita = (props) => {
             tratamientos={tratamientos}
             areas={areas}
             dermatologos={dermatologos}
-            cosmetologas={cosmetologas} /> :
+            cosmetologas={cosmetologas}
+            onChangePaymentMethod={(e) => handleChangePaymentMethod(e)}
+            formasPago={formasPago}
+            onChangeTotal={handleChangeTotal} /> :
           <Backdrop className={classes.backdrop} open={isLoading} >
             <CircularProgress color="inherit" />
           </Backdrop>

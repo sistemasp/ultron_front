@@ -159,8 +159,8 @@ const AgendarConsulta = (props) => {
 		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
 		{ title: 'TIPO', field: 'tipo_cita.nombre' },
-		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
-		{ title: 'PROMOVENDEDOR', field: 'promovendedor_nombre' },
+		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
+		{ title: 'PROMOVENDEDOR (A)', field: 'promovendedor_nombre' },
 		{ title: 'STATUS', field: 'status.nombre' },
 		{ title: 'PRECIO', field: 'precio_moneda' },
 		{ title: 'TOTAL', field: 'total_moneda' },
@@ -220,7 +220,11 @@ const AgendarConsulta = (props) => {
 		date.setHours(Number(hora[0]));
 		date.setMinutes(hora[1]);
 		date.setSeconds(0);
-		setValues({ ...values, hora: e.target.value, fecha_hora: date });
+		setValues({ 
+			...values,
+			hora: e.target.value,
+			fecha_hora: date
+		});
 		setIsLoading(false);
 	};
 
@@ -515,14 +519,14 @@ const AgendarConsulta = (props) => {
 		},
 		{
 			icon: EventAvailableIcon,
-			tooltip: 'AGENDAR NUEVA CITA',
+			tooltip: 'NUEVA CITA',
 			onClick: handleOnClickNuevaConsulta
 		},
-		/*{
+		{
 			icon: AttachMoneyIcon,
 			tooltip: 'PAGOS',
 			onClick: handleClickVerPagos
-		},*/
+		},
 		{
 			icon: AttachMoneyIcon,
 			tooltip: 'TRASPASO',
@@ -557,7 +561,7 @@ const AgendarConsulta = (props) => {
 		rowData => (
 			rowData.status._id === atendidoStatusId ? {
 				icon: EventAvailableIcon,
-				tooltip: 'AGENDAR NUEVA CITA',
+				tooltip: 'NUEVA CITA',
 				onClick: handleOnClickNuevaConsulta
 			} : ''
 		),*/
@@ -587,7 +591,7 @@ const AgendarConsulta = (props) => {
 			case 'AGREGAR FACIAL':
 				onClickAgendarFaciales(e, rowData);
 				break;
-			case 'AGENDAR NUEVA CITA':
+			case 'NUEVA CITA':
 				handleOnClickNuevaConsulta(e, rowData);
 				break;
 			case 'PAGOS':
@@ -610,7 +614,6 @@ const AgendarConsulta = (props) => {
 			return props.actions.length > 0
 				? <Fragment>
 					<FormControl variant="outlined" className={classes.formControl}>
-						<InputLabel id="simple-select-outlined-hora"></InputLabel>
 						<Select
 							labelId="simple-select-outlined-actions"
 							id="simple-select-outlined-actions"
@@ -631,10 +634,10 @@ const AgendarConsulta = (props) => {
 		}
 	}
 
-	const handleChangePaymentMethod = (event) => {
+	const handleChangePaymentMethod = (e) => {
 		setValues({
 			...values,
-			forma_pago: event.target.value,
+			forma_pago: e.target.value,
 		});
 	}
 

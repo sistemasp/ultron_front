@@ -29,7 +29,7 @@ const TabBiopsias = (props) => {
   const columns = [
     { title: 'FECHA', field: 'fecha_show' },
     { title: 'HORA', field: 'hora' },
-    { title: 'DERMATÓLOGO', field: 'dermatologo.nombre' },
+    { title: 'DERMATÓLOGO (A)', field: 'dermatologo.nombre' },
     { title: 'PATÓLOGO', field: 'patoloo.nombre' },
     { title: 'SUCURSAL', field: 'sucursal.nombre' },
     { title: 'FECHA ENTREGA', field: 'precio_moneda' },
@@ -43,6 +43,12 @@ const TabBiopsias = (props) => {
   ];
 
   const options = {
+    rowStyle: rowData => {
+      return {
+        color: rowData.status.color,
+        backgroundColor: rowData.pagado ? process.env.REACT_APP_PAGADO_COLOR : ''
+      };
+    },
     headerStyle: {
       backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
       color: '#FFF',

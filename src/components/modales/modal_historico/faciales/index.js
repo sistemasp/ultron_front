@@ -32,9 +32,6 @@ const TabFaciales = (props) => {
     { title: 'TIPO CITA', field: 'tipo_cita.nombre' },
     { title: 'ESTADO', field: 'status.nombre' },
     { title: 'SUCURSAL', field: 'sucursal.nombre' },
-    { title: 'PREPARÓ', field: 'quien_prepara' },
-    { title: 'REALIZA', field: 'quien_realiza' },
-    { title: 'ÁCIDOS', field: 'acidos_show' },
     { title: 'PRECIO', field: 'precio_moneda' },
   ];
 

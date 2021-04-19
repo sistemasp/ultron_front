@@ -232,7 +232,6 @@ const Pacientes = (props) => {
 			return props.actions.length > 0
 				? <Fragment>
 					<FormControl variant="outlined" className={classes.formControl}>
-						<InputLabel id="simple-select-outlined-hora"></InputLabel>
 						<Select
 							labelId="simple-select-outlined-actions"
 							id="simple-select-outlined-actions"

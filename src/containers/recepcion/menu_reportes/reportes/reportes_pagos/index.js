@@ -42,7 +42,7 @@ const ReportesPagos = (props) => {
 		{ title: 'FECHA', field: 'fecha_show' },
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
-		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
+		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
 		{ title: 'SERVICIO', field: 'servicio.nombre' },
 		{ title: 'TRATAMIENTOS', field: 'show_tratamientos' },
 		{ title: 'QUIÉN RECIBE PAGO', field: 'quien_recibe_pago.nombre' },
@@ -54,7 +54,7 @@ const ReportesPagos = (props) => {
 		{ title: 'TIPO TARJETA', field: 'tipo_tarjeta.nombre' },
 		{ title: 'DÍGITOS', field: 'digitos' },
 		{ title: 'FACTURA', field: 'factura' },
-		{ title: 'DEPOSITO CONFIRMADO', field: 'deposito_confirmado' },
+		{ title: 'DEPÓSITO CONFIRMADO', field: 'deposito_confirmado' },
 		{ title: 'SUCURSAL', field: 'sucursal.nombre'},
 		{ title: 'OBSERVACIONES', field: 'observaciones' },
 	];

@@ -120,20 +120,20 @@ const ListaEspera = (props) => {
 	const columnsConsultorios = [
 		{ title: 'CONSULTORIO', field: 'nombre' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
-		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
+		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
 	];
 
 	const columnsCabinas = [
 		{ title: 'CABINA', field: 'nombre' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'COSMETÓLOGA', field: 'cosmetologa_nombre' },
-		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
+		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
 	];
 
 	const columnsSalaCirugias = [
 		{ title: 'SALA', field: 'nombre' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
-		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
+		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
 	];
 
 	const columnsEspera = [
@@ -141,13 +141,13 @@ const ListaEspera = (props) => {
 		{ title: 'SERVICIO', field: 'servicio.nombre' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
 		{ title: 'CONSECUTIVO', field: 'consecutivo' },
-		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
+		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
 	];
 
 	const columnsEsperaConsultas = [
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
-		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
+		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
 		{ title: 'CONSECUTIVO', field: 'consecutivo' },
 	];
 

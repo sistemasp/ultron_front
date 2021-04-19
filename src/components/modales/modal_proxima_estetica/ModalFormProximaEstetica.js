@@ -79,6 +79,8 @@ const ModalFormProximaEstetica = (props) => {
     formasPago,
     productos,
     dermatologos,
+    onChangeSucursal,
+    sucursales,
   } = props;
 
   return (
@@ -90,92 +92,35 @@ const ModalFormProximaEstetica = (props) => {
         <div style={modalStyle} className={classes.paper}>
           <form onSubmit={handleSubmit}>
             <Grid container spacing={1}>
-              <Grid item xs={12}>
-                <h2 className={classes.label}>{values.paciente_nombre} ({values.telefono})</h2>
-              </Grid>
-              <Grid item xs={12}>
-                <Multiselect
-                  options={productos} // Options to display in the dropdown
-                  displayValue="nombre" // Property name to display in the dropdown options
-                  onSelect={(e) => onChangeProductos(e)} // Function will trigger on select event
-                  onRemove={(e) => onChangeProductos(e)} // Function will trigger on remove event
-                  placeholder={`PRODUCTO`}
-                  selectedValues={values.producto} // Preselected value to persist in dropdown
-                />
+              <Grid item xs={12} sm={6}>
+                <h1 className={classes.label}>ESTÉTICA</h1>
               </Grid>
               <Grid item xs={12} sm={6}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO</InputLabel>
-                  <Select
-                    labelId="simple-select-outlined-dermatologo"
-                    id="simple-select-outlined-dermatologo"
-                    value={values.dermatologo}
-                    onChange={onChangeDermatologo}
-                    label="DERMATÓLOGO" >
-                    {dermatologos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-tipo-dermapen">MEDIO</InputLabel>
-                  <Select
-                    labelId="simple-select-outlined-tipo-dermapen"
-                    id="simple-select-outlined-tipo-dermapen"
-                    value={values.medio}
-                    onChange={onChangeMedio}
-                    label="MEDIO" >
-                    {medios.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-promovendedor">PROMOVENDEDOR</InputLabel>
-                  <Select
-                    labelId="simple-select-outlined-promovendedor"
-                    id="simple-select-outlined-promovendedor"
-                    value={values.promovendedor}
-                    onChange={onChangePromovendedor}
-                    label="PROMOVENDEDOR" >
-                    {promovendedores.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-cosmetologa">COSMETÓLOGA</InputLabel>
-                  <Select
-                    labelId="simple-select-outlined-cosmetologa"
-                    id="simple-select-outlined-cosmetologa"
-                    value={values.cosmetologa}
-                    onChange={onChangeCosmetologa}
-                    label="COSMETÓLOGA" >
-                    {cosmetologas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-payment">FORMA DE PAGO</InputLabel>
-                  <Select
-                    labelId="simple-select-outlined-payment"
-                    id="simple-select-outlined-payment"
-                    value={values.forma_pago}
-                    onChange={onChangePaymentMethod}
-                    label="FORMA DE PAGO" >
-                    {formasPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12}>
                 <TextField
                   className={classes.textField}
-                  name="observaciones"
-                  label="OBSERVACIONES"
-                  value={values.observaciones}
-                  onChange={onChangeObservaciones}
+                  name="total"
+                  label="TOTAL ESTÉTICA"
+                  value={values.total}
+                  type='Number'
+                  onChange={onChangeTotal}
+                  onInput={(e) => {
+                    e.target.value = e.target.value < 0 ? 0 : e.target.value;
+                    e.target.value = Math.max(0, parseFloat(e.target.value)).toString().slice(0, 6)
+                  }}
                   variant="outlined" />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-hora">SUCURSAL</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-hora"
+                    id="simple-select-outlined-hora"
+                    value={values.sucursal}
+                    onChange={onChangeSucursal}
+                    label="SUCURSAL" >
+                    {sucursales.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -226,25 +171,70 @@ const ModalFormProximaEstetica = (props) => {
                   }}
                   variant="outlined" />
               </Grid>
-
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
+                <h2 className={classes.label}>{values.paciente_nombre}</h2>
+              </Grid>
+              <Grid item xs={12}>
+                <Multiselect
+                  options={productos} // Options to display in the dropdown
+                  displayValue="nombre" // Property name to display in the dropdown options
+                  onSelect={(e) => onChangeProductos(e)} // Function will trigger on select event
+                  onRemove={(e) => onChangeProductos(e)} // Function will trigger on remove event
+                  placeholder={`PRODUCTO`}
+                  selectedValues={values.producto} // Preselected value to persist in dropdown
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO (A)</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-dermatologo"
+                    id="simple-select-outlined-dermatologo"
+                    value={values.dermatologo}
+                    onChange={onChangeDermatologo}
+                    label="DERMATÓLOGO (A)" >
+                    {dermatologos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+              
+              <Grid item xs={12}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-payment">FORMA DE PAGO</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-payment"
+                    id="simple-select-outlined-payment"
+                    value={values.forma_pago}
+                    onChange={onChangePaymentMethod}
+                    label="FORMA DE PAGO" >
+                    {formasPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
                 <TextField
                   className={classes.textField}
-                  name="total"
-                  label="TOTAL CIRUGíA"
-                  value={values.total}
-                  type='Number'
-                  onChange={onChangeTotal}
-                  onInput={(e) => {
-                    e.target.value = e.target.value < 0 ? 0 : e.target.value;
-                    e.target.value = Math.max(0, parseFloat(e.target.value)).toString().slice(0, 6)
-                  }}
+                  name="observaciones"
+                  label="OBSERVACIONES"
+                  value={values.observaciones}
+                  onChange={onChangeObservaciones}
                   variant="outlined" />
               </Grid>
 
               <Grid item xs={12}>
+                <TextField
+                  className={classes.textField}
+                  name="TIEMPO"
+                  label="TIEMPO (MINUTOS)"
+                  value={values.tiempo}
+                  type='Number'
+                  onChange={onChangeTiempo}
+                  onInput={(e) => {
+                    e.target.value = Math.max(0, parseInt(e.target.value)).toString().slice(0, 3)
+                  }}
+                  variant="outlined" />
               </Grid>
-
+              
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
                   className={classes.button}

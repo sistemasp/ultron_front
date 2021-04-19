@@ -116,7 +116,7 @@ const ReportesIngresos = (props) => {
 				transferencia += Number(ingresoTransferencia.cantidad);
 			});
 
-			// PAGOS DEPOSITO
+			// PAGOS DEPÓSITO
 			let deposito = 0;
 			const ingresosDeposito = item.ingresos.filter(ingreso => {
 				return ingreso.forma_pago === formaPagoDeposito;

@@ -78,7 +78,7 @@ const ReportesDetallesGeneral = (props) => {
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
 		{ title: 'TIPO', field: 'tipo_cita.nombre' },
-		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
+		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
 		{ title: 'CANTIDAD SERVICIOS', field: 'cantidad_servicios' },
 		{ title: 'SERVICIO', field: 'servicio.nombre' },
 		{ title: 'PRODUCTO', field: 'producto.nombre' },

@@ -6,6 +6,7 @@ import {
   findScheduleByDateAndSucursalAndService,
   showAllMedios,
   showAllMetodoPago,
+  showAllOffices,
 } from "../../../services";
 import { Backdrop, CircularProgress, makeStyles } from '@material-ui/core';
 import { addZero } from '../../../utils/utils';
@@ -38,6 +39,7 @@ const ModalProximaEstetica = (props) => {
   } = props;
 
   const [isLoading, setIsLoading] = useState(true);
+  const [sucursales, setSucursales] = useState([]);
   const [horarios, setHorarios] = useState([]);
   const [cosmetologas, setCosmetologas] = useState([]);
   const [dermatologos, setDermatologos] = useState([]);
@@ -84,7 +86,7 @@ const ModalProximaEstetica = (props) => {
     frecuencia: reconsultaFrecuenciaId,
     producto: estetica.producto,
     servicio: estetica.servicio,
-    sucursal: estetica.sucursal,
+    sucursal: estetica.sucursal._id,
     medio: estetica.medio._id,
     areas: estetica.areas,
     forma_pago: estetica.forma_pago._id,
@@ -201,6 +203,13 @@ const ModalProximaEstetica = (props) => {
     onClose();
   };
 
+  const handleChangeSucursal = item => {
+    setValues({
+      ...values,
+      sucursal: item.target.value
+    });
+  };
+
   const handleChangeTiempo = e => {
     setValues({ ...values, tiempo: e.target.value });
   };
@@ -260,6 +269,15 @@ const ModalProximaEstetica = (props) => {
       forma_pago: event.target.value,
     });
   }
+
+  const loadSucursales = async () => {
+    const response = await showAllOffices();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      const sucursales = response.data;
+      setSucursales(sucursales);
+    }
+  }
+
   const loadFormasPago = async () => {
     const response = await showAllMetodoPago();
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
@@ -281,6 +299,7 @@ const ModalProximaEstetica = (props) => {
 
   const loadAll = async () => {
     setIsLoading(true);
+    await loadSucursales();
     await loadDermatologos();
     await loadProductos();
     await loadFormasPago();
@@ -306,6 +325,8 @@ const ModalProximaEstetica = (props) => {
             onClose={onClose}
             cita={estetica}
             empleado={empleado}
+            sucursales={sucursales}
+            onChangeSucursal={(e) => handleChangeSucursal(e)}
             onClickProximarEstetica={handleOnClickProximaEstetica}
             onChangeFecha={(e) => handleChangeFecha(e)}
             onChangeHora={(e) => handleChangeHora(e)}

@@ -44,7 +44,7 @@ const ReportesBiopsias = (props) => {
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'TELÉFONO', field: 'paciente.telefono' },
 		{ title: 'FOLIO CONSULTA', field: 'consulta.consecutivo' },
-		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
+		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
 		{ title: 'PATÓLOGO', field: 'patologo_nombre' },
 		{ title: 'COSTO BIOSIAS', field: 'costo_biopsia_moneda' },
 		{ title: 'CON PAGO', field: 'con_pago' },

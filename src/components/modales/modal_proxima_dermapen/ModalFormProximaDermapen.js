@@ -6,6 +6,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import { Multiselect } from 'multiselect-react-dropdown';
 import { ButtonCustom } from '../../basic/ButtonCustom';
+import { toFormatterCurrency } from '../../../utils/utils';
 
 function getModalStyle() {
   const top = 50;
@@ -46,7 +47,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ModalFormProximaCirugia = (props) => {
+const ModalFormProximaDermapen = (props) => {
   const classes = useStyles();
 
   // getModalStyle is not a pure function, we roll the style only on the first render
@@ -57,24 +58,23 @@ const ModalFormProximaCirugia = (props) => {
     handleSubmit,
     onChangeFecha,
     onChangeHora,
-    onChangeMinutos,
     onClose,
     onClickProximarCita,
     open,
-    onChangeTotal,
+    horarios,
     onChangeObservaciones,
     onChangeDermatologo,
+    tratamientos,
     cosmetologas,
     areas,
     onChangeTratamientos,
     onChangeAreas,
     onChangeTiempo,
     onChangeCosmetologa,
-    onChangeProductos,
-    productos,
-    dermatologos,
+    onChangeTotal,
     onChangeSucursal,
     sucursales,
+    dermatologos,
     onChangePaymentMethod,
     formasPago,
   } = props;
@@ -89,14 +89,15 @@ const ModalFormProximaCirugia = (props) => {
           <form onSubmit={handleSubmit}>
             <Grid container spacing={1}>
               <Grid item xs={12} sm={6}>
-                <h1 className={classes.label}>CIRUGíA</h1>
+                <h1 className={classes.label}>{values.servicio.nombre} </h1>
               </Grid>
+
               <Grid item xs={12} sm={6}>
                 <TextField
                   className={classes.textField}
                   name="total"
-                  label="TOTAL CIRUGíA"
-                  value={values.total}
+                  label="PRECIO"
+                  value={values.precio}
                   type='Number'
                   onChange={onChangeTotal}
                   onInput={(e) => {
@@ -138,51 +139,47 @@ const ModalFormProximaCirugia = (props) => {
                 </MuiPickersUtilsProvider>
               </Grid>
 
-              <Grid item xs={6} sm={3}>
-                <TextField
-                  className={classes.textField}
-                  name="hora"
-                  label="HORA"
-                  value={values.hora}
-                  type='Text'
-                  onChange={onChangeHora}
-                  onInput={(e) => {
-                    e.target.value = e.target.value < 0 ? 0 : (e.target.value > 24 ? 24 : e.target.value);
-                    e.target.value = (e.target.value).toString().slice(0, 2)
-                  }}
-                  variant="outlined" />
-              </Grid>
-
-              <Grid item xs={6} sm={3}>
-                <TextField
-                  className={classes.textField}
-                  name="minutos"
-                  label="MINUTOS"
-                  value={values.minutos}
-                  type='Text'
-                  onChange={onChangeMinutos}
-                  onInput={(e) => {
-                    e.target.value = e.target.value < 0 ? 0 : (e.target.value > 60 ? 60 : e.target.value);
-                    e.target.value = (e.target.value).toString().slice(0, 2)
-                  }}
-                  variant="outlined" />
+              <Grid item xs={12} sm={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-hora">HORA</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-hora"
+                    id="simple-select-outlined-hora"
+                    value={values.hora}
+                    onChange={onChangeHora}
+                    label="HORA" >
+                    {horarios.sort().map((item, index) => <MenuItem key={index} value={item.hora}>{item.hora}</MenuItem>)}
+                  </Select>
+                </FormControl>
               </Grid>
               <Grid item xs={12}>
                 <h2 className={classes.label}>{values.paciente_nombre}</h2>
               </Grid>
+
               <Grid item xs={12}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-hora">PRODUCTO</InputLabel>
-                  <Select
-                    labelId="simple-select-outlined-producto"
-                    id="simple-select-outlined-producto"
-                    value={values.producto}
-                    onChange={onChangeProductos}
-                    label="PRODUCTO" >
-                    {productos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                  </Select>
-                </FormControl>
+                <Multiselect
+                  options={tratamientos} // Options to display in the dropdown
+                  displayValue="nombre" // Property name to display in the dropdown options
+                  onSelect={(e) => onChangeTratamientos(e)} // Function will trigger on select event
+                  onRemove={(e) => onChangeTratamientos(e)} // Function will trigger on remove event
+                  placeholder={`TRATAMIENTOS`}
+                  selectedValues={values.tratamientos} // Preselected value to persist in dropdown
+                />
               </Grid>
+              {
+                values.tratamientos.map(tratamientoValue => {
+                  return <Grid item xs={12} sm={12}>
+                    <Multiselect
+                      options={tratamientoValue.areas} // Options to display in the dropdown
+                      displayValue="nombre" // Property name to display in the dropdown options
+                      onSelect={(e) => onChangeAreas(e, tratamientoValue)} // Function will trigger on select event
+                      onRemove={(e) => onChangeAreas(e, tratamientoValue)} // Function will trigger on remove event
+                      placeholder={`ÁREAS ${tratamientoValue.nombre}`}
+                      selectedValues={tratamientoValue.areasSeleccionadas} // Preselected value to persist in dropdown
+                    />
+                  </Grid>
+                })
+              }
               <Grid item xs={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO (A)</InputLabel>
@@ -221,6 +218,19 @@ const ModalFormProximaCirugia = (props) => {
                   variant="outlined" />
               </Grid>
 
+              <Grid item xs={12}>
+                <TextField
+                  className={classes.textField}
+                  name="TIEMPO"
+                  label="TIEMPO (MINUTOS)"
+                  value={values.tiempo}
+                  type='Number'
+                  onChange={onChangeTiempo}
+                  onInput={(e) => {
+                    e.target.value = Math.max(0, parseInt(e.target.value)).toString().slice(0, 3)
+                  }}
+                  variant="outlined" />
+              </Grid>
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
                   className={classes.button}
@@ -238,7 +248,6 @@ const ModalFormProximaCirugia = (props) => {
                   onClick={() => onClickProximarCita(values)}
                   text='REAGENDAR' />
               </Grid>
-
             </Grid>
           </form>
         </div>
@@ -247,4 +256,4 @@ const ModalFormProximaCirugia = (props) => {
   );
 }
 
-export default ModalFormProximaCirugia;
+export default ModalFormProximaDermapen;

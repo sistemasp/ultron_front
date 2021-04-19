@@ -7,14 +7,13 @@ import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import { Paper, TextField, Checkbox } from '@material-ui/core';
+import { Paper, TextField, Checkbox, Select } from '@material-ui/core';
 import TableComponent from '../../../components/table/TableComponent';
 import ModalConsulta from '../../../components/modales/modal_consulta';
 import { green } from '@material-ui/core/colors';
 import ModalPagos from '../../../components/modales/modal_pagos';
 import ModalImprimirConsulta from '../../../components/modales/imprimir/consulta';
-import { toFormatterCurrency } from '../../../utils/utils';
+import { optionSelect, optionSelectHorario, toFormatterCurrency } from '../../../utils/utils';
 import ModalCirugia from '../../../components/modales/modal_cirugia';
 import ModalEstetica from '../../../components/modales/modal_estetica';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
@@ -242,6 +241,7 @@ export const AgendarConsultaContainer = (props) => {
         </Grid>
 
         <Grid container spacing={3}>
+
           <Grid item xs={12} sm={2}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
@@ -279,18 +279,19 @@ export const AgendarConsultaContainer = (props) => {
               </Grid>
               : <Grid item xs={12} sm={2}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO</InputLabel>
+                  <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO (A)</InputLabel>
                   <Select
                     labelId="simple-select-outlined-dermatologo"
                     id="simple-select-outlined-dermatologo"
                     value={values.dermatologo}
                     onChange={onChangeDermatologos}
-                    label="DERMATÓLOGO" >
+                    label="DERMATÓLOGO (A)" >
                     {dermatologos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
                   </Select>
                 </FormControl>
               </Grid>
           }
+
           <Grid item xs={12} sm={2}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="simple-select-outlined-tipo-cita">MEDIO</InputLabel>
@@ -304,6 +305,7 @@ export const AgendarConsultaContainer = (props) => {
               </Select>
             </FormControl>
           </Grid>
+
           {
             values.frecuencia === frecuenciaReconsultaId
               ? <Grid item xs={12} sm={2}>
@@ -311,18 +313,19 @@ export const AgendarConsultaContainer = (props) => {
               </Grid>
               : <Grid item xs={12} sm={2}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-promovendedor">PROMOVENDEDOR</InputLabel>
+                  <InputLabel id="simple-select-outlined-promovendedor">PROMOVENDEDOR (A)</InputLabel>
                   <Select
                     labelId="simple-select-outlined-promovendedor"
                     id="simple-select-outlined-promovendedor"
                     value={values.promovendedor}
                     onChange={onChangePromovendedor}
-                    label="PROMOVENDEDOR" >
+                    label="PROMOVENDEDOR (A)" >
                     {promovendedores.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
                   </Select>
                 </FormControl>
               </Grid>
           }
+
           <Grid item xs={12} sm={2}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="simple-select-outlined-payment">FORMA DE PAGO</InputLabel>

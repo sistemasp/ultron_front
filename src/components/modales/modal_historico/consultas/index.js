@@ -29,7 +29,7 @@ const TabConsultas = (props) => {
   const columns = [
     { title: 'FECHA', field: 'fecha_show' },
     { title: 'HORA', field: 'hora' },
-    { title: 'DERMATÓLOGO', field: 'dermatologo.nombre' },
+    { title: 'DERMATÓLOGO (A)', field: 'dermatologo.nombre' },
     { title: 'TIPO CITA', field: 'tipo_cita.nombre' },
     { title: 'ESTADO', field: 'status.nombre' },
     { title: 'SUCURSAL', field: 'sucursal.nombre' },
