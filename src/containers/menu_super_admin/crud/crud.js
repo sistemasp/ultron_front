@@ -5,6 +5,7 @@ import myStyles from '../../../css';
 import TableComponent from '../../../components/table/TableComponent';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import ModalItemCatalogo from '../../../components/modales/item_catalogo';
+import ItemServicio from '../../../components/modales/item_catalogo/servicios';
 
 export const CrudContainer = props => {
 	const classes = myStyles();
@@ -13,9 +14,11 @@ export const CrudContainer = props => {
 		catalogo,
 		data,
 		item,
+		// MODALES
+		onCloseModal,
+		openModalServicios,
 		// MODAL NUEVO ITEM
 		onClicKNuevo,
-		onCloseModal,
 		openModal,
 		setMessage,
 		setSeverity,
@@ -33,6 +36,19 @@ export const CrudContainer = props => {
 				openModal ?
 					<ModalItemCatalogo
 						open={openModal}
+						onClose={onCloseModal}
+						item={item}
+						catalogo={catalogo}
+						setMessage={setMessage}
+						setSeverity={setSeverity}
+						setOpenAlert={setOpenAlert}
+					/>
+					: ''
+			}
+			{
+				openModalServicios ?
+					<ItemServicio
+						open={openModalServicios}
 						onClose={onCloseModal}
 						item={item}
 						catalogo={catalogo}

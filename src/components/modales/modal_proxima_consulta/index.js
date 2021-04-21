@@ -55,7 +55,7 @@ const ModalProximaConsulta = (props) => {
   const consultaServicioId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
   const reconsultaFrecuenciaId = process.env.REACT_APP_FRECUENCIA_RECONSULTA_ID;
   const tipoCitaDerivadaId = process.env.REACT_APP_TIPO_CITA_DERIVADO_ID;
-  const citadoMedioId = process.env.REACT_APP_MEDIO_CITADO_ID;
+  const fisicoMedioId = process.env.REACT_APP_MEDIO_FISICO_ID;
 
   const [values, setValues] = useState({
     fecha_show: fecha_cita,
@@ -77,7 +77,7 @@ const ModalProximaConsulta = (props) => {
     servicio: consulta.servicio,
     sucursal: consulta.sucursal._id,
     producto: consulta.producto._id,
-    medio: citadoMedioId,
+    medio: fisicoMedioId,
     forma_pago: consulta.forma_pago._id,
   });
 

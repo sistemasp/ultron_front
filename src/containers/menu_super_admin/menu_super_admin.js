@@ -31,6 +31,7 @@ export const MenuSuperAdminContainer = props => {
 			<Grid container spacing={3} className={classes.container_main}>
 				<Grid item xs={12} sm={3}>
 					<Paper>
+						<h1>CATÁLOGOS</h1>
 						<List component='nav' aria-label='menu-catalogos'>
 							{
 								catalogos.map((catalogoItem) => {

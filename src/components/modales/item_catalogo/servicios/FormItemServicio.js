@@ -2,9 +2,8 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { TextField, Button, Grid, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
-import { ButtonCustom } from '../../basic/ButtonCustom';
-import myStyles from '../../../css';
-import { CheckCustom } from '../../basic/CheckCustom';
+import { ButtonCustom } from '../../../basic/ButtonCustom';
+import { CheckCustom } from '../../../basic/CheckCustom';
 import { Fragment } from 'react';
 
 function getModalStyle() {
@@ -45,8 +44,6 @@ const useStyles = makeStyles(theme => ({
 const FormItemCatalogo = (props) => {
   const classes = useStyles();
 
-  const dermatologosCatalogoId = process.env.REACT_APP_DERMATOLOGOS_CATALOGO_ID;
-
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
 
@@ -54,12 +51,11 @@ const FormItemCatalogo = (props) => {
     handleSubmit,
     values,
     onChange,
-    onChangeSelect,
+    onChangeActive,
     onGuardarItem,
     onClickCancel,
     open,
     catalogo,
-    laboratorios,
   } = props;
 
   return (
@@ -83,32 +79,34 @@ const FormItemCatalogo = (props) => {
                   onChange={onChange}
                   variant="outlined" />
               </Grid>
-              {
-                catalogo._id === dermatologosCatalogoId ?
-                <Fragment>
-                  <h2>DERMA</h2>
-                </Fragment>
-                : ''
-              }
 
-              {
-                catalogo.columns.filter(column => column.title === 'LABORATORIO').length > 0 ?
-                  <Grid item xs={12}>
-                    <FormControl variant="outlined" className={classes.formControl}>
-                      <InputLabel id="simple-select-outlined-hora">LABORATORIO</InputLabel>
-                      <Select
-                        labelId="simple-select-outlined-dermatologo"
-                        id="simple-select-outlined-dermatologo"
-                        value={values.laboratorio}
-                        onChange={onChangeSelect}
-                        name="laboratorio"
-                        label="LABORATORIO" >
-                        {laboratorios.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  : ''
-              }
+              <Grid item xs={12}>
+                <TextField
+                  className={classes.textField}
+                  name="clave"
+                  label="CLAVE"
+                  value={values.clave}
+                  onChange={onChange}
+                  variant="outlined" />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  className={classes.textField}
+                  name="color"
+                  label="COLOR"
+                  value={values.color}
+                  onChange={onChange}
+                  variant="outlined" />
+              </Grid>
+
+              <Grid item xs={12}>
+                <CheckCustom
+                  checked={values.is_active}
+                  onChange={onChangeActive}
+                  name="checkedG"
+                  label="ACTIVO" />
+              </Grid>
 
               <Grid item xs={12} sm={6}>
                 <ButtonCustom

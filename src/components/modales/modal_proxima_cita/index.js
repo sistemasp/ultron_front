@@ -66,7 +66,7 @@ const ModalProximaCita = (props) => {
   const consultaServicioId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
   const reconsultaFrecuenciaId = process.env.REACT_APP_FRECUENCIA_RECONSULTA_ID;
   const tipoCitaDerivadaId = process.env.REACT_APP_TIPO_CITA_DERIVADO_ID;
-  const citadoMedioId = process.env.REACT_APP_MEDIO_CITADO_ID;
+  const fisicoMedioId = process.env.REACT_APP_MEDIO_FISICO_ID;
   const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
   const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
   const sucursalFedeId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
@@ -99,7 +99,7 @@ const ModalProximaCita = (props) => {
     frecuencia: reconsultaFrecuenciaId,
     servicio: cita.servicio,
     sucursal: cita.sucursal._id,
-    medio: citadoMedioId,
+    medio: fisicoMedioId,
     tratamientos: cita.tratamientos,
     areas: cita.areas,
     tiempo: cita.tiempo,

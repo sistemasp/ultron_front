@@ -8,6 +8,8 @@ const Crud = (props) => {
 
     const classes = myStyles();
 
+    const serviciosCatalogoId = process.env.REACT_APP_SERVICIOS_CATALOGO_ID;
+
     const {
         catalogo,
         data,
@@ -17,20 +19,34 @@ const Crud = (props) => {
     } = props;
 
     const [openModal, setOpenModal] = useState(false);
+    const [openModalServicios, setOpenModalServicios] = useState(false);
     const [item, setItem] = useState({});
 
     const handleClicKNuevo = () => {
-        setOpenModal(true);
+        switch (catalogo._id) {
+            case serviciosCatalogoId:
+                setOpenModalServicios(true)
+                break;
+            default:
+                setOpenModal(true);
+        }
     }
 
     const handleCloseModal = () => {
         setItem({});
         setOpenModal(false);
+        setOpenModalServicios(false);
     };
 
     const handleClicKEditar = (event, rowData) => {
         setItem(rowData);
-        setOpenModal(true);
+        switch (catalogo._id) {
+            case serviciosCatalogoId:
+                setOpenModalServicios(true)
+                break;
+            default:
+                setOpenModal(true);
+        }
     }
 
     const { columns } = catalogo;
@@ -115,6 +131,7 @@ const Crud = (props) => {
                 options={options}
                 components={components}
                 openModal={openModal}
+                openModalServicios={openModalServicios}
                 setMessage={setMessage}
                 setSeverity={setSeverity}
                 setOpenAlert={setOpenAlert}

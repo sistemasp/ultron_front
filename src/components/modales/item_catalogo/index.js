@@ -9,6 +9,7 @@ import { Backdrop, CircularProgress } from '@material-ui/core';
 import myStyles from '../../../css';
 import { createProductoComercial, updateProductoComercial } from '../../../services/productos_comerciales';
 import { createOcupacion, updateOcupacion } from '../../../services/ocupacion';
+import { createEspecialidad, updateEspecialidad } from '../../../services/especialidades';
 
 const ModalItemCatalogo = (props) => {
 
@@ -17,6 +18,8 @@ const ModalItemCatalogo = (props) => {
   const laboratoriosCatalogoId = process.env.REACT_APP_LABORATORIOS_CATALOGO_ID;
   const productoComercialCatalogoId = process.env.REACT_APP_PRODUCTO_COMERCIAL_CATALOGO_ID;
   const ocupacionCatalogoId = process.env.REACT_APP_OCUPACION_CATALOGO_ID;
+  const especialidadCatalogoId = process.env.REACT_APP_ESPECIALIDAD_CATALOGO_ID;
+  const dermatologosCatalogoId = process.env.REACT_APP_DERMATOLOGOS_CATALOGO_ID;
 
   const {
     open,
@@ -81,6 +84,9 @@ const ModalItemCatalogo = (props) => {
         break;
       case ocupacionCatalogoId:
         response = item._id ? await updateOcupacion(item._id, newItem) : await createOcupacion(newItem);
+        break;
+      case especialidadCatalogoId:
+        response = item._id ? await updateEspecialidad(item._id, newItem) : await createEspecialidad(newItem);
         break;
     }
 

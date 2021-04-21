@@ -297,8 +297,8 @@ const AgendarDermapen = (props) => {
 					promovendedor: '',
 					cosmetologa: '',
 					paciente: `${paciente._id}`,
-					precio: '',
-					total: '',
+					precio: 0,
+					total: 0,
 					tipo_cita: {},
 				});
 				loadDermapens(data.fecha_hora);
@@ -572,25 +572,6 @@ const AgendarDermapen = (props) => {
 		}
 	}
 
-	const findDermapen = async () => {
-		const response = await findAreaById(dermapenAreaId);
-		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			const dermapen = response.data;
-			const precio =
-				sucursal === sucursalManuelAcunaId ? dermapen.precio_ma // Precio Manuel Acuña
-					: (sucursal === sucursalOcciId ? dermapen.precio_oc // Precio Occidental
-						: (sucursal === sucursalFedeId ? dermapen.precio_fe // Precio Federalismo}
-							: (sucursal === sucursalRubenDarioId ? dermapen.precio_rd // PRECIO RUBEN DARIO
-								: 0))); // Error
-			setValues({
-				...values,
-				total: 0,
-				precio: 0 - Number(precio),
-				costo: precio,
-			});
-		}
-	}
-
 	const loadPromovendedores = async () => {
 		const response = await findEmployeesByRolId(promovendedorRolId);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
@@ -628,7 +609,6 @@ const AgendarDermapen = (props) => {
 
 	const loadAll = async () => {
 		setIsLoading(true);
-		await findDermapen();
 		await loadDermapens(new Date());
 		await loadFrecuencias();
 		await loadAreas();
