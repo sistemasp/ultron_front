@@ -119,6 +119,7 @@ const ModalCita = (props) => {
   const fecha = `${addZero(fecha_cita.getDate())}/${addZero(Number(fecha_cita.getMonth()) + 1)}/${addZero(fecha_cita.getFullYear())}`;
   const hora = `${addZero(Number(fecha_cita.getHours()))}:${addZero(fecha_cita.getMinutes())}`;
 
+  console.log("KAOZ", cita);
   const [values, setValues] = useState({
     fecha_hora: cita.fecha_hora,
     fecha_show: fecha_cita,
@@ -139,7 +140,7 @@ const ModalCita = (props) => {
     quien_confirma: cita.quien_confirma,
     promovendedor: cita.promovendedor ? cita.promovendedor._id : '',
     cosmetologa: cita.cosmetologa ? cita.cosmetologa._id : '',
-    status: cita.status ? cita.status._id : '',
+    status: cita.status._id,
     precio: cita.precio,
     total: cita.total,
     motivos: cita.motivos,

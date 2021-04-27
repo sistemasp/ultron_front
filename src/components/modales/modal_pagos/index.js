@@ -12,7 +12,6 @@ const ModalPagos = (props) => {
     sucursal,
     handleClickGuardarPago,
     servicio,
-    setServicio,
     empleado,
     onGuardarModalPagos,
     tipoServicioId,
@@ -77,7 +76,7 @@ const ModalPagos = (props) => {
     { title: 'TOTAL', field: 'total_moneda' },
     { title: 'BANCO', field: 'banco_nombre' },
     { title: 'TIPO TARJETA', field: 'tipo_tarjeta_nombre' },
-    { title: 'DIGITOS', field: 'digitos_show' },
+    { title: 'DÍGITOS', field: 'digitos_show' },
     { title: 'OBSERVACIONES', field: 'observaciones' },
   ];
 

@@ -15,7 +15,7 @@ function getModalStyle() {
     left: `${left}%`,
     transform: `translate(-${top}%, -${left}%)`,
     overflow: 'scroll',
-    height: '50%',
+    height: '60%',
   };
 }
 

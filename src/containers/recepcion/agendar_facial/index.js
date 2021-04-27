@@ -363,26 +363,26 @@ const AgendarFacial = (props) => {
 			}
 			const responseConsecutivo = await createConsecutivo(consecutivo);
 			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
-				setOpenAlert(true);
-				setSeverity('success');
-				setMessage('EL FACIAL SE AGREGO CORRECTAMENTE');
-				setValues({
-					servicio: '',
-					tratamientos: [],
-					dermatologo: '',
-					promovendedor: '',
-					cosmetologa: '',
-					paciente: `${paciente._id}`,
-					precio: '',
-					tipo_cita: {},
-				});
-				setDisableDate(true);
-				setPacienteAgendado({});
-				loadFaciales(data.fecha_hora);
-				setFilterDate({
-					fecha_show: data.fecha_hora,
-					fecha: dateToString(data.fecha_hora),
-				});
+			setOpenAlert(true);
+			setSeverity('success');
+			setMessage('EL FACIAL SE AGREGO CORRECTAMENTE');
+			setValues({
+				servicio: '',
+				tratamientos: [],
+				dermatologo: '',
+				promovendedor: '',
+				cosmetologa: '',
+				paciente: `${paciente._id}`,
+				precio: '',
+				tipo_cita: {},
+			});
+			setDisableDate(true);
+			setPacienteAgendado({});
+			loadFaciales(data.fecha_hora);
+			setFilterDate({
+				fecha_show: data.fecha_hora,
+				fecha: dateToString(data.fecha_hora),
+			});
 			//}
 		}
 
@@ -491,11 +491,11 @@ const AgendarFacial = (props) => {
 			tooltip: 'EDITAR',
 			onClick: handleOnClickEditarCita
 		}, //: ''
-		/*{
+		{
 			icon: AttachMoneyIcon,
 			tooltip: 'PAGOS',
 			onClick: handleClickVerPagos
-		},*/
+		},
 		{
 			icon: EventAvailableIcon,
 			tooltip: 'NUEVA CITA',

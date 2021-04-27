@@ -89,15 +89,13 @@ export const optionSelect = (items) => {
     });
 }
 
-export const optionSelectHorario = (items) => {
+export const optionSelect2 = (items) => {
     return items.map(item => {
         item = {
             ...item,
             value: item._id,
-            label: item.hora,
+            name: item.nombre,
         };
         return item;
     });
 }
-
-

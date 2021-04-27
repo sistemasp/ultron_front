@@ -138,6 +138,7 @@ const ModalProximaDermapen = (props) => {
     await setValues({
       ...values,
       fecha_hora: date,
+      hora: '',
     });
     await loadHorarios(date);
     setIsLoading(false);

@@ -10,10 +10,9 @@ import FormControl from '@material-ui/core/FormControl';
 import { Paper, TextField, Checkbox, Select } from '@material-ui/core';
 import TableComponent from '../../../components/table/TableComponent';
 import ModalConsulta from '../../../components/modales/modal_consulta';
-import { green } from '@material-ui/core/colors';
 import ModalPagos from '../../../components/modales/modal_pagos';
 import ModalImprimirConsulta from '../../../components/modales/imprimir/consulta';
-import { optionSelect, optionSelectHorario, toFormatterCurrency } from '../../../utils/utils';
+import { optionSelect, optionSelect2, toFormatterCurrency } from '../../../utils/utils';
 import ModalCirugia from '../../../components/modales/modal_cirugia';
 import ModalEstetica from '../../../components/modales/modal_estetica';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
@@ -21,6 +20,8 @@ import ModalProximaConsulta from '../../../components/modales/modal_proxima_cons
 import ModalTraspasoConsulta from '../../../components/modales/traspaso_consulta';
 import myStyles from '../../../css';
 import { CheckCustom } from '../../../components/basic/CheckCustom';
+//import Select from 'react-select';
+import SelectSearch from 'react-select-search';
 
 export const AgendarConsultaContainer = (props) => {
 
@@ -272,26 +273,47 @@ export const AgendarConsultaContainer = (props) => {
               </Grid>
               : ''
           }
-          {
-            false //values.frecuencia === frecuenciaPrimeraVezId
-              ? <Grid item xs={12} sm={2}>
-                <h2> {values.dermatologo.nombre} </h2>
-              </Grid>
-              : <Grid item xs={12} sm={2}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO (A)</InputLabel>
-                  <Select
-                    labelId="simple-select-outlined-dermatologo"
-                    id="simple-select-outlined-dermatologo"
-                    value={values.dermatologo}
-                    onChange={onChangeDermatologos}
-                    label="DERMATÓLOGO (A)" >
-                    {dermatologos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                  </Select>
-                </FormControl>
-              </Grid>
-          }
+          <Grid item xs={12} sm={2}>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO (A)</InputLabel>
+              <Select
+                labelId="simple-select-outlined-dermatologo"
+                id="simple-select-outlined-dermatologo"
+                value={values.dermatologo}
+                onChange={onChangeDermatologos}
+                label="DERMATÓLOGO (A)" >
+                {dermatologos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+              </Select>
+            </FormControl>
+          </Grid>
+{/*
+          <Grid item xs={12} sm={2}>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <SelectSearch
+              className="select-search select-search--multiple"
+                //labelId="simple-select-outlined-dermatologo"
+                id="simple-select-outlined-dermatologo"
+                //value={values.dermatologo}
+                options={optionSelect2(dermatologos)}
+                search
+                //onChange={onChangeDermatologos}
+                placeholder="DERMATÓLOGO (A)" />
+            </FormControl>
+          </Grid>
 
+          <Grid item xs={12} sm={2}>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <Select
+                labelId="simple-select-outlined-dermatologo"
+                //id="simple-select-outlined-dermatologo"
+                //value={values.dermatologo}
+                //onChange={onChangeDermatologos}
+                options={optionSelect(dermatologos)}
+                placeholder="DERMATÓLOGO (A)" />
+            </FormControl>
+          </Grid> */
+
+}
           <Grid item xs={12} sm={2}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="simple-select-outlined-tipo-cita">MEDIO</InputLabel>

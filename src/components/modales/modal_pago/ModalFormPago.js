@@ -144,7 +144,7 @@ const ModalFormPago = (props) => {
                         name="digitos"
                         //helperText={touched.numero_sesion ? errors.numero_sesion : ""}
                         error={Boolean(errors.digitos)}
-                        label="DIGITOS"
+                        label="DÍGITOS"
                         value={values.digitos}
                         type='Number'
                         onInput={(e) => {
