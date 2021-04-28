@@ -2,7 +2,6 @@ import React, { useState, useEffect, Fragment } from 'react';
 import {
   getAllSchedules,
   findScheduleByDateAndSucursalAndService,
-  findEmployeesByRolId,
   showAllTipoCitas,
   updatePago,
   deletePago,
@@ -28,6 +27,7 @@ import { createAparatologia, updateAparatologia } from '../../../services/aparat
 import { createFacial, updateFacial } from '../../../services/faciales';
 import { createLaser, updateLaser } from '../../../services/laser';
 import { showAllStatusVisibles } from '../../../services/status';
+import { findEmployeesByRolIdAvailable } from '../../../services/empleados';
 
 const validationSchema = Yup.object({
   fecha: Yup.string("Ingresa los nombres")
@@ -508,21 +508,21 @@ const ModalCita = (props) => {
   }
 
   const loadPromovendedores = async () => {
-    const response = await findEmployeesByRolId(promovendedorRolId);
+    const response = await findEmployeesByRolIdAvailable(promovendedorRolId, empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setPromovendedores(response.data);
     }
   }
 
   const loadCosmetologas = async () => {
-    const response = await findEmployeesByRolId(cosmetologaRolId);
+    const response = await findEmployeesByRolIdAvailable(cosmetologaRolId, empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setCosmetologas(response.data);
     }
   }
 
   const loadDoctores = async () => {
-    const response = await findEmployeesByRolId(dermatologoRolId);
+    const response = await findEmployeesByRolIdAvailable(dermatologoRolId, empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setDoctores(response.data);
     }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ModalFormPassword from './ModalFormPassword';
-import { updateEmployee } from "../../../services";
+import { updateEmployee } from "../../../services/empleados";
 
 const ModalPassword = (props) => {
   const {

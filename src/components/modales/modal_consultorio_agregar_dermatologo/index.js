@@ -3,7 +3,7 @@ import * as Yup from "yup";
 import { Formik } from 'formik';
 import ModalFormConsultorioAgregarDermatologo from './ModalFormConsultorioAgregarDermatologo';
 import { updateSurgery } from '../../../services/consultorios';
-import { findEmployeesByRolIdAvailable, updateEmployee } from '../../../services';
+import { findEmployeesByRolIdAvailable, updateEmployee } from '../../../services/empleados';
 
 const validationSchema = Yup.object({
   nombre: Yup.string("Ingresa los nombres")
@@ -18,6 +18,7 @@ const ModalConsultorioAgregarDermatologo = (props) => {
     setOpenAlert,
     setMessage,
     loadConsultorios,
+    empleado,
   } = props;
 
   const [isLoading, setIsLoading] = useState(true);
@@ -32,7 +33,7 @@ const ModalConsultorioAgregarDermatologo = (props) => {
 
   useEffect(() => {
     const loadDermatologos = async () => {
-      const response = await findEmployeesByRolIdAvailable(dermatologoRolId);
+      const response = await findEmployeesByRolIdAvailable(dermatologoRolId, empleado.access_token);
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
         setDermatologos(response.data);
       }

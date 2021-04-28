@@ -8,10 +8,10 @@ import { showAllLaboratorios } from "../../services/laboratorios";
 import { showAllProductoComercials } from "../../services/productos_comerciales";
 import { showAllOcupacions } from "../../services/ocupacion";
 import { showAllEspecialidades } from "../../services/especialidades";
-import { findEmployeesByRolId } from "../../services";
 import { addZero } from "../../utils/utils";
 import { getAllServices } from "../../services/servicios";
 import { getAllTreatments } from "../../services/tratamientos";
+import { findEmployeesByRolIdAvailable } from "../../services/empleados";
 
 const Alert = (props) => {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -74,7 +74,7 @@ const MenuSuperAdmin = (props) => {
     }
 
     const loadDermatologos = async () => {
-        const response = await findEmployeesByRolId(dermatologoRolId);
+        const response = await findEmployeesByRolIdAvailable(dermatologoRolId, empleado.access_token);
         if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
             response.data.forEach(item => {
                 const fecha_ingreso = new Date(item.fecha_ingreso);

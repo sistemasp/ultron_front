@@ -52,6 +52,7 @@ const Pacientes = (props) => {
 	const [severity, setSeverity] = useState('success');
 
 	const {
+		empleado,
 		onClickAgendar,
 		onClickAgendarConsulta,
 		onClickAgendarFaciales,
@@ -257,6 +258,7 @@ const Pacientes = (props) => {
 			{
 				!isLoading ?
 					<PacientesContainer
+						empleado={empleado}
 						columns={columns}
 						titulo='PACIENTES'
 						actions={actions}

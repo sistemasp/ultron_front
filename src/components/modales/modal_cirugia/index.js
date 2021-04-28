@@ -1,6 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import {
-  findEmployeesByRolId,
   showAllMaterials,
   createConsecutivo,
   findSchedulesBySucursalAndServicio,
@@ -18,6 +17,7 @@ import ModalFormCirugia from './ModalFormCirugia';
 import { createBiopsia } from '../../../services/biopsias';
 import { findProductoByServicio } from '../../../services/productos';
 import { showAllStatusVisibles } from '../../../services/status';
+import { findEmployeesByRolIdAvailable } from '../../../services/empleados';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -415,7 +415,7 @@ const ModalCirugia = (props) => {
   }
 
   const loadDermatologos = async () => {
-    const response = await findEmployeesByRolId(dermatologoRolId);
+    const response = await findEmployeesByRolIdAvailable(dermatologoRolId, empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setDermatologos(response.data);
     }
@@ -423,7 +423,7 @@ const ModalCirugia = (props) => {
 
 
   const loadPatologos = async () => {
-    const response = await findEmployeesByRolId(patologoRolId);
+    const response = await findEmployeesByRolIdAvailable(patologoRolId);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setPatologos(response.data);
     }

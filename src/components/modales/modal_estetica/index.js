@@ -4,7 +4,6 @@ import {
   createConsecutivo,
   showAllMaterials,
   showAllFrecuencias,
-  findEmployeesByRolIdAvailable,
   showAllMedios,
   showAllMetodoPago,
 } from "../../../services";
@@ -19,6 +18,7 @@ import { findProductoByServicio } from '../../../services/productos';
 import { showMaterialEsteticasByProducto } from '../../../services/material_estetica';
 import { showAllStatusVisibles } from '../../../services/status';
 import { addZero } from '../../../utils/utils';
+import { findEmployeesByRolIdAvailable } from '../../../services/empleados';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -401,21 +401,21 @@ const ModalEstetica = (props) => {
   }
 
   const loadCosmetologas = async () => {
-    const response = await findEmployeesByRolIdAvailable(cosmetologaRolId);
+    const response = await findEmployeesByRolIdAvailable(cosmetologaRolId, empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setCosmetologas(response.data);
     }
   }
 
   const loadPromovendedores = async () => {
-    const response = await findEmployeesByRolIdAvailable(promovendedorRolId);
+    const response = await findEmployeesByRolIdAvailable(promovendedorRolId, empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setPromovendedores(response.data);
     }
   }
 
   const loadDermatologos = async () => {
-    const response = await findEmployeesByRolIdAvailable(dermatologoRolId);
+    const response = await findEmployeesByRolIdAvailable(dermatologoRolId, empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setDermatologos(response.data);
     }

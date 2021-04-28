@@ -2,7 +2,6 @@ import React, { useState, useEffect, Fragment } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import { AgendarConsultaContainer } from "./agendar_consulta";
 import {
-	findEmployeesByRolId,
 	showAllTipoCitas,
 	showAllMedios,
 	showAllFrecuencias,
@@ -31,6 +30,7 @@ import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 import FaceIcon from '@material-ui/icons/Face';
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import { findProductoByServicio } from "../../../services/productos";
+import { findEmployeesByRolIdAvailable } from "../../../services/empleados";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -649,14 +649,14 @@ const AgendarConsulta = (props) => {
 	}
 
 	const loadDermatologos = async () => {
-		const response = await findEmployeesByRolId(dermatologoRolId);
+		const response = await findEmployeesByRolIdAvailable(dermatologoRolId, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setDermatologos(response.data);
 		}
 	}
 
 	const loadPromovendedores = async () => {
-		const response = await findEmployeesByRolId(promovendedorRolId);
+		const response = await findEmployeesByRolIdAvailable(promovendedorRolId, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setPromovendedores(response.data);
 		}

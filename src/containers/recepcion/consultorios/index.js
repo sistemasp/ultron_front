@@ -8,7 +8,6 @@ import {
 	breakFreeCabinaByIdDermatologo,
 	createSalaCirugia,
 	findSalaCirugiaBySucursalId,
-	updateEmployee
 } from '../../../services';
 import AirlineSeatReclineExtraIcon from '@material-ui/icons/AirlineSeatReclineExtra';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -19,6 +18,7 @@ import {
 	createSurgery,
 	findSurgeryBySucursalId
 } from "../../../services/consultorios";
+import { updateEmployee } from "../../../services/empleados";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;

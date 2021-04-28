@@ -1,7 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import {
   findScheduleInConsultByDateAndSucursal,
-  findEmployeesByRolId,
   showAllTipoCitas,
   updatePago,
   deletePago,
@@ -24,6 +23,7 @@ import { addZero } from '../../../utils/utils';
 import ModalFormConsulta from './ModalFormConsulta';
 import { showAllStatusVisibles } from '../../../services/status';
 import { findProductoByServicio } from '../../../services/productos';
+import { findEmployeesByRolIdAvailable } from '../../../services/empleados';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -141,14 +141,14 @@ const ModalConsulta = (props) => {
   }
 
   const loadPromovendedores = async () => {
-    const response = await findEmployeesByRolId(promovendedorRolId);
+    const response = await findEmployeesByRolIdAvailable(promovendedorRolId, empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setPromovendedores(response.data);
     }
   }
 
   const loadDoctores = async () => {
-    const response = await findEmployeesByRolId(dermatologoRolId);
+    const response = await findEmployeesByRolIdAvailable(dermatologoRolId, empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setDoctores(response.data);
     }

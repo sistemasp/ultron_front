@@ -12,6 +12,7 @@ export const PacientesContainer = (props) => {
   const classes = myStyles();
 
   const {
+    empleado,
     titulo,
     columns,
     paciente,
@@ -29,7 +30,11 @@ export const PacientesContainer = (props) => {
   const pacientes = query =>
     new Promise((resolve, reject) => {
       const url = `${baseUrl}/paciente/remote?per_page=${query.pageSize}&page=${query.page + 1}&search=${query.search}`
-      fetch(url)
+      fetch(url, {
+        headers: {
+          Authorization: `Bearer ${empleado.access_token}`
+        }
+      })
         .then(response => response.json())
         .then(result => {
           resolve({

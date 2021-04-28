@@ -1,8 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import {
   createConsecutivo,
-  findEmployeesByRolId,
-  findEmployeesByRolIdAvailable,
   findScheduleByDateAndSucursalAndService,
   showAllMetodoPago,
   showAllOffices,
@@ -18,6 +16,7 @@ import { addZero } from '../../../utils/utils';
 import ModalFormProximaCirugia from './ModalFormProximaCirugia';
 import { findProductoByServicio } from '../../../services/productos';
 import { createCirugia } from '../../../services/cirugias';
+import { findEmployeesByRolIdAvailable } from '../../../services/empleados';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -110,13 +109,6 @@ const ModalProximaCirugia = (props) => {
     const response = await findScheduleByDateAndSucursalAndService(dia, mes, anio, sucursal, values.servicio._id);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setHorarios(response.data);
-    }
-  }
-
-  const loadCosmetologas = async () => {
-    const response = await findEmployeesByRolId(cosmetologaRolId);
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setCosmetologas(response.data);
     }
   }
 
@@ -260,7 +252,7 @@ const ModalProximaCirugia = (props) => {
   }
 
   const loadDermatologos = async () => {
-    const response = await findEmployeesByRolIdAvailable(dermatologoRolId);
+    const response = await findEmployeesByRolIdAvailable(dermatologoRolId, empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setDermatologos(response.data);
     }

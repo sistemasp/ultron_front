@@ -2,14 +2,12 @@ import React, { useState, useEffect, Fragment } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import {
 	findScheduleByDateAndSucursalAndService,
-	findEmployeesByRolId,
 	createConsecutivo,
 	showAllMaterials,
 	showAllMaterialEsteticas,
 	showAllFrecuencias,
 	showAllMetodoPago,
 	showAllMedios,
-	findEmployeesByRolIdAvailable,
 } from "../../../services";
 import {
 	createEstetica,
@@ -27,6 +25,7 @@ import PrintIcon from '@material-ui/icons/Print';
 import { AgendarEsteticaContainer } from "./agendar_estetica";
 import { findProductoByServicio } from "../../../services/productos";
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
+import { findEmployeesByRolIdAvailable } from "../../../services/empleados";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -580,21 +579,21 @@ const AgendarEstetica = (props) => {
 	}
 
 	const loadCosmetologas = async () => {
-		const response = await findEmployeesByRolIdAvailable(cosmetologaRolId);
+		const response = await findEmployeesByRolIdAvailable(cosmetologaRolId, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setCosmetologas(response.data);
 		}
 	}
 
 	const loadPromovendedores = async () => {
-		const response = await findEmployeesByRolIdAvailable(promovendedorRolId);
+		const response = await findEmployeesByRolIdAvailable(promovendedorRolId, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setPromovendedores(response.data);
 		}
 	}
 
 	const loadDermatologos = async () => {
-		const response = await findEmployeesByRolIdAvailable(dermatologoRolId);
+		const response = await findEmployeesByRolIdAvailable(dermatologoRolId, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setDermatologos(response.data);
 		}

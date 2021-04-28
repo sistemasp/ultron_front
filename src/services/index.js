@@ -301,69 +301,6 @@ export const findRecepcionistByEmployeeNumber = async (employeeNumber) => {
     }
 }
 
-// EMPLEADOS
-
-export const findEmployeeByEmployeeNumber = async (employeeNumber) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/empleado/number/${employeeNumber}`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('findEmployeeByEmployeeNumber', error);
-    }
-}
-
-export const loginEmployee = async (employeeNumber, password) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/empleado/login/${employeeNumber}/${password}`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('loginEmployee', error);
-    }
-}
-
-export const findEmployeesByRolId = async (rolId) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/empleado/rol/${rolId}`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('findEmployeesByRolId', error);
-    }
-}
-
-export const findEmployeesByRolIdAvailable = async (rolId) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/empleado/rol/${rolId}/available`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('findEmployeesByRolIdAvailable', error);
-    }
-}
-
-export const updateEmployee = async (employeeId, employee) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/empleado/${employeeId}`,
-            method: 'PUT',
-            data: employee
-        });
-        return response;
-    } catch (error) {
-        console.log('updateEmployee', error);
-    }
-}
-
 // SUCURSALES
 
 export const showAllOffices = async () => {

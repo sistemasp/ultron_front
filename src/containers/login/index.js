@@ -4,13 +4,13 @@ import io from 'socket.io-client';
 import socketIOClient from "socket.io-client";
 import { showAllOffices } from "../../services";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { loginEmployee } from "../../services";
 import { LoginContainer } from "./login";
 import { withRouter } from 'react-router-dom';
 import * as Yup from "yup";
 import { Snackbar, Grid } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
 import bannerMePiel from './../../bannerMePiel.PNG';
+import { login } from "../../services/empleados";
 
 const styles = theme => ({
   paper: {
@@ -106,8 +106,8 @@ const LoginForm = (props) => {
   };
 
   const submit = async (data) => {
-    const response = await loginEmployee(data.employee_number, data.password);
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK && response.data !== '') {
+    const response = await login(data.employee_number, data.password);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED && response.data !== '') {
       const empleado = response.data;
       if (empleado.rol._id === rolCallCenterId) {
         history.push('/call_center', { empleado: empleado, sucursal: data.sucursal });

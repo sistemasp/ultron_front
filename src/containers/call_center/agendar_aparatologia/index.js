@@ -2,7 +2,6 @@ import React, { useState, useEffect, Fragment } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import {
 	findScheduleByDateAndSucursalAndService,
-	findEmployeesByRolId,
 	showAllTipoCitas,
 	createConsecutivo,
 	showAllMedios,
@@ -25,6 +24,7 @@ import PrintIcon from '@material-ui/icons/Print';
 import { AgendarAparatologiaContainer } from "./agendar_aparatologia";
 import { createAparatologia, findAparatologiaByDateAndSucursal, updateAparatologia } from "../../../services/aparatolgia";
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
+import { findEmployeesByRolIdAvailable } from "../../../services/empleados";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -560,21 +560,21 @@ const AgendarAparatologia = (props) => {
 		}
 
 		const loadPromovendedores = async () => {
-			const response = await findEmployeesByRolId(promovendedorRolId);
+			const response = await findEmployeesByRolIdAvailable(promovendedorRolId, empleado.access_token);
 			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 				setPromovendedores(response.data);
 			}
 		}
 
 		const loadCosmetologas = async () => {
-			const response = await findEmployeesByRolId(cosmetologaRolId);
+			const response = await findEmployeesByRolIdAvailable(cosmetologaRolId, empleado.access_token);
 			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 				setCosmetologas(response.data);
 			}
 		}
 
 		const loadDermatologos = async () => {
-			const response = await findEmployeesByRolId(dermatologoRolId);
+			const response = await findEmployeesByRolIdAvailable(dermatologoRolId, empleado.access_token);
 			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 				setDermatologos(response.data);
 			}

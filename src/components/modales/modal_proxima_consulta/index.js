@@ -1,7 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import {
   createConsecutivo,
-  findEmployeesByRolIdAvailable,
   findScheduleInConsultByDateAndSucursal,
   showAllMetodoPago,
   showAllOffices,
@@ -13,6 +12,7 @@ import { Backdrop, CircularProgress, makeStyles } from '@material-ui/core';
 import { addZero } from '../../../utils/utils';
 import ModalFormProximaConsulta from './ModalFormProximaConsulta';
 import { findProductoByServicio } from '../../../services/productos';
+import { findEmployeesByRolIdAvailable } from '../../../services/empleados';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -181,7 +181,7 @@ const ModalProximaConsulta = (props) => {
   };
 
   const loadDermatologos = async () => {
-    const response = await findEmployeesByRolIdAvailable(dermatologoRolId);
+    const response = await findEmployeesByRolIdAvailable(dermatologoRolId, empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setDermatologos(response.data);
     }

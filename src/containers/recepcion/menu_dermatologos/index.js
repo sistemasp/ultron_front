@@ -2,11 +2,11 @@ import React, { useState, useEffect, Fragment } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import { Backdrop, CircularProgress } from '@material-ui/core';
 import { DermatologosContainer } from './dermatologos';
-import { findEmployeesByRolId } from '../../../services';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import PaymentIcon from '@material-ui/icons/Payment';
 import { addZero } from '../../../utils/utils';
+import { findEmployeesByRolIdAvailable } from "../../../services/empleados";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -151,7 +151,7 @@ const Dermatologos = (props) => {
 	];
 
 	const loadDermatologos = async () => {
-		const response = await findEmployeesByRolId(dermatologoRolId);
+		const response = await findEmployeesByRolIdAvailable(dermatologoRolId, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			response.data.forEach(item => {
 				const fecha_ingreso = new Date(item.fecha_ingreso);
@@ -167,7 +167,7 @@ const Dermatologos = (props) => {
 	}
 
 	const loadPatologos = async () => {
-		const response = await findEmployeesByRolId(patologoRolId);
+		const response = await findEmployeesByRolIdAvailable(patologoRolId);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			response.data.forEach(item => {
 				const fecha_ingreso = new Date(item.fecha_ingreso);

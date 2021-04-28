@@ -2,7 +2,6 @@ import React, { useState, useEffect, Fragment } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import {
 	findScheduleByDateAndSucursalAndService,
-	findEmployeesByRolId,
 	createConsecutivo,
 	showAllMaterials,
 	showAllFrecuencias,
@@ -25,6 +24,7 @@ import PrintIcon from '@material-ui/icons/Print';
 import { AgendarCirugiaContainer } from "./agendar_cirugia";
 import { findProductoByServicio } from "../../../services/productos";
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
+import { findEmployeesByRolIdAvailable } from "../../../services/empleados";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -515,7 +515,7 @@ const AgendarCirugia = (props) => {
 	}
 
 	const loadDermatologos = async () => {
-		const response = await findEmployeesByRolId(dermatologoRolId);
+		const response = await findEmployeesByRolIdAvailable(dermatologoRolId, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setDermatologos(response.data);
 		}
