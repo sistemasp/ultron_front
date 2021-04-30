@@ -300,7 +300,7 @@ const AgendarFacial = (props) => {
 	};
 
 	const loadFaciales = async (filterDate) => {
-		const response = await findFacialByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal);
+		const response = await findFacialByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			response.data.forEach(item => {
 				item.folio = generateFolio(item);
@@ -351,7 +351,7 @@ const AgendarFacial = (props) => {
 		data.tipo_cita = data.dermatologo._id === dermatologoDirectoId ? directoTipoCitaId : data.tipo_cita;
 		// data.tiempo = getTimeToTratamiento(data.tratamientos);
 
-		const response = await createFacial(data);
+		const response = await createFacial(data, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			/*const consecutivo = {
 				consecutivo: response.data.consecutivo,
@@ -562,7 +562,7 @@ const AgendarFacial = (props) => {
 
 	const handleGuardarModalPagos = async (servicio) => {
 		servicio.pagado = servicio.pagos.length > 0;
-		await updateFacial(servicio._id, servicio);
+		await updateFacial(servicio._id, servicio, empleado.access_token);
 		await loadFaciales(new Date(servicio.fecha_hora));
 		setOpenModalPagos(false);
 	}

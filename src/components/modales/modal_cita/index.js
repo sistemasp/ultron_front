@@ -119,7 +119,6 @@ const ModalCita = (props) => {
   const fecha = `${addZero(fecha_cita.getDate())}/${addZero(Number(fecha_cita.getMonth()) + 1)}/${addZero(fecha_cita.getFullYear())}`;
   const hora = `${addZero(Number(fecha_cita.getHours()))}:${addZero(fecha_cita.getMinutes())}`;
 
-  console.log("KAOZ", cita);
   const [values, setValues] = useState({
     fecha_hora: cita.fecha_hora,
     fecha_show: fecha_cita,
@@ -236,6 +235,7 @@ const ModalCita = (props) => {
     await setValues({
       ...values,
       nueva_fecha_hora: date,
+      hora: '',
       observaciones: fechaObservaciones,
     });
     loadHorarios(date);
@@ -342,7 +342,7 @@ const ModalCita = (props) => {
           await updateAparatologia(cita._id, rowData);
           break;
         case servicioFacialId:
-          await updateFacial(cita._id, rowData);
+          await updateFacial(cita._id, rowData, empleado.access_token);
           break;
         case servicioLaserId:
           await updateLaser(cita._id, rowData);
@@ -362,7 +362,7 @@ const ModalCita = (props) => {
           response = await createAparatologia(rowData);
           break;
         case servicioFacialId:
-          response = await createFacial(rowData);
+          response = await createFacial(rowData, empleado.access_token);
           break;
         case servicioLaserId:
           response = await createLaser(rowData);
@@ -416,7 +416,7 @@ const ModalCita = (props) => {
           await loadAparatologias(rowData.fecha_show);
           break;
         case servicioFacialId:
-          await updateFacial(cita._id, rowData);
+          await updateFacial(cita._id, rowData, empleado.access_token);
           await loadFaciales(rowData.fecha_show);
           break;
         case servicioLaserId:
