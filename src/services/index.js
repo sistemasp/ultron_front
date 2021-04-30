@@ -2,58 +2,6 @@ import axios from 'axios';
 
 export const baseUrl = process.env.REACT_APP_BASE_URL_LOCAL_HAMACHI;
 
-// PACIENTES
-
-export const getAllPatients = async () => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/paciente`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('getAllPatients', error);
-    }
-}
-
-export const findPatientByPhoneNumber = async (telefono) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/paciente/phonenumber/${telefono}`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('findPatientByPhoneNumber', error);
-    }
-}
-
-export const updatePatient = async (pacienteId, paciente) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/paciente/${pacienteId}`,
-            method: 'PUT',
-            data: paciente
-        });
-        return response;
-    } catch (error) {
-        console.log('updatePatient', error);
-    }
-}
-
-export const createPatient = async (paciente) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/paciente`,
-            method: 'POST',
-            data: paciente
-        });
-        return response;
-    } catch (error) {
-        console.log('createPatient', error);
-    }
-}
-
 // HORARIO
 
 export const getAllSchedules = async () => {

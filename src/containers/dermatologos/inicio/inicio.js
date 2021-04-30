@@ -19,6 +19,7 @@ export const InicioContainer = (props) => {
 	const classes = myStyles();
 
 	const {
+		dermatologo,
 		consultorio,
 		onClickCompletarDatos,
 		onClickItemReceta,
@@ -55,6 +56,7 @@ export const InicioContainer = (props) => {
 			{
 				openModalPacienteDomicilio ?
 					<ModalPacienteDomicilio
+						dermatologo={dermatologo}
 						open={openModalPacienteDomicilio}
 						onClose={onClosePacienteDomicilio}
 						sucursal={sucursal}

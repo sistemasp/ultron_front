@@ -1,7 +1,9 @@
 import { Backdrop, CircularProgress } from '@material-ui/core';
 import React, { useState, useEffect, Fragment } from 'react';
 import myStyles from '../../../css';
-import { updatePatient } from '../../../services';
+import { 
+  updatePatient
+} from '../../../services/pacientes';
 import { showAllOcupacions } from '../../../services/ocupacion';
 import {
   sepomexGetEstados,
@@ -17,6 +19,7 @@ const ModalPacienteDomicilio = (props) => {
 
   const {
     open,
+    dermatologo,
     onClose,
     sucursal,
     paciente,
@@ -86,8 +89,6 @@ const ModalPacienteDomicilio = (props) => {
     });
   }
 
-  console.log("KAOZ", values);
-
   const handleClickBuscar = async () => {
     const response = await sepomexGetAllInfoByCP(values.codigo_postal);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
@@ -125,7 +126,7 @@ const ModalPacienteDomicilio = (props) => {
   const handleClickGuardar = async (e) => {
     values.codigo_postal = values.codigo_postal ? values.codigo_postal : 'SCP';
 
-    const response = await updatePatient(paciente._id, values);
+    const response = await updatePatient(paciente._id, values, dermatologo.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setSeverity('success');
       setOpenAlert(true);

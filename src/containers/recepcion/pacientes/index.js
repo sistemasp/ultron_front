@@ -2,7 +2,11 @@ import React, { useState, useEffect, Fragment } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import { Backdrop, CircularProgress, Select, FormControl, InputLabel, MenuItem } from '@material-ui/core';
 import { PacientesContainer } from './pacientes';
-import { getAllPatients, updatePatient, createPatient, findPatientByPhoneNumber } from '../../../services';
+import { 
+	updatePatient,
+	createPatient,
+	findPatientByPhoneNumber
+} from '../../../services/pacientes';
 import EditIcon from '@material-ui/icons/Edit';
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import TodayIcon from '@material-ui/icons/Today';
@@ -107,7 +111,7 @@ const Pacientes = (props) => {
 		setIsLoading(true);
 
 		if (!val.familiar) {
-			const existPatient = paciente._id ? '' : await findPatientByPhoneNumber(val.telefono);
+			const existPatient = paciente._id ? '' : await findPatientByPhoneNumber(val.telefono, empleado.access_token);
 
 			if (`${existPatient.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 				if (existPatient.data.length > 0) {
@@ -121,7 +125,7 @@ const Pacientes = (props) => {
 			}
 		}
 
-		const response = paciente._id ? await updatePatient(paciente._id, val) : await createPatient(val);
+		const response = paciente._id ? await updatePatient(paciente._id, val,  empleado.access_token) : await createPatient(val, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
 			|| `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			setSeverity('success');
@@ -136,7 +140,7 @@ const Pacientes = (props) => {
 
 	const handleOnClickGuardarAgendar = async (e, val) => {
 		setIsLoading(true);
-		const existPatient = paciente._id ? '' : await findPatientByPhoneNumber(val.telefono);
+		const existPatient = paciente._id ? '' : await findPatientByPhoneNumber(val.telefono, empleado.access_token);
 		setOpenAlert(true);
 
 		if (`${existPatient.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
@@ -149,7 +153,7 @@ const Pacientes = (props) => {
 			}
 		}
 
-		const response = paciente._id ? await updatePatient(paciente._id, val) : await createPatient(val);
+		const response = paciente._id ? await updatePatient(paciente._id, val, empleado.access_token) : await createPatient(val, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
 			|| `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			setSeverity('success');

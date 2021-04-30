@@ -110,7 +110,7 @@ const LoginForm = (props) => {
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED && response.data !== '') {
       const empleado = response.data;
       if (empleado.rol._id === rolCallCenterId) {
-        history.push('/call_center', { empleado: empleado, sucursal: data.sucursal });
+        //history.push('/call_center', { empleado: empleado, sucursal: data.sucursal });
       } else if (empleado.rol._id === rolCosmetologaId) {
         history.push('/cabinas', { empleado: empleado, sucursal: data.sucursal });
       } else if (empleado.rol._id === rolDermatologoId) {
