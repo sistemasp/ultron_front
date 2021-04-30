@@ -202,6 +202,7 @@ const ModalConsulta = (props) => {
     await setValues({
       ...values,
       nueva_fecha_hora: date,
+      hora: '',
       observaciones: fechaObservaciones,
     });
     await loadHorarios(date);
@@ -302,14 +303,14 @@ const ModalConsulta = (props) => {
     }
 
     if (rowData.status === reagendoStatusId) {
-      await updateConsult(consulta._id, rowData);
+      await updateConsult(consulta._id, rowData, empleado.access_token);
       rowData.quien_agenda = empleado._id;
       rowData.sucursal = sucursal;
       rowData.status = pendienteStatusId;
       rowData.hora_llegada = '--:--';
       rowData.observaciones = `CONSULTA REAGENDADA ${values.fecha_actual} - ${values.hora_actual} HRS`;
       rowData.fecha_hora = rowData.nueva_fecha_hora;
-      const response = await createConsult(rowData);
+      const response = await createConsult(rowData, empleado.access_token);
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
         /*const consecutivo = {
           consecutivo: response.data.consecutivo,
@@ -342,7 +343,7 @@ const ModalConsulta = (props) => {
         fecha_show: rowData.fecha_show,
         fecha: `${dia}/${mes}/${anio}`
       });
-      await updateConsult(consulta._id, rowData);
+      await updateConsult(consulta._id, rowData, empleado.access_token);
       await loadConsultas(rowData.fecha_show);
     }
     onClose();

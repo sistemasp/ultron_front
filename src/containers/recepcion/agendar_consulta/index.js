@@ -242,7 +242,7 @@ const AgendarConsulta = (props) => {
 	};
 
 	const loadConsultas = async (filterDate) => {
-		const response = await findConsultsByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal._id);
+		const response = await findConsultsByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal._id, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			response.data.forEach(item => {
 				const fecha = new Date(item.fecha_hora);
@@ -305,7 +305,7 @@ const AgendarConsulta = (props) => {
 			// data.quien_confirma_asistencia = empleado._id;
 		}
 
-		const response = await createConsult(data);
+		const response = await createConsult(data, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			/*const consecutivo = {
 				consecutivo: response.data.consecutivo,
@@ -475,7 +475,7 @@ const AgendarConsulta = (props) => {
 
 	const handleGuardarModalPagos = async (servicio) => {
 		servicio.pagado = servicio.pagos.length > 0;
-		await updateConsult(servicio._id, servicio);
+		await updateConsult(servicio._id, servicio, empleado.access_token);
 		await loadConsultas(new Date(servicio.fecha_hora));
 		setOpenModalPagos(false);
 	}
