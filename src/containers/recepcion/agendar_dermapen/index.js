@@ -230,7 +230,7 @@ const AgendarDermapen = (props) => {
 	};
 
 	const loadDermapens = async (filterDate) => {
-		const response = await findDermapenByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal);
+		const response = await findDermapenByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			response.data.forEach(item => {
 				item.folio = generateFolio(item);
@@ -277,7 +277,7 @@ const AgendarDermapen = (props) => {
 		data.total = data.precio;
 		// data.tiempo = getTimeToTratamiento(data.tratamientos);
 
-		const response = await createDermapen(data);
+		const response = await createDermapen(data, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			/*const consecutivo = {
 				consecutivo: response.data.consecutivo,
@@ -470,7 +470,7 @@ const AgendarDermapen = (props) => {
 
 	const handleGuardarModalPagos = async (servicio) => {
 		servicio.pagado = servicio.pagos.length > 0;
-		await updateDermapen(servicio._id, servicio);
+		await updateDermapen(servicio._id, servicio, empleado.access_token);
 		await loadDermapens(new Date(servicio.fecha_hora));
 		setOpenModalPagos(false);
 	}

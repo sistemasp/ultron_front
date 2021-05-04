@@ -23,7 +23,11 @@ import { toFormatterCurrency, addZero, generateFolio, dateToString } from "../..
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import PrintIcon from '@material-ui/icons/Print';
 import { AgendarAparatologiaContainer } from "./agendar_aparatologia";
-import { createAparatologia, findAparatologiaByDateAndSucursal, updateAparatologia } from "../../../services/aparatolgia";
+import { 
+	createAparatologia,
+	findAparatologiaByDateAndSucursal,
+	updateAparatologia
+} from "../../../services/aparatolgia";
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import { findEmployeesByRolIdAvailable } from "../../../services/empleados";
 
@@ -332,7 +336,7 @@ const AgendarAparatologia = (props) => {
 	};
 
 	const loadAparatologias = async (filterDate) => {
-		const response = await findAparatologiaByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal);
+		const response = await findAparatologiaByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			response.data.forEach(item => {
 				item.folio = generateFolio(item);
@@ -365,7 +369,7 @@ const AgendarAparatologia = (props) => {
 		data.status = pendienteStatusId;
 		data.hora_llegada = '--:--';
 		data.tipo_cita = data.dermatologo._id === dermatologoDirectoId ? directoTipoCitaId : data.tipo_cita;
-		const response = await createAparatologia(data);
+		const response = await createAparatologia(data, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			/*const consecutivo = {
 				consecutivo: response.data.consecutivo,
@@ -575,7 +579,7 @@ const AgendarAparatologia = (props) => {
 
 	const handleGuardarModalPagos = async (servicio) => {
 		servicio.pagado = servicio.pagos.length > 0;
-		await updateAparatologia(servicio._id, servicio);
+		await updateAparatologia(servicio._id, servicio, empleado.access_token);
 		await loadAparatologias(new Date(servicio.fecha_hora));
 		setOpenModalPagos(false);
 	}

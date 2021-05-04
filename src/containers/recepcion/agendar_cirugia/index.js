@@ -227,7 +227,7 @@ const AgendarCirugia = (props) => {
 	};
 
 	const loadCirugias = async (filterDate) => {
-		const response = await findCirugiaByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal);
+		const response = await findCirugiaByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			response.data.forEach(item => {
 				item.folio = generateFolio(item);
@@ -258,7 +258,7 @@ const AgendarCirugia = (props) => {
 		data.hora_llegada = `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;;
 		data.hora_atencion = '--:--';
 		data.hora_salida = '--:--';
-		const response = await createCirugia(data);
+		const response = await createCirugia(data, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			/*const consecutivo = {
 				consecutivo: response.data.consecutivo,
@@ -438,7 +438,7 @@ const AgendarCirugia = (props) => {
 
 	const handleGuardarModalPagos = async (servicio) => {
 		servicio.pagado = servicio.pagos.length > 0;
-		await updateCirugia(servicio._id, servicio);
+		await updateCirugia(servicio._id, servicio, empleado.access_token);
 		await loadCirugias(new Date(servicio.fecha_hora));
 		setOpenModalPagos(false);
 	}

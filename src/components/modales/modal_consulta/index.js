@@ -84,6 +84,7 @@ const ModalConsulta = (props) => {
     promovendedor: consulta.promovendedor ? consulta.promovendedor._id : '',
     status: consulta.status ? consulta.status._id : '',
     precio: consulta.precio,
+    total: consulta.total,
     motivos: consulta.motivos,
     observaciones: consulta.observaciones,
     dermatologo: consulta.dermatologo ? consulta.dermatologo._id : '',

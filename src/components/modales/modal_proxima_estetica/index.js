@@ -163,7 +163,7 @@ const ModalProximaEstetica = (props) => {
   const handleOnClickProximaEstetica = async (data) => {
     setIsLoading(true);
     data.hora_llegada = '--:--';
-    const response = await createEstetica(data);;
+    const response = await createEstetica(data, empleado.access_token);
     /*switch (cirugia.servicio._id) {
       case servicioAparatologiaId:
         response = await createAparatologia(data);

@@ -210,7 +210,7 @@ const ModalDermapen = (props) => {
     }
 
     if (rowData.status === reagendoStatusId) {
-      await updateDermapen(dermapen._id, rowData);
+      await updateDermapen(dermapen._id, rowData, empleado.access_token);
       rowData.quien_agenda = empleado._id;
       rowData.sucursal = sucursal;
       rowData.status = pendienteStatusId;
@@ -219,7 +219,7 @@ const ModalDermapen = (props) => {
       rowData.hora_salida = '--:--';
       rowData.observaciones = `DERMAPEN REAGENDADO ${values.fecha_actual} - ${values.hora_actual} HRS`;
       rowData.fecha_hora = rowData.nueva_fecha_hora;
-      const response = await createDermapen(rowData);
+      const response = await createDermapen(rowData, empleado.access_token);
 
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
         /*const consecutivo = {
@@ -253,7 +253,7 @@ const ModalDermapen = (props) => {
         fecha_show: rowData.fecha_show,
         fecha: `${dia}/${mes}/${anio}`
       });
-      await updateDermapen(dermapen._id, rowData);
+      await updateDermapen(dermapen._id, rowData, empleado.access_token);
       await loadDermapens(rowData.fecha_show);
       setOpenAlert(true);
       setMessage('DERMAPEN ACTUALIZADO');

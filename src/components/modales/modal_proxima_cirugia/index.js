@@ -164,7 +164,7 @@ const ModalProximaCirugia = (props) => {
   const handleOnClickProximarCita = async (data) => {
     setIsLoading(true);
     data.hora_llegada = '--:--';
-    const response = await createCirugia(data);;
+    const response = await createCirugia(data, empleado.access_token);
     /*switch (cirugia.servicio._id) {
       case servicioAparatologiaId:
         response = await createAparatologia(data);

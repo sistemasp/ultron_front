@@ -25,7 +25,6 @@ import { Backdrop, CircularProgress, makeStyles } from '@material-ui/core';
 import { addZero } from '../../../utils/utils';
 import { createAparatologia, updateAparatologia } from '../../../services/aparatolgia';
 import { createFacial, updateFacial } from '../../../services/faciales';
-import { createLaser, updateLaser } from '../../../services/laser';
 import { showAllStatusVisibles } from '../../../services/status';
 import { findEmployeesByRolIdAvailable } from '../../../services/empleados';
 
@@ -339,13 +338,10 @@ const ModalCita = (props) => {
     if (rowData.status === reagendoStatusId) {
       switch (cita.servicio._id) {
         case servicioAparatologiaId:
-          await updateAparatologia(cita._id, rowData);
+          await updateAparatologia(cita._id, rowData, empleado.access_token);
           break;
         case servicioFacialId:
           await updateFacial(cita._id, rowData, empleado.access_token);
-          break;
-        case servicioLaserId:
-          await updateLaser(cita._id, rowData);
           break;
       }
       rowData.quien_agenda = empleado._id;
@@ -359,13 +355,10 @@ const ModalCita = (props) => {
       let response;
       switch (cita.servicio._id) {
         case servicioAparatologiaId:
-          response = await createAparatologia(rowData);
+          response = await createAparatologia(rowData, empleado.access_token);
           break;
         case servicioFacialId:
           response = await createFacial(rowData, empleado.access_token);
-          break;
-        case servicioLaserId:
-          response = await createLaser(rowData);
           break;
       }
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
@@ -412,16 +405,12 @@ const ModalCita = (props) => {
 
       switch (cita.servicio._id) {
         case servicioAparatologiaId:
-          await updateAparatologia(cita._id, rowData);
+          await updateAparatologia(cita._id, rowData, empleado.access_token);
           await loadAparatologias(rowData.fecha_show);
           break;
         case servicioFacialId:
           await updateFacial(cita._id, rowData, empleado.access_token);
           await loadFaciales(rowData.fecha_show);
-          break;
-        case servicioLaserId:
-          await updateLaser(cita._id, rowData);
-          await loadLaser(rowData.fecha_show);
           break;
       }
     }

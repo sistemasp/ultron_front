@@ -149,7 +149,7 @@ const ModalCirugia = (props) => {
     }
     data.biopsias = idBiopsias;
     if (data.status === reagendoStatusId) {
-      await updateCirugia(data._id, data);
+      await updateCirugia(data._id, data, empleado.access_token);
       data.quien_agenda = empleado._id;
       data.sucursal = sucursal;
       data.status = pendienteStatusId;
@@ -157,7 +157,7 @@ const ModalCirugia = (props) => {
       data.observaciones = `CIRUGíA REAGENDADA ${values.fecha_actual} - ${values.hora}:${values.minutos} HRS`;
       data.fecha_hora = data.nueva_fecha_hora;
       data._id = undefined;
-      const response = await createCirugia(data);
+      const response = await createCirugia(data, empleado.access_token);
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
         setOpenAlert(true);
         setMessage('CIRUGíA REAGENDADA CORRECTAMENTE');
@@ -178,7 +178,7 @@ const ModalCirugia = (props) => {
         fecha_show: data.fecha_hora,
         fecha: `${dia}/${mes}/${anio}`
       });
-      await updateCirugia(data._id, data)
+      await updateCirugia(data._id, data, empleado.access_token)
       await loadCirugias(data.fecha_hora);
     }
     onClose();

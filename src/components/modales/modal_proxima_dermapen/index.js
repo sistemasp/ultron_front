@@ -168,22 +168,22 @@ const ModalProximaDermapen = (props) => {
     let response;
     switch (cita.servicio._id) {
       case servicioAparatologiaId:
-        response = await createAparatologia(data);
+        response = await createAparatologia(data, empleado.access_token);
         break;
       case servicioFacialId:
-        response = await createFacial(data);
+        response = await createFacial(data, empleado.access_token);
         break;
       case servicioLaserId:
-        response = await createLaser(data);
+        response = await createLaser(data, empleado.access_token);
         break;
       case servicioCirugiaId:
-        response = await createCirugia(data);
+        response = await createCirugia(data, empleado.access_token);
         break;
       case servicioEsteticaId:
-        response = await createEstetica(data);
+        response = await createEstetica(data, empleado.access_token);
         break;
       case servicioDermapenId:
-        response = await createDermapen(data);
+        response = await createDermapen(data, empleado.access_token);
         break;
     }
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
