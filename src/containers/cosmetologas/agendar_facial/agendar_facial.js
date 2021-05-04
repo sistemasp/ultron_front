@@ -24,18 +24,42 @@ export const AgendarFacialContainer = (props) => {
 	const classes = myStyles();
 
 	const {
+		values,
+		errors,
 		servicios,
 		tratamientos,
+		areas,
 		horarios,
+		tipoCitas,
 		onChangeServicio,
 		onChangeTratamientos,
+		onChangeAreas,
 		onChangeFecha,
 		onChangeHora,
 		onChangeFilterDate,
+		onChangeFrecuencia,
+		frecuencias,
 		filterDate,
+		paciente,
+		onClickAgendar,
+		isValid,
+		isSubmitting,
+		onChangeTiempo,
+		onChangeObservaciones,
 		empleado,
+		disableDate,
+		dermatologos,
+		promovendedores,
+		cosmetologas,
+		formasPago,
+		onChangeDoctors,
 		onChangeTipoCita,
+		onChangePromovendedor,
+		onChangeCosmetologa,
+		onChangePaymentMethod,
 		onChangeMedio,
+		medios,
+		dermatologoDirectoId,
 		// TABLE DATES PROPERTIES
 		titulo,
 		columns,
@@ -45,16 +69,29 @@ export const AgendarFacialContainer = (props) => {
 		components,
 		// MODAL PROPERTIES
 		openModal,
-		cita,
+		facial,
 		onClickActualizarCita,
 		onClickCancel,
 		onChangeAsistio,
 		loadFaciales,
 		setFilterDate,
 		setSeverity,
+		// MODAL PROXIMA
+		openModalProxima,
+		// MODAL PAGOS
+		onCloseVerPagos,
+		openModalPagos,
 		sucursal,
 		setMessage,
 		setOpenAlert,
+		onGuardarModalPagos,
+		// MODAL IMPRIMIR
+		openModalImprimirCita,
+		datosImpresion,
+		onCloseImprimirConsulta,
+		// MODAL TRASPASO
+		openModalTraspaso,
+		onCloseTraspasos,
 	} = props;
 
 	return (
@@ -63,7 +100,7 @@ export const AgendarFacialContainer = (props) => {
 				openModal ?
 					<ModalCita
 						open={openModal}
-						cita={cita}
+						cita={facial}
 						onClickActualizarCita={onClickActualizarCita}
 						onClose={onClickCancel}
 						onChangeServicio={onChangeServicio}
@@ -84,7 +121,7 @@ export const AgendarFacialContainer = (props) => {
 						setSeverity={setSeverity}
 						setFilterDate={setFilterDate} /> : ''
 			}
-
+			
 			<Paper>
 				<MuiPickersUtilsProvider utils={DateFnsUtils}>
 					<Grid
@@ -113,7 +150,7 @@ export const AgendarFacialContainer = (props) => {
 				titulo={titulo}
 				columns={columns}
 				data={citas}
-				actions={actions}
+				//actions={actions}
 				options={options}
 				components={components} />
 

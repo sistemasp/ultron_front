@@ -69,7 +69,7 @@ export const AgendarAparatologiaContainer = (props) => {
 		components,
 		// MODAL PROPERTIES
 		openModal,
-		cita,
+		aparatologia,
 		onClickActualizarCita,
 		onClickCancel,
 		onChangeAsistio,
@@ -89,6 +89,9 @@ export const AgendarAparatologiaContainer = (props) => {
 		openModalImprimirCita,
 		datosImpresion,
 		onCloseImprimirConsulta,
+		// MODAL APARATOLOGIA
+		openModalTraspaso,
+		onCloseTraspasos,
 	} = props;
 
 	return (
@@ -97,7 +100,7 @@ export const AgendarAparatologiaContainer = (props) => {
 				openModal ?
 					<ModalCita
 						open={openModal}
-						cita={cita}
+						cita={aparatologia}
 						onClickActualizarCita={onClickActualizarCita}
 						onClose={onClickCancel}
 						onChangeServicio={onChangeServicio}
@@ -146,7 +149,7 @@ export const AgendarAparatologiaContainer = (props) => {
 				titulo={titulo}
 				columns={columns}
 				data={aparatologias}
-				actions={actions}
+				//actions={actions}
 				options={options}
 				components={components} />
 

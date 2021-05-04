@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useTheme } from '@material-ui/core/styles';
@@ -49,6 +49,8 @@ TabPanel.propTypes = {
 export const MainContainer = props => {
 
 	const {
+		pacienteAgendado,
+		setPacienteAgendado,
 		onChangeTab,
 		value,
 		empleado,
