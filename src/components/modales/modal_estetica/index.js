@@ -142,7 +142,7 @@ const ModalEstetica = (props) => {
     }
 
     if (data.status === reagendoStatusId) {
-      await updateEstetica(data._id, data);
+      await updateEstetica(data._id, data, empleado.access_token);
       data.quien_agenda = empleado._id;
       data.sucursal = sucursal;
       data.status = pendienteStatusId;
@@ -150,7 +150,7 @@ const ModalEstetica = (props) => {
       data.observaciones = `ESTÉTICA REAGENDADA ${values.fecha_actual} - ${values.hora}:${values.minutos} HRS`;
       data.fecha_hora = data.nueva_fecha_hora;
       data._id = undefined;
-      const response = await createEstetica(data);
+      const response = await createEstetica(data, empleado.access_token);
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
         setOpenAlert(true);
         setMessage('ESTÉTICA REAGENDADA CORRECTAMENTE');
@@ -171,7 +171,7 @@ const ModalEstetica = (props) => {
         fecha_show: data.fecha_hora,
         fecha: `${dia}/${mes}/${anio}`
       });
-      await updateEstetica(data._id, data)
+      await updateEstetica(data._id, data, empleado.access_token)
       await loadEsteticas(data.fecha_hora);
     }
 

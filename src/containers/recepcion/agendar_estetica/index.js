@@ -242,7 +242,7 @@ const AgendarEstetica = (props) => {
 	};
 
 	const loadEsteticas = async (filterDate) => {
-		const response = await findEsteticaByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal);
+		const response = await findEsteticaByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			response.data.forEach(item => {
 				item.folio = generateFolio(item);
@@ -279,7 +279,7 @@ const AgendarEstetica = (props) => {
 		data.status = asistioStatusId;
 		data.hora_aplicacion = dateNow;
 		data.hora_llegada = `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;;
-		const response = await createEstetica(data);
+		const response = await createEstetica(data, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			/*const consecutivo = {
 				consecutivo: response.data.consecutivo,
@@ -470,7 +470,7 @@ const AgendarEstetica = (props) => {
 
 	const handleGuardarModalPagos = async (servicio) => {
 		servicio.pagado = servicio.pagos.length > 0;
-		await updateEstetica(servicio._id, servicio);
+		await updateEstetica(servicio._id, servicio, empleado.access_token);
 		await loadEsteticas(new Date(servicio.fecha_hora));
 		setOpenModalPagos(false);
 	}

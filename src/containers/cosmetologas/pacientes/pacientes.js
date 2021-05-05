@@ -64,14 +64,6 @@ export const PacientesContainer = (props) => {
             paciente={paciente} /> : ''
       }
       <Grid container>
-        <Grid item xs={12} sm={4}>
-          <ButtonCustom
-            className={classes.button}
-            color="primary"
-            variant="contained"
-            onClick={handleOpen}
-            text='NUEVO PACIENTE' />
-        </Grid>
         <Grid item xs={12}>
           <TableComponent
             titulo={titulo}

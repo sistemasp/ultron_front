@@ -149,7 +149,7 @@ export const AgendarAparatologiaContainer = (props) => {
 				titulo={titulo}
 				columns={columns}
 				data={aparatologias}
-				//actions={actions}
+				actions={actions}
 				options={options}
 				components={components} />
 

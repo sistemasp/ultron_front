@@ -181,6 +181,7 @@ export const MenuContainer = props => {
 			</TabPanel>
 			<TabPanel value={value} index={7}>
 				<GeneralCitas
+					empleado={empleado}
 					sucursal={sucursal._id} />
 			</TabPanel>
 			<TabPanel value={value} index={8}>

@@ -3,7 +3,6 @@ import TableComponent from '../../../components/table/TableComponent';
 import { makeStyles } from '@material-ui/core';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import ModalRazonSocial from '../../../components/modales/modal_razon_social';
-import ModHistoricoFacturas from '../../../components/modales/historicos/facturas';
 
 const useStyles = makeStyles(theme => ({
 	button: {
@@ -38,13 +37,6 @@ export const RazonSocialContainer = (props) => {
           onClose={handleClose}
           razonSocial={razonSocial}
           loadRazonSocial={loadRazonSocial} /> : ''
-      }
-      {
-        openHistoric ? 
-        <ModHistoricoFacturas
-          open={openHistoric}
-          onClose={handleClose}
-          razonSocial={razonSocial} /> : ''
       }
 
       <ButtonCustom 
