@@ -54,14 +54,16 @@ export const PacientesContainer = (props) => {
             onClose={handleClose}
             paciente={paciente}
             onClickGuardar={onClickGuardar}
-            onClickGuardarAgendar={onClickGuardarAgendar} /> : ''
+            onClickGuardarAgendar={onClickGuardarAgendar}
+            empleado={empleado} /> : ''
       }
       {
         openHistoric ?
           <MenuHistoricos
             open={openHistoric}
             onClose={handleClose}
-            paciente={paciente} /> : ''
+            paciente={paciente}
+            empleado={empleado} /> : ''
       }
       <Grid container>
         <Grid item xs={12} sm={4}>

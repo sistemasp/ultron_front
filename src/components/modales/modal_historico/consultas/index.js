@@ -21,6 +21,7 @@ const TabConsultas = (props) => {
     paciente,
     sucursal,
     servicio,
+    empleado,
   } = props;
 
   const [historial, setHistorial] = useState([]);
@@ -55,7 +56,7 @@ const TabConsultas = (props) => {
   useEffect(() => {
     const loadHistorial = async () => {
       if (servicio) {
-        const response = await findHistoricConsultByPaciente(paciente._id, servicio._id);
+        const response = await findHistoricConsultByPaciente(paciente._id, empleado.access_token);
         if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
           response.data.forEach(item => {
             item.precio_moneda = toFormatterCurrency(item.precio);

@@ -21,6 +21,7 @@ const TabEstetica = (props) => {
     paciente,
     sucursal,
     servicio,
+    empleado,
   } = props;
 
   const [historial, setHistorial] = useState([]);
@@ -54,7 +55,7 @@ const TabEstetica = (props) => {
   useEffect(() => {
     const loadHistorial = async () => {
       if (servicio) {
-        const response = await findEsteticasHistoricByPaciente(paciente._id);
+        const response = await findEsteticasHistoricByPaciente(paciente._id, empleado.access_token);
         if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
           response.data.forEach(item => {
             item.precio_moneda = toFormatterCurrency(item.precio);
