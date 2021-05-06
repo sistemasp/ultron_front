@@ -79,7 +79,7 @@ const ModalCirugia = (props) => {
     fecha_hora: cirugia.fecha_hora,
     fecha_actual: fecha,
     hora_actual: hora,
-    consulta: cirugia.consulta,
+    consultaId: cirugia.consultaId,
     consecutivo: cirugia.consecutivo,
     sucursal: cirugia.sucursal,
     precio: cirugia.precio,
@@ -107,7 +107,7 @@ const ModalCirugia = (props) => {
     hora: 0,
     minutos: 0,
   });
-  
+
   const dataComplete = values.pagado;
 
   const handleChangeMateriales = async (items) => {
@@ -122,7 +122,6 @@ const ModalCirugia = (props) => {
   const handleClickCrearCirugia = async (event, data) => {
     const fecha_actual = new Date();
     data.servicio = cirugiaServicioId;
-
     const idBiopsias = [];
     if (data.hasBiopsia) {
       const biopsias = [];
@@ -130,7 +129,6 @@ const ModalCirugia = (props) => {
       for (var i = 0; i < data.cantidad_biopsias; i++) {
         const biopsia = {
           fecha_realizacion: fecha_actual,
-          consulta: data.consulta._id,
           dermatologo: data.dermatologo._id,
           paciente: data.paciente._id,
           sucursal: data.sucursal,
@@ -157,29 +155,31 @@ const ModalCirugia = (props) => {
       data.observaciones = `CIRUGíA REAGENDADA ${values.fecha_actual} - ${values.hora}:${values.minutos} HRS`;
       data.fecha_hora = data.nueva_fecha_hora;
       data._id = undefined;
+      const fecha_hora = new Date(data.fecha_hora);
       const response = await createCirugia(data, empleado.access_token);
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
         setOpenAlert(true);
         setMessage('CIRUGíA REAGENDADA CORRECTAMENTE');
-        const dia = addZero(data.fecha_hora.getDate());
-        const mes = addZero(data.fecha_hora.getMonth() + 1);
-        const anio = data.fecha_hora.getFullYear();
+        const dia = addZero(fecha_hora.getDate());
+        const mes = addZero(fecha_hora.getMonth() + 1);
+        const anio = fecha_hora.getFullYear();
         setFilterDate({
-          fecha_show: data.fecha_hora,
+          fecha_show: fecha_hora,
           fecha: `${dia}/${mes}/${anio}`
         });
-        await loadCirugias(data.fecha_hora);
+        await loadCirugias(fecha_hora);
       }
     } else {
-      const dia = addZero(data.fecha_hora.getDate());
-      const mes = addZero(data.fecha_hora.getMonth() + 1);
-      const anio = data.fecha_hora.getFullYear();
+      const fecha_hora = new Date(data.fecha_hora);
+      const dia = addZero(fecha_hora.getDate());
+      const mes = addZero(fecha_hora.getMonth() + 1);
+      const anio = fecha_hora.getFullYear();
       setFilterDate({
-        fecha_show: data.fecha_hora,
+        fecha_show: fecha_hora,
         fecha: `${dia}/${mes}/${anio}`
       });
       await updateCirugia(data._id, data, empleado.access_token)
-      await loadCirugias(data.fecha_hora);
+      await loadCirugias(fecha_hora);
     }
     onClose();
   }
@@ -423,7 +423,7 @@ const ModalCirugia = (props) => {
 
 
   const loadPatologos = async () => {
-    const response = await findEmployeesByRolIdAvailable(patologoRolId);
+    const response = await findEmployeesByRolIdAvailable(patologoRolId, empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setPatologos(response.data);
     }

@@ -68,7 +68,7 @@ const ModalEstetica = (props) => {
     fecha_hora: estetica.fecha_hora,
     fecha_actual: fecha,
     hora_actual: hora,
-    consulta: estetica.consulta,
+    consultaId: estetica.consultaId,
     consecutivo: estetica.consecutivo,
     sucursal: estetica.sucursal,
     total_aplicacion: estetica.total_aplicacion ? estetica.total_aplicacion : 0,
@@ -140,7 +140,7 @@ const ModalEstetica = (props) => {
       data.hora_aplicacion = data.hora_aplicacion ? data.hora_aplicacion : dateNow;
       data.hora_llegada = (data.hora_llegada && data.hora_llegada !== '--:--') ? data.hora_llegada : `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;
     }
-
+    const fecha_hora = new Date(data.fecha_hora);
     if (data.status === reagendoStatusId) {
       await updateEstetica(data._id, data, empleado.access_token);
       data.quien_agenda = empleado._id;
@@ -150,29 +150,31 @@ const ModalEstetica = (props) => {
       data.observaciones = `ESTÉTICA REAGENDADA ${values.fecha_actual} - ${values.hora}:${values.minutos} HRS`;
       data.fecha_hora = data.nueva_fecha_hora;
       data._id = undefined;
+      const fecha_hora = new Date(data.fecha_hora);
       const response = await createEstetica(data, empleado.access_token);
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
         setOpenAlert(true);
         setMessage('ESTÉTICA REAGENDADA CORRECTAMENTE');
-        const dia = addZero(data.fecha_hora.getDate());
-        const mes = addZero(data.fecha_hora.getMonth() + 1);
-        const anio = data.fecha_hora.getFullYear();
+        const dia = addZero(fecha_hora.getDate());
+        const mes = addZero(fecha_hora.getMonth() + 1);
+        const anio = fecha_hora.getFullYear();
         setFilterDate({
-          fecha_show: data.fecha_hora,
+          fecha_show: fecha_hora,
           fecha: `${dia}/${mes}/${anio}`
         });
-        await loadEsteticas(data.fecha_hora);
+        await loadEsteticas(fecha_hora);
       }
     } else {
-      const dia = addZero(data.fecha_hora.getDate());
-      const mes = addZero(data.fecha_hora.getMonth() + 1);
-      const anio = data.fecha_hora.getFullYear();
+      const fecha_hora = new Date(data.fecha_hora);
+      const dia = addZero(fecha_hora.getDate());
+      const mes = addZero(fecha_hora.getMonth() + 1);
+      const anio = fecha_hora.getFullYear();
       setFilterDate({
-        fecha_show: data.fecha_hora,
+        fecha_show: fecha_hora,
         fecha: `${dia}/${mes}/${anio}`
       });
       await updateEstetica(data._id, data, empleado.access_token)
-      await loadEsteticas(data.fecha_hora);
+      await loadEsteticas(fecha_hora);
     }
 
     onClose();

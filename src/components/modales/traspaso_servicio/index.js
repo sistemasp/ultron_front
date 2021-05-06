@@ -2,7 +2,6 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { createConsecutivo, createPago, deletePago, showAllOffices } from '../../../services';
 import { addZero, generateFolio } from '../../../utils/utils';
 import ModalFormTraspasoServicio from './ModalFormTraspasoServicio';
-import { createConsult, updateConsult } from '../../../services/consultas';
 import { showAllStatusVisibles } from '../../../services/status';
 import { createIngreso, deleteIngreso, updateIngreso } from '../../../services/ingresos';
 import { createFacial, updateFacial } from '../../../services/faciales';
@@ -67,15 +66,15 @@ const ModalTraspasoServicio = (props) => {
     servicio.pagos = [];
     let servicioResponse;
     if (servicio.servicio._id === servicioFacialId) {
-      servicioResponse = await updateFacial(servicio._id, servicio);
+      servicioResponse = await updateFacial(servicio._id, servicio, empleado.access_token);
     } else if (servicio.servicio._id === servicioAparatologiaId) {
-      servicioResponse = await updateAparatologia(servicio._id, servicio);
+      servicioResponse = await updateAparatologia(servicio._id, servicio, empleado.access_token);
     } else if (servicio.servicio._id === servicioCirugiaId) {
-      servicioResponse = await updateCirugia(servicio._id, servicio);
+      servicioResponse = await updateCirugia(servicio._id, servicio, empleado.access_token);
     } else if (servicio.servicio._id === servicioEsteticaId) {
-      servicioResponse = await updateEstetica(servicio._id, servicio);
+      servicioResponse = await updateEstetica(servicio._id, servicio, empleado.access_token);
     } else if (servicio.servicio._id === servicioDermapenId) {
-      servicioResponse = await updateDermapen(servicio._id, servicio);
+      servicioResponse = await updateDermapen(servicio._id, servicio, empleado.access_token);
     }
 
     if (`${servicioResponse.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
@@ -93,15 +92,15 @@ const ModalTraspasoServicio = (props) => {
       let response;
 
       if (servicio.servicio._id === servicioFacialId) {
-        response = await createFacial(servicio);
+        response = await createFacial(servicio, empleado.access_token);
       } else if (servicio.servicio._id === servicioAparatologiaId) {
-        response = await createAparatologia(servicio);
+        response = await createAparatologia(servicio, empleado.access_token);
       } else if (servicio.servicio._id === servicioCirugiaId) {
-        response = await createCirugia(servicio);
+        response = await createCirugia(servicio, empleado.access_token);
       } else if (servicio.servicio._id === servicioEsteticaId) {
-        response = await createEstetica(servicio);
+        response = await createEstetica(servicio, empleado.access_token);
       } else if (servicio.servicio._id === servicioDermapenId) {
-        response = await createDermapen(servicio);
+        response = await createDermapen(servicio, empleado.access_token);
       }
 
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {

@@ -88,6 +88,7 @@ const AgendarCirugia = (props) => {
 	const [productos, setProductos] = useState([]);
 	const [values, setValues] = useState({
 		servicio: cirugiaServicioId,
+		consultaId: consultaAgendada._id,
 		fecha_hora: new Date(),
 		total_aplicacion: 0,
 		precio: 0,
@@ -248,7 +249,6 @@ const AgendarCirugia = (props) => {
 		setIsLoading(true);
 		const dateNow = new Date();
 		data.total = data.precio;
-		data.consulta = consultaAgendada._id;
 		data.quien_agenda = empleado._id;
 		data.sucursal = sucursal;
 		data.status = pendienteStatusId;

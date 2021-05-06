@@ -271,7 +271,7 @@ const AgendarEstetica = (props) => {
 		setIsLoading(true);
 		const dateNow = new Date();
 		data.total = data.precio;
-		data.consulta = consultaAgendada._id;
+		data.consultaId = consultaAgendada._id;
 		data.quien_agenda = empleado._id;
 		data.sucursal = sucursal;
 		data.status = pendienteStatusId;
