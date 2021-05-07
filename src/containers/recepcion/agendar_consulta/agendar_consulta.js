@@ -371,7 +371,8 @@ export const AgendarConsultaContainer = (props) => {
               onChange={onChangeObservaciones}
               variant="outlined" />
           </Grid>
-          {sucursal._id === process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID ?
+          { sucursal._id === process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID || 
+          sucursal._id === process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID ?
             <Fragment>
               <Grid item xs={12} sm={2}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>

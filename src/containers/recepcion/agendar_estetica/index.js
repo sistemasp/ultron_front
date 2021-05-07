@@ -276,7 +276,7 @@ const AgendarEstetica = (props) => {
 		data.sucursal = sucursal;
 		data.status = pendienteStatusId;
 		data.paciente = paciente._id;
-		data.status = asistioStatusId;
+		data.status = pendienteStatusId;
 		data.hora_aplicacion = dateNow;
 		data.hora_llegada = `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;;
 		const response = await createEstetica(data, empleado.access_token);

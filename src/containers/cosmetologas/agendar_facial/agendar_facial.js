@@ -18,6 +18,7 @@ import ModalImprimirTratamiento from '../../../components/modales/imprimir/trata
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import ModalProximaCita from '../../../components/modales/modal_proxima_cita';
 import myStyles from '../../../css';
+import ModalTraspasoServicio from '../../../components/modales/traspaso_servicio';
 
 export const AgendarFacialContainer = (props) => {
 
@@ -121,7 +122,66 @@ export const AgendarFacialContainer = (props) => {
 						setSeverity={setSeverity}
 						setFilterDate={setFilterDate} /> : ''
 			}
-			
+			{
+				openModalProxima ?
+					<ModalProximaCita
+						open={openModalProxima}
+						cita={facial}
+						onClickActualizarCita={onClickActualizarCita}
+						onClose={onClickCancel}
+						onChangeServicio={onChangeServicio}
+						onChangeTratamientos={onChangeTratamientos}
+						onChangeFecha={onChangeFecha}
+						onChangeHora={onChangeHora}
+						onChangeTipoCita={onChangeTipoCita}
+						onChangeMedio={onChangeMedio}
+						onChangeAsistio={onChangeAsistio}
+						servicios={servicios}
+						tratamientos={tratamientos}
+						horarios={horarios}
+						empleado={empleado}
+						loadFaciales={loadFaciales}
+						sucursal={sucursal}
+						setOpenAlert={setOpenAlert}
+						setMessage={setMessage}
+						setFilterDate={setFilterDate} /> : ''
+			}
+			{
+				openModalPagos ?
+					<ModalPagos
+						open={openModalPagos}
+						onClose={onCloseVerPagos}
+						servicio={facial}
+						empleado={empleado}
+						sucursal={sucursal}
+						setMessage={setMessage}
+						setOpenAlert={setOpenAlert}
+						onGuardarModalPagos={onGuardarModalPagos}
+						tipoServicioId={facial.servicio._id} />
+					: ''
+			}
+			{
+				openModalImprimirCita ?
+					<ModalImprimirTratamiento
+						open={openModalImprimirCita}
+						onClose={onCloseImprimirConsulta}
+						datos={datosImpresion} />
+					: ''
+			}
+			{
+				openModalTraspaso ?
+					<ModalTraspasoServicio
+						open={openModalTraspaso}
+						onClose={onCloseTraspasos}
+						servicio={facial}
+						empleado={empleado}
+						sucursal={sucursal._id}
+						setMessage={setMessage}
+						setOpenAlert={setOpenAlert}
+						loadServicios={loadFaciales} />
+					: ''
+			}
+
 			<Paper>
 				<MuiPickersUtilsProvider utils={DateFnsUtils}>
 					<Grid
@@ -150,7 +210,7 @@ export const AgendarFacialContainer = (props) => {
 				titulo={titulo}
 				columns={columns}
 				data={citas}
-				//actions={actions}
+				actions={actions}
 				options={options}
 				components={components} />
 
