@@ -191,7 +191,7 @@ export const MainContainer = props => {
 						<ListItemIcon> <AccessibilityNewIcon /> </ListItemIcon>
 						<ListItemText primary={'PACIENTES'} />
 					</ListItem>
-
+{/*
 					<ListItem button key={'DERMATOLÓGOS'} onClick={(e) => onChangeTab(e, 1, handleDrawerClose)}>
 						<ListItemIcon> <People /> </ListItemIcon>
 						<ListItemText primary={'DERMATOLÓGOS'} />
@@ -216,6 +216,7 @@ export const MainContainer = props => {
 						<ListItemIcon> <AssignmentIcon /> </ListItemIcon>
 						<ListItemText primary={'REPORTES'} />
 					</ListItem>
+*/}
 					{
 						empleado.super_admin
 							? <ListItem button key={'SUPER ADMINISTRADOR'} onClick={(e) => onChangeTab(e, 7, handleDrawerClose)}>
