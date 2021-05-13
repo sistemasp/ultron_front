@@ -283,6 +283,7 @@ const AgendarAparatologia = (props) => {
 									: (sucursal._id === sucursalRubenDarioId ? item.precio_rd // PRECIO RUBEN DARIO
 										: 0))); // Error
 					precio = Number(precio) + Number(itemPrecio);
+					item.precio_real = itemPrecio;
 				});
 			}
 		});

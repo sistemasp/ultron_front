@@ -19,6 +19,8 @@ const ModalImprimirTratamiento = (props) => {
     datos,
   } = props;
   
+  console.log("KAOZ", datos);
+  
   const [show, setShow] = useState(true);
 
   const handleClickImprimir = (e) => {

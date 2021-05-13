@@ -21,6 +21,7 @@ export const ListaEsperaContainer = (props) => {
   const classes = useStyles();
 
   const {
+    empleado,
     tituloConsultorios,
     tituloCabinas,
     tituloEsperaConsultas,
@@ -81,6 +82,7 @@ export const ListaEsperaContainer = (props) => {
             setMessage={setMessage}
             loadAll={loadAll}
             sucursal={sucursal}
+            empleado={empleado}
             cambio={cambio}
             paciente={paciente} /> : ''
       }
@@ -90,6 +92,7 @@ export const ListaEsperaContainer = (props) => {
           <ModalCabinaAgregarPaciente
             open={openModalCabinaAsignar}
             onClose={handleClose}
+            empleado={empleado}
             tipo_servicio={tipo_servicio}
             servicio={servicio}
             setOpenAlert={setOpenAlert}
@@ -106,6 +109,7 @@ export const ListaEsperaContainer = (props) => {
           <ModalCirugiaAgregarPaciente
             open={openModalSalaCirugiaAsignar}
             onClose={handleClose}
+            empleado={empleado}
             tipo_servicio={tipo_servicio}
             servicio={servicio}
             setOpenAlert={setOpenAlert}

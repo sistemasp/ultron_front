@@ -72,6 +72,7 @@ export const MenuContainer = props => {
 		onChangeTab,
 		value,
 		sucursal,
+		empleado,
 	} = props;
 
 	return (
@@ -101,34 +102,42 @@ export const MenuContainer = props => {
 			</AppBar>
 			<TabPanel value={value} index={0}>
 				<ReportesDetallesGeneral
+					empleado={empleado}
 					sucursal={sucursal} />
 			</TabPanel>
 			<TabPanel value={value} index={1}>
 				<ReportesIngresos
+					empleado={empleado}
 					sucursal={sucursal} />
 			</TabPanel>
 			<TabPanel value={value} index={2}>
 				<ReportesGastos
+					empleado={empleado}
 					sucursal={sucursal} />
 			</TabPanel>
 			<TabPanel value={value} index={3}>
 				<ReportesAparatologia
+					empleado={empleado}
 					sucursal={sucursal} />
 			</TabPanel>
 			<TabPanel value={value} index={4}>
 				<ReportesPagos
+					empleado={empleado}
 					sucursal={sucursal} />
 			</TabPanel>
 			<TabPanel value={value} index={5}>
 				<ReportesFacturas
+					empleado={empleado}
 					sucursal={sucursal} />
 			</TabPanel>
 			<TabPanel value={value} index={6}>
 				<ReportesCirugias
+					empleado={empleado}
 					sucursal={sucursal} />
 			</TabPanel>
 			<TabPanel value={value} index={7}>
 				<ReportesBiopsias
+					empleado={empleado}
 					sucursal={sucursal} />
 			</TabPanel>
 		</div>

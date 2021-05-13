@@ -45,12 +45,12 @@ import {
 	updateAparatologia,
 	waitingAparatologiaList,
 } from "../../../services/aparatolgia";
-import { 
+import {
 	findDermapenById,
 	updateDermapen,
 	waitingDermapenList
 } from "../../../services/dermapens";
-import { 
+import {
 	breakFreeSurgeryByIdPaciente,
 	findSurgeryBySucursalIdWaitingList,
 	updateSurgery
@@ -619,6 +619,7 @@ const ListaEspera = (props) => {
 			{
 				!isLoading ?
 					<ListaEsperaContainer
+						empleado={empleado}
 						columnsConsultorios={columnsConsultorios}
 						columnsEspera={columnsEspera}
 						columnsCabinas={columnsCabinas}

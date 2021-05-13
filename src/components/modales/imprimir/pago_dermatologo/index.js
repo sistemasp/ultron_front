@@ -77,28 +77,28 @@ const ModalImprimirPagoDermatologo = (props) => {
   const sucursalFedeId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
 
   const loadConsultas = async (hora_apertura, hora_cierre) => {
-    const response = await findConsultsByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date());
+    const response = await findConsultsByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setConsultas(response.data);
     }
   }
 
   const loadConsultasPrimeraVez = async (hora_apertura, hora_cierre) => {
-    const response = await findConsultsByPayOfDoctorHoraAplicacionFrecuencia(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), primeraVezFrecuenciaId);
+    const response = await findConsultsByPayOfDoctorHoraAplicacionFrecuencia(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), primeraVezFrecuenciaId, empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setConsultasPrimeraVez(response.data);
     }
   }
 
   const loadConsultasPrimeraVezPA = async (hora_apertura, hora_cierre) => {
-    const response = await findConsultsByPayOfDoctorHoraAplicacionFrecuenciaPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date(), primeraVezFrecuenciaId);
+    const response = await findConsultsByPayOfDoctorHoraAplicacionFrecuenciaPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date(), primeraVezFrecuenciaId, empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setConsultasPrimeraVezPA(response.data);
     }
   }
 
   const loadConsultasReconsulta = async (hora_apertura, hora_cierre) => {
-    const response = await findConsultsByPayOfDoctorHoraAplicacionFrecuencia(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), reconsultaFrecuenciaId);
+    const response = await findConsultsByPayOfDoctorHoraAplicacionFrecuencia(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), reconsultaFrecuenciaId, empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       const newReconsultas = response.data.filter(reconsulta => {
         let total = 0;
@@ -112,7 +112,7 @@ const ModalImprimirPagoDermatologo = (props) => {
   }
 
   const loadConsultasReconsultaPA = async (hora_apertura, hora_cierre) => {
-    const response = await findConsultsByPayOfDoctorHoraAplicacionFrecuenciaPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date(), reconsultaFrecuenciaId);
+    const response = await findConsultsByPayOfDoctorHoraAplicacionFrecuenciaPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date(), reconsultaFrecuenciaId, empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       const newReconsultas = response.data.filter(reconsulta => {
         let total = 0;
@@ -126,77 +126,77 @@ const ModalImprimirPagoDermatologo = (props) => {
   }
 
   const loadCirugias = async (hora_apertura, hora_cierre) => {
-    const response = await findCirugiasByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date());
+    const response = await findCirugiasByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setCirugias(response.data);
     }
   }
 
   const loadCirugiasCPA = async (hora_apertura, hora_cierre) => {
-    const response = await findCirugiasByPayOfDoctorHoraAplicacionPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date());
+    const response = await findCirugiasByPayOfDoctorHoraAplicacionPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date(), empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setCirugiasPA(response.data);
     }
   }
 
   const loadFaciales = async (hora_apertura, hora_cierre) => {
-    const response = await findFacialesByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date());
+    const response = await findFacialesByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setFaciales(response.data);
     }
   }
 
   const loadFacialesCPA = async (hora_apertura, hora_cierre) => {
-    const response = await findFacialesByPayOfDoctorHoraAplicacionPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date());
+    const response = await findFacialesByPayOfDoctorHoraAplicacionPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date(), empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setFacialesPA(response.data);
     }
   }
 
   const loadDermapens = async (hora_apertura, hora_cierre) => {
-    const response = await findDermapensByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date());
+    const response = await findDermapensByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setDermapens(response.data);
     }
   }
 
   const loadDermapensCPA = async (hora_apertura, hora_cierre) => {
-    const response = await findDermapensByPayOfDoctorHoraAplicacionPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date());
+    const response = await findDermapensByPayOfDoctorHoraAplicacionPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date(), empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setDermapensPA(response.data);
     }
   }
 
   const loadAparatologias = async (hora_apertura, hora_cierre) => {
-    const response = await findAparatologiasByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date());
+    const response = await findAparatologiasByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setAparatologias(response.data);
     }
   }
 
   const loadAparatologiasCPA = async (hora_apertura, hora_cierre) => {
-    const response = await findAparatologiasByPayOfDoctorHoraAplicacionPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date());
+    const response = await findAparatologiasByPayOfDoctorHoraAplicacionPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date(), empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setAparatologiasPA(response.data);
     }
   }
 
   const loadEsteticas = async (hora_apertura, hora_cierre) => {
-    const response = await findEsteticasByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date());
+    const response = await findEsteticasByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setEsteticas(response.data);
     }
   }
 
   const loadEsteticasPA = async (hora_apertura, hora_cierre) => {
-    const response = await findEsteticasByPayOfDoctorHoraAplicacionPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date());
+    const response = await findEsteticasByPayOfDoctorHoraAplicacionPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date(), empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setEsteticasPA(response.data);
     }
   }
 
   const findPagoToday = async (hora_apertura, hora_cierre) => {
-    const response = await showTodayPagoDermatologoBySucursalTurno(dermatologo._id, sucursal._id, turno);
+    const response = await showTodayPagoDermatologoBySucursalTurno(dermatologo._id, sucursal._id, turno, empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       const pagoDermatologo = response.data;
       setPagoDermatologo(pagoDermatologo);
@@ -369,7 +369,7 @@ const ModalImprimirPagoDermatologo = (props) => {
       pagado: true,
     }
 
-    const response = await createPagoDermatologo(pagoDermatologo);
+    const response = await createPagoDermatologo(pagoDermatologo, empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
       || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
       const data = response.data;
@@ -397,7 +397,7 @@ const ModalImprimirPagoDermatologo = (props) => {
   };
 
   const handleObtenerInformacion = async (corte) => {
-    await findPagoToday(corte.hora_apertura, corte.hora_cierre);
+    await findPagoToday(corte.hora_apertura, corte.hora_cierre, empleado.access_token);
   };
 
   const handleCambioTurno = () => {
@@ -405,7 +405,7 @@ const ModalImprimirPagoDermatologo = (props) => {
   };
 
   const findCorte = async () => {
-    const response = await showCorteTodayBySucursalAndTurno(sucursal._id, turno);
+    const response = await showCorteTodayBySucursalAndTurno(sucursal._id, turno, empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setCorte(response.data);
       handleObtenerInformacion(response.data);

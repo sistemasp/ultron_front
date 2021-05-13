@@ -167,7 +167,7 @@ const Dermatologos = (props) => {
 	}
 
 	const loadPatologos = async () => {
-		const response = await findEmployeesByRolIdAvailable(patologoRolId);
+		const response = await findEmployeesByRolIdAvailable(patologoRolId, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			response.data.forEach(item => {
 				const fecha_ingreso = new Date(item.fecha_ingreso);
@@ -182,9 +182,13 @@ const Dermatologos = (props) => {
 		setIsLoading(false);
 	}
 
+	const loadAll = async() => {
+		await loadDermatologos();
+		await loadPatologos();
+	}
+
 	useEffect(() => {
-		loadDermatologos();
-		loadPatologos();
+		loadAll();
 	}, []);
 
 	return (
