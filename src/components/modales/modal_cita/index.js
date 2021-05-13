@@ -491,7 +491,8 @@ const ModalCita = (props) => {
     });
     setValues({
       ...values,
-      precio: precio
+      precio: precio,
+      total: precio,
     });
     setIsLoading(false);
   }
