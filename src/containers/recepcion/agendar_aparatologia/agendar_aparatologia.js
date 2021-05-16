@@ -197,7 +197,7 @@ export const AgendarAparatologiaContainer = (props) => {
 							color="primary"
 							variant="contained"
 							disabled={!isValid || isSubmitting || !paciente.nombres
-								|| values.tratamientos.length === 0 || !values.fecha_hora || !values.precio}
+								|| values.tratamientos.length === 0 || !values.fecha_hora}
 							onClick={() => onClickAgendar(values)}
 							text='GUARDAR' />
 					</Grid>

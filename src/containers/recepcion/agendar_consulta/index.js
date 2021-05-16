@@ -522,13 +522,13 @@ const AgendarConsulta = (props) => {
 			tooltip: 'NUEVA CITA',
 			onClick: handleOnClickNuevaConsulta
 		},
-		{
+		/*{
 			
 			icon: AttachMoneyIcon,
 			tooltip: 'PAGOS',
 			onClick: handleClickVerPagos
 			
-		},
+		},*/
 		{
 			icon: AttachMoneyIcon,
 			tooltip: 'TRASPASO',

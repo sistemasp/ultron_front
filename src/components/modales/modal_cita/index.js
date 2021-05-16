@@ -118,6 +118,7 @@ const ModalCita = (props) => {
   const fecha = `${addZero(fecha_cita.getDate())}/${addZero(Number(fecha_cita.getMonth()) + 1)}/${addZero(fecha_cita.getFullYear())}`;
   const hora = `${addZero(Number(fecha_cita.getHours()))}:${addZero(fecha_cita.getMinutes())}`;
 
+  console.log("KAOZ", cita);
   const [values, setValues] = useState({
     fecha_hora: cita.fecha_hora,
     fecha_show: fecha_cita,

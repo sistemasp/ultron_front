@@ -62,6 +62,7 @@ const LoginForm = (props) => {
   const rolEnfermeraId = process.env.REACT_APP_ENFERMERA_ROL_ID;
   const rolAdministacionId = process.env.REACT_APP_ADMINISTRACION_ROL_ID;
   const rolDiosSupremoId = process.env.REACT_APP_DIOS_SUPREMO_ROL_ID;
+  const rolMasterId = process.env.REACT_APP_MASTER_ROL_ID;
   const rolSistemasId = process.env.REACT_APP_SISTEMAS_ROL_ID;
   const rolSupervisorId = process.env.REACT_APP_SUPERVISOR_ROL_ID;
   const rolAuxiliarAdministrativoId = process.env.REACT_APP_AUXILIAR_ADMINISTRATIVO_ROL_ID;
@@ -119,6 +120,7 @@ const LoginForm = (props) => {
         || empleado.rol._id === rolEncargadoSucursalId
         || empleado.rol._id === rolRecepcionistaId
         || empleado.rol._id === rolDiosSupremoId
+        || empleado.rol._id === rolMasterId
         || empleado.rol._id === rolSistemasId
         || empleado.rol._id === rolSupervisorId
       ) {
