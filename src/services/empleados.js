@@ -74,12 +74,15 @@ export const findEmployeesByRolIdAvailable = async (rolId, token) => {
     }
 }
 
-export const updateEmployee = async (employeeId, employee) => {
+export const updateEmployee = async (employeeId, employee, token) => {
     try {
         const response = await axios({
             url: `${baseUrl}/empleado/${employeeId}`,
             method: 'PUT',
-            data: employee
+            data: employee,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         });
         return response;
     } catch (error) {

@@ -47,7 +47,7 @@ const ModalPassword = (props) => {
       const data = {
         password: values.passwordNuevo
       }
-      await updateEmployee(empleado._id, data);
+      await updateEmployee(empleado._id, data, empleado.access_token);
       setSeverity('success');
       setMessage('CONSTRASEÑA CAMBIADA CORRECTAMENTE');
       onClose();

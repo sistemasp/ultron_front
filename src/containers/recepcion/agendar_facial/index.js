@@ -312,12 +312,13 @@ const AgendarFacial = (props) => {
 				item.promovendedor_nombre = item.promovendedor ? item.promovendedor.nombre : 'SIN ASIGNAR';
 				item.cosmetologa_nombre = item.cosmetologa ? item.cosmetologa.nombre : 'SIN ASIGNAR';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
-				item.show_tratamientos = item.tratamientos.map(tratamiento => {
-					const show_areas = tratamiento.areasSeleccionadas.map(area => {
+				
+				item.show_tratamientos = item.tratamientos ? item.tratamientos.map(tratamiento => {
+					const show_areas = tratamiento.areasSeleccionadas ? tratamiento.areasSeleccionadas.map(area => {
 						return `${area.nombre}`;
-					});
+					}) : '';
 					return `►${tratamiento.nombre}(${show_areas}) `;
-				});
+				}) : '';
 			});
 			setFaciales(response.data);
 		}

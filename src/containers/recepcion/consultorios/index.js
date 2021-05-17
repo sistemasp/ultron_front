@@ -66,6 +66,7 @@ const Consultorios = (props) => {
 
 	const {
 		sucursal,
+		empleado,
 	} = props;
 
 	const columnsConsultorio = [
@@ -162,7 +163,7 @@ const Consultorios = (props) => {
 
 	const handleOnClickLiberarConsultorio = async (event, rowData) => {
 		rowData.dermatologo.disponible = true;
-    	await updateEmployee(rowData.dermatologo._id, rowData.dermatologo);
+    	await updateEmployee(rowData.dermatologo._id, rowData.dermatologo, empleado.access_token);
 		const response = await breakFreeSurgeryByIdDermatologo(rowData._id);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setOpenAlert(true);
