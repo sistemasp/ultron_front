@@ -17,7 +17,7 @@ export const login = async (employeeNumber, password) => {
         });
         return response;
     } catch (error) {
-        console.log('KAOZ', 'login', error);
+        console.log('login', error);
         return error;
     }
 }

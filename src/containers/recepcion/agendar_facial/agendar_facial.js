@@ -61,6 +61,7 @@ export const AgendarFacialContainer = (props) => {
 		onChangeMedio,
 		medios,
 		dermatologoDirectoId,
+		selectedAreas,
 		// TABLE DATES PROPERTIES
 		titulo,
 		columns,
@@ -196,7 +197,7 @@ export const AgendarFacialContainer = (props) => {
 							variant="contained"
 							disabled={!isValid || isSubmitting || !paciente.nombres || !values.servicio
 								|| values.tratamientos.length === 0 || !values.fecha_hora || !values.precio
-								|| !values.tiempo}
+								|| !values.tiempo || !selectedAreas}
 							onClick={() => onClickAgendar(values)}
 							text='GUARDAR' />
 					</Grid>

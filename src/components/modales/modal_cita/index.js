@@ -110,6 +110,7 @@ const ModalCita = (props) => {
   const [statements, setStatements] = useState([]);
   const [previousState, setPreviousState] = useState();
   const [medios, setMedios] = useState([]);
+  const [selectedAreas, setSelectedAreas] = useState(true);
 
   const [openModalPagos, setOpenModalPagos] = useState(false);
   const [openModalConfirmacion, setOpenModalConfirmacion] = useState(false);
@@ -118,7 +119,6 @@ const ModalCita = (props) => {
   const fecha = `${addZero(fecha_cita.getDate())}/${addZero(Number(fecha_cita.getMonth()) + 1)}/${addZero(fecha_cita.getFullYear())}`;
   const hora = `${addZero(Number(fecha_cita.getHours()))}:${addZero(fecha_cita.getMinutes())}`;
 
-  console.log("KAOZ", cita);
   const [values, setValues] = useState({
     fecha_hora: cita.fecha_hora,
     fecha_show: fecha_cita,
@@ -198,6 +198,7 @@ const ModalCita = (props) => {
   }
 
   const handleChangeTratamientos = (e) => {
+    setSelectedAreas(false);
     e.map(async (tratamiento) => {
       setIsLoading(true);
       const response = await findAreasByTreatmentServicio(tratamiento.servicio, tratamiento._id);
@@ -474,6 +475,7 @@ const ModalCita = (props) => {
   }
 
   const handleChangeAreas = async (items, tratamiento) => {
+    setSelectedAreas(items.length > 0);
     tratamiento.areasSeleccionadas = items;
     setIsLoading(true);
     let precio = 0;
@@ -484,7 +486,7 @@ const ModalCita = (props) => {
             sucursal === sucursalManuelAcunaId ? item.precio_ma // Precio Manuel Acuña
               : (sucursal === sucursalOcciId ? item.precio_oc // Precio Occidental
                 : (sucursal === sucursalFedeId ? item.precio_fe // Precio Federalismo
-                  : (sucursal._id === sucursalRubenDarioId ? item.precio_rd // PRECIO RUBEN DARIO
+                  : (sucursal === sucursalRubenDarioId ? item.precio_rd // PRECIO RUBEN DARIO
                   : 0))); // Error
           precio = Number(precio) + Number(itemPrecio);
         });
@@ -610,6 +612,7 @@ const ModalCita = (props) => {
                 setOpenAlert={setOpenAlert}
                 setMessage={setMessage}
                 setSeverity={setSeverity}
+                selectedAreas={selectedAreas}
                 {...props} />
             }
           </Formik> :

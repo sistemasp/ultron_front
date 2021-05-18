@@ -99,6 +99,7 @@ const AgendarAparatologia = (props) => {
 	const [productos, setProductos] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [disableDate, setDisableDate] = useState(true);
+	const [selectedAreas, setSelectedAreas] = useState(false);
 	const [values, setValues] = useState({
 		servicio: servicioAparatologiaId,
 		tratamientos: [],
@@ -251,6 +252,7 @@ const AgendarAparatologia = (props) => {
 	}
 
 	const handleChangeTratamientos = (e) => {
+		setSelectedAreas(false);
 		e.map(async (tratamiento) => {
 			setIsLoading(true);
 			const response = await findAreasByTreatmentServicio(tratamiento.servicio, tratamiento._id);
@@ -271,6 +273,7 @@ const AgendarAparatologia = (props) => {
 	};
 
 	const handleChangeAreas = async (items, tratamiento) => {
+		setSelectedAreas(items.length > 0);
 		tratamiento.areasSeleccionadas = items;
 		setIsLoading(true);
 		let precio = 0;
@@ -281,7 +284,7 @@ const AgendarAparatologia = (props) => {
 						sucursal === sucursalManuelAcunaId ? item.precio_ma // Precio Manuel Acuña
 							: (sucursal === sucursalOcciId ? item.precio_oc // Precio Occidental
 								: (sucursal === sucursalFedeId ? item.precio_fe // Precio Federalismo
-									: (sucursal._id === sucursalRubenDarioId ? item.precio_rd // PRECIO RUBEN DARIO
+									: (sucursal === sucursalRubenDarioId ? item.precio_rd // PRECIO RUBEN DARIO
 										: 0))); // Error
 					precio = Number(precio) + Number(itemPrecio);
 					item.precio_real = itemPrecio;
@@ -741,6 +744,7 @@ const AgendarAparatologia = (props) => {
 								onGuardarModalPagos={handleGuardarModalPagos}
 								openModalTraspaso={openModalTraspaso}
 								onCloseTraspasos={handleCloseTraspasos}
+								selectedAreas={selectedAreas}
 								{...props} />
 						}
 					</Formik> :

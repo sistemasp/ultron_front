@@ -1,15 +1,11 @@
 import React, { Fragment } from 'react';
 import TableComponent from '../../../components/table/TableComponent';
 import { Grid, makeStyles } from '@material-ui/core';
-import ModalPaciente from '../../../components/modales/modal_paciente';
 import MenuHistoricos from '../../../components/modales/modal_historico';
-import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import { baseUrl } from '../../../services';
 import myStyles from '../../../css';
 
 export const PacientesContainer = (props) => {
-
-  const classes = myStyles();
 
   const {
     empleado,
@@ -23,8 +19,6 @@ export const PacientesContainer = (props) => {
     openHistoric,
     handleOpen,
     handleClose,
-    onClickGuardar,
-    onClickGuardarAgendar
   } = props;
 
   const pacientes = query =>
@@ -48,18 +42,10 @@ export const PacientesContainer = (props) => {
   return (
     <Fragment>
       {
-        open ?
-          <ModalPaciente
-            open={open}
-            onClose={handleClose}
-            paciente={paciente}
-            onClickGuardar={onClickGuardar}
-            onClickGuardarAgendar={onClickGuardarAgendar} /> : ''
-      }
-      {
         openHistoric ?
           <MenuHistoricos
             open={openHistoric}
+            empleado={empleado}
             onClose={handleClose}
             paciente={paciente} /> : ''
       }

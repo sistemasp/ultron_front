@@ -148,7 +148,6 @@ const ModalProximaConsulta = (props) => {
     data.hora_llegada = '--:--';
     data.hora_atencion = '--:--';
     data.hora_salida = '--:--';
-    console.log("KAOZ", data);
     const response = await createConsult(data, empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
       /*const consecutivo = {

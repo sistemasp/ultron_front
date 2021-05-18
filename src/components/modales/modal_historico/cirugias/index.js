@@ -47,7 +47,10 @@ const TabCirugias = (props) => {
       color: '#FFF',
       fontWeight: 'bolder',
       fontSize: '18px'
-    }
+    },
+		exportAllData: true,
+		exportButton: true,
+		exportDelimiter: ';'
   }
 
   useEffect(() => {

@@ -245,7 +245,7 @@ const AgendarFacial = (props) => {
 						sucursal === sucursalManuelAcunaId ? item.precio_ma // Precio Manuel Acuña
 							: (sucursal === sucursalOcciId ? item.precio_oc // Precio Occidental
 								: (sucursal === sucursalFedeId ? item.precio_fe // Precio Federalismo
-									: (sucursal._id === sucursalRubenDarioId ? item.precio_rd // PRECIO RUBEN DARIO
+									: (sucursal === sucursalRubenDarioId ? item.precio_rd // PRECIO RUBEN DARIO
 										: 0))); // Error
 					precio = Number(precio) + Number(itemPrecio);
 					item.precio_real = itemPrecio;

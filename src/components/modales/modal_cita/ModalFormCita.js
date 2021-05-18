@@ -105,6 +105,7 @@ const ModalFormCita = (props) => {
     setMessage,
     setSeverity,
     setOpenAlert,
+    selectedAreas,
   } = props;
 
   return (
@@ -366,7 +367,7 @@ const ModalFormCita = (props) => {
                   className={classes.button}
                   color="primary"
                   variant="contained"
-                  disabled={!isValid}
+                  disabled={!selectedAreas}
                   onClick={(e) => onClickActualizarCita(e, values)}
                   text='GUARDAR' />
               </Grid>
@@ -375,7 +376,6 @@ const ModalFormCita = (props) => {
                   className={classes.button}
                   color="secondary"
                   variant="contained"
-                  disabled={!isValid}
                   onClick={onClickCancel}
                   text='CANCELAR' />
               </Grid>
