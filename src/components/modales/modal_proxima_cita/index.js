@@ -228,6 +228,7 @@ const ModalProximaCita = (props) => {
         await loadDermapens(data.fecha_hora, empleado.access_token);
         break;
     }
+    setIsLoading(false);
     onClose();
   };
 

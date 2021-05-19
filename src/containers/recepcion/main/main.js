@@ -66,6 +66,8 @@ TabPanel.propTypes = {
 
 export const MainContainer = props => {
 
+	const rolRecepcionistaId = process.env.REACT_APP_RECEPCIONISTA_ROL_ID;
+	
 	const {
 		pacienteAgendado,
 		setPacienteAgendado,
@@ -191,7 +193,7 @@ export const MainContainer = props => {
 						<ListItemIcon> <AccessibilityNewIcon /> </ListItemIcon>
 						<ListItemText primary={'PACIENTES'} />
 					</ListItem>
-{/*
+					{/*
 					<ListItem button key={'DERMATOLÓGOS'} onClick={(e) => onChangeTab(e, 1, handleDrawerClose)}>
 						<ListItemIcon> <People /> </ListItemIcon>
 						<ListItemText primary={'DERMATOLÓGOS'} />
@@ -212,11 +214,16 @@ export const MainContainer = props => {
 						<ListItemIcon> <Description /> </ListItemIcon>
 						<ListItemText primary={'RAZÓN SOCIAL'} />
 					</ListItem>
-					<ListItem button key={'REPORTES'} onClick={(e) => onChangeTab(e, 6, handleDrawerClose)}>
-						<ListItemIcon> <AssignmentIcon /> </ListItemIcon>
-						<ListItemText primary={'REPORTES'} />
-					</ListItem>
+					
 */}
+					{
+						empleado.rol._id !== rolRecepcionistaId ? 
+						<ListItem button key={'REPORTES'} onClick={(e) => onChangeTab(e, 6, handleDrawerClose)}>
+							<ListItemIcon> <AssignmentIcon /> </ListItemIcon>
+							<ListItemText primary={'REPORTES'} />
+						</ListItem>
+						: ''
+					}
 					{
 						empleado.super_admin
 							? <ListItem button key={'SUPER ADMINISTRADOR'} onClick={(e) => onChangeTab(e, 7, handleDrawerClose)}>

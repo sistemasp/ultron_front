@@ -199,6 +199,7 @@ const ModalProximaEstetica = (props) => {
     }
 
     await loadEsteticas(data.fecha_hora);
+    setIsLoading(false);
     onClose();
   };
 

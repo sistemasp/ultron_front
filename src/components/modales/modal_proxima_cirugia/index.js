@@ -200,6 +200,7 @@ const ModalProximaCirugia = (props) => {
     }
 
     await loadCirugias(data.fecha_hora);
+    setIsLoading(false);
     onClose();
   };
 

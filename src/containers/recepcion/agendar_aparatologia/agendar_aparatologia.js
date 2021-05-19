@@ -25,6 +25,7 @@ export const AgendarAparatologiaContainer = (props) => {
 	const classes = myStyles();
 
 	const {
+		isSubmitting,
 		values,
 		errors,
 		servicios,
@@ -46,7 +47,6 @@ export const AgendarAparatologiaContainer = (props) => {
 		paciente,
 		onClickAgendar,
 		isValid,
-		isSubmitting,
 		onChangeTiempo,
 		onChangeObservaciones,
 		empleado,
@@ -95,6 +95,8 @@ export const AgendarAparatologiaContainer = (props) => {
 		openModalTraspaso,
 		onCloseTraspasos,
 	} = props;
+
+	console.log("KAOZ", isSubmitting);
 
 	return (
 		<Fragment>

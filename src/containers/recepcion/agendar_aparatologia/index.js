@@ -150,6 +150,7 @@ const AgendarAparatologia = (props) => {
 		//{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
 		//{ title: 'HORA SALIDA', field: 'hora_salida' },
 		{ title: 'PRODUCTO (ÁREAS)', field: 'show_tratamientos' },
+		{ title: 'TIEMPO', field: 'tiempo' },
 		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
 		{ title: 'TIPO', field: 'tipo_cita.nombre' },
@@ -159,7 +160,6 @@ const AgendarAparatologia = (props) => {
 		{ title: 'PRECIO', field: 'precio_moneda' },
 		{ title: 'TOTAL', field: 'total_moneda' },
 		{ title: 'FORMA DE PAGO', field: 'forma_pago.nombre' },
-		{ title: 'TIEMPO', field: 'tiempo' },
 		{ title: 'OBSERVACIONES', field: 'observaciones' },
 	];
 

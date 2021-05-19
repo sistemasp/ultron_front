@@ -180,6 +180,7 @@ const ModalDermapen = (props) => {
   }
 
   const handleOnClickActualizarDermapen = async (event, rowData) => {
+    setIsLoading(true);
     if (rowData.pagado) {
       if (rowData.status === canceloCPStatusId) {
         rowData.pagos.forEach(async (pago) => {
@@ -258,6 +259,7 @@ const ModalDermapen = (props) => {
       setOpenAlert(true);
       setMessage('DERMAPEN ACTUALIZADO');
     }
+    setIsLoading(false);
     onClose();
   }
 

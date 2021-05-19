@@ -134,7 +134,7 @@ const ModalEstetica = (props) => {
   }
 
   const handleClickGuardarEstetica = async (event, data) => {
-
+    setIsLoading(true);
     if (data.status === asistioStatusId) {
       const dateNow = new Date();
       data.hora_aplicacion = data.hora_aplicacion ? data.hora_aplicacion : dateNow;
@@ -176,7 +176,7 @@ const ModalEstetica = (props) => {
       await updateEstetica(data._id, data, empleado.access_token)
       await loadEsteticas(fecha_hora);
     }
-
+    setIsLoading(false);
     onClose();
   }
 

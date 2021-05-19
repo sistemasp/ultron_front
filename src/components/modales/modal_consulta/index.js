@@ -275,6 +275,7 @@ const ModalConsulta = (props) => {
   }
 
   const handleOnClickActualizarCita = async (event, rowData) => {
+    setIsLoading(true);
     if (rowData.pagado) {
       if (rowData.status === canceloCPStatusId) {
         rowData.pagos.forEach(async (pago) => {
@@ -347,6 +348,7 @@ const ModalConsulta = (props) => {
       await updateConsult(consulta._id, rowData, empleado.access_token);
       await loadConsultas(rowData.fecha_show);
     }
+    setIsLoading(false);
     onClose();
   }
 

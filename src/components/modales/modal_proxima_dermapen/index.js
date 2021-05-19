@@ -229,6 +229,7 @@ const ModalProximaDermapen = (props) => {
         await loadDermapens(data.fecha_hora);
         break;
     }
+    setIsLoading(false);
     onClose();
   };
 

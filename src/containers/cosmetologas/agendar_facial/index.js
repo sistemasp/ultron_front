@@ -149,6 +149,7 @@ const AgendarFacial = (props) => {
 		//{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
 		//{ title: 'HORA SALIDA', field: 'hora_salida' },
 		{ title: 'PRODUCTO (ÁREAS)', field: 'show_tratamientos' },
+		{ title: 'TIEMPO', field: 'tiempo' },
 		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
 		{ title: 'TIPO', field: 'tipo_cita.nombre' },

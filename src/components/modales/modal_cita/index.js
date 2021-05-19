@@ -299,6 +299,7 @@ const ModalCita = (props) => {
   }
 
   const handleOnClickActualizarCita = async (event, rowData) => {
+    setIsLoading(true);
     rowData.tratamientos.forEach(tratamiento => {
       tratamiento.areas = undefined;
     });
@@ -416,6 +417,7 @@ const ModalCita = (props) => {
           break;
       }
     }
+    setIsLoading(false);
     onClose();
 
   }

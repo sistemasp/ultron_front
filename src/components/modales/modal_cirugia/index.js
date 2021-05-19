@@ -120,6 +120,7 @@ const ModalCirugia = (props) => {
   }
 
   const handleClickCrearCirugia = async (event, data) => {
+    setIsLoading(true);
     const fecha_actual = new Date();
     data.servicio = cirugiaServicioId;
     const idBiopsias = [];
@@ -181,6 +182,7 @@ const ModalCirugia = (props) => {
       await updateCirugia(data._id, data, empleado.access_token)
       await loadCirugias(fecha_hora);
     }
+    setIsLoading(false);
     onClose();
   }
 
