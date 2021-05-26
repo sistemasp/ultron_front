@@ -9,7 +9,7 @@ import { findAparatologiaByRangeDateAndSucursal, findAparatologiaByRangeDateAndS
 import { findEsteticasByRangeDateAndSucursal } from "../../../../../services/esteticas";
 import { findCirugiasByRangeDateAndSucursal } from "../../../../../services/cirugias";
 import { findDermapenByRangeDateAndSucursal } from "../../../../../services/dermapens";
-import { showAllBanco, showAllMetodoPago, showAllTipoTarjeta } from "../../../../../services";
+import { findDatesByRangeDateAndSucursal, showAllBanco, showAllMetodoPago, showAllTipoTarjeta } from "../../../../../services";
 import { findRazonSocialById } from "../../../../../services/razones_sociales";
 import { ControlCamera } from "@material-ui/icons";
 
@@ -194,6 +194,16 @@ const ReporteGeneralCitas = (props) => {
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {				
 			setDermapens(processResponse(response.data));
 			await loadCirugias(startDate, endDate);
+		}
+	}
+
+	
+	const loadCitas = async (startDate, endDate) => {
+		const response = await findDatesByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
+			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, empleado.access_token);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {				
+			setDermapens(processResponse(response.data));
+			procesarDatos();
 		}
 	}
 

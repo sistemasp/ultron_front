@@ -370,6 +370,7 @@ const ListaEspera = (props) => {
 
 	const handleOnClickLiberarCabina = async (event, rowData) => {
 		const dateNow = new Date();
+		console.log("KAOZ", rowData);
 
 		let responseCita;
 		switch (rowData.tipo_servicio) {
@@ -483,7 +484,7 @@ const ListaEspera = (props) => {
 		//new Date(anio, mes - 1, dia) < filterDate.fecha_show  ? 
 		{
 			icon: InputIcon,
-			tooltip: 'ASIGNAR A SALA DE CIRUDIAS cirugias',
+			tooltip: 'ASIGNAR A SALA DE CIRUGÍAS',
 			onClick: handleOnClickSalaCirugiaAsignarPaciente
 		} //: ''
 	];
@@ -546,13 +547,13 @@ const ListaEspera = (props) => {
 		rowData => (
 			!rowData.disponible ? {
 				icon: DirectionsWalkIcon,
-				tooltip: 'Salida paciente',
+				tooltip: 'SALIDA PACIENTE',
 				onClick: handleOnClickLiberarCabina
 			} : ''),
 		rowData => (
 			!rowData.disponible ? {
 				icon: InputIcon,
-				tooltip: 'Cambiar de cabina',
+				tooltip: 'CAMBIAR DE CABINA',
 				onClick: handleOnCabinaCambiarPaciente
 			} : ''),
 	];
@@ -562,13 +563,13 @@ const ListaEspera = (props) => {
 		rowData => (
 			!rowData.disponible ? {
 				icon: DirectionsWalkIcon,
-				tooltip: 'Salida paciente',
+				tooltip: 'SALIDA PACIENTE',
 				onClick: handleOnClickLiberarSalaCirugia
 			} : ''),
 		rowData => (
 			!rowData.disponible ? {
 				icon: InputIcon,
-				tooltip: 'Cambiar de sala de cirugia',
+				tooltip: 'CAMBIAR SALA DE CIRUGÍA',
 				onClick: handleOnSalaCirugiaCambiarPaciente
 			} : ''),
 	];

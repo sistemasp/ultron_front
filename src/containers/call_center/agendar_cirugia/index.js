@@ -367,11 +367,11 @@ const AgendarCirugia = (props) => {
 			tooltip: 'EDITAR',
 			onClick: handleOnClickEditarCita
 		},
-		/*{
+		{
 			icon: AttachMoneyIcon,
 			tooltip: 'PAGOS',
 			onClick: handleClickVerPagos
-		},*/
+		},
 		{
 			icon: EventAvailableIcon,
 			tooltip: 'NUEVA CITA',

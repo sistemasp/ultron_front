@@ -23,7 +23,7 @@ import { toFormatterCurrency, addZero, generateFolio, dateToString } from "../..
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import PrintIcon from '@material-ui/icons/Print';
 import { AgendarAparatologiaContainer } from "./agendar_aparatologia";
-import { 
+import {
 	createAparatologia,
 	findAparatologiaByDateAndSucursal,
 	updateAparatologia
@@ -376,7 +376,7 @@ const AgendarAparatologia = (props) => {
 		data.tipo_cita = data.dermatologo._id === dermatologoDirectoId ? directoTipoCitaId : data.tipo_cita;
 		const response = await createAparatologia(data, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-			/*const consecutivo = {
+			const consecutivo = {
 				consecutivo: response.data.consecutivo,
 				tipo_servicio: response.data.servicio,
 				servicio: response.data._id,
@@ -385,26 +385,26 @@ const AgendarAparatologia = (props) => {
 				status: response.data.status,
 			}
 			const responseConsecutivo = await createConsecutivo(consecutivo);
-			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
-			setOpenAlert(true);
-			setSeverity('success');
-			setMessage('APARATOLOGIA AGREGADA CORRECTAMENTE');
-			setValues({
-				servicio: '',
-				tratamientos: [],
-				dermatologo: '',
-				promovendedor: '',
-				cosmetologa: '',
-				paciente: `${paciente._id}`,
-				precio: 0,
-				total: 0,
-				tipo_cita: {},
-				tiempo: '30',
-			});
-			setDisableDate(true);
-			setPacienteAgendado({});
-			loadAparatologias(new Date());
-			//}
+			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+				setOpenAlert(true);
+				setSeverity('success');
+				setMessage('APARATOLOGIA AGREGADA CORRECTAMENTE');
+				setValues({
+					servicio: '',
+					tratamientos: [],
+					dermatologo: '',
+					promovendedor: '',
+					cosmetologa: '',
+					paciente: `${paciente._id}`,
+					precio: 0,
+					total: 0,
+					tipo_cita: {},
+					tiempo: '30',
+				});
+				setDisableDate(true);
+				setPacienteAgendado({});
+				loadAparatologias(new Date());
+			}
 		}
 
 		setIsLoading(false);
@@ -513,11 +513,11 @@ const AgendarAparatologia = (props) => {
 			tooltip: 'EDITAR CITA',
 			onClick: handleOnClickEditarCita
 		},
-		/*{
+		{
 			icon: AttachMoneyIcon,
 			tooltip: 'PAGOS',
 			onClick: handleClickVerPagos
-		},*/
+		},
 		{
 			icon: EventAvailableIcon,
 			tooltip: 'NUEVA CITA',

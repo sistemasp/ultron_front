@@ -77,7 +77,7 @@ const ModalFormConsultorioAgregarDermatologo = (props) => {
               </Grid>
               <Grid item xs={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-hora">Dermatologo</InputLabel>
+                  <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO (A)</InputLabel>
                   <Select
                     labelId="simple-select-outlined-dermatologo"
                     id="simple-select-outlined-dermatologo"

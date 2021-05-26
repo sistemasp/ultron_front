@@ -96,8 +96,6 @@ export const AgendarAparatologiaContainer = (props) => {
 		onCloseTraspasos,
 	} = props;
 
-	console.log("KAOZ", isSubmitting);
-
 	return (
 		<Fragment>
 			{

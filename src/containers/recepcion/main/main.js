@@ -67,7 +67,8 @@ TabPanel.propTypes = {
 export const MainContainer = props => {
 
 	const rolRecepcionistaId = process.env.REACT_APP_RECEPCIONISTA_ROL_ID;
-	
+	const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
+
 	const {
 		pacienteAgendado,
 		setPacienteAgendado,
@@ -124,7 +125,7 @@ export const MainContainer = props => {
 	}
 
 	useEffect(() => {
-		//findCorte();
+		if (sucursal._id === sucursalManuelAcunaId) findCorte();
 	}, []);
 
 	return (
@@ -193,36 +194,40 @@ export const MainContainer = props => {
 						<ListItemIcon> <AccessibilityNewIcon /> </ListItemIcon>
 						<ListItemText primary={'PACIENTES'} />
 					</ListItem>
-					{/*
-					<ListItem button key={'DERMATOLÓGOS'} onClick={(e) => onChangeTab(e, 1, handleDrawerClose)}>
-						<ListItemIcon> <People /> </ListItemIcon>
-						<ListItemText primary={'DERMATOLÓGOS'} />
-					</ListItem>
-					<ListItem button key={'CONSULTORIOS / CABINAS'} onClick={(e) => onChangeTab(e, 2, handleDrawerClose)}>
-						<ListItemIcon> <AirlineSeatReclineNormalIcon /> </ListItemIcon>
-						<ListItemText primary={'CONSULTORIOS / CABINAS'} />
-					</ListItem>
-					<ListItem button key={'CORTE'} onClick={(e) => onChangeTab(e, 3, handleDrawerClose)}>
-						<ListItemIcon> <AttachMoneyIcon /> </ListItemIcon>
-						<ListItemText primary={'CORTE'} />
-					</ListItem>
-					<ListItem button key={'LISTA DE ESPERA'} onClick={(e) => onChangeTab(e, 4, handleDrawerClose)}>
-						<ListItemIcon> <ListAltIcon /> </ListItemIcon>
-						<ListItemText primary={'LISTA DE ESPERA'} />
-					</ListItem>
-					<ListItem button key={'RAZÓN SOCIAL'} onClick={(e) => onChangeTab(e, 5, handleDrawerClose)}>
-						<ListItemIcon> <Description /> </ListItemIcon>
-						<ListItemText primary={'RAZÓN SOCIAL'} />
-					</ListItem>
-					
-*/}
 					{
-						empleado.rol._id !== rolRecepcionistaId ? 
-						<ListItem button key={'REPORTES'} onClick={(e) => onChangeTab(e, 6, handleDrawerClose)}>
-							<ListItemIcon> <AssignmentIcon /> </ListItemIcon>
-							<ListItemText primary={'REPORTES'} />
-						</ListItem>
-						: ''
+						sucursal._id === sucursalManuelAcunaId ?
+							<Fragment>
+								<ListItem button key={'DERMATOLÓGOS'} onClick={(e) => onChangeTab(e, 1, handleDrawerClose)}>
+									<ListItemIcon> <People /> </ListItemIcon>
+									<ListItemText primary={'DERMATOLÓGOS'} />
+								</ListItem>
+								<ListItem button key={'CONSULTORIOS / CABINAS'} onClick={(e) => onChangeTab(e, 2, handleDrawerClose)}>
+									<ListItemIcon> <AirlineSeatReclineNormalIcon /> </ListItemIcon>
+									<ListItemText primary={'CONSULTORIOS / CABINAS'} />
+								</ListItem>
+								<ListItem button key={'CORTE'} onClick={(e) => onChangeTab(e, 3, handleDrawerClose)}>
+									<ListItemIcon> <AttachMoneyIcon /> </ListItemIcon>
+									<ListItemText primary={'CORTE'} />
+								</ListItem>
+								<ListItem button key={'LISTA DE ESPERA'} onClick={(e) => onChangeTab(e, 4, handleDrawerClose)}>
+									<ListItemIcon> <ListAltIcon /> </ListItemIcon>
+									<ListItemText primary={'LISTA DE ESPERA'} />
+								</ListItem>
+								<ListItem button key={'RAZÓN SOCIAL'} onClick={(e) => onChangeTab(e, 5, handleDrawerClose)}>
+									<ListItemIcon> <Description /> </ListItemIcon>
+									<ListItemText primary={'RAZÓN SOCIAL'} />
+								</ListItem>
+							</Fragment>
+							: ''
+					}
+
+					{
+						empleado.rol._id !== rolRecepcionistaId ?
+							<ListItem button key={'REPORTES'} onClick={(e) => onChangeTab(e, 6, handleDrawerClose)}>
+								<ListItemIcon> <AssignmentIcon /> </ListItemIcon>
+								<ListItemText primary={'REPORTES'} />
+							</ListItem>
+							: ''
 					}
 					{
 						empleado.super_admin

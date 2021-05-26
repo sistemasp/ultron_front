@@ -279,7 +279,7 @@ const AgendarDermapen = (props) => {
 
 		const response = await createDermapen(data, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-			/*const consecutivo = {
+			const consecutivo = {
 				consecutivo: response.data.consecutivo,
 				tipo_servicio: response.data.servicio,
 				servicio: response.data._id,
@@ -288,7 +288,7 @@ const AgendarDermapen = (props) => {
 				status: response.data.status,
 			}
 			const responseConsecutivo = await createConsecutivo(consecutivo);
-			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
+			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 				setOpenAlert(true);
 				setMessage('EL DERMAPEN SE AGREGO CORRECTAMENTE');
 				setValues({
@@ -306,7 +306,7 @@ const AgendarDermapen = (props) => {
 					fecha_show: data.fecha_hora,
 					fecha: dateToString(data.fecha_hora),
 				});
-			//}
+			}
 		}
 
 		setIsLoading(false);
@@ -399,11 +399,11 @@ const AgendarDermapen = (props) => {
 			tooltip: 'EDITAR',
 			onClick: handleOnClickEditarCita
 		},
-		/*{
+		{
 			icon: AttachMoneyIcon,
 			tooltip: 'PAGOS',
 			onClick: handleClickVerPagos
-		},*/
+		},
 		{
 			icon: EventAvailableIcon,
 			tooltip: 'NUEVA CITA',
@@ -542,7 +542,7 @@ const AgendarDermapen = (props) => {
 		setDisableDate(false);
 		setIsLoading(false);
 	}
-	
+
 	const handleChangeFrecuencia = (e) => {
 		const frecuencia = e.target.value;
 		setValues({

@@ -316,7 +316,7 @@ const AgendarFacial = (props) => {
 				item.promovendedor_nombre = item.promovendedor ? item.promovendedor.nombre : 'SIN ASIGNAR';
 				item.cosmetologa_nombre = item.cosmetologa ? item.cosmetologa.nombre : 'SIN ASIGNAR';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
-				
+
 				item.show_tratamientos = item.tratamientos ? item.tratamientos.map(tratamiento => {
 					const show_areas = tratamiento.areasSeleccionadas ? tratamiento.areasSeleccionadas.map(area => {
 						return `${area.nombre}`;
@@ -358,7 +358,7 @@ const AgendarFacial = (props) => {
 
 		const response = await createFacial(data, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-			/*const consecutivo = {
+			const consecutivo = {
 				consecutivo: response.data.consecutivo,
 				tipo_servicio: response.data.servicio,
 				servicio: response.data._id,
@@ -367,28 +367,28 @@ const AgendarFacial = (props) => {
 				status: response.data.status,
 			}
 			const responseConsecutivo = await createConsecutivo(consecutivo);
-			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
-			setOpenAlert(true);
-			setSeverity('success');
-			setMessage('EL FACIAL SE AGREGO CORRECTAMENTE');
-			setValues({
-				servicio: '',
-				tratamientos: [],
-				dermatologo: '',
-				promovendedor: '',
-				cosmetologa: '',
-				paciente: `${paciente._id}`,
-				precio: '',
-				tipo_cita: {},
-			});
-			setDisableDate(true);
-			setPacienteAgendado({});
-			loadFaciales(data.fecha_hora);
-			setFilterDate({
-				fecha_show: data.fecha_hora,
-				fecha: dateToString(data.fecha_hora),
-			});
-			//}
+			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+				setOpenAlert(true);
+				setSeverity('success');
+				setMessage('EL FACIAL SE AGREGO CORRECTAMENTE');
+				setValues({
+					servicio: '',
+					tratamientos: [],
+					dermatologo: '',
+					promovendedor: '',
+					cosmetologa: '',
+					paciente: `${paciente._id}`,
+					precio: '',
+					tipo_cita: {},
+				});
+				setDisableDate(true);
+				setPacienteAgendado({});
+				loadFaciales(data.fecha_hora);
+				setFilterDate({
+					fecha_show: data.fecha_hora,
+					fecha: dateToString(data.fecha_hora),
+				});
+			}
 		}
 
 		setIsLoading(false);
@@ -496,11 +496,11 @@ const AgendarFacial = (props) => {
 			tooltip: 'EDITAR',
 			onClick: handleOnClickEditarCita
 		}, //: ''
-		/*{
+		{
 			icon: AttachMoneyIcon,
 			tooltip: 'PAGOS',
 			onClick: handleClickVerPagos
-		},*/
+		},
 		{
 			icon: EventAvailableIcon,
 			tooltip: 'NUEVA CITA',
