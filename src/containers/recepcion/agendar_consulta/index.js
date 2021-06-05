@@ -70,6 +70,7 @@ const AgendarConsulta = (props) => {
 	const promovendedorRolId = process.env.REACT_APP_PROMOVENDEDOR_ROL_ID;
 	const pendienteStatusId = process.env.REACT_APP_PENDIENTE_STATUS_ID;
 	const asistioStatusId = process.env.REACT_APP_ASISTIO_STATUS_ID;
+	const confirmadoStatusId = process.env.REACT_APP_CONFIRMADO_STATUS_ID;
 	const enProcedimientoStatusId = process.env.REACT_APP_EN_PROCEDIMIENTO_STATUS_ID;
 	const enConsultorioStatusId = process.env.REACT_APP_EN_CONSULTORIO_STATUS_ID;
 	const enCabinaStatusId = process.env.REACT_APP_EN_CABINA_STATUS_ID;
@@ -644,7 +645,7 @@ const AgendarConsulta = (props) => {
 												: '';
 											break;
 										case 'PAGOS':
-											menuItem = props.data.status._id !== pendienteStatusId ?
+											menuItem = props.data.status._id !== pendienteStatusId && props.data.status._id !== confirmadoStatusId ?
 												<MenuItem
 													key={index}
 													value={item.tooltip}
@@ -652,7 +653,7 @@ const AgendarConsulta = (props) => {
 												: '';
 											break;
 										case 'TRASPASO':
-											menuItem = props.data.status._id !== atendidoStatusId ?
+											menuItem = props.data.status._id !== atendidoStatusId && props.data.status._id !== confirmadoStatusId ?
 												<MenuItem
 													key={index}
 													value={item.tooltip}

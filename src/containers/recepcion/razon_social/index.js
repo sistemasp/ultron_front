@@ -101,7 +101,7 @@ const RazonSocial = (props) => {
 		const response = await showAllRazonSocials();
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			await response.data.forEach(item => {
-				item.domicilio_completo = `${item.domicilio} #${item.numero}`;
+				item.domicilio_completo = `${item.domicilio} #${item.numero_exterior} ${item.numero_interior ? '- ' + item.numero_interior : '' }`;
 			});
 			setRazonSociales(response.data);
 		}
@@ -186,18 +186,12 @@ const RazonSocial = (props) => {
 		}
 	];
 
+	const loadAll = async () => {
+		await loadRazonSocial();
+	}
+
 	useEffect(() => {
-		const loadRazonSocial = async () => {
-			const response = await showAllRazonSocials();
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				await response.data.forEach(item => {
-					item.domicilio_completo = `${item.domicilio} #${item.numero}`;
-				});
-				setRazonSociales(response.data);
-			}
-			setIsLoading(false);
-		}
-		loadRazonSocial();
+		loadAll();
 	}, []);
 
 	return (

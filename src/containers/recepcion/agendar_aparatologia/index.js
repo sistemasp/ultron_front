@@ -70,6 +70,7 @@ const AgendarAparatologia = (props) => {
 	const cosmetologaRolId = process.env.REACT_APP_COSMETOLOGA_ROL_ID;
 	const pendienteStatusId = process.env.REACT_APP_PENDIENTE_STATUS_ID;
 	const atendidoStatusId = process.env.REACT_APP_ATENDIDO_STATUS_ID;
+	const confirmadoStatusId = process.env.REACT_APP_CONFIRMADO_STATUS_ID;
 	const noAsistioStatusId = process.env.REACT_APP_NO_ASISTIO_STATUS_ID;
 	const reagendoStatusId = process.env.REACT_APP_REAGENDO_STATUS_ID;
 	const canceladoCPStatusId = process.env.REACT_APP_CANCELO_CP_STATUS_ID;
@@ -590,7 +591,7 @@ const AgendarAparatologia = (props) => {
 												: '';
 											break;
 										case 'PAGOS':
-											menuItem = props.data.status._id !== pendienteStatusId ?
+											menuItem = props.data.status._id !== pendienteStatusId && props.data.status._id !== confirmadoStatusId ?
 												<MenuItem
 													key={index}
 													value={item.tooltip}
@@ -598,7 +599,7 @@ const AgendarAparatologia = (props) => {
 												: '';
 											break;
 										case 'TRASPASO':
-											menuItem = props.data.status._id !== atendidoStatusId ?
+											menuItem = props.data.status._id !== atendidoStatusId && props.data.status._id !== confirmadoStatusId ?
 												<MenuItem
 													key={index}
 													value={item.tooltip}
