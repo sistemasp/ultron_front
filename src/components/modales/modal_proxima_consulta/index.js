@@ -92,22 +92,22 @@ const ModalProximaConsulta = (props) => {
   }
 
   const handleChangeSucursal = item => {
-    setValues({ 
+    setValues({
       ...values,
       sucursal: item.target.value
     });
   };
 
   const handleChangeProductos = (e) => {
-		setValues({ ...values, producto: e.target.value });
-	}
+    setValues({ ...values, producto: e.target.value });
+  }
 
   const handleChangePaymentMethod = (event) => {
-		setValues({
-			...values,
-			forma_pago: event.target.value,
-		});
-	}
+    setValues({
+      ...values,
+      forma_pago: event.target.value,
+    });
+  }
 
   const handleChangeFecha = async (date) => {
     setIsLoading(true);
@@ -150,7 +150,7 @@ const ModalProximaConsulta = (props) => {
     data.hora_salida = '--:--';
     const response = await createConsult(data, empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-      /*const consecutivo = {
+      const consecutivo = {
         consecutivo: response.data.consecutivo,
         tipo_servicio: consultaServicioId,
         servicio: response.data._id,
@@ -159,7 +159,7 @@ const ModalProximaConsulta = (props) => {
         status: response.data.status,
       }
       const responseConsecutivo = await createConsecutivo(consecutivo);
-      if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
+      if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
         setOpenAlert(true);
         setMessage('CONSULTA AGREGADA CORRECTAMENTE');
         const dia = addZero(data.fecha_show.getDate());
@@ -170,7 +170,7 @@ const ModalProximaConsulta = (props) => {
           fecha: `${dia}/${mes}/${anio}`
         });
         loadConsultas(data.fecha_hora);
-      //}
+      }
     }
     onClose();
     setIsLoading(false);
@@ -203,13 +203,13 @@ const ModalProximaConsulta = (props) => {
   }
 
   const loadFormasPago = async () => {
-		const response = await showAllMetodoPago();
-		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			setFormasPago(response.data);
-		}
-	}
+    const response = await showAllMetodoPago();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setFormasPago(response.data);
+    }
+  }
 
-  const  loadAll = async () => {
+  const loadAll = async () => {
     setIsLoading(true);
     await loadSucursales();
     await loadHorarios();
@@ -220,7 +220,7 @@ const ModalProximaConsulta = (props) => {
   }
 
   useEffect(() => {
-    loadAll();    
+    loadAll();
   }, []);
 
   return (

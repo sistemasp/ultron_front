@@ -74,8 +74,13 @@ const AgendarConsulta = (props) => {
 	const enConsultorioStatusId = process.env.REACT_APP_EN_CONSULTORIO_STATUS_ID;
 	const enCabinaStatusId = process.env.REACT_APP_EN_CABINA_STATUS_ID;
 	const atendidoStatusId = process.env.REACT_APP_ATENDIDO_STATUS_ID;
+	const noAsistioStatusId = process.env.REACT_APP_NO_ASISTIO_STATUS_ID;
+	const reagendoStatusId = process.env.REACT_APP_REAGENDO_STATUS_ID;
+	const canceladoCPStatusId = process.env.REACT_APP_CANCELO_CP_STATUS_ID;
+	const canceladoSPStatusId = process.env.REACT_APP_CANCELO_SP_STATUS_ID;
 	const consultaServicioId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
 	const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
+	const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
 	const dermatologoDirectoId = process.env.REACT_APP_DERMATOLOGO_DIRECTO_ID;
 	const promovendedorSinPromovendedorId = process.env.REACT_APP_PROMOVENDEDOR_SIN_PROMOVENDEDOR_ID;
 	const frecuenciaPrimeraVezId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
@@ -148,13 +153,13 @@ const AgendarConsulta = (props) => {
 	});
 
 	const columns = [
-		//{ title: 'FOLIO', field: 'consecutivo' },
+		{ title: 'FOLIO', field: 'consecutivo' },
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'TELÉFONO', field: 'paciente.telefono' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
-		//{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
-		//{ title: 'HORA SALIDA', field: 'hora_salida' },
+		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
+		{ title: 'HORA SALIDA', field: 'hora_salida' },
 		{ title: 'PRODUCTO', field: 'producto.nombre' },
 		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
@@ -169,7 +174,8 @@ const AgendarConsulta = (props) => {
 	];
 
 	const dataComplete = !paciente.nombres || !values.precio || !values.dermatologo
-		|| !values.promovendedor || (sucursal._id === sucursalManuelAcunaId ? (!values.fecha_hora || !values.medio) : false);
+		|| !values.promovendedor || (sucursal._id === sucursalManuelAcunaId ? (!values.fecha_hora || !values.medio) : false)
+		|| (sucursal._id === sucursalRubenDarioId ? (!values.fecha_hora || !values.medio) : false);
 
 	const options = {
 		rowStyle: rowData => {
@@ -294,7 +300,7 @@ const AgendarConsulta = (props) => {
 		data.total = data.precio;
 		data.servicio = consultaServicioId;
 		data.tipo_cita = data.frecuencia === frecuenciaPrimeraVezId ? tipoCitaRevisionId : tipoCitaDerivadaId;
-		if (sucursal._id !== sucursalManuelAcunaId) {
+		if (sucursal._id !== sucursalManuelAcunaId && sucursal._id !== sucursalRubenDarioId) {
 			const dateNow = new Date();
 			data.hora_llegada = `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;
 			dateNow.setMinutes(0);
@@ -623,10 +629,47 @@ const AgendarConsulta = (props) => {
 							label="ACCIONES">
 							{
 								props.actions.map((item, index) => {
-									return <MenuItem
+									let menuItem = <MenuItem
 										key={index}
 										value={item.tooltip}
-									>{item.tooltip}</MenuItem>
+									>{item.tooltip}</MenuItem>;
+									switch (item.tooltip) {
+										case 'EDITAR':
+											menuItem = props.data.status._id !== canceladoCPStatusId && props.data.status._id !== canceladoSPStatusId
+												?
+												<MenuItem
+													key={index}
+													value={item.tooltip}
+												>{item.tooltip}</MenuItem>
+												: '';
+											break;
+										case 'PAGOS':
+											menuItem = props.data.status._id !== pendienteStatusId ?
+												<MenuItem
+													key={index}
+													value={item.tooltip}
+												>{item.tooltip}</MenuItem>
+												: '';
+											break;
+										case 'TRASPASO':
+											menuItem = props.data.status._id !== atendidoStatusId ?
+												<MenuItem
+													key={index}
+													value={item.tooltip}
+												>{item.tooltip}</MenuItem>
+												: '';
+											break;
+										case 'NUEVA CITA':
+											menuItem = props.data.status._id === atendidoStatusId ?
+												<MenuItem
+													key={index}
+													value={item.tooltip}
+												>{item.tooltip}</MenuItem>
+												: '';
+									}
+									if (menuItem !== '' && props.data.status._id !== reagendoStatusId && props.data.status._id !== noAsistioStatusId) {
+										return menuItem;
+									}
 								})
 							}
 						</Select>

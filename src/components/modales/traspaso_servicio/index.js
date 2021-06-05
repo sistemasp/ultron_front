@@ -31,8 +31,8 @@ const ModalTraspasoServicio = (props) => {
   const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
   const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
   const servicioCirugiaId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID;
-	const servicioEsteticaId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
-	const servicioDermapenId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID;
+  const servicioEsteticaId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
+  const servicioDermapenId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID;
 
   const [isLoading, setIsLoading] = useState(true);
   const [sucursales, setSucursales] = useState([]);
@@ -105,7 +105,7 @@ const ModalTraspasoServicio = (props) => {
 
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
         const servicioRes = response.data;
-        /*const consecutivo = {
+        const consecutivo = {
           consecutivo: response.data.consecutivo,
           tipo_servicio: consultaServicioId,
           servicio: response.data._id,
@@ -115,7 +115,7 @@ const ModalTraspasoServicio = (props) => {
         }
 
         const responseConsecutivo = await createConsecutivo(consecutivo);
-        if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
+        if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
           pagos.forEach(async (pago) => {
             pago.fecha_pago = dateNow;
             pago.observaciones = "TRASPASO";
@@ -149,7 +149,7 @@ const ModalTraspasoServicio = (props) => {
               }
             }
           });
-        //}
+        }
       }
     }
     loadServicios(dateNow);

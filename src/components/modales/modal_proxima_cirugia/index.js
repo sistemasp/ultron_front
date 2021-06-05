@@ -177,7 +177,7 @@ const ModalProximaCirugia = (props) => {
         break;
     }*/
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-      /*const consecutivo = {
+      const consecutivo = {
         consecutivo: response.data.consecutivo,
         tipo_servicio: cirugia.servicio._id,
         servicio: response.data._id,
@@ -186,17 +186,17 @@ const ModalProximaCirugia = (props) => {
         status: response.data.status,
       }
       const responseConsecutivo = await createConsecutivo(consecutivo);
-      if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
-      setOpenAlert(true);
-      setMessage('CIRUGIA AGREGADA CORRECTAMENTE');
-      const dia = addZero(data.fecha_show.getDate());
-      const mes = addZero(data.fecha_show.getMonth() + 1);
-      const anio = data.fecha_show.getFullYear();
-      setFilterDate({
-        fecha_show: data.fecha_hora,
-        fecha: `${dia}/${mes}/${anio}`
-      });
-      //}
+      if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+        setOpenAlert(true);
+        setMessage('CIRUGIA AGREGADA CORRECTAMENTE');
+        const dia = addZero(data.fecha_show.getDate());
+        const mes = addZero(data.fecha_show.getMonth() + 1);
+        const anio = data.fecha_show.getFullYear();
+        setFilterDate({
+          fecha_show: data.fecha_hora,
+          fecha: `${dia}/${mes}/${anio}`
+        });
+      }
     }
 
     await loadCirugias(data.fecha_hora);
@@ -235,14 +235,14 @@ const ModalProximaCirugia = (props) => {
   }
 
   const handleChangeTotal = e => {
-		let total_aplicacion = Number(e.target.value);
-		setValues({
-			...values,
-			precio: e.target.value,
-			total: e.target.value,
-			total_aplicacion: total_aplicacion,
-		});
-	};
+    let total_aplicacion = Number(e.target.value);
+    setValues({
+      ...values,
+      precio: e.target.value,
+      total: e.target.value,
+      total_aplicacion: total_aplicacion,
+    });
+  };
 
   const loadSucursales = async () => {
     const response = await showAllOffices();

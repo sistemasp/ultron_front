@@ -18,7 +18,7 @@ const ModalTraspasoConsulta = (props) => {
     setOpenAlert,
     setMessage,
   } = props;
-  
+
   const consultaServicioId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
   const canceladoSPStatusId = process.env.REACT_APP_CANCELO_SP_STATUS_ID;
   const asistioStatusId = process.env.REACT_APP_ASISTIO_STATUS_ID;
@@ -68,13 +68,13 @@ const ModalTraspasoConsulta = (props) => {
       servicio.hora_salida = '--:--';
       servicio.observaciones = `CONSULTA TRASPASADA`;
       dateNowServicio.setMinutes(0);
-			dateNowServicio.setSeconds(0);
+      dateNowServicio.setSeconds(0);
       servicio.fecha_hora = dateNowServicio.toString();
       servicio.pagado = true;
       const response = await createConsult(servicio, empleado.access_token);
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
         const servicioRes = response.data;
-        /*const consecutivo = {
+        const consecutivo = {
           consecutivo: response.data.consecutivo,
           tipo_servicio: consultaServicioId,
           servicio: response.data._id,
@@ -84,7 +84,7 @@ const ModalTraspasoConsulta = (props) => {
         }
 
         const responseConsecutivo = await createConsecutivo(consecutivo);
-        if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
+        if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
           pagos.forEach(async (pago) => {
             pago.fecha_pago = dateNow;
             pago.observaciones = "TRASPASO";
@@ -118,7 +118,7 @@ const ModalTraspasoConsulta = (props) => {
               }
             }
           });
-        //}
+        }
       }
     }
     loadConsultas(dateNow);

@@ -134,7 +134,7 @@ const ModalCita = (props) => {
     areas: cita.areas,
     numero_sesion: cita.numero_sesion,
     quien_agenda: cita.quien_agenda,
-    tipo_cita: cita.tipo_cita ? cita.tipo_cita : '',
+    tipo_cita: cita.tipo_cita._id,
     confirmo: cita.confirmo,
     quien_confirma: cita.quien_confirma,
     promovendedor: cita.promovendedor ? cita.promovendedor._id : '',
@@ -365,7 +365,7 @@ const ModalCita = (props) => {
           break;
       }
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-        /*const consecutivo = {
+        const consecutivo = {
           consecutivo: response.data.consecutivo,
           tipo_servicio: cita.servicio._id,
           servicio: response.data._id,
@@ -374,10 +374,10 @@ const ModalCita = (props) => {
           status: response.data.status,
         }
         const responseConsecutivo = await createConsecutivo(consecutivo);
-        if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
+        if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
           setOpenAlert(true);
           setMessage('TRATAMIENTO REAGENDADO CORRECTAMENTE');
-        //}
+        }
       }
       const dia = addZero(rowData.fecha_hora.getDate());
       const mes = addZero(rowData.fecha_hora.getMonth());
@@ -485,11 +485,11 @@ const ModalCita = (props) => {
       if (tratam.areasSeleccionadas) {
         tratam.areasSeleccionadas.map((item) => {
           const itemPrecio =
-            sucursal === sucursalManuelAcunaId ? item.precio_ma // Precio Manuel Acuña
-              : (sucursal === sucursalOcciId ? item.precio_oc // Precio Occidental
-                : (sucursal === sucursalFedeId ? item.precio_fe // Precio Federalismo
+            sucursal === sucursalManuelAcunaId ? item.precio_ma // PRECIO MANUEL ACUÑA
+              : (sucursal === sucursalOcciId ? item.precio_oc // PRECIO OCCIDENTAL
+                : (sucursal === sucursalFedeId ? item.precio_fe // PRECIO FEDERALISMO
                   : (sucursal === sucursalRubenDarioId ? item.precio_rd // PRECIO RUBEN DARIO
-                  : 0))); // Error
+                  : 0))); // ERROR
           precio = Number(precio) + Number(itemPrecio);
         });
       }

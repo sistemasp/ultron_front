@@ -187,7 +187,7 @@ const ModalProximaDermapen = (props) => {
         break;
     }
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-      /*const consecutivo = {
+      const consecutivo = {
         consecutivo: response.data.consecutivo,
         tipo_servicio: cita.servicio._id,
         servicio: response.data._id,
@@ -196,17 +196,17 @@ const ModalProximaDermapen = (props) => {
         status: response.data.status,
       }
       const responseConsecutivo = await createConsecutivo(consecutivo);
-      if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
-      setOpenAlert(true);
-      setMessage('CITA AGREGADA CORRECTAMENTE');
-      const dia = addZero(data.fecha_show.getDate());
-      const mes = addZero(data.fecha_show.getMonth() + 1);
-      const anio = data.fecha_show.getFullYear();
-      setFilterDate({
-        fecha_show: data.fecha_hora,
-        fecha: `${dia}/${mes}/${anio}`
-      });
-      //}
+      if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+        setOpenAlert(true);
+        setMessage('CITA AGREGADA CORRECTAMENTE');
+        const dia = addZero(data.fecha_show.getDate());
+        const mes = addZero(data.fecha_show.getMonth() + 1);
+        const anio = data.fecha_show.getFullYear();
+        setFilterDate({
+          fecha_show: data.fecha_hora,
+          fecha: `${dia}/${mes}/${anio}`
+        });
+      }
     }
 
     switch (cita.servicio._id) {
@@ -297,11 +297,11 @@ const ModalProximaDermapen = (props) => {
       if (tratam.areasSeleccionadas) {
         tratam.areasSeleccionadas.map((item) => {
           const itemPrecio =
-            sucursal === sucursalManuelAcunaId ? item.precio_ma // Precio Manuel Acuña
-              : (sucursal === sucursalOcciId ? item.precio_oc // Precio Occidental
-                : (sucursal === sucursalFedeId ? item.precio_fe // Precio Federalismo
+            sucursal === sucursalManuelAcunaId ? item.precio_ma // PRECIO MANUEL ACUÑA
+              : (sucursal === sucursalOcciId ? item.precio_oc // PRECIO OCCIDENTAL
+                : (sucursal === sucursalFedeId ? item.precio_fe // PRECIO FEDERALISMO
                   : (sucursal === sucursalRubenDarioId ? item.precio_rd // PRECIO RUBEN DARIO
-                    : 0))); // Error
+                    : 0))); // ERROR
           precio = Number(precio) + Number(itemPrecio);
         });
       }

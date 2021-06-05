@@ -60,6 +60,17 @@ const ModalUsoCfdi = (props) => {
   const servicioCirugiaId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID;
   const servicioEsteticaId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
 
+  const [values, setValues] = useState({
+    paciente: factura.paciente,
+    razon_social: factura.razon_social,
+    servicio: factura.servicio,
+    tipo_servicio: factura.tipo_servicio,
+    sucursal: factura.sucursal,
+    uso_cfdi: process.env.REACT_APP_POR_DEFINIR_USO_CFDI_ID
+  });
+
+  console.log("KAOZ", values);
+
   const handleGenerarFactura = async (event, rowData) => {
     rowData.fecha_hora = new Date();
     const response = await createFactura(rowData);
@@ -104,27 +115,24 @@ const ModalUsoCfdi = (props) => {
   }, []);
 
   const handleChangeUsoCfdi = (event) => {
-    factura.uso_cfdi = event.target.value;
+    setValues({
+      ...values,
+      uso_cfdi: event.target.value
+    });
   }
 
   return (
     <Fragment>
       {
         !isLoading ?
-          <Formik
-            enableReinitialize
-            initialValues={factura} >
-            {
-              props => <ModalFormUsoCfdi
-                open={open}
-                onClose={onClose}
-                usoCfdis={usoCfdis}
-                //factura={factura}
-                onChangeUsoCfdi={(event) => handleChangeUsoCfdi(event)}
-                onGenerarFactura={handleGenerarFactura}
-                {...props} />
-            }
-          </Formik> :
+          <ModalFormUsoCfdi
+            open={open}
+            onClose={onClose}
+            usoCfdis={usoCfdis}
+            values={values}
+            onChangeUsoCfdi={(event) => handleChangeUsoCfdi(event)}
+            onGenerarFactura={handleGenerarFactura} />
+          :
           <Backdrop className={classes.backdrop} open={isLoading} >
             <CircularProgress color="inherit" />
           </Backdrop>

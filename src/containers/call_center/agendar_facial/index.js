@@ -141,13 +141,13 @@ const AgendarFacial = (props) => {
 	});
 
 	const columns = [
-		//{ title: 'FOLIO', field: 'folio' },
+		{ title: 'FOLIO', field: 'consecutivo' },
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'TELÉFONO', field: 'paciente.telefono' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
-		//{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
-		//{ title: 'HORA SALIDA', field: 'hora_salida' },
+		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
+		{ title: 'HORA SALIDA', field: 'hora_salida' },
 		{ title: 'PRODUCTO (ÁREAS)', field: 'show_tratamientos' },
 		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
@@ -242,11 +242,11 @@ const AgendarFacial = (props) => {
 			if (tratam.areasSeleccionadas) {
 				tratam.areasSeleccionadas.map((item) => {
 					const itemPrecio =
-						sucursal === sucursalManuelAcunaId ? item.precio_ma // Precio Manuel Acuña
-							: (sucursal === sucursalOcciId ? item.precio_oc // Precio Occidental
-								: (sucursal === sucursalFedeId ? item.precio_fe // Precio Federalismo
+						sucursal === sucursalManuelAcunaId ? item.precio_ma // PRECIO MANUEL ACUÑA
+							: (sucursal === sucursalOcciId ? item.precio_oc // PRECIO OCCIDENTAL
+								: (sucursal === sucursalFedeId ? item.precio_fe // PRECIO FEDERALISMO
 									: (sucursal === sucursalRubenDarioId ? item.precio_rd // PRECIO RUBEN DARIO
-										: 0))); // Error
+										: 0))); // ERROR
 					precio = Number(precio) + Number(itemPrecio);
 					item.precio_real = itemPrecio;
 				});

@@ -64,6 +64,11 @@ const AgendarEstetica = (props) => {
 	const promovendedorRolId = process.env.REACT_APP_PROMOVENDEDOR_ROL_ID;
 	const cosmetologaRolId = process.env.REACT_APP_COSMETOLOGA_ROL_ID;
 	const pendienteStatusId = process.env.REACT_APP_PENDIENTE_STATUS_ID;
+	const atendidoStatusId = process.env.REACT_APP_ATENDIDO_STATUS_ID;
+	const noAsistioStatusId = process.env.REACT_APP_NO_ASISTIO_STATUS_ID;
+	const reagendoStatusId = process.env.REACT_APP_REAGENDO_STATUS_ID;
+	const canceladoCPStatusId = process.env.REACT_APP_CANCELO_CP_STATUS_ID;
+	const canceladoSPStatusId = process.env.REACT_APP_CANCELO_SP_STATUS_ID;
 	const dermatologoDirectoId = process.env.REACT_APP_DERMATOLOGO_DIRECTO_ID;
 	const tipoCitaRealizadoId = process.env.REACT_APP_TIPO_CITA_REALIZADO_ID;
 	const esteticaServicioId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
@@ -131,13 +136,13 @@ const AgendarEstetica = (props) => {
 	});
 
 	const columns = [
-		//{ title: 'FOLIO', field: 'folio' },
+		{ title: 'FOLIO', field: 'consecutivo' },
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'TELÉFONO', field: 'paciente.telefono' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
-		//{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
-		//{ title: 'HORA SALIDA', field: 'hora_salida' },
+		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
+		{ title: 'HORA SALIDA', field: 'hora_salida' },
 		{ title: 'PRODUCTO', field: 'producto_nombre' },
 		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
@@ -455,11 +460,47 @@ const AgendarEstetica = (props) => {
 						label="ACCIONES">
 						{
 							props.actions.map((item, index) => {
-
-								return <MenuItem
+								let menuItem = <MenuItem
 									key={index}
 									value={item.tooltip}
-								>{item.tooltip}</MenuItem>
+								>{item.tooltip}</MenuItem>;
+								switch (item.tooltip) {
+									case 'EDITAR':
+										menuItem = props.data.status._id !== canceladoCPStatusId && props.data.status._id !== canceladoSPStatusId
+											?
+											<MenuItem
+												key={index}
+												value={item.tooltip}
+											>{item.tooltip}</MenuItem>
+											: '';
+										break;
+									case 'PAGOS':
+										menuItem = props.data.status._id !== pendienteStatusId ?
+											<MenuItem
+												key={index}
+												value={item.tooltip}
+											>{item.tooltip}</MenuItem>
+											: '';
+										break;
+									case 'TRASPASO':
+										menuItem = props.data.status._id !== atendidoStatusId ?
+											<MenuItem
+												key={index}
+												value={item.tooltip}
+											>{item.tooltip}</MenuItem>
+											: '';
+										break;
+									case 'NUEVA CITA':
+										menuItem = props.data.status._id === atendidoStatusId ?
+											<MenuItem
+												key={index}
+												value={item.tooltip}
+											>{item.tooltip}</MenuItem>
+											: '';
+								}
+								if (menuItem !== '' && props.data.status._id !== reagendoStatusId && props.data.status._id !== noAsistioStatusId) {
+									return menuItem;
+								}
 							})
 						}
 					</Select>

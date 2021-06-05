@@ -78,7 +78,7 @@ const useStyles = makeStyles(theme => ({
 		flexGrow: 1,
 	},
 	bar: {
-		backgroundColor: "#2BA6C6",
+		backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
 	},
 	button: {
 		width: '100%',

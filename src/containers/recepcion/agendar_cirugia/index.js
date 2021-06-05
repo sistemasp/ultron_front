@@ -64,6 +64,10 @@ const AgendarCirugia = (props) => {
 	const cosmetologaRolId = process.env.REACT_APP_COSMETOLOGA_ROL_ID;
 	const pendienteStatusId = process.env.REACT_APP_PENDIENTE_STATUS_ID;
 	const atendidoStatusId = process.env.REACT_APP_ATENDIDO_STATUS_ID;
+	const noAsistioStatusId = process.env.REACT_APP_NO_ASISTIO_STATUS_ID;
+	const reagendoStatusId = process.env.REACT_APP_REAGENDO_STATUS_ID;
+	const canceladoCPStatusId = process.env.REACT_APP_CANCELO_CP_STATUS_ID;
+	const canceladoSPStatusId = process.env.REACT_APP_CANCELO_SP_STATUS_ID;
 	const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
 	const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
 	const sucursalFedeId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
@@ -128,13 +132,13 @@ const AgendarCirugia = (props) => {
 	});
 
 	const columns = [
-		//{ title: 'FOLIO', field: 'folio' },
+		{ title: 'FOLIO', field: 'consecutivo' },
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'TELÉFONO', field: 'paciente.telefono' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
-		//{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
-		//{ title: 'HORA SALIDA', field: 'hora_salida' },
+		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
+		{ title: 'HORA SALIDA', field: 'hora_salida' },
 		{ title: 'PRODUCTO', field: 'producto.nombre' },
 		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
@@ -423,10 +427,47 @@ const AgendarCirugia = (props) => {
 							label="ACCIONES">
 							{
 								props.actions.map((item, index) => {
-									return <MenuItem
+									let menuItem = <MenuItem
 										key={index}
 										value={item.tooltip}
-									>{item.tooltip}</MenuItem>
+									>{item.tooltip}</MenuItem>;
+									switch (item.tooltip) {
+										case 'EDITAR':
+											menuItem = props.data.status._id !== canceladoCPStatusId && props.data.status._id !== canceladoSPStatusId
+												?
+												<MenuItem
+													key={index}
+													value={item.tooltip}
+												>{item.tooltip}</MenuItem>
+												: '';
+											break;
+										case 'PAGOS':
+											menuItem = props.data.status._id !== pendienteStatusId ?
+												<MenuItem
+													key={index}
+													value={item.tooltip}
+												>{item.tooltip}</MenuItem>
+												: '';
+											break;
+										case 'TRASPASO':
+											menuItem = props.data.status._id !== atendidoStatusId ?
+												<MenuItem
+													key={index}
+													value={item.tooltip}
+												>{item.tooltip}</MenuItem>
+												: '';
+											break;
+										case 'NUEVA CITA':
+											menuItem = props.data.status._id === atendidoStatusId ?
+												<MenuItem
+													key={index}
+													value={item.tooltip}
+												>{item.tooltip}</MenuItem>
+												: '';
+									}
+									if (menuItem !== '' && props.data.status._id !== reagendoStatusId && props.data.status._id !== noAsistioStatusId) {
+										return menuItem;
+									}
 								})
 							}
 						</Select>

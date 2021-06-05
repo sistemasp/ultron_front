@@ -139,13 +139,13 @@ const AgendarDermapen = (props) => {
 	});
 
 	const columns = [
-		//{ title: 'FOLIO', field: 'folio' },
+		{ title: 'FOLIO', field: 'consecutivo' },
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'TELÉFONO', field: 'paciente.telefono' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
-		//{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
-		//{ title: 'HORA SALIDA', field: 'hora_salida' },
+		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
+		{ title: 'HORA SALIDA', field: 'hora_salida' },
 		{ title: 'PRODUCTO (ÁREAS)', field: 'producto_nombre' },
 		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },

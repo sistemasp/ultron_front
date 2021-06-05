@@ -26,7 +26,6 @@ export const AgendarFacialContainer = (props) => {
 
 	const {
 		values,
-		errors,
 		servicios,
 		tratamientos,
 		areas,
@@ -197,7 +196,7 @@ export const AgendarFacialContainer = (props) => {
 							variant="contained"
 							disabled={!isValid || isSubmitting || !paciente.nombres || !values.servicio
 								|| values.tratamientos.length === 0 || !values.fecha_hora || !values.precio
-								|| !values.tiempo || !selectedAreas}
+								|| !values.tiempo || !selectedAreas || !values.hora}
 							onClick={() => onClickAgendar(values)}
 							text='GUARDAR' />
 					</Grid>
@@ -291,7 +290,6 @@ export const AgendarFacialContainer = (props) => {
 										labelId="simple-select-outlined-tipo-cita"
 										id="simple-select-outlined-tipo-cita"
 										value={values.tipoCita}
-										error={Boolean(errors.tipoCita)}
 										onChange={onChangeTipoCita}
 										label="TIPO" >
 										{tipoCitas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
@@ -307,7 +305,6 @@ export const AgendarFacialContainer = (props) => {
 								labelId="simple-select-outlined-promovendedor"
 								id="simple-select-outlined-promovendedor"
 								value={values.promovendedor}
-								error={Boolean(errors.promovendedor)}
 								onChange={onChangePromovendedor}
 								label="PROMOVENDEDOR (A)" >
 								{promovendedores.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
@@ -321,7 +318,6 @@ export const AgendarFacialContainer = (props) => {
 								labelId="simple-select-outlined-cosmetologa"
 								id="simple-select-outlined-cosmetologa"
 								value={values.cosmetologa}
-								error={Boolean(errors.cosmetologa)}
 								onChange={onChangeCosmetologa}
 								label="COSMETÓLOGA" >
 								{cosmetologas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
@@ -345,7 +341,6 @@ export const AgendarFacialContainer = (props) => {
 						<TextField
 							className={classes.button}
 							name="observaciones"
-							error={Boolean(errors.observaciones)}
 							label="OBSERVACIONES"
 							value={values.observaciones}
 							onChange={onChangeObservaciones}
@@ -384,7 +379,6 @@ export const AgendarFacialContainer = (props) => {
 								labelId="simple-select-outlined-hora"
 								id="simple-select-outlined-hora"
 								value={values.hora}
-								error={Boolean(errors.hora)}
 								onChange={onChangeHora}
 								disabled={!values.fecha_hora}
 								label="HORA" >
@@ -396,7 +390,6 @@ export const AgendarFacialContainer = (props) => {
 						<TextField
 							className={classes.button}
 							name="tiempo"
-							error={Boolean(errors.tiempo)}
 							label="TIEMPO"
 							value={values.tiempo}
 							type='Number'

@@ -142,6 +142,14 @@ const ModalImprimirPagoDermatologo = (props) => {
   const loadFaciales = async (hora_apertura, hora_cierre) => {
     const response = await findFacialesByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      response.data.forEach(item => {
+        item.show_tratamientos = item.tratamientos.map(tratamiento => {
+          const show_areas = tratamiento.areasSeleccionadas.map(area => {
+            return `${area.nombre}`;
+          });
+          return `►${tratamiento.nombre}(${show_areas}) `;
+        });
+      });
       setFaciales(response.data);
     }
   }
@@ -170,6 +178,14 @@ const ModalImprimirPagoDermatologo = (props) => {
   const loadAparatologias = async (hora_apertura, hora_cierre) => {
     const response = await findAparatologiasByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      response.data.forEach(item => {
+        item.show_tratamientos = item.tratamientos.map(tratamiento => {
+          const show_areas = tratamiento.areasSeleccionadas.map(area => {
+            return `${area.nombre}`;
+          });
+          return `►${tratamiento.nombre}(${show_areas}) `;
+        });
+      });
       setAparatologias(response.data);
     }
   }
@@ -269,49 +285,51 @@ const ModalImprimirPagoDermatologo = (props) => {
     // TOTAL DE LOS FACIALES
     faciales.forEach(async (facial) => {
       let comisionDermatologo = 0;
-      facial.tratamientos.map(tratamiento => {
-        let importe1 = 0;
-        tratamiento.areasSeleccionadas.map(areaSeleccionada => {
-          let comisionReal = 0;
-          const itemPrecio = sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.precio_ma
-            : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.precio_rd
-              : (sucursal._id === sucursalOcciId ? areaSeleccionada.precio_oc
-                : (sucursal._id === sucursalFedeId ? areaSeleccionada.precio_fe : '0')));
+      if (!facial.has_descuento_dermatologo) {
+        facial.tratamientos.map(tratamiento => {
+          let importe1 = 0;
+          tratamiento.areasSeleccionadas.map(areaSeleccionada => {
+            let comisionReal = 0;
+            const itemPrecio = sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.precio_ma
+              : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.precio_rd
+                : (sucursal._id === sucursalOcciId ? areaSeleccionada.precio_oc
+                  : (sucursal._id === sucursalFedeId ? areaSeleccionada.precio_fe : '0')));
 
-          importe1 += Number(itemPrecio);
-          switch (facial.tipo_cita._id) {
-            case revisadoTipoCitaId:
-              comisionReal = sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.comision_revisado_ma
-                : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.comision_revisado_rd
-                  : areaSeleccionada.comision_revisado);
-              break;
-            case derivadoTipoCitaId:
-              comisionReal = sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.comision_derivado_ma
-                : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.comision_derivado_rd
-                  : areaSeleccionada.comision_derivado);
-              break;
-            case realizadoTipoCitaId:
-              comisionReal = sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.comision_realizado_ma
-                : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.comision_realizado_rd
-                  : areaSeleccionada.comision_realizado);
-              break;
-            case directoTipoCitaId: // TOMA EL 100%
-              comisionReal = sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.precio_ma
-                : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.precio_rd
-                  : areaSeleccionada.precio_fe);
-              break;
-            case noAplicaTipoCitaId:
-              comisionReal = 0;
-              break;
-          }
-          const precioReal = (itemPrecio - (itemPrecio * (facial.porcentaje_descuento_clinica ? facial.porcentaje_descuento_clinica : 0) / 100));
-          areaSeleccionada.comision_real = !facial.has_descuento_dermatologo ? comisionReal : 0;
-          areaSeleccionada.precio_real = precioReal;
-          comisionDermatologo += Number(comisionReal);
+            importe1 += Number(itemPrecio);
+            switch (facial.tipo_cita._id) {
+              case revisadoTipoCitaId:
+                comisionReal = sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.comision_revisado_ma
+                  : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.comision_revisado_rd
+                    : areaSeleccionada.comision_revisado);
+                break;
+              case derivadoTipoCitaId:
+                comisionReal = sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.comision_derivado_ma
+                  : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.comision_derivado_rd
+                    : areaSeleccionada.comision_derivado);
+                break;
+              case realizadoTipoCitaId:
+                comisionReal = sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.comision_realizado_ma
+                  : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.comision_realizado_rd
+                    : areaSeleccionada.comision_realizado);
+                break;
+              case directoTipoCitaId: // TOMA EL 100%
+                comisionReal = sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.precio_ma
+                  : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.precio_rd
+                    : areaSeleccionada.precio_fe);
+                break;
+              case noAplicaTipoCitaId:
+                comisionReal = 0;
+                break;
+            }
+            const precioReal = (itemPrecio - (itemPrecio * (facial.porcentaje_descuento_clinica ? facial.porcentaje_descuento_clinica : 0) / 100));
+            areaSeleccionada.comision_real = !facial.has_descuento_dermatologo ? comisionReal : 0;
+            areaSeleccionada.precio_real = precioReal;
+            comisionDermatologo += Number(comisionReal);
+          });
+          tratamiento.importe1 = importe1;
         });
-        tratamiento.importe1 = importe1;
-      });
-      const pagoDermatologo = comisionDermatologo - ((comisionDermatologo * facial.pagos[0].porcentaje_descuento_clinica) / 100);
+      }
+      const pagoDermatologo = comisionDermatologo - ((comisionDermatologo * facial.porcentaje_descuento_clinica ? facial.porcentaje_descuento_clinica : 0) / 100);
       facial.pago_dermatologo = pagoDermatologo;
       updateFacial(facial._id, facial);
       total += Number(pagoDermatologo);
@@ -320,25 +338,27 @@ const ModalImprimirPagoDermatologo = (props) => {
     // TOTAL DE LAS APARATOLOGIAS
     aparatologias.forEach(async (aparatologia) => {
       let comisionDermatologo = 0;
-      aparatologia.tratamientos.forEach(tratamiento => {
-        let importe1 = 0;
-        tratamiento.areasSeleccionadas.map(area => {
-          const itemPrecio =
-            sucursal._id === sucursalManuelAcunaId ? area.precio_ma // Precio Manuel Acuña
-              : (sucursal._id === sucursalOcciId ? area.precio_oc // Precio Occidental
-                : (sucursal._id === sucursalFedeId ? area.precio_fe // Precio Federalismo
-                  : (sucursal._id === sucursalRubenDarioId ? area.precio_rd // PRECIO RUBEN DARIO
-                    : 0))); // Error
-          importe1 += Number(itemPrecio);
-          const precioReal = (itemPrecio - (itemPrecio * aparatologia.porcentaje_descuento_clinica ? aparatologia.porcentaje_descuento_clinica : 0 / 100)) *
-            (aparatologia.has_descuento_dermatologo ? (1 - ((aparatologia.frecuencia === primeraVezFrecuenciaId ? dermatologo.esquema.porcentaje_laser : 0) / 100)) : 1);
-          const comisionReal = Number(precioReal) * Number(aparatologia.frecuencia === primeraVezFrecuenciaId ? dermatologo.esquema.porcentaje_laser : 0) / 100;
-          comisionDermatologo += comisionReal;
-          area.comision_real = aparatologia.has_descuento_dermatologo ? 0 : comisionReal;
-          area.precio_real = precioReal;
+      if (!aparatologia.has_descuento_dermatologo) {
+        aparatologia.tratamientos.forEach(tratamiento => {
+          let importe1 = 0;
+          tratamiento.areasSeleccionadas.map(area => {
+            const itemPrecio =
+              sucursal._id === sucursalManuelAcunaId ? area.precio_ma // PRECIO MANUEL ACUÑA
+                : (sucursal._id === sucursalOcciId ? area.precio_oc // PRECIO OCCIDENTAL
+                  : (sucursal._id === sucursalFedeId ? area.precio_fe // PRECIO FEDERALISMO
+                    : (sucursal._id === sucursalRubenDarioId ? area.precio_rd // PRECIO RUBEN DARIO
+                      : 0))); // ERROR
+            importe1 += Number(itemPrecio);
+            const precioReal = (itemPrecio - (itemPrecio * aparatologia.porcentaje_descuento_clinica ? aparatologia.porcentaje_descuento_clinica : 0 / 100)) *
+              (aparatologia.has_descuento_dermatologo ? (1 - ((aparatologia.frecuencia === primeraVezFrecuenciaId ? dermatologo.esquema.porcentaje_laser : 0) / 100)) : 1);
+            const comisionReal = Number(precioReal) * Number(aparatologia.frecuencia === primeraVezFrecuenciaId ? dermatologo.esquema.porcentaje_laser : 0) / 100;
+            comisionDermatologo += comisionReal;
+            area.comision_real = aparatologia.has_descuento_dermatologo ? 0 : comisionReal;
+            area.precio_real = precioReal;
+          });
+          tratamiento.importe1 = importe1;
         });
-        tratamiento.importe1 = importe1;
-      });
+      }
       let pagoDermatologo = aparatologia.has_descuento_dermatologo ? 0 : comisionDermatologo;
       aparatologia.pago_dermatologo = pagoDermatologo;
       updateAparatologia(aparatologia._id, aparatologia);

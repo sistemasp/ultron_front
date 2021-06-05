@@ -68,6 +68,7 @@ export const MainContainer = props => {
 
 	const rolRecepcionistaId = process.env.REACT_APP_RECEPCIONISTA_ROL_ID;
 	const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
+	const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
 
 	const {
 		pacienteAgendado,
@@ -125,7 +126,7 @@ export const MainContainer = props => {
 	}
 
 	useEffect(() => {
-		if (sucursal._id === sucursalManuelAcunaId) findCorte();
+		if (sucursal._id === sucursalManuelAcunaId || sucursal._id === sucursalRubenDarioId ) findCorte();
 	}, []);
 
 	return (
@@ -195,7 +196,7 @@ export const MainContainer = props => {
 						<ListItemText primary={'PACIENTES'} />
 					</ListItem>
 					{
-						sucursal._id === sucursalManuelAcunaId ?
+						sucursal._id === sucursalManuelAcunaId || sucursal._id === sucursalRubenDarioId ?
 							<Fragment>
 								<ListItem button key={'DERMATOLÓGOS'} onClick={(e) => onChangeTab(e, 1, handleDrawerClose)}>
 									<ListItemIcon> <People /> </ListItemIcon>

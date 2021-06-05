@@ -45,7 +45,7 @@ const ModalCirugiaAgregarPaciente = (props) => {
   const [values, setValues] = useState({
   });
 
-  const enSalaCirugiaStatusId = process.env.REACT_APP_EN_SALA_CIRUGíA_STATUS_ID;
+  const enSalaCirugiaStatusId = process.env.REACT_APP_EN_SALA_CIRUGIA_STATUS_ID;
   const cirugiaServicioId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID;
 
   const handleClickGuardar = async (event, rowData) => {
@@ -56,10 +56,9 @@ const ModalCirugiaAgregarPaciente = (props) => {
       let updateData = currentService;
       updateData.status = enSalaCirugiaStatusId;
       updateData.hora_atencion = `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;
-      tipo_servicio === cirugiaServicioId ? await updateCirugia(currentService._id, updateData) : updateEstetica(currentService._id, updateData, empleado.access_token);
+      tipo_servicio === cirugiaServicioId ? await updateCirugia(currentService._id, updateData, empleado.access_token) : updateEstetica(currentService._id, updateData, empleado.access_token, empleado.access_token);
     }
 
-    console.log("KAOZ", currentService);
     setValues({ sala_cirugia: { paciente: currentService.paciente._id } });
     let salaCirugia = values.sala_cirugia;
     salaCirugia.cirugia = currentService._id;

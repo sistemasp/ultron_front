@@ -64,18 +64,19 @@ const ReporteGeneralCitas = (props) => {
 	});
 
 	const columns = [
-		//{ title: 'FOLIO', field: 'folio' },
+		{ title: 'FOLIO', field: 'consecutivo' },
 		{ title: 'FECHA', field: 'fecha_show' },
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'TELÉFONO', field: 'paciente.telefono' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
-		//{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
-		//{ title: 'HORA SALIDA', field: 'hora_salida' },
+		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
+		{ title: 'HORA SALIDA', field: 'hora_salida' },
 		{ title: 'SERVICIO', field: 'servicio.nombre' },
 		{ title: 'PRODUCTO (ÁREAS)', field: 'show_tratamientos' },
 		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
+		{ title: 'MEDIO', field: 'medio.nombre' },
 		{ title: 'TIPO', field: 'tipo_cita.nombre' },
 		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
 		{ title: 'PROMOVENDEDOR (A)', field: 'promovendedor_nombre' },
@@ -117,8 +118,7 @@ const ReporteGeneralCitas = (props) => {
 
 	const processResponse = (data) => {
 		data.forEach(item => {
-			// item.folio = generateFolio(item);
-			console.log("KAOZ", item);
+			//item.folio = generateFolio(item);
 			const date = new Date(item.fecha_hora);
             const dia = addZero(date.getDate());
             const mes = addZero(date.getMonth() + 1);
