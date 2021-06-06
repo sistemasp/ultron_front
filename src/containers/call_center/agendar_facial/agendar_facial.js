@@ -18,6 +18,7 @@ import ModalImprimirTratamiento from '../../../components/modales/imprimir/trata
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import ModalProximaCita from '../../../components/modales/modal_proxima_cita';
 import myStyles from '../../../css';
+import ModalTraspasoServicio from '../../../components/modales/traspaso_servicio';
 
 export const AgendarFacialContainer = (props) => {
 
@@ -28,12 +29,11 @@ export const AgendarFacialContainer = (props) => {
 		errors,
 		servicios,
 		tratamientos,
+		areas,
 		horarios,
 		tipoCitas,
 		onChangeServicio,
-		onChangePaymentMethod,
 		onChangeTratamientos,
-		formasPago,
 		onChangeAreas,
 		onChangeFecha,
 		onChangeHora,
@@ -52,10 +52,12 @@ export const AgendarFacialContainer = (props) => {
 		dermatologos,
 		promovendedores,
 		cosmetologas,
+		formasPago,
 		onChangeDoctors,
 		onChangeTipoCita,
 		onChangePromovendedor,
 		onChangeCosmetologa,
+		onChangePaymentMethod,
 		onChangeMedio,
 		medios,
 		dermatologoDirectoId,
@@ -68,7 +70,7 @@ export const AgendarFacialContainer = (props) => {
 		components,
 		// MODAL PROPERTIES
 		openModal,
-		cita,
+		facial,
 		onClickActualizarCita,
 		onClickCancel,
 		onChangeAsistio,
@@ -77,6 +79,9 @@ export const AgendarFacialContainer = (props) => {
 		setSeverity,
 		// MODAL PROXIMA
 		openModalProxima,
+		// MODAL PAGOS
+		onCloseVerPagos,
+		openModalPagos,
 		sucursal,
 		setMessage,
 		setOpenAlert,
@@ -85,6 +90,9 @@ export const AgendarFacialContainer = (props) => {
 		openModalImprimirCita,
 		datosImpresion,
 		onCloseImprimirConsulta,
+		// MODAL TRASPASO
+		openModalTraspaso,
+		onCloseTraspasos,
 	} = props;
 
 	return (
@@ -93,7 +101,7 @@ export const AgendarFacialContainer = (props) => {
 				openModal ?
 					<ModalCita
 						open={openModal}
-						cita={cita}
+						cita={facial}
 						onClickActualizarCita={onClickActualizarCita}
 						onClose={onClickCancel}
 						onChangeServicio={onChangeServicio}
@@ -118,7 +126,7 @@ export const AgendarFacialContainer = (props) => {
 				openModalProxima ?
 					<ModalProximaCita
 						open={openModalProxima}
-						cita={cita}
+						cita={facial}
 						onClickActualizarCita={onClickActualizarCita}
 						onClose={onClickCancel}
 						onChangeServicio={onChangeServicio}
@@ -139,11 +147,38 @@ export const AgendarFacialContainer = (props) => {
 						setFilterDate={setFilterDate} /> : ''
 			}
 			{
+				openModalPagos ?
+					<ModalPagos
+						open={openModalPagos}
+						onClose={onCloseVerPagos}
+						servicio={facial}
+						empleado={empleado}
+						sucursal={sucursal}
+						setMessage={setMessage}
+						setOpenAlert={setOpenAlert}
+						onGuardarModalPagos={onGuardarModalPagos}
+						tipoServicioId={facial.servicio._id} />
+					: ''
+			}
+			{
 				openModalImprimirCita ?
 					<ModalImprimirTratamiento
 						open={openModalImprimirCita}
 						onClose={onCloseImprimirConsulta}
 						datos={datosImpresion} />
+					: ''
+			}
+			{
+				openModalTraspaso ?
+					<ModalTraspasoServicio
+						open={openModalTraspaso}
+						onClose={onCloseTraspasos}
+						servicio={facial}
+						empleado={empleado}
+						sucursal={sucursal._id}
+						setMessage={setMessage}
+						setOpenAlert={setOpenAlert}
+						loadServicios={loadFaciales} />
 					: ''
 			}
 			<Paper>
@@ -167,6 +202,19 @@ export const AgendarFacialContainer = (props) => {
 					</Grid>
 				</Grid>
 				<Grid container spacing={3}>
+					<Grid item xs={12} sm={2}>
+						<FormControl variant="outlined" className={classes.formControl}>
+							<InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
+							<Select
+								labelId="simple-select-outlined-frecuencia"
+								id="simple-select-outlined-frecuencia"
+								value={values.frecuencia}
+								onChange={onChangeFrecuencia}
+								label="FRECUENCIA" >
+								{frecuencias.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+							</Select>
+						</FormControl>
+					</Grid>
 					{
 						true ?
 							<Grid item xs={12} sm={2}>
@@ -209,26 +257,13 @@ export const AgendarFacialContainer = (props) => {
 					}
 					<Grid item xs={12} sm={2}>
 						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
-							<Select
-								labelId="simple-select-outlined-frecuencia"
-								id="simple-select-outlined-frecuencia"
-								value={values.frecuencia}
-								onChange={onChangeFrecuencia}
-								label="FRECUENCIA" >
-								{frecuencias.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-							</Select>
-						</FormControl>
-					</Grid>
-					<Grid item xs={12} sm={2}>
-						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-hora">DERMATÓLOGO</InputLabel>
+							<InputLabel id="simple-select-outlined-hora">DERMATÓLOGO (A)</InputLabel>
 							<Select
 								labelId="simple-select-outlined-dermatologo"
 								id="simple-select-outlined-dermatologo"
 								value={values.dermatologo}
 								onChange={onChangeDoctors}
-								label="DERMATÓLOGO" >
+								label="DERMATÓLOGO (A)" >
 								{dermatologos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
 							</Select>
 						</FormControl>
@@ -257,7 +292,7 @@ export const AgendarFacialContainer = (props) => {
 										value={values.tipoCita}
 										error={Boolean(errors.tipoCita)}
 										onChange={onChangeTipoCita}
-										label="TIPO CITA" >
+										label="TIPO" >
 										{tipoCitas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
 									</Select>
 								</FormControl>
@@ -266,14 +301,14 @@ export const AgendarFacialContainer = (props) => {
 					}
 					<Grid item xs={12} sm={2}>
 						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-promovendedor">PROMOVENDEDOR</InputLabel>
+							<InputLabel id="simple-select-outlined-promovendedor">PROMOVENDEDOR (A)</InputLabel>
 							<Select
 								labelId="simple-select-outlined-promovendedor"
 								id="simple-select-outlined-promovendedor"
 								value={values.promovendedor}
 								error={Boolean(errors.promovendedor)}
 								onChange={onChangePromovendedor}
-								label="PROMOVENDEDOR" >
+								label="PROMOVENDEDOR (A)" >
 								{promovendedores.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
 							</Select>
 						</FormControl>
@@ -291,6 +326,29 @@ export const AgendarFacialContainer = (props) => {
 								{cosmetologas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
 							</Select>
 						</FormControl>
+					</Grid>
+					<Grid item xs={12} sm={2}>
+						<FormControl variant="outlined" className={classes.formControl}>
+							<InputLabel id="simple-select-outlined-payment">FORMA DE PAGO</InputLabel>
+							<Select
+								labelId="simple-select-outlined-payment"
+								id="simple-select-outlined-payment"
+								value={values.forma_pago}
+								onChange={onChangePaymentMethod}
+								label="FORMA DE PAGO" >
+								{formasPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+							</Select>
+						</FormControl>
+					</Grid>
+					<Grid item xs={12} sm={2}>
+						<TextField
+							className={classes.button}
+							name="observaciones"
+							error={Boolean(errors.observaciones)}
+							label="OBSERVACIONES"
+							value={values.observaciones}
+							onChange={onChangeObservaciones}
+							variant="outlined" />
 					</Grid>
 					<Grid item xs={12} sm={2}>
 						<MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -345,29 +403,6 @@ export const AgendarFacialContainer = (props) => {
 							onInput={(e) => {
 								e.target.value = Math.max(0, parseInt(e.target.value)).toString().slice(0, 3)
 							}}
-							variant="outlined" />
-					</Grid>
-					<Grid item xs={12} sm={2}>
-						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-payment">FORMA DE PAGO</InputLabel>
-							<Select
-								labelId="simple-select-outlined-payment"
-								id="simple-select-outlined-payment"
-								value={values.forma_pago}
-								onChange={onChangePaymentMethod}
-								label="FORMA DE PAGO" >
-								{formasPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-							</Select>
-						</FormControl>
-					</Grid>
-					<Grid item xs={12} sm={2}>
-						<TextField
-							className={classes.button}
-							name="observaciones"
-							error={Boolean(errors.observaciones)}
-							label="OBSERVACIONES"
-							value={values.observaciones}
-							onChange={onChangeObservaciones}
 							variant="outlined" />
 					</Grid>
 				</Grid>

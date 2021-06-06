@@ -21,6 +21,8 @@ const MenuMainRecepcion = (props) => {
 		sucursal,
 	} = props.location.state;
 
+	console.log("KAOZ", sucursal);
+
 	const { permisos } = empleado.rol;
 
 	const {

@@ -18,6 +18,8 @@ import ModalProximaCita from '../../../components/modales/modal_proxima_cita';
 import ModalDermapen from '../../../components/modales/modal_dermapen';
 import ModalImprimirDermapen from '../../../components/modales/imprimir/dermapen';
 import myStyles from '../../../css';
+import ModalTraspasoServicio from '../../../components/modales/traspaso_servicio';
+import ModalProximaDermapen from '../../../components/modales/modal_proxima_dermapen';
 
 export const AgendarDermapenContainer = (props) => {
 
@@ -55,7 +57,6 @@ export const AgendarDermapenContainer = (props) => {
 		onChangeCosmetologa,
 		onChangeMedio,
 		medios,
-		dermatologoDirectoId,
 		materiales,
 		onChangeMateriales,
 		onChangeItemPrecio,
@@ -93,6 +94,9 @@ export const AgendarDermapenContainer = (props) => {
 		openModalImprimirCita,
 		datosImpresion,
 		onCloseImprimirConsulta,
+		// MODAL TRASPASOS
+		openModalTraspaso,
+		onCloseTraspasos,
 	} = props;
 
 	return (
@@ -123,9 +127,9 @@ export const AgendarDermapenContainer = (props) => {
 			}
 			{
 				openModalProxima ?
-					<ModalProximaCita
+					<ModalProximaDermapen
 						open={openModalProxima}
-						dermapen={dermapen}
+						cita={dermapen}
 						onClickActualizarCita={onClickActualizarCita}
 						onClose={onClickCancel}
 						onChangeServicio={onChangeServicio}
@@ -167,16 +171,26 @@ export const AgendarDermapenContainer = (props) => {
 						datos={datosImpresion} />
 					: ''
 			}
+			{
+				openModalTraspaso ?
+					<ModalTraspasoServicio
+						open={openModalTraspaso}
+						onClose={onCloseTraspasos}
+						servicio={dermapen}
+						empleado={empleado}
+						sucursal={sucursal._id}
+						setMessage={setMessage}
+						setOpenAlert={setOpenAlert}
+						loadServicios={loadDermapens} />
+					: ''
+			}
 			<Paper>
 				<Grid container spacing={3}>
-					<Grid item xs={12} sm={6} className={classes.grid_center}>
+					<Grid item xs={12} sm={8} className={classes.grid_center}>
 						<h1>{paciente.nombres ? `${paciente.nombres} ${paciente.apellidos}` : 'SELECCIONA DESDE UNA CONSULTA'}</h1>
 					</Grid>
 					<Grid item xs={12} sm={2} className={classes.grid_center}>
-						<h2>APLICACIÓN: {toFormatterCurrency(values.total_aplicacion)}</h2>
-					</Grid>
-					<Grid item xs={12} sm={2} className={classes.grid_center}>
-						<h1>TOTAL: {toFormatterCurrency(values.precio)}</h1>
+						<h1>{toFormatterCurrency(values.precio)}</h1>
 					</Grid>
 					<Grid item xs={12} sm={2} className={classes.grid_center}>
 						<ButtonCustom
@@ -191,32 +205,17 @@ export const AgendarDermapenContainer = (props) => {
 				</Grid>
 				<Grid container spacing={3}>
 					<Grid item xs={12} sm={2}>
-						<TextField
-							className={classes.textField}
-							name="total"
-							label="TOTAL DERMAPEN"
-							value={values.precio}
-							type='Number'
-							onChange={onChangeTotal}
-							onInput={(e) => {
-								e.target.value = e.target.value < 0 ? 0 : e.target.value;
-								e.target.value = Math.max(0, parseFloat(e.target.value)).toString().slice(0, 6)
-							}}
-							variant="outlined" />
-					</Grid>
-					<Grid item xs={12} sm={2}>
-						<TextField
-							className={classes.textField}
-							name="costo"
-							label="COSTO DERMAPEN"
-							value={values.costo}
-							type='Number'
-							onChange={onChangeCosto}
-							onInput={(e) => {
-								e.target.value = e.target.value < 0 ? 0 : e.target.value;
-								e.target.value = Math.max(0, parseFloat(e.target.value)).toString().slice(0, 6)
-							}}
-							variant="outlined" />
+						<FormControl variant="outlined" className={classes.formControl}>
+							<InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
+							<Select
+								labelId="simple-select-outlined-frecuencia"
+								id="simple-select-outlined-frecuencia"
+								value={values.frecuencia}
+								onChange={onChangeFrecuencia}
+								label="FRECUENCIA" >
+								{frecuencias.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+							</Select>
+						</FormControl>
 					</Grid>
 					<Grid item xs={12} sm={2}>
 						<Multiselect
@@ -229,53 +228,16 @@ export const AgendarDermapenContainer = (props) => {
 						/>
 					</Grid>
 					<Grid item xs={12} sm={2}>
-						<Multiselect
-							options={materiales} // Options to display in the dropdown
-							displayValue="nombre" // Property name to display in the dropdown options
-							onSelect={(e) => onChangeMateriales(e)} // Function will trigger on select event
-							onRemove={(e) => onChangeMateriales(e)} // Function will trigger on remove event
-							placeholder="SELECCIONA MATERIALES"
-							selectedValues={values.materiales} // Preselected value to persist in dropdown
-						/>
-					</Grid>
-
-					{
-						values.materiales.map((item, index) =>
-							<Grid item xs={12} sm={2}>
-								<TextField
-									className={classes.button}
-									name={item.precio}
-									label={`PRECIO: ${item.nombre}`}
-									value={item.precio}
-									type='Number'
-									onChange={(e) => onChangeItemPrecio(e, index)}
-									variant="outlined" />
-							</Grid>)
-					}
-					<Grid item xs={12} sm={2}>
 						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
-							<Select
-								labelId="simple-select-outlined-frecuencia"
-								id="simple-select-outlined-frecuencia"
-								value={values.frecuencia}
-								onChange={onChangeFrecuencia}
-								label="FRECUENCIA" >
-								{frecuencias.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
-							</Select>
-						</FormControl>
-					</Grid>
-					<Grid item xs={12} sm={2}>
-						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-hora">DERMATÓLOGO</InputLabel>
+							<InputLabel id="simple-select-outlined-hora">DERMATÓLOGO (A)</InputLabel>
 							<Select
 								labelId="simple-select-outlined-dermatologo"
 								id="simple-select-outlined-dermatologo"
 								value={values.dermatologo}
 								error={Boolean(errors.dermatologo)}
 								onChange={onChangeDoctors}
-								label="DERMATÓLOGO" >
-								{dermatologos.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
+								label="DERMATÓLOGO (A)" >
+								{dermatologos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
 							</Select>
 						</FormControl>
 					</Grid>
@@ -294,17 +256,54 @@ export const AgendarDermapenContainer = (props) => {
 					</Grid>
 					<Grid item xs={12} sm={2}>
 						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-promovendedor">PROMOVENDEDOR</InputLabel>
+							<InputLabel id="simple-select-outlined-promovendedor">PROMOVENDEDOR (A)</InputLabel>
 							<Select
 								labelId="simple-select-outlined-promovendedor"
 								id="simple-select-outlined-promovendedor"
 								value={values.promovendedor}
 								error={Boolean(errors.promovendedor)}
 								onChange={onChangePromovendedor}
-								label="PROMOVENDEDOR" >
-								{promovendedores.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
+								label="PROMOVENDEDOR (A)" >
+								{promovendedores.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
 							</Select>
 						</FormControl>
+					</Grid>
+					<Grid item xs={12} sm={2}>
+						<FormControl variant="outlined" className={classes.formControl}>
+							<InputLabel id="simple-select-outlined-cosmetologa">COSMETÓLOGA</InputLabel>
+							<Select
+								labelId="simple-select-outlined-cosmetologa"
+								id="simple-select-outlined-cosmetologa"
+								value={values.cosmetologa}
+								error={Boolean(errors.cosmetologa)}
+								onChange={onChangeCosmetologa}
+								label="COSMETÓLOGA" >
+								{cosmetologas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+							</Select>
+						</FormControl>
+					</Grid>
+					<Grid item xs={12} sm={2}>
+						<FormControl variant="outlined" className={classes.formControl}>
+							<InputLabel id="simple-select-outlined-payment">FORMA DE PAGO</InputLabel>
+							<Select
+								labelId="simple-select-outlined-payment"
+								id="simple-select-outlined-payment"
+								value={values.forma_pago}
+								onChange={onChangePaymentMethod}
+								label="FORMA DE PAGO" >
+								{formasPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+							</Select>
+						</FormControl>
+					</Grid>
+					<Grid item xs={12} sm={2}>
+						<TextField
+							className={classes.button}
+							name="observaciones"
+							error={Boolean(errors.observaciones)}
+							label="OBSERVACIONES"
+							value={values.observaciones}
+							onChange={onChangeObservaciones}
+							variant="outlined" />
 					</Grid>
 					<Grid item xs={12} sm={2}>
 						<MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -362,26 +361,17 @@ export const AgendarDermapenContainer = (props) => {
 							variant="outlined" />
 					</Grid>
 					<Grid item xs={12} sm={2}>
-						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-payment">FORMA DE PAGO</InputLabel>
-							<Select
-								labelId="simple-select-outlined-payment"
-								id="simple-select-outlined-payment"
-								value={values.forma_pago}
-								onChange={onChangePaymentMethod}
-								label="FORMA DE PAGO" >
-								{formasPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-							</Select>
-						</FormControl>
-					</Grid>
-					<Grid item xs={12} sm={2}>
 						<TextField
-							className={classes.button}
-							name="observaciones"
-							error={Boolean(errors.observaciones)}
-							label="OBSERVACIONES"
-							value={values.observaciones}
-							onChange={onChangeObservaciones}
+							className={classes.textField}
+							name="total"
+							label="TOTAL DERMAPEN"
+							value={values.precio}
+							type='Number'
+							onChange={onChangeTotal}
+							onInput={(e) => {
+								e.target.value = e.target.value < 0 ? 0 : e.target.value;
+								e.target.value = Math.max(0, parseFloat(e.target.value)).toString().slice(0, 6)
+							}}
 							variant="outlined" />
 					</Grid>
 				</Grid>

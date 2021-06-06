@@ -78,7 +78,7 @@ const useStyles = makeStyles(theme => ({
 		flexGrow: 1,
 	},
 	bar: {
-		backgroundColor: "#2BA6C6",
+		backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
 	},
 	button: {
 		width: '100%',
@@ -99,6 +99,7 @@ export const MenuHistoricoContainer = props => {
 		sucursal,
 		onClickCancel,
 		servicios,
+		empleado,
 	} = props;
 
 	return (
@@ -128,49 +129,57 @@ export const MenuHistoricoContainer = props => {
 							<TabAparatologia
 								paciente={paciente}
 								sucursal={sucursal}
-								servicio={servicios[0]} />
+								servicio={servicios[0]}
+								empleado={empleado} />
 						</TabPanel>
 						<TabPanel value={value} index={1}>
 							<TabBiopsias
 								paciente={paciente}
 								sucursal={sucursal}
-								servicio={servicios[1]} />
+								servicio={servicios[1]}
+								empleado={empleado} />
 						</TabPanel>
 						<TabPanel value={value} index={2}>
 							<TabCirugias
 								paciente={paciente}
 								sucursal={sucursal}
-								servicio={servicios[2]} />
+								servicio={servicios[2]}
+								empleado={empleado} />
 						</TabPanel>
 						<TabPanel value={value} index={3}>
 							<TabConsultas
 								paciente={paciente}
 								sucursal={sucursal}
-								servicio={servicios[3]} />
+								servicio={servicios[3]}
+								empleado={empleado} />
 						</TabPanel>
 						<TabPanel value={value} index={4}>
 							<TabDermapen
 								paciente={paciente}
 								sucursal={sucursal}
-								servicio={servicios[4]} />
+								servicio={servicios[4]}
+								empleado={empleado} />
 						</TabPanel>
 						<TabPanel value={value} index={5}>
 							<TabEstetica
 								paciente={paciente}
 								sucursal={sucursal}
-								servicio={servicios[5]} />
+								servicio={servicios[5]}
+								empleado={empleado} />
 						</TabPanel>
 						<TabPanel value={value} index={6}>
 							<TabFaciales
 								paciente={paciente}
 								sucursal={sucursal}
-								servicio={servicios[6]} />
+								servicio={servicios[6]}
+								empleado={empleado} />
 						</TabPanel>
 						<TabPanel value={value} index={7}>
 							<TabLaser
 								paciente={paciente}
 								sucursal={sucursal}
-								servicio={servicios[7]} />
+								servicio={servicios[7]}
+								empleado={empleado} />
 						</TabPanel>
 					</div>
 					<Grid item xs={12} sm={12}>

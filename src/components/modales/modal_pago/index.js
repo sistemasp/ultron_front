@@ -14,13 +14,14 @@ import {
 import { generateFolio } from '../../../utils/utils';
 import ModalFormPago from './ModalFormPago';
 import { findEsquemaById } from '../../../services/esquemas';
-
-const validationSchema = Yup.object({
-  nombre: Yup.string("Ingresa los nombres")
-    .required("Los nombres del pacientes son requeridos")
-});
+import { Backdrop, CircularProgress } from '@material-ui/core';
+import myStyles from '../../../css';
+import { Fragment } from 'react';
 
 const ModalPago = (props) => {
+
+  const classes = myStyles();
+
   const {
     open,
     onClose,
@@ -40,9 +41,9 @@ const ModalPago = (props) => {
 
   const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
   const tipoIngresoConsultaId = process.env.REACT_APP_TIPO_INGRESO_CONSULTA_ID;
-  const tipoIngresoCirugiaId = process.env.REACT_APP_TIPO_INGRESO_CIRUGíA_ID;
+  const tipoIngresoCirugiaId = process.env.REACT_APP_TIPO_INGRESO_CIRUGIA_ID;
   const tipoIngresoFacialesId = process.env.REACT_APP_TIPO_INGRESO_FACIALES_ID;
-  const tipoIngresoEsteticaId = process.env.REACT_APP_TIPO_INGRESO_ESTÉTICA_ID;
+  const tipoIngresoEsteticaId = process.env.REACT_APP_TIPO_INGRESO_ESTETICA_ID;
   const tipoIngresoAparatologiaId = process.env.REACT_APP_TIPO_INGRESO_APARATOLOGIA_ID;
   const tipoIngresoLaserId = process.env.REACT_APP_TIPO_INGRESO_LASER_ID;
   const tipoIngresoDermapenId = process.env.REACT_APP_TIPO_INGRESO_DERMAPEN_ID;
@@ -191,6 +192,7 @@ const ModalPago = (props) => {
   }
 
   const handleClickGuardarPago = async (event, rowData) => {
+    setIsLoading(true);
     rowData.fecha_pago = new Date();
     rowData.paciente = servicio.paciente._id;
     rowData.dermatologo = servicio.dermatologo._id;
@@ -275,6 +277,7 @@ const ModalPago = (props) => {
         || `${res.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
         resIngreso.pago = res.data._id;
         await updateIngreso(resIngreso._id, resIngreso);
+        setIsLoading(false);
         onClose();
         loadPagos();
       }
@@ -309,45 +312,50 @@ const ModalPago = (props) => {
     }
   }
 
-  useEffect(() => {
-
-    loadBancos();
-    loadMetodosPago();
-    loadTipoTarjeta();
-    loadEsquema();
+  const loadAll = async () => {
+    setIsLoading(true);
+    await loadBancos();
+    await loadMetodosPago();
+    await loadTipoTarjeta();
+    await loadEsquema();
     setIsLoading(false);
+  }
 
+  useEffect(() => {
+    loadAll();
   }, [sucursal]);
 
   return (
-    <Formik
-      initialValues={values}
-      enableReinitialize
-      validationSchema={validationSchema} >
+    <Fragment>
       {
-        props => <ModalFormPago
-          aria-labelledby="simple-modal-title"
-          aria-describedby="simple-modal-description"
-          open={open}
-          bancos={bancos}
-          formasPago={formasPago}
-          tiposTarjeta={tiposTarjeta}
-          onClickCancel={onClose}
-          onClickGuardar={handleClickGuardarPago}
-          isLoading={isLoading}
-          onChangePaymentMethod={(e) => handleChangePaymentMethod(e)}
-          onChangeBank={(e) => handleChangeBank(e)}
-          onChangeCardType={(e) => handleChangeCardType(e)}
-          onChangeCantidad={(e) => handleChangeCantidad(e)}
-          onChangeConfirmado={(e) => handleChangeConfirmado(e)}
-          onChangeObservaciones={(e) => handleChangeObservaciones(e)}
-          onChangeDigitos={(e) => handleChangeDigitos(e)}
-          onChangeDescuento={(e) => handleChangeDescuento(e)}
-          onChangePagoAnticipado={(e) => handleChangePagoAnticipado(e)}
-          onChangDescuentoDermatologo={(e) => handleChangDescuentoDermatologo(e)}
-          {...props} />
+        !isLoading ?
+          <ModalFormPago
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+            values={values}
+            isLoading={isLoading}
+            open={open}
+            bancos={bancos}
+            formasPago={formasPago}
+            tiposTarjeta={tiposTarjeta}
+            onClickCancel={onClose}
+            onClickGuardar={handleClickGuardarPago}
+            onChangePaymentMethod={(e) => handleChangePaymentMethod(e)}
+            onChangeBank={(e) => handleChangeBank(e)}
+            onChangeCardType={(e) => handleChangeCardType(e)}
+            onChangeCantidad={(e) => handleChangeCantidad(e)}
+            onChangeConfirmado={(e) => handleChangeConfirmado(e)}
+            onChangeObservaciones={(e) => handleChangeObservaciones(e)}
+            onChangeDigitos={(e) => handleChangeDigitos(e)}
+            onChangeDescuento={(e) => handleChangeDescuento(e)}
+            onChangePagoAnticipado={(e) => handleChangePagoAnticipado(e)}
+            onChangDescuentoDermatologo={(e) => handleChangDescuentoDermatologo(e)} />
+          : <Backdrop className={classes.backdrop} open={isLoading} >
+            <CircularProgress color="inherit" />
+          </Backdrop>
       }
-    </Formik>
+
+    </Fragment>
   );
 }
 

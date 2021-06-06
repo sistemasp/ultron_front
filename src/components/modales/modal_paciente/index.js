@@ -14,7 +14,6 @@ const ModalPaciente = (props) => {
   } = props;
 
   const [sexos, setSexos] = useState([]);
-  const [isLoading, setIsLoading] = useState([]);
 
   const [values, setValues] = useState({
     _id: paciente._id,
@@ -24,6 +23,7 @@ const ModalPaciente = (props) => {
     email: paciente.email,
     sexo: paciente.sexo ? paciente.sexo._id : '',
     fecha_nacimiento: paciente.fecha_nacimiento ? paciente.fecha_nacimiento : '',
+    familiar: false,
   });
 
   const handleChange = (e) => {
@@ -47,20 +47,24 @@ const ModalPaciente = (props) => {
     })
   }
 
+  const handleChangeFamiliar = (e) => {
+    setValues({
+      ...values,
+      familiar: !values.familiar
+    })
+  }
+
   const dataComplete = !values.nombres || !values.apellidos
     || !values.sexo || !values.telefono || !values.fecha_nacimiento || values.fecha_nacimiento.length !== 10;
 
-  useEffect(() => {
-
-    const loadSexos = async () => {
-      const response = await showAllSexos();
-      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-        setSexos(response.data);
-      }
-      setIsLoading(false);
+  const loadSexos = async () => {
+    const response = await showAllSexos();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setSexos(response.data);
     }
+  }
 
-    setIsLoading(true);
+  useEffect(() => {
     loadSexos();
   }, []);
 
@@ -78,6 +82,7 @@ const ModalPaciente = (props) => {
       onChange={handleChange}
       onChangeSexo={handleChangeSexo}
       onChangeEmail={handleChangeEmail}
+      onChangeFamiliar={handleChangeFamiliar}
       sexos={sexos} />
 
   );

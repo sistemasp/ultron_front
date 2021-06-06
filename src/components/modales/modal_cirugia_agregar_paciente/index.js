@@ -33,6 +33,7 @@ const ModalCirugiaAgregarPaciente = (props) => {
     sucursal,
     cambio,
     paciente,
+    empleado,
   } = props;
 
   const [isLoading, setIsLoading] = useState(true);
@@ -44,7 +45,7 @@ const ModalCirugiaAgregarPaciente = (props) => {
   const [values, setValues] = useState({
   });
 
-  const enSalaCirugiaStatusId = process.env.REACT_APP_EN_SALA_CIRUGíA_STATUS_ID;
+  const enSalaCirugiaStatusId = process.env.REACT_APP_EN_SALA_CIRUGIA_STATUS_ID;
   const cirugiaServicioId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID;
 
   const handleClickGuardar = async (event, rowData) => {
@@ -55,7 +56,7 @@ const ModalCirugiaAgregarPaciente = (props) => {
       let updateData = currentService;
       updateData.status = enSalaCirugiaStatusId;
       updateData.hora_atencion = `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;
-      tipo_servicio === cirugiaServicioId ? await updateCirugia(currentService._id, updateData) : updateEstetica(currentService._id, updateData);
+      tipo_servicio === cirugiaServicioId ? await updateCirugia(currentService._id, updateData, empleado.access_token) : updateEstetica(currentService._id, updateData, empleado.access_token, empleado.access_token);
     }
 
     setValues({ sala_cirugia: { paciente: currentService.paciente._id } });
@@ -67,7 +68,7 @@ const ModalCirugiaAgregarPaciente = (props) => {
     salaCirugia.servicio = servicio;
     salaCirugia.disponible = false;
 
-    const response = await updateSalaCirugia(salaCirugia._id, salaCirugia);
+    const response = await updateSalaCirugia(salaCirugia._id, salaCirugia, empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setOpenAlert(true);
       setMessage('EL PACIENTE ENTRO A LA SALA DE CIRUGíA');
@@ -84,14 +85,14 @@ const ModalCirugiaAgregarPaciente = (props) => {
 
   useEffect(() => {
     const loadCabinasDisponibles = async () => {
-      const response = await findSalaCirugiaBySucursalIdAndFree(sucursal);
+      const response = await findSalaCirugiaBySucursalIdAndFree(sucursal, empleado.access_token);
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
         setSalaCirugias(response.data);
       }
     }
 
     const getCurrentService = async () => {
-      const responseServicio = tipo_servicio === cirugiaServicioId ? await findCirugiaById(servicio) : await findEsteticaById(servicio);
+      const responseServicio = tipo_servicio === cirugiaServicioId ? await findCirugiaById(servicio, empleado.access_token) : await findEsteticaById(servicio, empleado.access_token);
       if (`${responseServicio.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
         const currentService = responseServicio.data;
         setCurrentService(currentService);

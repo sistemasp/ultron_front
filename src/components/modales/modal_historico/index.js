@@ -1,6 +1,6 @@
 import React, { useState, Fragment, useEffect } from "react";
 import { MenuHistoricoContainer } from "./menu";
-import { getAllServices } from "../../../services";
+import { getAllServices } from "../../../services/servicios";
 
 const MenuHistoricos = (props) => {
 

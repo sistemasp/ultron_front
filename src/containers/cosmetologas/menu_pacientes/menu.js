@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Pacientes from '../pacientes/index';
 import AgendarFacial from '../agendar_facial';
+import GeneralCitas from '../general_citas';
 import AgendarAparatologia from '../agendar_aparatologia';
 
 function TabPanel(props) {
@@ -68,6 +69,8 @@ export const MenuContainer = props => {
 		setPacienteAgendado,
 		onChangeTab,
 		value,
+		onClickAgendarFaciales,
+		onClickAgendarAparatologia,
 		empleado,
 		sucursal,
 		history,
@@ -87,10 +90,14 @@ export const MenuContainer = props => {
 					<Tab className={classes.tabs} label="PACIENTES" {...a11yProps(0)} />
 					<Tab className={classes.tabs} label="FACIALES" {...a11yProps(1)} />
 					<Tab className={classes.tabs} label="APARATOLOGÍA" {...a11yProps(2)} />
+					<Tab className={classes.tabs} label="GENERAL" {...a11yProps(3)} />
 				</Tabs>
 			</AppBar>
 			<TabPanel value={value} index={0}>
 				<Pacientes
+					empleado={empleado}
+					onClickAgendarFaciales={onClickAgendarFaciales}
+					onClickAgendarAparatologia={onClickAgendarAparatologia}
 					onChangeTab={onChangeTab} />
 			</TabPanel>
 			<TabPanel value={value} index={1}>
@@ -107,6 +114,12 @@ export const MenuContainer = props => {
 					empleado={empleado}
 					sucursal={sucursal._id} />
 			</TabPanel>
+			<TabPanel value={value} index={3}>
+				<GeneralCitas
+					empleado={empleado}
+					sucursal={sucursal._id} />
+			</TabPanel>
+
 		</div>
 	);
 }

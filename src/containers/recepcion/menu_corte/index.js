@@ -179,7 +179,7 @@ const Corte = (props) => {
 
   const detailPanelEgreso = [
     {
-      tooltip: 'Detalles',
+      tooltip: 'DETALLES',
       render: rowData => {
         return (
           <Fragment>

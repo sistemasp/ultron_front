@@ -18,24 +18,49 @@ import ModalImprimirTratamiento from '../../../components/modales/imprimir/trata
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import ModalProximaCita from '../../../components/modales/modal_proxima_cita';
 import myStyles from '../../../css';
+import ModalTraspasoServicio from '../../../components/modales/traspaso_servicio';
 
 export const AgendarFacialContainer = (props) => {
 
 	const classes = myStyles();
 
 	const {
+		values,
+		errors,
 		servicios,
 		tratamientos,
+		areas,
 		horarios,
+		tipoCitas,
 		onChangeServicio,
 		onChangeTratamientos,
+		onChangeAreas,
 		onChangeFecha,
 		onChangeHora,
 		onChangeFilterDate,
+		onChangeFrecuencia,
+		frecuencias,
 		filterDate,
+		paciente,
+		onClickAgendar,
+		isValid,
+		isSubmitting,
+		onChangeTiempo,
+		onChangeObservaciones,
 		empleado,
+		disableDate,
+		dermatologos,
+		promovendedores,
+		cosmetologas,
+		formasPago,
+		onChangeDoctors,
 		onChangeTipoCita,
+		onChangePromovendedor,
+		onChangeCosmetologa,
+		onChangePaymentMethod,
 		onChangeMedio,
+		medios,
+		dermatologoDirectoId,
 		// TABLE DATES PROPERTIES
 		titulo,
 		columns,
@@ -45,16 +70,29 @@ export const AgendarFacialContainer = (props) => {
 		components,
 		// MODAL PROPERTIES
 		openModal,
-		cita,
+		facial,
 		onClickActualizarCita,
 		onClickCancel,
 		onChangeAsistio,
 		loadFaciales,
 		setFilterDate,
 		setSeverity,
+		// MODAL PROXIMA
+		openModalProxima,
+		// MODAL PAGOS
+		onCloseVerPagos,
+		openModalPagos,
 		sucursal,
 		setMessage,
 		setOpenAlert,
+		onGuardarModalPagos,
+		// MODAL IMPRIMIR
+		openModalImprimirCita,
+		datosImpresion,
+		onCloseImprimirConsulta,
+		// MODAL TRASPASO
+		openModalTraspaso,
+		onCloseTraspasos,
 	} = props;
 
 	return (
@@ -63,7 +101,7 @@ export const AgendarFacialContainer = (props) => {
 				openModal ?
 					<ModalCita
 						open={openModal}
-						cita={cita}
+						cita={facial}
 						onClickActualizarCita={onClickActualizarCita}
 						onClose={onClickCancel}
 						onChangeServicio={onChangeServicio}
@@ -83,6 +121,65 @@ export const AgendarFacialContainer = (props) => {
 						setMessage={setMessage}
 						setSeverity={setSeverity}
 						setFilterDate={setFilterDate} /> : ''
+			}
+			{
+				openModalProxima ?
+					<ModalProximaCita
+						open={openModalProxima}
+						cita={facial}
+						onClickActualizarCita={onClickActualizarCita}
+						onClose={onClickCancel}
+						onChangeServicio={onChangeServicio}
+						onChangeTratamientos={onChangeTratamientos}
+						onChangeFecha={onChangeFecha}
+						onChangeHora={onChangeHora}
+						onChangeTipoCita={onChangeTipoCita}
+						onChangeMedio={onChangeMedio}
+						onChangeAsistio={onChangeAsistio}
+						servicios={servicios}
+						tratamientos={tratamientos}
+						horarios={horarios}
+						empleado={empleado}
+						loadFaciales={loadFaciales}
+						sucursal={sucursal}
+						setOpenAlert={setOpenAlert}
+						setMessage={setMessage}
+						setFilterDate={setFilterDate} /> : ''
+			}
+			{
+				openModalPagos ?
+					<ModalPagos
+						open={openModalPagos}
+						onClose={onCloseVerPagos}
+						servicio={facial}
+						empleado={empleado}
+						sucursal={sucursal}
+						setMessage={setMessage}
+						setOpenAlert={setOpenAlert}
+						onGuardarModalPagos={onGuardarModalPagos}
+						tipoServicioId={facial.servicio._id} />
+					: ''
+			}
+			{
+				openModalImprimirCita ?
+					<ModalImprimirTratamiento
+						open={openModalImprimirCita}
+						onClose={onCloseImprimirConsulta}
+						datos={datosImpresion} />
+					: ''
+			}
+			{
+				openModalTraspaso ?
+					<ModalTraspasoServicio
+						open={openModalTraspaso}
+						onClose={onCloseTraspasos}
+						servicio={facial}
+						empleado={empleado}
+						sucursal={sucursal._id}
+						setMessage={setMessage}
+						setOpenAlert={setOpenAlert}
+						loadServicios={loadFaciales} />
+					: ''
 			}
 
 			<Paper>

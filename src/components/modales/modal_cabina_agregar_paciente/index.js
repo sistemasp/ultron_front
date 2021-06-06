@@ -21,6 +21,7 @@ const ModalCabinaAgregarPaciente = (props) => {
   const {
     open,
     onClose,
+    empleado,
     tipo_servicio,
     servicio,
     setOpenAlert,
@@ -63,16 +64,16 @@ const ModalCabinaAgregarPaciente = (props) => {
     let responseCita;
     switch (tipo_servicio) {
       case facialServicioId:
-        responseCita = await findFacialById(servicio);
+        responseCita = await findFacialById(servicio, empleado.access_token);
         break;
       case dermapenServicioId:
-        responseCita = await findDermapenById(servicio);
+        responseCita = await findDermapenById(servicio, empleado.access_token);
         break;
       case laserServicioId:
-        responseCita = await findLaserById(servicio);
+        responseCita = await findLaserById(servicio, empleado.access_token);
         break;
       case aparatologiaServicioId:
-        responseCita = await findAparatologiaById(servicio);
+        responseCita = await findAparatologiaById(servicio, empleado.access_token);
         break;
     }
 
@@ -86,16 +87,16 @@ const ModalCabinaAgregarPaciente = (props) => {
         updateCita.cosmetologa = values.cabina.cosmetologa;
         switch (tipo_servicio) {
           case facialServicioId:
-            responseCita = await updateFacial(cita._id, updateCita);
+            responseCita = await updateFacial(cita._id, updateCita, empleado.access_token);
             break;
           case dermapenServicioId:
-            responseCita = await updateDermapen(cita._id, updateCita);
+            responseCita = await updateDermapen(cita._id, updateCita, empleado.access_token);
             break;
           case laserServicioId:
-            responseCita = await updateLaser(cita._id, updateCita);
+            responseCita = await updateLaser(cita._id, updateCita, empleado.access_token);
             break;
           case aparatologiaServicioId:
-            responseCita = await updateAparatologia(cita._id, updateCita);
+            responseCita = await updateAparatologia(cita._id, updateCita, empleado.access_token);
             break;
         }
       }

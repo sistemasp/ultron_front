@@ -1,7 +1,7 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, useEffect } from "react";
+import { MainContainer } from "./main";
 import { Snackbar } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
-import { MainContainer, MainCosmetologasContainer } from "./main";
 
 const Alert = (props) => {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;

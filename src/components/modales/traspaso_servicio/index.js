@@ -2,11 +2,13 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { createConsecutivo, createPago, deletePago, showAllOffices } from '../../../services';
 import { addZero, generateFolio } from '../../../utils/utils';
 import ModalFormTraspasoServicio from './ModalFormTraspasoServicio';
-import { createConsult, updateConsult } from '../../../services/consultas';
 import { showAllStatusVisibles } from '../../../services/status';
 import { createIngreso, deleteIngreso, updateIngreso } from '../../../services/ingresos';
 import { createFacial, updateFacial } from '../../../services/faciales';
 import { createAparatologia, updateAparatologia } from '../../../services/aparatolgia';
+import { createCirugia, updateCirugia } from '../../../services/cirugias';
+import { createEstetica, updateEstetica } from '../../../services/esteticas';
+import { createDermapen, updateDermapen } from '../../../services/dermapens';
 
 const ModalTraspasoServicio = (props) => {
   const {
@@ -28,6 +30,9 @@ const ModalTraspasoServicio = (props) => {
   const pendienteStatusId = process.env.REACT_APP_PENDIENTE_STATUS_ID;
   const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
   const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
+  const servicioCirugiaId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID;
+  const servicioEsteticaId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
+  const servicioDermapenId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID;
 
   const [isLoading, setIsLoading] = useState(true);
   const [sucursales, setSucursales] = useState([]);
@@ -61,10 +66,17 @@ const ModalTraspasoServicio = (props) => {
     servicio.pagos = [];
     let servicioResponse;
     if (servicio.servicio._id === servicioFacialId) {
-      servicioResponse = await updateFacial(servicio._id, servicio);
+      servicioResponse = await updateFacial(servicio._id, servicio, empleado.access_token);
     } else if (servicio.servicio._id === servicioAparatologiaId) {
-      servicioResponse = await updateAparatologia(servicio._id, servicio);
+      servicioResponse = await updateAparatologia(servicio._id, servicio, empleado.access_token);
+    } else if (servicio.servicio._id === servicioCirugiaId) {
+      servicioResponse = await updateCirugia(servicio._id, servicio, empleado.access_token);
+    } else if (servicio.servicio._id === servicioEsteticaId) {
+      servicioResponse = await updateEstetica(servicio._id, servicio, empleado.access_token);
+    } else if (servicio.servicio._id === servicioDermapenId) {
+      servicioResponse = await updateDermapen(servicio._id, servicio, empleado.access_token);
     }
+
     if (`${servicioResponse.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       servicio._id = undefined;
       servicio.consecutivo = undefined;
@@ -73,16 +85,24 @@ const ModalTraspasoServicio = (props) => {
       servicio.status = { _id: pendienteStatusId };
       servicio.hora_llegada = `--:--`;
       servicio.hora_aplicacion = dateNow.toString();
-      servicio.hora_atencion = '--:--';
-      servicio.hora_salida = '--:--';
+      //servicio.hora_atencion = '--:--';
+      //servicio.hora_salida = '--:--';
       servicio.observaciones = `SERVICIO TRASPASADO`;
       servicio.pagado = true;
       let response;
+
       if (servicio.servicio._id === servicioFacialId) {
-        response = await createFacial(servicio);
+        response = await createFacial(servicio, empleado.access_token);
       } else if (servicio.servicio._id === servicioAparatologiaId) {
-        response = await createAparatologia(servicio);
+        response = await createAparatologia(servicio, empleado.access_token);
+      } else if (servicio.servicio._id === servicioCirugiaId) {
+        response = await createCirugia(servicio, empleado.access_token);
+      } else if (servicio.servicio._id === servicioEsteticaId) {
+        response = await createEstetica(servicio, empleado.access_token);
+      } else if (servicio.servicio._id === servicioDermapenId) {
+        response = await createDermapen(servicio, empleado.access_token);
       }
+
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
         const servicioRes = response.data;
         const consecutivo = {

@@ -25,6 +25,7 @@ export const AgendarAparatologiaContainer = (props) => {
 	const classes = myStyles();
 
 	const {
+		isSubmitting,
 		values,
 		errors,
 		servicios,
@@ -46,7 +47,6 @@ export const AgendarAparatologiaContainer = (props) => {
 		paciente,
 		onClickAgendar,
 		isValid,
-		isSubmitting,
 		onChangeTiempo,
 		onChangeObservaciones,
 		empleado,
@@ -61,6 +61,7 @@ export const AgendarAparatologiaContainer = (props) => {
 		onChangeMedio,
 		medios,
 		dermatologoDirectoId,
+		selectedAreas,
 		// TABLE DATES PROPERTIES
 		titulo,
 		columns,
@@ -197,12 +198,25 @@ export const AgendarAparatologiaContainer = (props) => {
 							color="primary"
 							variant="contained"
 							disabled={!isValid || isSubmitting || !paciente.nombres
-								|| values.tratamientos.length === 0 || !values.fecha_hora || !values.precio}
+								|| values.tratamientos.length === 0 || !values.fecha_hora || !selectedAreas}
 							onClick={() => onClickAgendar(values)}
 							text='GUARDAR' />
 					</Grid>
 				</Grid>
 				<Grid container spacing={3}>
+					<Grid item xs={12} sm={2}>
+						<FormControl variant="outlined" className={classes.formControl}>
+							<InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
+							<Select
+								labelId="simple-select-outlined-frecuencia"
+								id="simple-select-outlined-frecuencia"
+								value={values.frecuencia}
+								onChange={onChangeFrecuencia}
+								label="FRECUENCIA" >
+								{frecuencias.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+							</Select>
+						</FormControl>
+					</Grid>
 					{
 						true ?
 							<Grid item xs={12} sm={2}>
@@ -245,27 +259,14 @@ export const AgendarAparatologiaContainer = (props) => {
 					}
 					<Grid item xs={12} sm={2}>
 						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
-							<Select
-								labelId="simple-select-outlined-frecuencia"
-								id="simple-select-outlined-frecuencia"
-								value={values.frecuencia}
-								onChange={onChangeFrecuencia}
-								label="FRECUENCIA" >
-								{frecuencias.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-							</Select>
-						</FormControl>
-					</Grid>
-					<Grid item xs={12} sm={2}>
-						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-hora">DERMATÓLOGO</InputLabel>
+							<InputLabel id="simple-select-outlined-hora">DERMATÓLOGO (A)</InputLabel>
 							<Select
 								labelId="simple-select-outlined-dermatologo"
 								id="simple-select-outlined-dermatologo"
 								value={values.dermatologo}
 								error={Boolean(errors.dermatologo)}
 								onChange={onChangeDoctors}
-								label="DERMATÓLOGO" >
+								label="DERMATÓLOGO (A)" >
 								{dermatologos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
 							</Select>
 						</FormControl>
@@ -303,14 +304,14 @@ export const AgendarAparatologiaContainer = (props) => {
 					}
 					<Grid item xs={12} sm={2}>
 						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-promovendedor">PROMOVENDEDOR</InputLabel>
+							<InputLabel id="simple-select-outlined-promovendedor">PROMOVENDEDOR (A)</InputLabel>
 							<Select
 								labelId="simple-select-outlined-promovendedor"
 								id="simple-select-outlined-promovendedor"
 								value={values.promovendedor}
 								error={Boolean(errors.promovendedor)}
 								onChange={onChangePromovendedor}
-								label="PROMOVENDEDOR" >
+								label="PROMOVENDEDOR (A)" >
 								{promovendedores.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
 							</Select>
 						</FormControl>
@@ -328,6 +329,29 @@ export const AgendarAparatologiaContainer = (props) => {
 								{cosmetologas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
 							</Select>
 						</FormControl>
+					</Grid>
+					<Grid item xs={12} sm={2}>
+						<FormControl variant="outlined" className={classes.formControl}>
+							<InputLabel id="simple-select-outlined-payment">FORMA DE PAGO</InputLabel>
+							<Select
+								labelId="simple-select-outlined-payment"
+								id="simple-select-outlined-payment"
+								value={values.forma_pago}
+								onChange={onChangePaymentMethod}
+								label="FORMA DE PAGO" >
+								{formasPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+							</Select>
+						</FormControl>
+					</Grid>
+					<Grid item xs={12} sm={2}>
+						<TextField
+							className={classes.button}
+							name="observaciones"
+							error={Boolean(errors.observaciones)}
+							label="OBSERVACIONES"
+							value={values.observaciones}
+							onChange={onChangeObservaciones}
+							variant="outlined" />
 					</Grid>
 					<Grid item xs={12} sm={2}>
 						<MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -377,36 +401,12 @@ export const AgendarAparatologiaContainer = (props) => {
 							error={Boolean(errors.tiempo)}
 							label="TIEMPO"
 							value={values.tiempo}
-							type='Number'
 							onChange={onChangeTiempo}
-							onInput={(e) => {
-								e.target.value = Math.max(0, parseInt(e.target.value)).toString().slice(0, 3)
-							}}
 							variant="outlined" />
 					</Grid>
-					<Grid item xs={12} sm={2}>
-						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-payment">FORMA DE PAGO</InputLabel>
-							<Select
-								labelId="simple-select-outlined-payment"
-								id="simple-select-outlined-payment"
-								value={values.forma_pago}
-								onChange={onChangePaymentMethod}
-								label="FORMA DE PAGO" >
-								{formasPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-							</Select>
-						</FormControl>
-					</Grid>
-					<Grid item xs={12} sm={2}>
-						<TextField
-							className={classes.button}
-							name="observaciones"
-							error={Boolean(errors.observaciones)}
-							label="OBSERVACIONES"
-							value={values.observaciones}
-							onChange={onChangeObservaciones}
-							variant="outlined" />
-					</Grid>
+					{/*<Grid item xs={12} sm={2}>
+						<h2>{`TIEMPO: ${values.tiempo} MINUTOS`}</h2>
+					</Grid>*/}
 				</Grid>
 				<MuiPickersUtilsProvider utils={DateFnsUtils}>
 					<Grid

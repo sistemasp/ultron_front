@@ -34,6 +34,7 @@ const ModalFormPagos = (props) => {
     isValid,
     onClickCancel,
     onClickGuardar,
+    isLoading,
     open,
     columns,
     options,
@@ -93,6 +94,7 @@ const ModalFormPagos = (props) => {
                 color="primary"
                 variant="contained"
                 onClick={onClickNewPago}
+                disabled={isLoading}
                 text='AGREGAR PAGO' />
             </Grid>
 

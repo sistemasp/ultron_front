@@ -94,7 +94,6 @@ const MenuPatient = (props) => {
                 onClickAgendarConsulta={handleClickAgendarConsulta}
                 onClickAgendarCirugia={handleClickAgendarCirugia}
                 onClickAgendarEstetica={handleClickAgendarEstetica}
-                //onClickAgendarLaser={handleAgendarLaser}
                 onClickAgendarAparatologia={handleAgendarAparatologia}
                 onClickAgendarDermapen={handleAgendarDermapen}
                 empleado={empleado}

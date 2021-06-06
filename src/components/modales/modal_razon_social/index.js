@@ -5,7 +5,7 @@ import {
   sepomexGetMunicipos,
   sepomexGetColonia,
   sepomexGetAllInfoByCP,
-} from '../../../services';
+} from '../../../services/sepomex';
 import { Formik } from 'formik';
 import { Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -57,7 +57,7 @@ const ModalRazonSocial = (props) => {
         setEstados(response.data.response.estado);
       }
     }
-    loadEstados();
+    // loadEstados();
   }, []);
 
   const loadMunicipios = async (estado) => {
@@ -148,6 +148,13 @@ const ModalRazonSocial = (props) => {
     setValues({ ...values, ciudad: event.target.value.toUpperCase() });
   }
 
+  const handleChange = (event) => {
+    setValues({
+      ...values,
+      [event.target.name]: event.target.value.toUpperCase()
+    });
+  }
+
   const handleClickGuardar = async (e) => {
     const response = razonSocial._id ? await updateRazonSocial(razonSocial._id, values) : await createRazonSocial(values);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
@@ -191,6 +198,7 @@ const ModalRazonSocial = (props) => {
             onChangeRfc={(e) => handleChangeRfc(e)}
             onChangeCiudad={(e) => handleChangeCiudad(e)}
             onChangeTelefono={(e) => handleChangeTelefono(e)}
+            onChange={handleChange}
             {...props} />
         }
       </Formik>

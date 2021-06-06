@@ -55,7 +55,7 @@ const ModalTraspasoConsulta = (props) => {
     });
     servicio.pagado = false;
     servicio.pagos = [];
-    const consul = await updateConsult(servicio._id, servicio);
+    const consul = await updateConsult(servicio._id, servicio, empleado.access_token);
     if (`${consul.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       servicio._id = undefined;
       servicio.consecutivo = undefined;
@@ -68,10 +68,10 @@ const ModalTraspasoConsulta = (props) => {
       servicio.hora_salida = '--:--';
       servicio.observaciones = `CONSULTA TRASPASADA`;
       dateNowServicio.setMinutes(0);
-			dateNowServicio.setSeconds(0);
+      dateNowServicio.setSeconds(0);
       servicio.fecha_hora = dateNowServicio.toString();
       servicio.pagado = true;
-      const response = await createConsult(servicio);
+      const response = await createConsult(servicio, empleado.access_token);
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
         const servicioRes = response.data;
         const consecutivo = {

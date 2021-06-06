@@ -4,15 +4,19 @@ import { addZero, toFormatterCurrency } from '../../../utils/utils';
 import ModalFormPagos from './ModalFormPagos';
 import EditIcon from '@material-ui/icons/Edit';
 import { findEsquemaById } from '../../../services/esquemas';
+import { Backdrop, CircularProgress } from '@material-ui/core';
+import myStyles from '../../../css';
 
 const ModalPagos = (props) => {
+
+  const classes = myStyles();
+
   const {
     open,
     onClose,
     sucursal,
     handleClickGuardarPago,
     servicio,
-    setServicio,
     empleado,
     onGuardarModalPagos,
     tipoServicioId,
@@ -54,11 +58,6 @@ const ModalPagos = (props) => {
     total: servicio.total,
   });
 
-  const handleClickBuscarRazonSocial = (event, rowData) => {
-    setPago(rowData);
-    setOpenModalFactura(true);
-  }
-
   const handleOnClickEditarPago = (event, rowData) => {
     setPago(rowData);
     setOpenModalPago(true);
@@ -77,7 +76,7 @@ const ModalPagos = (props) => {
     { title: 'TOTAL', field: 'total_moneda' },
     { title: 'BANCO', field: 'banco_nombre' },
     { title: 'TIPO TARJETA', field: 'tipo_tarjeta_nombre' },
-    { title: 'DIGITOS', field: 'digitos_show' },
+    { title: 'DÍGITOS', field: 'digitos_show' },
     { title: 'OBSERVACIONES', field: 'observaciones' },
   ];
 
@@ -103,6 +102,7 @@ const ModalPagos = (props) => {
   ];
 
   const loadPagos = async () => {
+    setIsLoading(true);
     const response = await findPagosByTipoServicioAndServicio(tipoServicioId, servicio._id);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       let acomulado = 0;
@@ -122,6 +122,7 @@ const ModalPagos = (props) => {
       servicio.pagos = response.data;
       setPagos(response.data);
     }
+    setIsLoading(false);
   }
 
   /*const handleClickGuardar = async (event, rowData) => {
@@ -264,45 +265,56 @@ const ModalPagos = (props) => {
     }
   }
 
-  useEffect(() => {
+  const loadAll = async () => {
     setIsLoading(true);
-    loadPagos();
-    loadEsquema();
+    await loadPagos();
+    await loadEsquema();
     setIsLoading(false);
+  }
+
+  useEffect(() => {
+    loadAll();
   }, []);
 
   return (
     <Fragment>
-      <ModalFormPagos
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-        open={open}
-        onClickNewPago={handleClickNewPago}
-        onClickCancelPago={handleClickCancelPago}
-        openModalPago={openModalPago}
-        onClickCancel={onClose}
-        onClickGuardar={handleClickGuardarPago}
-        isLoading={isLoading}
-        pagos={pagos}
-        pago={pago}
-        columns={columns}
-        options={options}
-        actions={actions}
-        localization={localization}
-        servicio={servicio}
-        empleado={empleado}
-        sucursal={sucursal}
-        onGuardarModalPagos={onGuardarModalPagos}
-        titulo={`PAGOS: ${servicio.paciente.nombres} ${servicio.paciente.apellidos}`}
-        openModalFactura={openModalFactura}
-        onCloseBuscarRazonSocial={handleCloseBuscarRazonSocial}
-        onChangeFactura={handleChangeFactura}
-        loadPagos={loadPagos}
-        restante={restante}
-        onChangeDescuento={(e) => handleChangeDescuento(e)}
-        onChangDescuentoDermatologo={(e) => handleChangDescuentoDermatologo(e)}
-        tipoServicioId={tipoServicioId}
-        values={values} />
+      {
+        !isLoading ?
+          <ModalFormPagos
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+            open={open}
+            onClickNewPago={handleClickNewPago}
+            onClickCancelPago={handleClickCancelPago}
+            openModalPago={openModalPago}
+            onClickCancel={onClose}
+            onClickGuardar={handleClickGuardarPago}
+            isLoading={isLoading}
+            pagos={pagos}
+            pago={pago}
+            columns={columns}
+            options={options}
+            actions={actions}
+            localization={localization}
+            servicio={servicio}
+            empleado={empleado}
+            sucursal={sucursal}
+            onGuardarModalPagos={onGuardarModalPagos}
+            titulo={`PAGOS: ${servicio.paciente.nombres} ${servicio.paciente.apellidos}`}
+            openModalFactura={openModalFactura}
+            onCloseBuscarRazonSocial={handleCloseBuscarRazonSocial}
+            onChangeFactura={handleChangeFactura}
+            loadPagos={loadPagos}
+            restante={restante}
+            onChangeDescuento={(e) => handleChangeDescuento(e)}
+            onChangDescuentoDermatologo={(e) => handleChangDescuentoDermatologo(e)}
+            tipoServicioId={tipoServicioId}
+            values={values} />
+
+          : <Backdrop className={classes.backdrop} open={isLoading} >
+            <CircularProgress color="inherit" />
+          </Backdrop>
+      }
     </Fragment>
 
 

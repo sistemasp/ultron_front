@@ -1,76 +1,6 @@
 import axios from 'axios';
 
-export const baseUrl = process.env.REACT_APP_BASE_URL_LOCAL;
-const urlSepomexGetEstados = 'https://api-sepomex.hckdrk.mx/query/get_estados';
-const urlSepomexGetMunicipos = 'https://api-sepomex.hckdrk.mx/query/get_municipio_por_estado/';
-const urlSepomexGetColonia = 'https://api-sepomex.hckdrk.mx/query/get_colonia_por_municipio/';
-const urlSepomexGetAllInfoByCP = 'https://api-sepomex.hckdrk.mx/query/info_cp/';
-
-// PACIENTES
-
-export const getAllPatients = async () => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/paciente`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('getAllPatients', error);
-    }
-}
-
-export const findPatientByPhoneNumber = async (telefono) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/paciente/phonenumber/${telefono}`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('findPatientByPhoneNumber', error);
-    }
-}
-
-export const updatePatient = async (pacienteId, paciente) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/paciente/${pacienteId}`,
-            method: 'PUT',
-            data: paciente
-        });
-        return response;
-    } catch (error) {
-        console.log('updatePatient', error);
-    }
-}
-
-export const createPatient = async (paciente) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/paciente`,
-            method: 'POST',
-            data: paciente
-        });
-        return response;
-    } catch (error) {
-        console.log('createPatient', error);
-    }
-}
-
-// SERVICIOS
-
-export const getAllServices = async () => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/servicio`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('getAllServices', error);
-    }
-}
+export const baseUrl = process.env.REACT_APP_BASE_URL;
 
 // HORARIO
 
@@ -316,69 +246,6 @@ export const findRecepcionistByEmployeeNumber = async (employeeNumber) => {
         return response;
     } catch (error) {
         console.log('findRecepcionistByEmployeeNumber', error);
-    }
-}
-
-// EMPLEADOS
-
-export const findEmployeeByEmployeeNumber = async (employeeNumber) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/empleado/number/${employeeNumber}`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('findEmployeeByEmployeeNumber', error);
-    }
-}
-
-export const loginEmployee = async (employeeNumber, password) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/empleado/login/${employeeNumber}/${password}`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('loginEmployee', error);
-    }
-}
-
-export const findEmployeesByRolId = async (rolId) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/empleado/rol/${rolId}`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('findEmployeesByRolId', error);
-    }
-}
-
-export const findEmployeesByRolIdAvailable = async (rolId) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/empleado/rol/${rolId}/available`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('findEmployeesByRolIdAvailable', error);
-    }
-}
-
-export const updateEmployee = async (employeeId, employee) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/empleado/${employeeId}`,
-            method: 'PUT',
-            data: employee
-        });
-        return response;
-    } catch (error) {
-        console.log('updateEmployee', error);
     }
 }
 
@@ -742,72 +609,6 @@ export const deletePago = async (pagoId) => {
     }
 }
 
-// SEPOMEX
-
-export const sepomexGetEstados = async () => {
-    try {
-        const response = await axios({
-            url: urlSepomexGetEstados,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('sepomexGetEstados', error);
-        return {
-            'error': process.env.REACT_APP_RESPONSE_CODE_ERROR,
-            'descripcion': error
-        };
-    }
-}
-
-export const sepomexGetMunicipos = async (estado) => {
-    try {
-        const response = await axios({
-            url: `${urlSepomexGetMunicipos}${estado}`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('sepomexGetMunicipos', error);
-        return {
-            'error': process.env.REACT_APP_RESPONSE_CODE_ERROR,
-            'descripcion': error
-        };
-    }
-}
-
-export const sepomexGetColonia = async (municipio) => {
-    try {
-        const response = await axios({
-            url: `${urlSepomexGetColonia}${municipio}`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('sepomexGetColonia', error);
-        return {
-            'error': process.env.REACT_APP_RESPONSE_CODE_ERROR,
-            'descripcion': error
-        };
-    }
-}
-
-export const sepomexGetAllInfoByCP = async (cp) => {
-    try {
-        const response = await axios({
-            url: `${urlSepomexGetAllInfoByCP}${cp}?type=simplified`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('sepomexGetAllInfoByCP', error);
-        return {
-            'error': process.env.REACT_APP_RESPONSE_CODE_ERROR,
-            'descripcion': error
-        };
-    }
-}
-
 // USO CFDI
 
 export const showAllUsoCfdis = async () => {
@@ -865,44 +666,6 @@ export const showAllSexos = async () => {
     }
 }
 
-// DERMATÓLOGOS
-
-export const findCirugiasByPayOfDoctor = async (dia, mes, anio, sucursalId, dermatologoId) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/cirugia/${dia}/${mes}/${anio}/sucursal/${sucursalId}/dermatologo/${dermatologoId}`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('findCirugiasByPayOfDoctor', error);
-    }
-}
-
-export const findCirugiasByPayOfDoctorTurno = async (dia, mes, anio, sucursalId, dermatologoId, turno) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/cirugia/${dia}/${mes}/${anio}/sucursal/${sucursalId}/dermatologo/${dermatologoId}/turno/${turno}`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('findCirugiasByPayOfDoctorTurno', error);
-    }
-}
-
-export const findEsteticasByPayOfDoctorTurno = async (dia, mes, anio, sucursalId, dermatologoId, turno) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/estetica/${dia}/${mes}/${anio}/sucursal/${sucursalId}/dermatologo/${dermatologoId}/turno/${turno}`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('findEsteticasByPayOfDoctorTurno', error);
-    }
-}
-
 // MATERIALES
 
 export const showAllMaterials = async () => {
@@ -943,20 +706,6 @@ export const showAllTipoEsteticas = async () => {
         return response;
     } catch (error) {
         console.log('showAllTipoEsteticas', error);
-    }
-}
-
-// MATERIALES ESTÉTICA
-
-export const showAllMaterialEsteticas = async () => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/materialestetica`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('showAllMaterialEsteticas', error);
     }
 }
 

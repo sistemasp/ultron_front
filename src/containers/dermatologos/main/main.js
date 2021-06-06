@@ -64,8 +64,6 @@ export const MainDermatologosContainer = props => {
 		history,
 	} = props;
 
-	console.log("KAOZ", dermatologo);
-
 	const classes = myStyles();
 	const theme = useTheme();
 	const [openDrawer, setOpenDrawer] = useState(false);

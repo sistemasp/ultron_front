@@ -25,6 +25,7 @@ const ReportesDetallesGeneral = (props) => {
 	const classes = useStyles();
 
 	const {
+		empleado,
 		sucursal,
 	} = props;
 
@@ -78,7 +79,7 @@ const ReportesDetallesGeneral = (props) => {
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
 		{ title: 'TIPO', field: 'tipo_cita.nombre' },
-		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
+		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
 		{ title: 'CANTIDAD SERVICIOS', field: 'cantidad_servicios' },
 		{ title: 'SERVICIO', field: 'servicio.nombre' },
 		{ title: 'PRODUCTO', field: 'producto.nombre' },
@@ -974,7 +975,7 @@ const ReportesDetallesGeneral = (props) => {
 
 	const loadConsultas = async (startDate, endDate) => {
 		const response = await findConsultsByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
-			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal);
+			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setConsultas(response.data);
 			procesarDatos();
@@ -983,7 +984,7 @@ const ReportesDetallesGeneral = (props) => {
 
 	const loadFaciales = async (startDate, endDate) => {
 		const response = await findFacialByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
-			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal);
+			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setFaciales(response.data);
 			await loadConsultas(startDate, endDate);
@@ -992,7 +993,7 @@ const ReportesDetallesGeneral = (props) => {
 
 	const loadAparatologias = async (startDate, endDate) => {
 		const response = await findAparatologiaByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
-			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal);
+			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setAparatologias(response.data);
 			await loadFaciales(startDate, endDate);
@@ -1001,7 +1002,7 @@ const ReportesDetallesGeneral = (props) => {
 
 	const loadEsteticas = async (startDate, endDate) => {
 		const response = await findEsteticasByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
-			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal);
+			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setEsteticas(response.data);
 			await loadAparatologias(startDate, endDate);
@@ -1010,7 +1011,7 @@ const ReportesDetallesGeneral = (props) => {
 
 	const loadCirugias = async (startDate, endDate) => {
 		const response = await findCirugiasByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
-			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal);
+			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setCirugias(response.data);
 			await loadEsteticas(startDate, endDate);
@@ -1019,7 +1020,7 @@ const ReportesDetallesGeneral = (props) => {
 
 	const loadDermapens = async (startDate, endDate) => {
 		const response = await findDermapenByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
-			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal);
+			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setDermapens(response.data);
 			await loadCirugias(startDate, endDate);

@@ -10,7 +10,7 @@ import Pacientes from '../pacientes/index';
 import AgendarConsulta from '../agendar_consulta';
 import Consultas from '../calendario/consultas';
 import AgendarFacial from '../agendar_facial';
-import AgendarLaser from '../agendar_laser';
+import GeneralCitas from '../general_citas';
 import AgendarAparatologia from '../agendar_aparatologia';
 import Faciales from '../calendario/faciales';
 import Laser from '../calendario/laser';
@@ -109,18 +109,20 @@ export const MenuContainer = props => {
 					<Tab className={classes.tabs} label="DERMAPEN" {...a11yProps(4)} />
 					<Tab className={classes.tabs} label="CIRUGíA" {...a11yProps(5)} />
 					<Tab className={classes.tabs} label="ESTÉTICA" {...a11yProps(6)} />
+					<Tab className={classes.tabs} label="GENERAL" {...a11yProps(7)} />
 					{
-					/*
-					<Tab className={classes.tabs} label="VER CONSULTAS" {...a11yProps(7)} />
-					<Tab className={classes.tabs} label="VER FACIALES" {...a11yProps(8)} />
-					<Tab className={classes.tabs} label="VER APARATOLOGÍA" {...a11yProps(9)} />
-					<Tab className={classes.tabs} label="VER DERMAPEN" {...a11yProps(10)} />
-					*/
+						/*
+						<Tab className={classes.tabs} label="VER CONSULTAS" {...a11yProps(7)} />
+						<Tab className={classes.tabs} label="VER FACIALES" {...a11yProps(8)} />
+						<Tab className={classes.tabs} label="VER APARATOLOGÍA" {...a11yProps(9)} />
+						<Tab className={classes.tabs} label="VER DERMAPEN" {...a11yProps(10)} />
+						*/
 					}
 				</Tabs>
 			</AppBar>
 			<TabPanel value={value} index={0}>
 				<Pacientes
+					empleado={empleado}
 					onClickAgendarFaciales={onClickAgendarFaciales}
 					onClickAgendarConsulta={onClickAgendarConsulta}
 					onClickAgendarAparatologia={onClickAgendarAparatologia}
@@ -178,7 +180,8 @@ export const MenuContainer = props => {
 					sucursal={sucursal._id} />
 			</TabPanel>
 			<TabPanel value={value} index={7}>
-				<Consultas
+				<GeneralCitas
+					empleado={empleado}
 					sucursal={sucursal._id} />
 			</TabPanel>
 			<TabPanel value={value} index={8}>

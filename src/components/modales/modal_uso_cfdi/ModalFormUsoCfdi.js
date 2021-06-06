@@ -37,7 +37,7 @@ const ModalFormUsoCfdi = (props) => {
         aria-describedby="simple-modal-description"
         open={open} >
         <div style={modalStyle} className={classes.paper}>
-          <h1>Generar factura</h1>
+          <h1>GENERAR FACTURA</h1>
           <Grid item xs={12}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="simple-select-outlined-use">Uso CFDI</InputLabel>
@@ -46,7 +46,7 @@ const ModalFormUsoCfdi = (props) => {
                 id="simple-select-outlined-use"
                 value={values.uso_cfdi}
                 onChange={onChangeUsoCfdi}
-                label="Uso CFDI" >
+                label="USO CFDI" >
                 {usoCfdis.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.clave} - {item.descripcion}</MenuItem>)}
               </Select>
             </FormControl>
@@ -58,7 +58,7 @@ const ModalFormUsoCfdi = (props) => {
                 color="primary"
                 variant="contained"
                 onClick={(e) => onGenerarFactura(e, values)}
-                text='Facturar' />
+                text='FACTURAR' />
             </Grid>
             <Grid item xs={6}>
               <ButtonCustom
@@ -66,7 +66,7 @@ const ModalFormUsoCfdi = (props) => {
                 color="secondary"
                 variant="contained"
                 onClick={onClose}
-                text='Cancelar' />
+                text='CANCELAR' />
             </Grid>
           </Grid>
         </div>

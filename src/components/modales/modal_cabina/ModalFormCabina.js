@@ -61,7 +61,7 @@ const ModalFormCabina = (props) => {
           <form onSubmit={handleSubmit}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <h2>Cabina</h2>
+                <h2>CABINA</h2>
                 </Grid>
               <Grid item xs={12}>
                 <TextField

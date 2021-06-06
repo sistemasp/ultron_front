@@ -18,6 +18,7 @@ import ReportesAparatologia from './reportes/reportes_aparatologia';
 import ReportesDetallesGeneral from './reportes/detalles_general';
 import ReportesGastos from './reportes/gastos';
 import ReportesIngresos from './reportes/ingresos';
+import ReporteGeneralCitas from './reportes/general_citas';
 
 function TabPanel(props) {
 	const { children, value, index, ...other } = props;
@@ -72,6 +73,7 @@ export const MenuContainer = props => {
 		onChangeTab,
 		value,
 		sucursal,
+		empleado,
 	} = props;
 
 	return (
@@ -87,9 +89,13 @@ export const MenuContainer = props => {
 					variant="scrollable"
 					scrollButtons="on"
 				>
+					{/*
 					<Tab label="DETALLES GENERAL" {...a11yProps(0)} />
 					<Tab label="INGRESOS" {...a11yProps(1)} />
 					<Tab label="GASTOS" {...a11yProps(2)} />
+					 */}
+
+					<Tab label="CITAS GENERAL" {...a11yProps(0)} />
 					{/*
 					<Tab label="APARATOLOGÍA" {...a11yProps(3)} />
 					<Tab label="PAGOS" {...a11yProps(4)} />
@@ -99,38 +105,51 @@ export const MenuContainer = props => {
 					*/}
 				</Tabs>
 			</AppBar>
+			{/*
 			<TabPanel value={value} index={0}>
 				<ReportesDetallesGeneral
+					empleado={empleado}
 					sucursal={sucursal} />
 			</TabPanel>
 			<TabPanel value={value} index={1}>
 				<ReportesIngresos
+					empleado={empleado}
 					sucursal={sucursal} />
 			</TabPanel>
 			<TabPanel value={value} index={2}>
 				<ReportesGastos
+					empleado={empleado}
 					sucursal={sucursal} />
 			</TabPanel>
-			<TabPanel value={value} index={3}>
-				<ReportesAparatologia
+			*/}
+			
+			<TabPanel value={value} index={0}>
+				<ReporteGeneralCitas
+					empleado={empleado}
 					sucursal={sucursal} />
 			</TabPanel>
+			{/*
 			<TabPanel value={value} index={4}>
 				<ReportesPagos
+					empleado={empleado}
 					sucursal={sucursal} />
 			</TabPanel>
 			<TabPanel value={value} index={5}>
 				<ReportesFacturas
+					empleado={empleado}
 					sucursal={sucursal} />
 			</TabPanel>
 			<TabPanel value={value} index={6}>
 				<ReportesCirugias
+					empleado={empleado}
 					sucursal={sucursal} />
 			</TabPanel>
 			<TabPanel value={value} index={7}>
 				<ReportesBiopsias
+					empleado={empleado}
 					sucursal={sucursal} />
 			</TabPanel>
+			*/}
 		</div>
 	);
 }

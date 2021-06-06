@@ -22,6 +22,7 @@ import People from '@material-ui/icons/People';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import AirlineSeatReclineNormalIcon from '@material-ui/icons/AirlineSeatReclineNormal';
+import AndroidIcon from '@material-ui/icons/Android';
 import { Button, Grid } from '@material-ui/core';
 import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
 import ModalPassword from '../../../components/modales/modal_password';
@@ -38,6 +39,7 @@ import {
 	showCorteTodayBySucursalAndTurno
 } from '../../../services/corte';
 import myStyles from '../../../css';
+import MenuSuperAdmin from '../../menu_super_admin';
 
 const TabPanel = (props) => {
 	const { children, value, index, ...other } = props;
@@ -63,6 +65,10 @@ TabPanel.propTypes = {
 };
 
 export const MainContainer = props => {
+
+	const rolRecepcionistaId = process.env.REACT_APP_RECEPCIONISTA_ROL_ID;
+	const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
+	const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
 
 	const {
 		pacienteAgendado,
@@ -109,18 +115,18 @@ export const MainContainer = props => {
 		}
 	}
 
-	useEffect(() => {
-		const findCorte = async () => {
-			const response = await showCorteTodayBySucursalAndTurno(sucursal._id, 'm');
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				const corte = response.data;
-				if (!corte) {
-					generateCorteMatutino();
-				}
+	const findCorte = async () => {
+		const response = await showCorteTodayBySucursalAndTurno(sucursal._id, 'm');
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			const corte = response.data;
+			if (!corte) {
+				generateCorteMatutino();
 			}
 		}
+	}
 
-		findCorte();
+	useEffect(() => {
+		if (sucursal._id === sucursalManuelAcunaId || sucursal._id === sucursalRubenDarioId ) findCorte();
 	}, []);
 
 	return (
@@ -189,30 +195,49 @@ export const MainContainer = props => {
 						<ListItemIcon> <AccessibilityNewIcon /> </ListItemIcon>
 						<ListItemText primary={'PACIENTES'} />
 					</ListItem>
-					<ListItem button key={'DERMATOLÓGOS'} onClick={(e) => onChangeTab(e, 1, handleDrawerClose)}>
-						<ListItemIcon> <People /> </ListItemIcon>
-						<ListItemText primary={'DERMATOLÓGOS'} />
-					</ListItem>
-					<ListItem button key={'CONSULTORIOS / CABINAS'} onClick={(e) => onChangeTab(e, 2, handleDrawerClose)}>
-						<ListItemIcon> <AirlineSeatReclineNormalIcon /> </ListItemIcon>
-						<ListItemText primary={'CONSULTORIOS / CABINAS'} />
-					</ListItem>
-					<ListItem button key={'CORTE'} onClick={(e) => onChangeTab(e, 3, handleDrawerClose)}>
-						<ListItemIcon> <AttachMoneyIcon /> </ListItemIcon>
-						<ListItemText primary={'CORTE'} />
-					</ListItem>
-					<ListItem button key={'LISTA DE ESPERA'} onClick={(e) => onChangeTab(e, 4, handleDrawerClose)}>
-						<ListItemIcon> <ListAltIcon /> </ListItemIcon>
-						<ListItemText primary={'LISTA DE ESPERA'} />
-					</ListItem>
-					<ListItem button key={'RAZÓN SOCIAL'} onClick={(e) => onChangeTab(e, 5, handleDrawerClose)}>
-						<ListItemIcon> <Description /> </ListItemIcon>
-						<ListItemText primary={'RAZÓN SOCIAL'} />
-					</ListItem>
-					<ListItem button key={'REPORTES'} onClick={(e) => onChangeTab(e, 6, handleDrawerClose)}>
-						<ListItemIcon> <AssignmentIcon /> </ListItemIcon>
-						<ListItemText primary={'REPORTES'} />
-					</ListItem>
+					{
+						sucursal._id === sucursalManuelAcunaId || sucursal._id === sucursalRubenDarioId ?
+							<Fragment>
+								<ListItem button key={'DERMATOLÓGOS'} onClick={(e) => onChangeTab(e, 1, handleDrawerClose)}>
+									<ListItemIcon> <People /> </ListItemIcon>
+									<ListItemText primary={'DERMATOLÓGOS'} />
+								</ListItem>
+								<ListItem button key={'CONSULTORIOS / CABINAS'} onClick={(e) => onChangeTab(e, 2, handleDrawerClose)}>
+									<ListItemIcon> <AirlineSeatReclineNormalIcon /> </ListItemIcon>
+									<ListItemText primary={'CONSULTORIOS / CABINAS'} />
+								</ListItem>
+								<ListItem button key={'CORTE'} onClick={(e) => onChangeTab(e, 3, handleDrawerClose)}>
+									<ListItemIcon> <AttachMoneyIcon /> </ListItemIcon>
+									<ListItemText primary={'CORTE'} />
+								</ListItem>
+								<ListItem button key={'LISTA DE ESPERA'} onClick={(e) => onChangeTab(e, 4, handleDrawerClose)}>
+									<ListItemIcon> <ListAltIcon /> </ListItemIcon>
+									<ListItemText primary={'LISTA DE ESPERA'} />
+								</ListItem>
+								<ListItem button key={'RAZÓN SOCIAL'} onClick={(e) => onChangeTab(e, 5, handleDrawerClose)}>
+									<ListItemIcon> <Description /> </ListItemIcon>
+									<ListItemText primary={'RAZÓN SOCIAL'} />
+								</ListItem>
+							</Fragment>
+							: ''
+					}
+
+					{
+						empleado.rol._id !== rolRecepcionistaId ?
+							<ListItem button key={'REPORTES'} onClick={(e) => onChangeTab(e, 6, handleDrawerClose)}>
+								<ListItemIcon> <AssignmentIcon /> </ListItemIcon>
+								<ListItemText primary={'REPORTES'} />
+							</ListItem>
+							: ''
+					}
+					{
+						empleado.super_admin
+							? <ListItem button key={'SUPER ADMINISTRADOR'} onClick={(e) => onChangeTab(e, 7, handleDrawerClose)}>
+								<ListItemIcon> <AndroidIcon /> </ListItemIcon>
+								<ListItemText primary={'SUPER ADMINISTRADOR'} />
+							</ListItem>
+							: ''
+					}
 				</List>
 			</Drawer>
 			<main
@@ -267,6 +292,12 @@ export const MainContainer = props => {
 							setPacienteAgendado={setPacienteAgendado}
 							empleado={empleado}
 							sucursal={sucursal._id} />
+					</TabPanel>
+					<TabPanel value={value} index={7}>
+						<MenuSuperAdmin
+							empleado={empleado}
+							sucursal={sucursal}
+							history={history} />
 					</TabPanel>
 				</Fragment>
 			</main>

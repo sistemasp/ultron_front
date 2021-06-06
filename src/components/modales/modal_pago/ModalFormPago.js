@@ -56,11 +56,8 @@ const ModalFormPago = (props) => {
 
   const {
     values,
-    errors,
-    touched,
-    handleSubmit,
-    isValid,
     bancos,
+    isLoading,
     formasPago,
     tiposTarjeta,
     onClickCancel,
@@ -85,7 +82,7 @@ const ModalFormPago = (props) => {
         aria-describedby="simple-modal-description"
         open={open} >
         <div style={modalStyle} className={classes.paper}>
-          <form onSubmit={handleSubmit}>
+          <form>
             <Grid container spacing={3}>
 
               <Grid item xs={12}>
@@ -95,8 +92,8 @@ const ModalFormPago = (props) => {
                     labelId="simple-select-outlined-payment"
                     id="simple-select-outlined-payment"
                     value={values.forma_pago}
-                    error={Boolean(errors.forma_pago)}
                     onChange={onChangePaymentMethod}
+                    disabled={isLoading}
                     label="FORMA DE PAGO" >
                     {formasPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
                   </Select>
@@ -115,7 +112,6 @@ const ModalFormPago = (props) => {
                           labelId="simple-select-outlined-banks"
                           id="simple-select-outlined-banks"
                           value={values.banco}
-                          error={Boolean(errors.banco)}
                           onChange={onChangeBank}
                           label="BANCOS" >
                           {bancos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
@@ -130,7 +126,6 @@ const ModalFormPago = (props) => {
                           labelId="simple-select-outlined-card-type"
                           id="simple-select-outlined-card-type"
                           value={values.tipoTarjeta}
-                          error={Boolean(errors.tipoTarjeta)}
                           onChange={onChangeCardType}
                           label="TIPO TARJETA" >
                           {tiposTarjeta.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
@@ -143,12 +138,10 @@ const ModalFormPago = (props) => {
                         className={classes.textField}
                         name="digitos"
                         //helperText={touched.numero_sesion ? errors.numero_sesion : ""}
-                        error={Boolean(errors.digitos)}
-                        label="DIGITOS"
+                        label="DÍGITOS"
                         value={values.digitos}
-                        type='Number'
                         onInput={(e) => {
-                          e.target.value = Math.max(0, parseFloat(e.target.value)).toString().slice(0, 4)
+                          e.target.value = (e.target.value).toString().slice(0, 4)
                         }}
                         onChange={onChangeDigitos}
                         variant="outlined" />
@@ -161,7 +154,6 @@ const ModalFormPago = (props) => {
                   className={classes.textField}
                   name="cantidad"
                   //helperText={touched.numero_sesion ? errors.numero_sesion : ""}
-                  error={Boolean(errors.cantidad)}
                   label="CANTIDAD A COBRAR"
                   value={values.cantidad}
                   onChange={onChangeCantidad}
@@ -228,7 +220,6 @@ const ModalFormPago = (props) => {
                   className={classes.textField}
                   name="observaciones"
                   //helperText={touched.numero_sesion ? errors.numero_sesion : ""}
-                  error={Boolean(errors.observaciones)}
                   label="OBSERVACIONES"
                   value={values.observaciones}
                   onChange={onChangeObservaciones}
@@ -241,7 +232,7 @@ const ModalFormPago = (props) => {
                   color="primary"
                   variant="contained"
                   onClick={(e) => onClickGuardar(e, values)}
-                  disabled={!isValid}
+                  disabled={isLoading}
                   text='GUARDAR' />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -253,15 +244,14 @@ const ModalFormPago = (props) => {
                   text='CANCELAR' />
               </Grid>
 
-              {
-                /*<Grid item xs={12}>
+              
+                <Grid item xs={12}>
                   <CheckCustom
                     checked={values.pago_anticipado}
                     onChange={onChangePagoAnticipado}
                     name="checkedC"
                     label="PAGO ANTICIPADO" />
-              </Grid>*/
-              }
+              </Grid>
             </Grid>
 
           </form>

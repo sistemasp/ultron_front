@@ -2,7 +2,11 @@ import React, { useState, useEffect, Fragment } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import { Backdrop, CircularProgress } from '@material-ui/core';
 import { RazonSocialContainer } from './razon_social';
-import {  updatePatient, createPatient, findPatientByPhoneNumber } from '../../../services';
+import {
+	updatePatient,
+	createPatient,
+	findPatientByPhoneNumber
+} from '../../../services/pacientes';
 import EditIcon from '@material-ui/icons/Edit';
 import HistoryIcon from '@material-ui/icons/History';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -48,6 +52,7 @@ const RazonSocial = (props) => {
 	const [severity, setSeverity] = useState('success');
 
 	const {
+		empleado,
 		onClickAgendar,
 		onClickAgendarTratamiento,
 		onClickAgendarConsulta
@@ -96,7 +101,7 @@ const RazonSocial = (props) => {
 		const response = await showAllRazonSocials();
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			await response.data.forEach(item => {
-				item.domicilio_completo = `${item.domicilio} #${item.numero}`;
+				item.domicilio_completo = `${item.domicilio} #${item.numero_exterior} ${item.numero_interior ? '- ' + item.numero_interior : '' }`;
 			});
 			setRazonSociales(response.data);
 		}
@@ -118,7 +123,7 @@ const RazonSocial = (props) => {
 			}
 		}
 
-		const response = razonSocial._id ? await updatePatient(razonSocial._id, val) : await createPatient(val);
+		const response = razonSocial._id ? await updatePatient(razonSocial._id, val) : await createPatient(val, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
 			|| `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			setSeverity('success');
@@ -145,7 +150,7 @@ const RazonSocial = (props) => {
 			}
 		}
 
-		const response = razonSocial._id ? await updatePatient(razonSocial._id, val) : await createPatient(val);
+		const response = razonSocial._id ? await updatePatient(razonSocial._id, val) : await createPatient(val, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
 			|| `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			setSeverity('success');
@@ -181,18 +186,12 @@ const RazonSocial = (props) => {
 		}
 	];
 
+	const loadAll = async () => {
+		await loadRazonSocial();
+	}
+
 	useEffect(() => {
-		const loadRazonSocial = async () => {
-			const response = await showAllRazonSocials();
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				await response.data.forEach(item => {
-					item.domicilio_completo = `${item.domicilio} #${item.numero}`;
-				});
-				setRazonSociales(response.data);
-			}
-			setIsLoading(false);
-		}
-		loadRazonSocial();
+		loadAll();
 	}, []);
 
 	return (

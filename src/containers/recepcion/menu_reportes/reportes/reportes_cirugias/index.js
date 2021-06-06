@@ -44,7 +44,7 @@ const ReportesCirugias = (props) => {
 		{ title: 'CONSECUTIVO', field: 'consecutivo' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'FOLIO CONSULTA', field: 'folio_consulta' },
-		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
+		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
 		{ title: 'MATERIALES', field: 'materiales_show' },
 		{ title: 'BIOPSIAS', field: 'biopsias_show' },
 		{ title: 'COSTO BIOPSIAS', field: 'costo_biopsias_moneda' },

@@ -2,7 +2,11 @@ import React, { useState, useEffect, Fragment } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import { Backdrop, CircularProgress, Select, FormControl, InputLabel, MenuItem } from '@material-ui/core';
 import { PacientesContainer } from './pacientes';
-import { getAllPatients, updatePatient, createPatient, findPatientByPhoneNumber } from '../../../services';
+import { 
+	updatePatient,
+	createPatient,
+	findPatientByPhoneNumber
+} from '../../../services/pacientes';
 import EditIcon from '@material-ui/icons/Edit';
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import TodayIcon from '@material-ui/icons/Today';
@@ -47,11 +51,12 @@ const Pacientes = (props) => {
 	const [openHistoric, setOpenHistoric] = useState(false);
 	const [openAlert, setOpenAlert] = useState(false);
 	const [paciente, setPaciente] = useState({});
-	const [isLoading, setIsLoading] = useState(true);
+	const [isLoading, setIsLoading] = useState(false);
 	const [message, setMessage] = useState('');
 	const [severity, setSeverity] = useState('success');
 
 	const {
+		empleado,
 		onClickAgendar,
 		onClickAgendarConsulta,
 		onClickAgendarFaciales,
@@ -74,16 +79,18 @@ const Pacientes = (props) => {
 			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
 			color: '#FFF',
 			fontWeight: 'bolder',
-			fontSize: '18px'
+			fontSize: '18px',
+			textAlign: 'center',
+		},
+		cellStyle: {
+			fontWeight: 'bolder',
+			fontSize: '16px',
+			padding: '5px',
+			textAlign: 'center',
 		},
 		exportAllData: true,
 		exportButton: false,
 		exportDelimiter: ';',
-		cellStyle: {
-			fontWeight: 'bolder',
-			fontSize: '16px',
-			padding: '0px',
-		},
 	}
 
 	const handleOpen = () => {
@@ -100,44 +107,40 @@ const Pacientes = (props) => {
 		setOpenAlert(false);
 	};
 
-	const loadPacientes = async () => {
-		/*const response = await getAllPatients();
-		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			setPacientes(response.data);
-		}*/
-		setIsLoading(false);
-	}
-
 	const handleOnClickGuardar = async (e, val) => {
 		setIsLoading(true);
-		const existPatient = paciente._id ? '' : await findPatientByPhoneNumber(val.telefono);
-		setOpenAlert(true);
 
-		if (`${existPatient.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			if (existPatient.data.length > 0) {
-				setSeverity('warning');
-				setMessage('YA EXISTE UN REGISTRO CON EL MISMO NUMERO DE TELÉFONO');
-				setIsLoading(false);
-				handleClose();
-				return;
+		if (!val.familiar) {
+			const existPatient = paciente._id ? '' : await findPatientByPhoneNumber(val.telefono, empleado.access_token);
+
+			if (`${existPatient.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+				if (existPatient.data.length > 0) {
+					setSeverity('warning');
+					setOpenAlert(true);
+					setMessage('YA EXISTE UN REGISTRO CON EL MISMO NUMERO DE TELÉFONO');
+					setIsLoading(false);
+					handleClose();
+					return;
+				}
 			}
 		}
 
-		const response = paciente._id ? await updatePatient(paciente._id, val) : await createPatient(val);
+		const response = paciente._id ? await updatePatient(paciente._id, val,  empleado.access_token) : await createPatient(val, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
 			|| `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			setSeverity('success');
-			loadPacientes();
+			setOpenAlert(true);
 			setMessage(paciente._id ? 'PACIENTE ACTUALIZADO' : 'PACIENTE CREADO');
 		}
 
 		handleClose();
+
 		setIsLoading(false);
 	}
 
 	const handleOnClickGuardarAgendar = async (e, val) => {
 		setIsLoading(true);
-		const existPatient = paciente._id ? '' : await findPatientByPhoneNumber(val.telefono);
+		const existPatient = paciente._id ? '' : await findPatientByPhoneNumber(val.telefono, empleado.access_token);
 		setOpenAlert(true);
 
 		if (`${existPatient.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
@@ -150,11 +153,10 @@ const Pacientes = (props) => {
 			}
 		}
 
-		const response = paciente._id ? await updatePatient(paciente._id, val) : await createPatient(val);
+		const response = paciente._id ? await updatePatient(paciente._id, val, empleado.access_token) : await createPatient(val, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
 			|| `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			setSeverity('success');
-			loadPacientes();
 			onClickAgendar(e, val);
 			setMessage(paciente._id ? 'PACIENTE ACTUALIZADO' : 'PACIENTE CREADO');
 		}
@@ -191,7 +193,7 @@ const Pacientes = (props) => {
 		},*/
 		{
 			icon: EventAvailableIcon,
-			tooltip: 'AGREGAR APARATOLOGIA',
+			tooltip: 'AGREGAR APARATOLOGÍA',
 			onClick: onClickAgendarAparatologia
 		},
 		{
@@ -218,7 +220,7 @@ const Pacientes = (props) => {
 			/*case 'AGREGAR LÁSER':
 				onClickAgendarLaser(e, rowData);
 				break;*/
-			case 'AGREGAR APARATOLOGIA':
+			case 'AGREGAR APARATOLOGÍA':
 				onClickAgendarAparatologia(e, rowData);
 				break;
 			case 'ACTUALIZAR REGISTRO':
@@ -232,44 +234,35 @@ const Pacientes = (props) => {
 
 	const components = {
 		Actions: props => {
-			return <Fragment>
-				<FormControl variant="outlined" className={classes.formControl}>
-					<InputLabel id="simple-select-outlined-hora"></InputLabel>
-					<Select
-						labelId="simple-select-outlined-actions"
-						id="simple-select-outlined-actions"
-						onChange={(e) => onChangeActions(e, props.data)}
-						label="ACCIONES">
-						{
-							props.actions.map((item, index) => {
-								return <MenuItem
-									key={index}
-									value={item.tooltip}
-								>{item.tooltip}</MenuItem>
-							})
-						}
-					</Select>
-				</FormControl>
-			</Fragment>
+			return props.actions.length > 0
+				? <Fragment>
+					<FormControl variant="outlined" className={classes.formControl}>
+						<Select
+							labelId="simple-select-outlined-actions"
+							id="simple-select-outlined-actions"
+							onChange={(e) => onChangeActions(e, props.data)}
+							label="ACCIONES">
+							{
+								props.actions.map((item, index) => {
+									return <MenuItem
+										key={index}
+										value={item.tooltip}
+									>{item.tooltip}</MenuItem>
+								})
+							}
+						</Select>
+					</FormControl>
+				</Fragment>
+				: ''
 		}
 	};
-
-	useEffect(() => {
-		const loadPacientes = async () => {
-			/*const response = await getAllPatients();
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				setPacientes(response.data);
-			}*/
-			setIsLoading(false);
-		}
-		loadPacientes();
-	}, []);
 
 	return (
 		<Fragment>
 			{
 				!isLoading ?
 					<PacientesContainer
+						empleado={empleado}
 						columns={columns}
 						titulo='PACIENTES'
 						actions={actions}

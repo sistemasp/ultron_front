@@ -21,6 +21,10 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { Button, Grid } from '@material-ui/core';
 import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
 import ModalPassword from '../../../components/modales/modal_password';
+import {
+	createCorte,
+	showCorteTodayBySucursalAndTurno
+} from '../../../services/corte';
 import myStyles from '../../../css';
 
 const TabPanel = (props) => {
@@ -77,8 +81,34 @@ export const MainContainer = props => {
 		setOpenDrawer(false);
 	};
 
+	const generateCorteMatutino = async () => {
+		const create_date = new Date();
+		const newCorte = {
+			recepcionista: empleado._id,
+			create_date: create_date,
+			hora_apertura: create_date,
+			turno: 'm',
+			sucursal: sucursal,
+		}
+		const response = await createCorte(newCorte);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+			setMessage("CORTE MATUTINO ABIERTO.");
+			setOpenAlert(true);
+		}
+	}
+
+	const findCorte = async () => {
+		const response = await showCorteTodayBySucursalAndTurno(sucursal._id, 'm');
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			const corte = response.data;
+			if (!corte) {
+				generateCorteMatutino();
+			}
+		}
+	}
 
 	useEffect(() => {
+		findCorte();
 	}, []);
 
 	return (

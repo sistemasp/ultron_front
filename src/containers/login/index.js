@@ -4,13 +4,13 @@ import io from 'socket.io-client';
 import socketIOClient from "socket.io-client";
 import { showAllOffices } from "../../services";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { loginEmployee } from "../../services";
 import { LoginContainer } from "./login";
 import { withRouter } from 'react-router-dom';
 import * as Yup from "yup";
 import { Snackbar, Grid } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
 import bannerMePiel from './../../bannerMePiel.PNG';
+import { login } from "../../services/empleados";
 
 const styles = theme => ({
   paper: {
@@ -62,6 +62,7 @@ const LoginForm = (props) => {
   const rolEnfermeraId = process.env.REACT_APP_ENFERMERA_ROL_ID;
   const rolAdministacionId = process.env.REACT_APP_ADMINISTRACION_ROL_ID;
   const rolDiosSupremoId = process.env.REACT_APP_DIOS_SUPREMO_ROL_ID;
+  const rolMasterId = process.env.REACT_APP_MASTER_ROL_ID;
   const rolSistemasId = process.env.REACT_APP_SISTEMAS_ROL_ID;
   const rolSupervisorId = process.env.REACT_APP_SUPERVISOR_ROL_ID;
   const rolAuxiliarAdministrativoId = process.env.REACT_APP_AUXILIAR_ADMINISTRATIVO_ROL_ID;
@@ -106,8 +107,8 @@ const LoginForm = (props) => {
   };
 
   const submit = async (data) => {
-    const response = await loginEmployee(data.employee_number, data.password);
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK && response.data !== '') {
+    const response = await login(data.employee_number, data.password);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED && response.data !== '') {
       const empleado = response.data;
       if (empleado.rol._id === rolCallCenterId) {
         history.push('/call_center', { empleado: empleado, sucursal: data.sucursal });
@@ -119,6 +120,7 @@ const LoginForm = (props) => {
         || empleado.rol._id === rolEncargadoSucursalId
         || empleado.rol._id === rolRecepcionistaId
         || empleado.rol._id === rolDiosSupremoId
+        || empleado.rol._id === rolMasterId
         || empleado.rol._id === rolSistemasId
         || empleado.rol._id === rolSupervisorId
       ) {

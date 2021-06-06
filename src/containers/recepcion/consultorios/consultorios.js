@@ -48,6 +48,7 @@ export const ConsultorioContainer = (props) => {
     setOpenAlert,
     setMessage,
     loadConsultorios,
+    empleado,
   } = props;
 
   return (
@@ -56,6 +57,7 @@ export const ConsultorioContainer = (props) => {
         openModalConsultorio ?
           <ModalConsultorio
             open={openModalConsultorio}
+            empleado={empleado}
             onClose={handleClose}
             consultorio={consultorio}
             handleClickGuardar={handleClickGuardarConsultorio}
@@ -68,6 +70,7 @@ export const ConsultorioContainer = (props) => {
             open={openModalCabina}
             onClose={handleClose}
             cabina={cabina}
+            empleado={empleado}
             handleClickGuardar={handleClickGuardarCabina}
             setOpenAlert={setOpenAlert}
             setMessage={setMessage} /> : ''
@@ -76,6 +79,7 @@ export const ConsultorioContainer = (props) => {
         openModalSalaCirugia ?
           <ModalSalaCirugia
             open={openModalSalaCirugia}
+            empleado={empleado}
             onClose={handleClose}
             salaCirugia={salaCirugia}
             handleClickGuardar={handleClickGuardarSalaCirugia}
@@ -87,6 +91,7 @@ export const ConsultorioContainer = (props) => {
           <ModalConsultorioAgregarDermatologo
             open={openModalAsignar}
             onClose={handleClose}
+            empleado={empleado}
             consultorio={consultorio}
             setOpenAlert={setOpenAlert}
             setMessage={setMessage}

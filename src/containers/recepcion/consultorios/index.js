@@ -8,7 +8,6 @@ import {
 	breakFreeCabinaByIdDermatologo,
 	createSalaCirugia,
 	findSalaCirugiaBySucursalId,
-	updateEmployee
 } from '../../../services';
 import AirlineSeatReclineExtraIcon from '@material-ui/icons/AirlineSeatReclineExtra';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -19,6 +18,7 @@ import {
 	createSurgery,
 	findSurgeryBySucursalId
 } from "../../../services/consultorios";
+import { updateEmployee } from "../../../services/empleados";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -66,11 +66,12 @@ const Consultorios = (props) => {
 
 	const {
 		sucursal,
+		empleado,
 	} = props;
 
 	const columnsConsultorio = [
 		{ title: 'NOMBRE', field: 'nombre' },
-		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
+		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 	];
 
@@ -82,7 +83,7 @@ const Consultorios = (props) => {
 
 	const columnsSalaCirugia = [
 		{ title: 'NOMBRE', field: 'nombre' },
-		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
+		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 	];
 
@@ -162,7 +163,7 @@ const Consultorios = (props) => {
 
 	const handleOnClickLiberarConsultorio = async (event, rowData) => {
 		rowData.dermatologo.disponible = true;
-    	await updateEmployee(rowData.dermatologo._id, rowData.dermatologo);
+    	await updateEmployee(rowData.dermatologo._id, rowData.dermatologo, empleado.access_token);
 		const response = await breakFreeSurgeryByIdDermatologo(rowData._id);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setOpenAlert(true);
@@ -188,7 +189,7 @@ const Consultorios = (props) => {
 		const response = await breakFreeCabinaByIdDermatologo(rowData._id);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setOpenAlert(true);
-			setMessage('Salio la cosmetologa');
+			setMessage('SALIO LA COSMETOLÓGA');
 			await loadConsultorios();
 		}
 	}
@@ -199,7 +200,7 @@ const Consultorios = (props) => {
 		const response = await createCabina(data);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			setOpenAlert(true);
-			setMessage('La cabina se guardo correctamente');
+			setMessage('LA CABINA SE GUARDO CORRECTAMENTE');
 			loadCabinas();
 		}
 		setOpenModalCabina(false);
@@ -212,7 +213,7 @@ const Consultorios = (props) => {
 		const response = await createSalaCirugia(data);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			setOpenAlert(true);
-			setMessage('La sala de cirugia se guardo correctamente');
+			setMessage('LA SALA DE CIRUGÍA SE GUARDO CORRECTAMENTE');
 			loadSalaCirugia();
 		}
 		setOpenModalSalaCirugia(false);
@@ -224,12 +225,12 @@ const Consultorios = (props) => {
 			!rowData.dermatologo ?
 				{
 					icon: AirlineSeatReclineExtraIcon,
-					tooltip: 'Asignar un dermatologo',
+					tooltip: 'ASIGNAR UN DERMATOLÓGO',
 					onClick: handleOnClickAsignarDermatologo
 				} :
 				(!rowData.paciente ? {
 					icon: DirectionsWalkIcon,
-					tooltip: 'Liberar consultorio',
+					tooltip: 'LIBERAR CONSULTORIO',
 					onClick: handleOnClickLiberarConsultorio
 				} : '')
 		)
@@ -240,12 +241,12 @@ const Consultorios = (props) => {
 			!rowData.cosmetologa ?
 				{
 					icon: AirlineSeatReclineExtraIcon,
-					tooltip: 'Asignar una cosmetologa',
+					tooltip: 'ASIGNAR UNA COSMETOLÓGA',
 					onClick: handleOnClickAsignarDermatologo
 				} :
 				(!rowData.paciente ? {
 					icon: DirectionsWalkIcon,
-					tooltip: 'Liberar consultorio',
+					tooltip: 'LIBERAR CONSULTORIO',
 					onClick: handleOnClickLiberarConsultorio
 				} : '')
 		)
@@ -256,12 +257,12 @@ const Consultorios = (props) => {
 			!rowData.dermatologo ?
 				{
 					icon: AirlineSeatReclineExtraIcon,
-					tooltip: 'Asignar un dermatologo',
+					tooltip: 'ASIGNAR UN DERMATOLÓGO',
 					onClick: handleOnClickAsignarDermatologo
 				} :
 				(!rowData.paciente ? {
 					icon: DirectionsWalkIcon,
-					tooltip: 'Liberar sala de cirugia',
+					tooltip: 'LIBERAR SALA DE CIRUGÍA',
 					onClick: handleOnClickLiberarConsultorio
 				} : '')
 		)
@@ -316,9 +317,9 @@ const Consultorios = (props) => {
 						columnsConsultorio={columnsConsultorio}
 						columnsCabina={columnsCabina}
 						columnsSalaCirugia={columnsSalaCirugia}
-						tituloConsultorio='Consultorios'
-						tituloCabina='Cabinas'
-						tituloSalaCirugia='Sala Cirugias'
+						tituloConsultorio='CONSULTORIOS'
+						tituloCabina='CABINAS'
+						tituloSalaCirugia='SALA CIRUGÍAS'
 						actionsConsultorio={actionsConsultorio}
 						actionsSalaCirugia={actionsSalaCirugia}
 						actionsCabina={actionsCabina}
@@ -333,6 +334,7 @@ const Consultorios = (props) => {
 						cabina={cabina}
 						salaCirugias={salaCirugias}
 						salaCirugia={salaCirugia}
+						empleado={empleado}
 						handleOpenConsultorio={handleOpenConsultorio}
 						handleOpenCabina={handleOpenCabina}
 						handleOpenSalaCirugia={handleOpenSalaCirugia}

@@ -18,6 +18,7 @@ const ModalConsultorioAgregarPaciente = (props) => {
   const {
     open,
     onClose,
+    empleado,
     tipo_servicio,
     servicio,
     setOpenAlert,
@@ -53,7 +54,7 @@ const ModalConsultorioAgregarPaciente = (props) => {
   const handleClickGuardar = async (event, rowData) => {
     setIsLoading(true);
 
-    const responseServicio = await findConsultById(servicio);
+    const responseServicio = await findConsultById(servicio, empleado.access_token);
     if (`${responseServicio.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       const consulta = responseServicio.data;
       if (!cambio) {
@@ -62,16 +63,16 @@ const ModalConsultorioAgregarPaciente = (props) => {
         updateConsulta.status = enConsultorioStatusId;
         updateConsulta.hora_atencion = `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;
         updateConsulta.dermatologo = values.consultorio.dermatologo;
-        await updateConsult(consulta._id, updateConsulta);
+        await updateConsult(consulta._id, updateConsulta, empleado.access_token);
       } else {
         const updateConsulta = consulta;
         updateConsulta.dermatologo = values.consultorio.dermatologo;
-        await updateConsult(consulta._id, updateConsulta);
+        await updateConsult(consulta._id, updateConsulta, empleado.access_token);
       }
 
       setValues({ consultorio: { paciente: consulta.paciente._id } });
       let consul = values.consultorio;
-      consul.consulta = consulta._id;
+      consul.consultaId = consulta._id;
       consul.paciente = paciente._id;
       consul.tipo_servicio = tipo_servicio;
       consul.servicio = servicio;

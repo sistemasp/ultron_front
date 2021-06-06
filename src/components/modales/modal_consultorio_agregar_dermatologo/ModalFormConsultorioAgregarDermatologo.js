@@ -77,14 +77,14 @@ const ModalFormConsultorioAgregarDermatologo = (props) => {
               </Grid>
               <Grid item xs={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-hora">Dermatologo</InputLabel>
+                  <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO (A)</InputLabel>
                   <Select
                     labelId="simple-select-outlined-dermatologo"
                     id="simple-select-outlined-dermatologo"
                     value={values.dermatologo}
                     error={Boolean(errors.dermatologo)}
                     onChange={onChangeDermatologos}
-                    label="DERMATÓLOGO" >
+                    label="DERMATÓLOGO (A)" >
                     {dermatologos.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
                   </Select>
                 </FormControl>

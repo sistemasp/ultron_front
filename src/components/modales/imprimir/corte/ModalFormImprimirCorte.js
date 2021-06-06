@@ -342,37 +342,45 @@ const ModalFormImprimirCorte = (props) => {
             {
               dataEgresos.map(dataEgreso => {
                 {
-                  pagoDermatologos += dataEgreso.tipo_egreso === 'PAGO DERMATÓLOGOS' ? dataEgreso.total : 0;
-                  retirosParciales += dataEgreso.tipo_egreso === 'RETIRO PARCIAL' ? dataEgreso.total : 0;
-                  otrosEgresos += dataEgreso.tipo_egreso === 'OTROS EGRESOS' ? dataEgreso.total : 0;
+                  switch (dataEgreso.tipo_egreso) {
+                    case 'PAGO DERMATÓLOGOS':
+                      pagoDermatologos += dataEgreso.total;
+                      break;
+                    case 'RETIRO PARCIAL':
+                      retirosParciales += dataEgreso.total;
+                      break;
+                    default:
+                      otrosEgresos += dataEgreso.total;
+                      break
+                  }
                 }
                 return (
                   <Grid container xs={4} className={classes.grid_left}>
-                    <Grid item xs={12} className={classes.label}>
-                      <h2 className={classes.label_title_descripcion} > {dataEgreso.tipo_egreso}</h2>
-                    </Grid>
-                    <Grid item xs={9} className={classes.label}>
-                      <p className={classes.label_title_ingresos}>CONCEPTO</p>
-                    </Grid>
-                    <Grid item xs={3} className={classes.label}>
-                      <p className={classes.label_title_ingresos}>CANTIDAD</p>
-                    </Grid>
-                    {
-                      dataEgreso.egresos_por_tipo.map((egreso) => {
-                        return (
-                          <Fragment>
-                            <Grid item xs={9} className={classes.label}>
-                              <h3 className={classes.label_cells_concepto}>{egreso.concepto}</h3>
-                            </Grid>
-                            <Grid item xs={3} className={classes.label}>
-                              <p className={classes.label_cells_total}>{egreso.cantidad_moneda}</p>
-                            </Grid>
-                          </Fragment>
+              <Grid item xs={12} className={classes.label}>
+                <h2 className={classes.label_title_descripcion} > {dataEgreso.tipo_egreso}</h2>
+              </Grid>
+              <Grid item xs={9} className={classes.label}>
+                <p className={classes.label_title_ingresos}>CONCEPTO</p>
+              </Grid>
+              <Grid item xs={3} className={classes.label}>
+                <p className={classes.label_title_ingresos}>CANTIDAD</p>
+              </Grid>
+              {
+                dataEgreso.egresos_por_tipo.map((egreso) => {
+                  return (
+                    <Fragment>
+                      <Grid item xs={9} className={classes.label}>
+                        <h3 className={classes.label_cells_concepto}>{egreso.concepto}</h3>
+                      </Grid>
+                      <Grid item xs={3} className={classes.label}>
+                        <p className={classes.label_cells_total}>{egreso.cantidad_moneda}</p>
+                      </Grid>
+                    </Fragment>
 
-                        )
-                      })
-                    }
-                  </Grid>
+                  )
+                })
+              }
+            </Grid>
                 );
               })
             }
@@ -425,7 +433,7 @@ const ModalFormImprimirCorte = (props) => {
 
             <Grid container xs={6} className={classes.grid_right}>
               <Grid item xs={12} className={classes.label}>
-                <h1 className={classes.label_utilidad_perdida}>{`UTILIDAD O PÉRDIDA: ${toFormatterCurrency(totalEfectivo - pagoDermatologos - retirosParciales - otrosEgresos)}`}<br /><br /></h1>
+                <h1 className={classes.label_utilidad_perdida}>{`TOTAL CORTE CAJA: ${toFormatterCurrency(totalEfectivo - pagoDermatologos - retirosParciales - otrosEgresos)}`}<br /><br /></h1>
               </Grid>
               <Grid container>
                 <Grid item xs={true}>

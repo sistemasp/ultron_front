@@ -10,36 +10,26 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { Paper, TextField } from '@material-ui/core';
 import TableComponent from '../../../components/table/TableComponent';
-import ModalCita from '../../../components/modales/modal_cita';
 import { Multiselect } from 'multiselect-react-dropdown';
 import ModalPagos from '../../../components/modales/modal_pagos';
 import { toFormatterCurrency } from '../../../utils/utils';
-import ModalImprimirTratamiento from '../../../components/modales/imprimir/tratamiento';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import ModalProximaCita from '../../../components/modales/modal_proxima_cita';
+import ModalDermapen from '../../../components/modales/modal_dermapen';
+import ModalImprimirDermapen from '../../../components/modales/imprimir/dermapen';
+import myStyles from '../../../css';
+import ModalTraspasoServicio from '../../../components/modales/traspaso_servicio';
+import ModalProximaDermapen from '../../../components/modales/modal_proxima_dermapen';
 
-const useStyles = makeStyles(theme => ({
-	formControl: {
-		minWidth: 120,
-		width: '100%',
-	},
-	selectEmpty: {
-		marginTop: theme.spacing(2),
-	},
-	button: {
-		width: '100%',
-		color: '#FFFFFF',
-	}
-}));
+export const AgendarDermapenContainer = (props) => {
 
-export const AgendarLaserContainer = (props) => {
-
-	const classes = useStyles();
+	const classes = myStyles();
 
 	const {
 		values,
 		errors,
 		servicios,
+		tratamientos,
 		areas,
 		horarios,
 		tipoCitas,
@@ -67,21 +57,29 @@ export const AgendarLaserContainer = (props) => {
 		onChangeCosmetologa,
 		onChangeMedio,
 		medios,
-		dermatologoDirectoId,
+		materiales,
+		onChangeMateriales,
+		onChangeItemPrecio,
+		onChangeTotal,
+		onChangeFrecuencia,
+		frecuencias,
+		onChangeCosto,
+		onChangePaymentMethod,
+		formasPago,
 		// TABLE DATES PROPERTIES
 		titulo,
 		columns,
-		citas,
+		dermapens,
 		actions,
 		options,
 		components,
 		// MODAL PROPERTIES
 		openModal,
-		cita,
+		dermapen,
 		onClickActualizarCita,
 		onClickCancel,
 		onChangeAsistio,
-		loadLaser,
+		loadDermapens,
 		setFilterDate,
 		// MODAL PROXIMA
 		openModalProxima,
@@ -96,15 +94,18 @@ export const AgendarLaserContainer = (props) => {
 		openModalImprimirCita,
 		datosImpresion,
 		onCloseImprimirConsulta,
+		// MODAL TRASPASOS
+		openModalTraspaso,
+		onCloseTraspasos,
 	} = props;
 
 	return (
 		<Fragment>
 			{
 				openModal ?
-					<ModalCita
+					<ModalDermapen
 						open={openModal}
-						cita={cita}
+						dermapen={dermapen}
 						onClickActualizarCita={onClickActualizarCita}
 						onClose={onClickCancel}
 						onChangeServicio={onChangeServicio}
@@ -115,9 +116,10 @@ export const AgendarLaserContainer = (props) => {
 						onChangeMedio={onChangeMedio}
 						onChangeAsistio={onChangeAsistio}
 						servicios={servicios}
+						tratamientos={tratamientos}
 						horarios={horarios}
 						empleado={empleado}
-						loadLaser={loadLaser}
+						loadDermapens={loadDermapens}
 						sucursal={sucursal}
 						setOpenAlert={setOpenAlert}
 						setMessage={setMessage}
@@ -125,9 +127,9 @@ export const AgendarLaserContainer = (props) => {
 			}
 			{
 				openModalProxima ?
-					<ModalProximaCita
+					<ModalProximaDermapen
 						open={openModalProxima}
-						cita={cita}
+						cita={dermapen}
 						onClickActualizarCita={onClickActualizarCita}
 						onClose={onClickCancel}
 						onChangeServicio={onChangeServicio}
@@ -138,9 +140,10 @@ export const AgendarLaserContainer = (props) => {
 						onChangeMedio={onChangeMedio}
 						onChangeAsistio={onChangeAsistio}
 						servicios={servicios}
+						tratamientos={tratamientos}
 						horarios={horarios}
 						empleado={empleado}
-						loadLaser={loadLaser}
+						loadDermapens={loadDermapens}
 						sucursal={sucursal}
 						setOpenAlert={setOpenAlert}
 						setMessage={setMessage}
@@ -151,26 +154,69 @@ export const AgendarLaserContainer = (props) => {
 					<ModalPagos
 						open={openModalPagos}
 						onClose={onCloseVerPagos}
-						servicio={cita}
+						servicio={dermapen}
 						empleado={empleado}
 						sucursal={sucursal}
 						setMessage={setMessage}
 						setOpenAlert={setOpenAlert}
 						onGuardarModalPagos={onGuardarModalPagos}
-						tipoServicioId={cita.servicio._id} />
+						tipoServicioId={dermapen.servicio._id} />
 					: ''
 			}
 			{
 				openModalImprimirCita ?
-					<ModalImprimirTratamiento
+					<ModalImprimirDermapen
 						open={openModalImprimirCita}
 						onClose={onCloseImprimirConsulta}
 						datos={datosImpresion} />
 					: ''
 			}
+			{
+				openModalTraspaso ?
+					<ModalTraspasoServicio
+						open={openModalTraspaso}
+						onClose={onCloseTraspasos}
+						servicio={dermapen}
+						empleado={empleado}
+						sucursal={sucursal._id}
+						setMessage={setMessage}
+						setOpenAlert={setOpenAlert}
+						loadServicios={loadDermapens} />
+					: ''
+			}
 			<Paper>
-				<h1>{paciente.nombres ? `${paciente.nombres} ${paciente.apellidos}` : 'SELECCIONA UN PACIENTE'}</h1>
 				<Grid container spacing={3}>
+					<Grid item xs={12} sm={8} className={classes.grid_center}>
+						<h1>{paciente.nombres ? `${paciente.nombres} ${paciente.apellidos}` : 'SELECCIONA DESDE UNA CONSULTA'}</h1>
+					</Grid>
+					<Grid item xs={12} sm={2} className={classes.grid_center}>
+						<h1>{toFormatterCurrency(values.precio)}</h1>
+					</Grid>
+					<Grid item xs={12} sm={2} className={classes.grid_center}>
+						<ButtonCustom
+							className={classes.button}
+							color="primary"
+							variant="contained"
+							disabled={!isValid || isSubmitting || !paciente.nombres || !values.dermatologo
+								|| !values.fecha_hora || !values.tiempo}
+							onClick={() => onClickAgendar(values)}
+							text='GUARDAR' />
+					</Grid>
+				</Grid>
+				<Grid container spacing={3}>
+					<Grid item xs={12} sm={2}>
+						<FormControl variant="outlined" className={classes.formControl}>
+							<InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
+							<Select
+								labelId="simple-select-outlined-frecuencia"
+								id="simple-select-outlined-frecuencia"
+								value={values.frecuencia}
+								onChange={onChangeFrecuencia}
+								label="FRECUENCIA" >
+								{frecuencias.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+							</Select>
+						</FormControl>
+					</Grid>
 					<Grid item xs={12} sm={2}>
 						<Multiselect
 							options={areas} // Options to display in the dropdown
@@ -183,47 +229,42 @@ export const AgendarLaserContainer = (props) => {
 					</Grid>
 					<Grid item xs={12} sm={2}>
 						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-hora">DERMATÓLOGO</InputLabel>
+							<InputLabel id="simple-select-outlined-hora">DERMATÓLOGO (A)</InputLabel>
 							<Select
 								labelId="simple-select-outlined-dermatologo"
 								id="simple-select-outlined-dermatologo"
 								value={values.dermatologo}
 								error={Boolean(errors.dermatologo)}
 								onChange={onChangeDoctors}
-								label="DERMATÓLOGO" >
-								{dermatologos.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
+								label="DERMATÓLOGO (A)" >
+								{dermatologos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
 							</Select>
 						</FormControl>
 					</Grid>
-					{
-						dermatologoDirectoId !== values.dermatologo._id ?
-							<Grid item xs={12} sm={2}>
-								<FormControl variant="outlined" className={classes.formControl}>
-									<InputLabel id="simple-select-outlined-tipo-cita">TIPO CITA</InputLabel>
-									<Select
-										labelId="simple-select-outlined-tipo-cita"
-										id="simple-select-outlined-tipo-cita"
-										value={values.tipoCita}
-										error={Boolean(errors.tipoCita)}
-										onChange={onChangeTipoCita}
-										label="TIPO CITA" >
-										{tipoCitas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-									</Select>
-								</FormControl>
-							</Grid>
-							: ''
-					}
 					<Grid item xs={12} sm={2}>
 						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-promovendedor">PROMOVENDEDOR</InputLabel>
+							<InputLabel id="simple-select-outlined-tipo-dermapen">MEDIO</InputLabel>
+							<Select
+								labelId="simple-select-outlined-tipo-dermapen"
+								id="simple-select-outlined-tipo-dermapen"
+								value={values.medio}
+								onChange={onChangeMedio}
+								label="MEDIO" >
+								{medios.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+							</Select>
+						</FormControl>
+					</Grid>
+					<Grid item xs={12} sm={2}>
+						<FormControl variant="outlined" className={classes.formControl}>
+							<InputLabel id="simple-select-outlined-promovendedor">PROMOVENDEDOR (A)</InputLabel>
 							<Select
 								labelId="simple-select-outlined-promovendedor"
 								id="simple-select-outlined-promovendedor"
 								value={values.promovendedor}
 								error={Boolean(errors.promovendedor)}
 								onChange={onChangePromovendedor}
-								label="PROMOVENDEDOR" >
-								{promovendedores.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
+								label="PROMOVENDEDOR (A)" >
+								{promovendedores.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
 							</Select>
 						</FormControl>
 					</Grid>
@@ -237,9 +278,32 @@ export const AgendarLaserContainer = (props) => {
 								error={Boolean(errors.cosmetologa)}
 								onChange={onChangeCosmetologa}
 								label="COSMETÓLOGA" >
-								{cosmetologas.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
+								{cosmetologas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
 							</Select>
 						</FormControl>
+					</Grid>
+					<Grid item xs={12} sm={2}>
+						<FormControl variant="outlined" className={classes.formControl}>
+							<InputLabel id="simple-select-outlined-payment">FORMA DE PAGO</InputLabel>
+							<Select
+								labelId="simple-select-outlined-payment"
+								id="simple-select-outlined-payment"
+								value={values.forma_pago}
+								onChange={onChangePaymentMethod}
+								label="FORMA DE PAGO" >
+								{formasPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+							</Select>
+						</FormControl>
+					</Grid>
+					<Grid item xs={12} sm={2}>
+						<TextField
+							className={classes.button}
+							name="observaciones"
+							error={Boolean(errors.observaciones)}
+							label="OBSERVACIONES"
+							value={values.observaciones}
+							onChange={onChangeObservaciones}
+							variant="outlined" />
 					</Grid>
 					<Grid item xs={12} sm={2}>
 						<MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -263,7 +327,7 @@ export const AgendarLaserContainer = (props) => {
 									KeyboardButtonProps={{
 										'aria-label': 'change date',
 									}}
-									invalidDateMessage='SELECCIONA UNA FECHA' />
+									invalidDateMessage='Selecciona una fecha' />
 							</Grid>
 						</MuiPickersUtilsProvider>
 					</Grid>
@@ -283,19 +347,6 @@ export const AgendarLaserContainer = (props) => {
 						</FormControl>
 					</Grid>
 					<Grid item xs={12} sm={2}>
-						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-tipo-cita">MEDIO</InputLabel>
-							<Select
-								labelId="simple-select-outlined-tipo-cita"
-								id="simple-select-outlined-tipo-cita"
-								value={values.medio}
-								onChange={onChangeMedio}
-								label="MEDIO" >
-								{medios.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
-							</Select>
-						</FormControl>
-					</Grid>
-					<Grid item xs={12} sm={2}>
 						<TextField
 							className={classes.button}
 							name="tiempo"
@@ -311,26 +362,17 @@ export const AgendarLaserContainer = (props) => {
 					</Grid>
 					<Grid item xs={12} sm={2}>
 						<TextField
-							className={classes.button}
-							name="observaciones"
-							error={Boolean(errors.observaciones)}
-							label="OBSERVACIONES"
-							value={values.observaciones}
-							onChange={onChangeObservaciones}
+							className={classes.textField}
+							name="total"
+							label="TOTAL DERMAPEN"
+							value={values.precio}
+							type='Number'
+							onChange={onChangeTotal}
+							onInput={(e) => {
+								e.target.value = e.target.value < 0 ? 0 : e.target.value;
+								e.target.value = Math.max(0, parseFloat(e.target.value)).toString().slice(0, 6)
+							}}
 							variant="outlined" />
-					</Grid>
-					<Grid item xs={12} sm={2}>
-						<ButtonCustom
-							className={classes.button}
-							color="primary"
-							variant="contained"
-							disabled={!isValid || isSubmitting || !paciente.nombres || !values.servicio
-								|| !values.fecha_hora || !values.precio || !values.tiempo}
-							onClick={() => onClickAgendar(values)}
-							text='GUARDAR' />
-					</Grid>
-					<Grid item xs={12} sm={2}>
-						<h1>TOTAL: {toFormatterCurrency(values.precio)}</h1>
 					</Grid>
 				</Grid>
 				<MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -346,7 +388,7 @@ export const AgendarLaserContainer = (props) => {
 							format="dd/MM/yyyy"
 							margin="normal"
 							id="date-picker-inline-filter"
-							label="FILTRADO LÁSER"
+							label="FILTRADO DERMAPEN"
 							value={filterDate}
 							onChange={onChangeFilterDate}
 							KeyboardButtonProps={{
@@ -359,7 +401,7 @@ export const AgendarLaserContainer = (props) => {
 			<TableComponent
 				titulo={titulo}
 				columns={columns}
-				data={citas}
+				data={dermapens}
 				actions={actions}
 				options={options}
 				components={components} />
