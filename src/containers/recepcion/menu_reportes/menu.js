@@ -96,6 +96,7 @@ export const MenuContainer = props => {
 					 */}
 
 					<Tab label="CITAS GENERAL" {...a11yProps(0)} />
+					<Tab label="DETALLES GENERAL" {...a11yProps(1)} />
 					{/*
 					<Tab label="APARATOLOGÍA" {...a11yProps(3)} />
 					<Tab label="PAGOS" {...a11yProps(4)} />
@@ -125,6 +126,11 @@ export const MenuContainer = props => {
 			
 			<TabPanel value={value} index={0}>
 				<ReporteGeneralCitas
+					empleado={empleado}
+					sucursal={sucursal} />
+			</TabPanel>
+			<TabPanel value={value} index={1}>
+				<ReportesDetallesGeneral
 					empleado={empleado}
 					sucursal={sucursal} />
 			</TabPanel>

@@ -157,7 +157,7 @@ const ModalProximaEstetica = (props) => {
   };
 
   const handleChangeObservaciones = e => {
-    setValues({ ...values, observaciones: e.target.value });
+    setValues({ ...values, observaciones: e.target.value.toUpperCase()});
   }
 
   const handleOnClickProximaEstetica = async (data) => {

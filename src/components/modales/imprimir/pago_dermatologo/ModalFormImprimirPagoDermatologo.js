@@ -1115,11 +1115,9 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                       aparatologias ?
                         aparatologias.map(aparatologia => {
                           let comisionDermatologo = 0;
-                          let total_aplicacion = 0;
                           aparatologia.tratamientos.forEach(tratamiento => {
 
                             tratamiento.areasSeleccionadas.map(area => {
-                              total_aplicacion += Number(area.precio_real);
                               const itemPrecio =
                                 sucursal._id === sucursalManuelAcunaId ? area.precio_ma // PRECIO MANUEL ACUÑA
                                   : (sucursal._id === sucursalOcciId ? area.precio_oc // PRECIO OCCIDENTAL
@@ -1153,7 +1151,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                               <p className={classes.label_cells}>{`${aparatologia.forma_pago.nombre}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
-                              <p className={classes.label_cells_total}> {`${toFormatterCurrency(total_aplicacion)}`} </p>
+                              <p className={classes.label_cells_total}> {`${toFormatterCurrency(aparatologia.total)}`} </p>
                             </Grid>
                             <Grid item xs={true} >
                               <p className={classes.label_cells_total}> {`${toFormatterCurrency(pagoDermatologo)}`} </p>

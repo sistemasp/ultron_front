@@ -158,7 +158,7 @@ const ModalProximaCirugia = (props) => {
   };
 
   const handleChangeObservaciones = e => {
-    setValues({ ...values, observaciones: e.target.value });
+    setValues({ ...values, observaciones: e.target.value.toUpperCase() });
   }
 
   const handleOnClickProximarCita = async (data) => {
