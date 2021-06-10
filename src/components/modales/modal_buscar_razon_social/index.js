@@ -89,27 +89,12 @@ const ModalBuscarRazonSocial = (props) => {
     }
   ];
 
-  useEffect(() => {
-    const loadRazonSocial = async () => {
-      const response = await showAllRazonSocials();
-      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-        await response.data.forEach(item => {
-          item.domicilio_completo = `${item.domicilio} #${item.numero}`;
-        });
-        setRazonSociales(response.data);
-      }
-      setIsLoading(false);
-    }
-    setIsLoading(true);
-    loadRazonSocial();
-  }, []);
-
   const loadRazonSocial = async () => {
     const response = await showAllRazonSocials();
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       await response.data.forEach(item => {
-        item.domicilio_completo = `${item.domicilio} #${item.numero}`;
-      });
+				item.domicilio_completo = `${item.domicilio} #${item.numero_exterior} ${item.numero_interior ? '- ' + item.numero_interior : '' }`;
+			});
       setRazonSociales(response.data);
     }
     setIsLoading(false);
@@ -126,6 +111,16 @@ const ModalBuscarRazonSocial = (props) => {
   const handleCloseNuevaRazonSocial = () => {
     setOpenNuevaRazonSocial(false);
   }
+
+  const loadAll = async () => {
+    setIsLoading(true);
+    await loadRazonSocial();
+    setIsLoading(false);
+  }
+
+  useEffect(() => {
+    loadAll();
+  }, []);
 
   return (
     <Fragment>

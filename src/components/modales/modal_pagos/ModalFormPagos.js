@@ -126,7 +126,7 @@ const ModalFormPagos = (props) => {
               <CheckCustom
                 checked={servicio.factura}
                 onChange={onChangeFactura}
-                disabled={servicio.factura}
+                //disabled={servicio.factura}
                 name="checkedF"
                 label="REQUIERE FACTURA"
               />

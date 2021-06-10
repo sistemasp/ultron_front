@@ -49,7 +49,7 @@ const ModalNuevoEgreso = (props) => {
     const tipoEgreso = tipoEgresos.find(item => {
       return item._id === e.target.value
     });
-    setOpenModalConfirmacion(tipoEgreso.confirmacion);
+    //setOpenModalConfirmacion(tipoEgreso.confirmacion);
     setValues({
       ...values,
       tipo_egreso: tipoEgreso._id

@@ -65,7 +65,7 @@ const ModalPagos = (props) => {
 
   const handleChangeFactura = () => {
     servicio.factura = !servicio.factura;
-    setOpenModalFactura(true);
+    setOpenModalFactura(servicio.factura);
   }
 
   const columns = [

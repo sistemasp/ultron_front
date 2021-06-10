@@ -69,8 +69,6 @@ const ModalUsoCfdi = (props) => {
     uso_cfdi: process.env.REACT_APP_POR_DEFINIR_USO_CFDI_ID
   });
 
-  console.log("KAOZ", values);
-
   const handleGenerarFactura = async (event, rowData) => {
     rowData.fecha_hora = new Date();
     const response = await createFactura(rowData);

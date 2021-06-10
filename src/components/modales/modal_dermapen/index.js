@@ -459,7 +459,11 @@ const ModalDermapen = (props) => {
   const loadStaus = async () => {
     const response = await showAllStatusVisibles();
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setStatements(response.data);
+      // SI EL DIA DE LA CITA ES A FUTURO, ELIMINA EL STATUS ASISTIO
+      const resStatus = response.data.filter(item => {
+        return item._id !== asistioStatusId ? true : new Date(dermapen.fecha_hora).getDate() === new Date().getDate();
+      });
+      setStatements(resStatus);
     }
     setIsLoading(false);
   }

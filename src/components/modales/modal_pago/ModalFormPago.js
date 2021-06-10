@@ -244,7 +244,7 @@ const ModalFormPago = (props) => {
                   text='CANCELAR' />
               </Grid>
 
-              
+              {/*
                 <Grid item xs={12}>
                   <CheckCustom
                     checked={values.pago_anticipado}
@@ -252,6 +252,7 @@ const ModalFormPago = (props) => {
                     name="checkedC"
                     label="PAGO ANTICIPADO" />
               </Grid>
+              */}
             </Grid>
 
           </form>

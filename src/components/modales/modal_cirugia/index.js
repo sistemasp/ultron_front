@@ -124,7 +124,8 @@ const ModalCirugia = (props) => {
     const fecha_actual = new Date();
     data.servicio = cirugiaServicioId;
     const idBiopsias = [];
-    if (data.hasBiopsia) {
+
+    if (data.hasBiopsia && cirugia.biopsias.length === 0) {
       const biopsias = [];
 
       for (var i = 0; i < data.cantidad_biopsias; i++) {
@@ -146,7 +147,7 @@ const ModalCirugia = (props) => {
         });
       }
     }
-    data.biopsias = idBiopsias;
+    data.biopsias = data.hasBiopsia ? idBiopsias : [];
     if (data.status === reagendoStatusId) {
       await updateCirugia(data._id, data, empleado.access_token);
       data.quien_agenda = empleado._id;
@@ -397,7 +398,11 @@ const ModalCirugia = (props) => {
   const loadStaus = async () => {
     const response = await showAllStatusVisibles();
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setStatements(response.data);
+      // SI EL DIA DE LA CITA ES A FUTURO, ELIMINA EL STATUS ASISTIO
+      const resStatus = response.data.filter(item => {
+        return item._id !== asistioStatusId ? true : new Date(cirugia.fecha_hora).getDate() === new Date().getDate();
+      });
+      setStatements(resStatus);
     }
     setIsLoading(false);
   }

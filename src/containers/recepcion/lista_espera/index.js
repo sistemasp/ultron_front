@@ -370,7 +370,6 @@ const ListaEspera = (props) => {
 
 	const handleOnClickLiberarCabina = async (event, rowData) => {
 		const dateNow = new Date();
-		console.log("KAOZ", rowData);
 
 		let responseCita;
 		switch (rowData.tipo_servicio) {

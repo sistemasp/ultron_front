@@ -85,6 +85,7 @@ const ModalCita = (props) => {
   const cosmetologaRolId = process.env.REACT_APP_COSMETOLOGA_ROL_ID;
   const dermatologoRolId = process.env.REACT_APP_DERMATOLOGO_ROL_ID;
   const pendienteStatusId = process.env.REACT_APP_PENDIENTE_STATUS_ID;
+  const confirmadoStatusId = process.env.REACT_APP_CONFIRMADO_STATUS_ID;
   const asistioStatusId = process.env.REACT_APP_ASISTIO_STATUS_ID;
   const reagendoStatusId = process.env.REACT_APP_REAGENDO_STATUS_ID;
   const canceloCPStatusId = process.env.REACT_APP_CANCELO_CP_STATUS_ID;
@@ -534,7 +535,11 @@ const ModalCita = (props) => {
   const loadStaus = async () => {
     const response = await showAllStatusVisibles();
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setStatements(response.data);
+      // SI EL DIA DE LA CITA ES A FUTURO, ELIMINA EL STATUS ASISTIO
+      const resStatus = response.data.filter(item => {
+        return item._id !== asistioStatusId ? true : (new Date(cita.fecha_hora).getDate() === new Date().getDate() && cita.status._id === confirmadoStatusId);
+      });
+      setStatements(resStatus);
     }
     setIsLoading(false);
   }
