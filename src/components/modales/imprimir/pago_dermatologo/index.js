@@ -264,7 +264,9 @@ const ModalImprimirPagoDermatologo = (props) => {
       consulta.pago_dermatologo = pagoDermatologo;
       updateConsult(consulta._id, consulta);
       total += Number(pagoDermatologo);
+      console.log("KAOZ", pagoDermatologo);
     });
+
 
     // TOTAL DE LAS CIRUGíAS
     cirugias.forEach(async (cirugia) => {
@@ -272,6 +274,7 @@ const ModalImprimirPagoDermatologo = (props) => {
       cirugia.pago_dermatologo = pagoDermatologo;
       updateCirugia(cirugia._id, cirugia)
       total += Number(pagoDermatologo);
+      console.log("KAOZ", pagoDermatologo);
     });
 
     // TOTAL DERMAPENS
@@ -280,6 +283,7 @@ const ModalImprimirPagoDermatologo = (props) => {
       dermapen.pago_dermatologo = pagoDermatologo;
       updateDermapen(dermapen._id, dermapen);
       total += Number(pagoDermatologo);
+      console.log("KAOZ", pagoDermatologo);
     });
 
     // TOTAL DE LOS FACIALES
@@ -349,8 +353,10 @@ const ModalImprimirPagoDermatologo = (props) => {
                     : (sucursal._id === sucursalRubenDarioId ? area.precio_rd // PRECIO RUBEN DARIO
                       : 0))); // ERROR
             importe1 += Number(itemPrecio);
-            const precioReal = (itemPrecio - (itemPrecio * aparatologia.porcentaje_descuento_clinica ? aparatologia.porcentaje_descuento_clinica : 0 / 100)) *
-              (aparatologia.has_descuento_dermatologo ? (1 - ((aparatologia.frecuencia === primeraVezFrecuenciaId ? dermatologo.esquema.porcentaje_laser : 0) / 100)) : 1);
+
+            const precioReal = itemPrecio - ((itemPrecio * (aparatologia.porcentaje_descuento_clinica ? aparatologia.porcentaje_descuento_clinica : 0)) / 100);
+            //const precioReal = (itemPrecio - (itemPrecio * (aparatologia.porcentaje_descuento_clinica ? aparatologia.porcentaje_descuento_clinica : 0 / 100))) *
+            //(aparatologia.has_descuento_dermatologo ? (1 - ((aparatologia.frecuencia === primeraVezFrecuenciaId ? dermatologo.esquema.porcentaje_laser : 0) / 100)) : 1);
             const comisionReal = Number(precioReal) * Number(aparatologia.frecuencia === primeraVezFrecuenciaId ? dermatologo.esquema.porcentaje_laser : 0) / 100;
             comisionDermatologo += comisionReal;
             area.comision_real = aparatologia.has_descuento_dermatologo ? 0 : comisionReal;
@@ -371,6 +377,7 @@ const ModalImprimirPagoDermatologo = (props) => {
       estetica.pago_dermatologo = pagoDermatologo;
       updateEstetica(estetica._id, estetica);
       total += Number(pagoDermatologo);
+      console.log("KAOZ", pagoDermatologo);
     });
 
     const pagoDermatologo = {

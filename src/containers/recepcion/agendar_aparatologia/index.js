@@ -517,7 +517,7 @@ const AgendarAparatologia = (props) => {
 		//new Date(anio, mes - 1, dia) < filterDate.fecha_hora  ? 
 		{
 			icon: EditIcon,
-			tooltip: 'EDITAR CITA',
+			tooltip: 'EDITAR',
 			onClick: handleOnClickEditarCita
 		},
 		{
@@ -543,7 +543,7 @@ const AgendarAparatologia = (props) => {
 			case 'IMPRIMIR':
 				handlePrint(e, rowData);
 				break;
-			case 'EDITAR CITA':
+			case 'EDITAR':
 				handleOnClickEditarCita(e, rowData);
 				break;
 			case 'NUEVA CITA':

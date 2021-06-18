@@ -141,7 +141,7 @@ const ModalFormPagos = (props) => {
             localization={
               {
                 header: {
-                  actions: 'FACTURA'
+                  actions: 'Factura'
                 }
               }
             } />
@@ -168,7 +168,7 @@ const ModalFormPagos = (props) => {
                   variant="contained"
                   onClick={() => onGuardarModalPagos(servicio)}
                   disabled={pagos == ![]}
-                  text='GUARDAR' />
+                  text='Guardar' />
               </Grid> //: ''
             }
             <Grid item xs={12} sm={6}>
@@ -177,7 +177,7 @@ const ModalFormPagos = (props) => {
                 color="secondary"
                 variant="contained"
                 onClick={onClickCancel} >
-                {!servicio.pagado ? 'CANCELAR' : 'SALIR'}
+                {!servicio.pagado ? 'Cancelar' : 'Salir'}
               </Button>
             </Grid>
           </Grid>
