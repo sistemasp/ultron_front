@@ -260,10 +260,10 @@ export const findFacialesByPayOfDoctorHoraAplicacionPA = async (sucursalId, derm
     }
 }
 
-export const showAllFacialBySucursalPendiente = async (sucursalId, pendienteId, token) => {
+export const showAllFacialBySucursalPendiente = async (sucursalId, pendienteId, confirmadoStatusId, token) => {
     try {
         const response = await axios({
-            url: `${baseUrl}/facial/sucursal/${sucursalId}/pendiente/${pendienteId}`,
+            url: `${baseUrl}/facial/sucursal/${sucursalId}/pendiente/${pendienteId}/${confirmadoStatusId}`,
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`

@@ -50,10 +50,10 @@ export const showAllConsultsBySucursalAsistio = async (sucursalId, token) => {
     }
 }
 
-export const showAllConsultsBySucursalPendiente = async (sucursalId, pendienteId, token) => {
+export const showAllConsultsBySucursalPendiente = async (sucursalId, pendienteId, confirmadoStatusId, token) => {
     try {
         const response = await axios({
-            url: `${baseUrl}/consulta/sucursal/${sucursalId}/pendiente/${pendienteId}`,
+            url: `${baseUrl}/consulta/sucursal/${sucursalId}/pendiente/${pendienteId}/${confirmadoStatusId}`,
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`

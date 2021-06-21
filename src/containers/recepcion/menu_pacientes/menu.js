@@ -19,6 +19,7 @@ import ModalDermapen from '../../../components/modales/modal_dermapen';
 import AgendarDermapen from '../agendar_dermapen';
 import AgendarCirugia from '../agendar_cirugia';
 import AgendarEstetica from '../agendar_estetica';
+import Calendario from '../calendario';
 
 function TabPanel(props) {
 	const { children, value, index, ...other } = props;
@@ -110,9 +111,10 @@ export const MenuContainer = props => {
 					<Tab className={classes.tabs} label="CIRUGíA" {...a11yProps(5)} />
 					<Tab className={classes.tabs} label="ESTÉTICA" {...a11yProps(6)} />
 					<Tab className={classes.tabs} label="GENERAL" {...a11yProps(7)} />
+					<Tab className={classes.tabs} label="CALENDARIO" {...a11yProps(8)} />
 					{
 						/*
-						<Tab className={classes.tabs} label="VER CONSULTAS" {...a11yProps(7)} />
+						
 						<Tab className={classes.tabs} label="VER FACIALES" {...a11yProps(8)} />
 						<Tab className={classes.tabs} label="VER APARATOLOGÍA" {...a11yProps(9)} />
 						<Tab className={classes.tabs} label="VER DERMAPEN" {...a11yProps(10)} />
@@ -185,7 +187,8 @@ export const MenuContainer = props => {
 					sucursal={sucursal._id} />
 			</TabPanel>
 			<TabPanel value={value} index={8}>
-				<Faciales
+				<Calendario
+					empleado={empleado}
 					sucursal={sucursal._id} />
 			</TabPanel>
 			<TabPanel value={value} index={9}>

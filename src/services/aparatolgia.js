@@ -260,10 +260,10 @@ export const findAparatologiasByPayOfDoctorHoraAplicacionPA = async (sucursalId,
     }
 }
 
-export const showAllAparatologiasBySucursalPendiente = async (sucursalId, pendienteId, token) => {
+export const showAllAparatologiasBySucursalPendiente = async (sucursalId, pendienteId, confirmadoStatusId, token) => {
     try {
         const response = await axios({
-            url: `${baseUrl}/aparatologia/sucursal/${sucursalId}/pendiente/${pendienteId}`,
+            url: `${baseUrl}/aparatologia/sucursal/${sucursalId}/pendiente/${pendienteId}/${confirmadoStatusId}`,
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`
