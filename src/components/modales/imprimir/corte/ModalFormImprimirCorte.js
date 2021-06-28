@@ -171,7 +171,7 @@ const ModalFormImprimirCorte = (props) => {
 
             <Grid container xs={12} className={classes.grid_left}>
               <Grid item xs={12} className={classes.label}>
-                <h2 className={classes.label_title_descripcion} >INGRESOS BRUTOS</h2>
+                <h2 className={classes.label_title_descripcion} >ENTRADAS</h2>
               </Grid>
               <Grid container>
                 <Grid item xs={true} className={classes.label}>
@@ -386,20 +386,13 @@ const ModalFormImprimirCorte = (props) => {
             }
             <Grid container xs={6} className={classes.grid_left}>
               <Grid item xs={12} className={classes.label}>
-                <h2 className={classes.label_title_descripcion}> BALANCE </h2>
+                <h2 className={classes.label_title_descripcion}> DETALLE DE EFECTIVO </h2>
               </Grid>
               <Grid item xs={8} className={classes.label}>
                 <p className={classes.label_title_ingresos}>CONCEPTO</p>
               </Grid>
               <Grid item xs={4} className={classes.label}>
                 <p className={classes.label_title_ingresos}>CANTIDAD</p>
-              </Grid>
-
-              <Grid item xs={8} className={classes.label}>
-                <h3 className={classes.label_cells_concepto}>TOTAL INGRESOS BRUTOS</h3>
-              </Grid>
-              <Grid item xs={4} className={classes.label}>
-                <h3 className={classes.label_cells}>{toFormatterCurrency(totalIngresos)}</h3>
               </Grid>
 
               <Grid item xs={8} className={classes.label}>
@@ -413,27 +406,27 @@ const ModalFormImprimirCorte = (props) => {
                 <h3 className={classes.label_cells_concepto}>TOTAL PAGO DERMATÓLOGOS</h3>
               </Grid>
               <Grid item xs={4} className={classes.label}>
-                <h3 className={classes.label_cells}>{toFormatterCurrency(pagoDermatologos)}</h3>
+                <h3 className={classes.label_cells}>{`-${toFormatterCurrency(pagoDermatologos)}`}</h3>
               </Grid>
 
               <Grid item xs={8} className={classes.label}>
                 <h3 className={classes.label_cells_concepto}>TOTAL RETIROS PARCIALES</h3>
               </Grid>
               <Grid item xs={4} className={classes.label}>
-                <h3 className={classes.label_cells}>{toFormatterCurrency(retirosParciales)}</h3>
+                <h3 className={classes.label_cells}>{`-${toFormatterCurrency(retirosParciales)}`}</h3>
               </Grid>
 
               <Grid item xs={8} className={classes.label}>
-                <h3 className={classes.label_cells_concepto}>TOTAL OTROS EGRESOS</h3>
+                <h3 className={classes.label_cells_concepto}>TOTAL OTRAS SALIDAS</h3>
               </Grid>
               <Grid item xs={4} className={classes.label}>
-                <h3 className={classes.label_cells}>{toFormatterCurrency(otrosEgresos)}</h3>
+                <h3 className={classes.label_cells}>{`-${toFormatterCurrency(otrosEgresos)}`}</h3>
               </Grid>
             </Grid>
 
             <Grid container xs={6} className={classes.grid_right}>
               <Grid item xs={12} className={classes.label}>
-                <h1 className={classes.label_utilidad_perdida}>{`TOTAL CORTE CAJA: ${toFormatterCurrency(totalEfectivo - pagoDermatologos - retirosParciales - otrosEgresos)}`}<br /><br /></h1>
+                <h1 className={classes.label_utilidad_perdida}>{`TOTAL CORTE EFECTIVO: ${toFormatterCurrency(totalEfectivo - pagoDermatologos - retirosParciales - otrosEgresos)}`}<br /><br /></h1>
               </Grid>
               <Grid container>
                 <Grid item xs={true}>

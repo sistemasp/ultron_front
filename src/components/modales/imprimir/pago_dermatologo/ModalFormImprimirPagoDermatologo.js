@@ -192,6 +192,8 @@ const ModalFormImprimirPagoDermatologo = (props) => {
   const listaFaciales = [...faciales, ...facialesPA];
   const listaAparatologias = [...aparatologias, ...aparatologiasPA];
 
+  let totalConsultasPrimeraVez = 0;
+
   return (
     <div>
       <Modal
@@ -290,6 +292,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
             }
 
             {
+              
               consultasPrimeraVez.length > 0 ?
                 <Grid container className={classes.container}>
                   <Grid item xs={12}>

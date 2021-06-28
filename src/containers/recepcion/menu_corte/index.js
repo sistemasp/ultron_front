@@ -509,9 +509,9 @@ const Corte = (props) => {
           <CorteContainer
             columnsIngreso={columnsIngreso}
             columnsEgreso={columnsEgreso}
-            tituloIngreso='INGRESOS BRUTOS'
+            tituloIngreso='ENTRADAS'
             tituloPagoAnticipado='PAGOS ANTICIPADOS'
-            tituloEgreso='EGRESOS'
+            tituloEgreso='SALIDAS'
             options={options}
             openModalNuevoIngreso={openModalNuevoIngreso}
             openModalNuevoEgreso={openModalNuevoEgreso}

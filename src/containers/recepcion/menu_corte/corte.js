@@ -190,12 +190,12 @@ export const CorteContainer = (props) => {
                   color="primary"
                   variant="contained"
                   onClick={handleOpenNuevoIngreso}
-                  text='AGREGAR INGRESO' />
+                  text='AGREGAR ENTRADA' />
               </Grid>
               : ''
           }
           <Grid item sm={12}>
-            <h1>TOTAL INGRESOS</h1>
+            <h1>TOTAL ENTRADAS</h1>
           </Grid>
           <Grid item sm={12}>
             <h1>{toFormatterCurrency(totalIngresos)}</h1>
@@ -230,12 +230,12 @@ export const CorteContainer = (props) => {
                   color="primary"
                   variant="contained"
                   onClick={handleOpenNuevoEgreso}
-                  text='AGREGAR EGRESO' />
+                  text='AGREGAR SALIDA' />
               </Grid>
               : ''
           }
           <Grid item sm={12}>
-            <h1>TOTAL EGRESOS</h1>
+            <h1>TOTAL SALIDAS</h1>
           </Grid>
           <Grid item sm={12}>
             <h1>{toFormatterCurrency(totalEgresos)}</h1>

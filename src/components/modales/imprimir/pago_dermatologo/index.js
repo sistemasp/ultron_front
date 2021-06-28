@@ -337,6 +337,8 @@ const ModalImprimirPagoDermatologo = (props) => {
       facial.pago_dermatologo = pagoDermatologo;
       updateFacial(facial._id, facial);
       total += Number(pagoDermatologo);
+      console.log("KAOZ", pagoDermatologo);
+
     });
 
     // TOTAL DE LAS APARATOLOGIAS
@@ -378,6 +380,7 @@ const ModalImprimirPagoDermatologo = (props) => {
       updateEstetica(estetica._id, estetica);
       total += Number(pagoDermatologo);
       console.log("KAOZ", pagoDermatologo);
+
     });
 
     const pagoDermatologo = {
@@ -395,6 +398,8 @@ const ModalImprimirPagoDermatologo = (props) => {
       total: total,
       pagado: true,
     }
+
+    console.log("KAOZ", pagoDermatologo);
 
     const response = await createPagoDermatologo(pagoDermatologo, empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
@@ -418,7 +423,7 @@ const ModalImprimirPagoDermatologo = (props) => {
       if (`${resp.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
         setIsLoading(false);
       }
-    }
+    } 
 
     findCorte();
   };
