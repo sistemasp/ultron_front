@@ -77,11 +77,11 @@ const MenuSuperAdmin = (props) => {
         const response = await findEmployeesByRolIdAvailable(dermatologoRolId, empleado.access_token);
         if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
             response.data.forEach(item => {
-                const fecha_ingreso = new Date(item.fecha_ingreso);
-                const fecha_ingreso_show = `${addZero(fecha_ingreso.getDate())}/${addZero(Number(fecha_ingreso.getMonth() + 1))}/${fecha_ingreso.getFullYear()}`;
+                const fecha_entrada = new Date(item.fecha_entrada);
+                const fecha_entrada_show = `${addZero(fecha_entrada.getDate())}/${addZero(Number(fecha_entrada.getMonth() + 1))}/${fecha_entrada.getFullYear()}`;
                 const fecha_baja = new Date(item.fecha_baja);
                 const fecha_baja_show = `${addZero(fecha_baja.getDate())}/${addZero(Number(fecha_baja.getMonth() + 1))}/${fecha_baja.getFullYear()}`;
-                item.fecha_ingreso = fecha_ingreso_show;
+                item.fecha_entrada = fecha_entrada_show;
                 item.fecha_baja = item.fecha_baja ? fecha_baja_show : 'VIGENTE';
             });
             setData(response.data);

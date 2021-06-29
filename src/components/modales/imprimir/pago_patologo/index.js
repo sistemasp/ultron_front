@@ -1,8 +1,8 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { Backdrop, CircularProgress, makeStyles } from '@material-ui/core';
 import {
-  createEgreso,
-} from '../../../../services/egresos';
+  createSalida,
+} from '../../../../services/salidas';
 import { showCorteTodayBySucursalAndTurno } from '../../../../services/corte';
 import {
   indCirugiasByPayOfDoctorHoraAplicacionPA,
@@ -41,7 +41,7 @@ const ModalImprimirPagoPatologo = (props) => {
   const [pagoDermatologo, setPagoDermatologo] = useState();
   const [corte, setCorte] = useState();
 
-  const pagoPatologoTipoEgresoId = process.env.REACT_APP_TIPO_EGRESO_PAGO_PATOLOGO_ID;
+  const pagoPatologoTipoSalidaId = process.env.REACT_APP_TIPO_EGRESO_PAGO_PATOLOGO_ID;
   const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
 
   const loadCirugias = async (hora_apertura, hora_cierre) => {
@@ -113,10 +113,10 @@ const ModalImprimirPagoPatologo = (props) => {
       || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
       const data = response.data;
 
-      const egreso = {
+      const salida = {
         create_date: new Date(),
         hora_aplicacion: corte.create_date,
-        tipo_egreso: pagoPatologoTipoEgresoId,
+        tipo_salida: pagoPatologoTipoSalidaId,
         recepcionista: empleado,
         turno: corte.turno === 'm' ? 'MATUTINO' : 'VESPERTINO',
         concepto: patologo.nombre,
@@ -126,7 +126,7 @@ const ModalImprimirPagoPatologo = (props) => {
         forma_pago: efectivoMetodoPagoId,
       }
 
-      const resp = await createEgreso(egreso);
+      const resp = await createSalida(salida);
       if (`${resp.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
         setIsLoading(false);
       }

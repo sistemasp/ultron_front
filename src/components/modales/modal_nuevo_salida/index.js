@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import ModalFormNuevoEgreso from './ModalFormNuevoEgreso';
+import ModalFormNuevoSalida from './ModalFormNuevoSalida';
 import {
-  showAllTipoEgresos,
+  showAllTipoSalidas,
 } from "../../../services";
 import {
-  createEgreso,
-} from "../../../services/egresos";
+  createSalida,
+} from "../../../services/salidas";
 
-const ModalNuevoEgreso = (props) => {
+const ModalNuevoSalida = (props) => {
   const {
     open,
     onClose,
@@ -27,15 +27,15 @@ const ModalNuevoEgreso = (props) => {
     sucursal: sucursal,
     forma_pago: efectivoMetodoPagoId,
     turno: corte.turno === 'm' ? 'MATUTINO' : 'VESPERTINO',
-    tipo_egreso: '',
+    tipo_salida: '',
   });
 
-  const [previousTipoEgreso, setPreviousTipoEgreso] = useState();
+  const [previousTipoSalida, setPreviousTipoSalida] = useState();
   const [openModalConfirmacion, setOpenModalConfirmacion] = useState(false);
 
-  const [tipoEgresos, setTipoEgresos] = useState([]);
+  const [tipoSalidas, setTipoSalidas] = useState([]);
 
-  const dataComplete = !values.concepto || !values.cantidad || !values.tipo_egreso || !values.forma_pago;
+  const dataComplete = !values.concepto || !values.cantidad || !values.tipo_salida || !values.forma_pago;
 
   const handleChange = (e) => {
     setValues({
@@ -44,24 +44,24 @@ const ModalNuevoEgreso = (props) => {
     });
   }
 
-  const handleChangeTipoEgreso = (e) => {
-    setPreviousTipoEgreso(values.tipo_egreso);
-    const tipoEgreso = tipoEgresos.find(item => {
+  const handleChangeTipoSalida = (e) => {
+    setPreviousTipoSalida(values.tipo_salida);
+    const tipoSalida = tipoSalidas.find(item => {
       return item._id === e.target.value
     });
-    //setOpenModalConfirmacion(tipoEgreso.confirmacion);
+    //setOpenModalConfirmacion(tipoSalida.confirmacion);
     setValues({
       ...values,
-      tipo_egreso: tipoEgreso._id
+      tipo_salida: tipoSalida._id
     });
   }
 
-  const handleAgregarEgreso = async () => {
+  const handleAgregarSalida = async () => {
     const create_date = new Date();
     create_date.setHours(create_date.getHours());
     values.create_date = create_date;
     values.hora_aplicacion = corte.hora_apertura;
-    const response = await createEgreso(values);
+    const response = await createSalida(values);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
       setSeverity('success');
       setMessage("EGRESO AGREGADO CORRECTAMENTE");
@@ -77,23 +77,23 @@ const ModalNuevoEgreso = (props) => {
 
   const handleCloseModalConfirmacion = () => {
     setOpenModalConfirmacion(false);
-    setValues({ ...values, tipo_egreso: previousTipoEgreso });
+    setValues({ ...values, tipo_salida: previousTipoSalida });
   }
 
   useEffect(() => {
 
-    const loadTipoEgreso = async () => {
-      const response = await showAllTipoEgresos();
+    const loadTipoSalida = async () => {
+      const response = await showAllTipoSalidas();
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-        setTipoEgresos(response.data);
+        setTipoSalidas(response.data);
       }
     }
 
-    loadTipoEgreso();
+    loadTipoSalida();
   }, []);
 
   return (
-    <ModalFormNuevoEgreso
+    <ModalFormNuevoSalida
       aria-labelledby="simple-modal-title"
       aria-describedby="simple-modal-description"
       open={open}
@@ -101,16 +101,16 @@ const ModalNuevoEgreso = (props) => {
       dataComplete={dataComplete}
       values={values}
       empleado={empleado}
-      tipoEgresos={tipoEgresos}
-      previousTipoEgreso={previousTipoEgreso}
+      tipoSalidas={tipoSalidas}
+      previousTipoSalida={previousTipoSalida}
       openModalConfirmacion={openModalConfirmacion}
       onCloseModalConfirmacion={handleCloseModalConfirmacion}
       onConfirmModalConfirmacion={handleConfirmModalConfirmacion}
-      onAgregarEgreso={handleAgregarEgreso}
+      onAgregarSalida={handleAgregarSalida}
       onChange={handleChange}
-      onChangeTipoEgreso={(e) => handleChangeTipoEgreso(e)}
+      onChangeTipoSalida={(e) => handleChangeTipoSalida(e)}
       {...props} />
   );
 }
 
-export default ModalNuevoEgreso;
+export default ModalNuevoSalida;

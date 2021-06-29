@@ -17,7 +17,7 @@ import ReportesLaser from './reportes/reportes_laser';
 import ReportesAparatologia from './reportes/reportes_aparatologia';
 import ReportesDetallesGeneral from './reportes/detalles_general';
 import ReportesGastos from './reportes/gastos';
-import ReportesIngresos from './reportes/ingresos';
+import ReportesEntradas from './reportes/entradas';
 import ReporteGeneralCitas from './reportes/general_citas';
 import ReportePagosDermatologos from './reportes/pagos_dermatologos';
 
@@ -114,7 +114,7 @@ export const MenuContainer = props => {
 					sucursal={sucursal} />
 			</TabPanel>
 			<TabPanel value={value} index={1}>
-				<ReportesIngresos
+				<ReportesEntradas
 					empleado={empleado}
 					sucursal={sucursal} />
 			</TabPanel>

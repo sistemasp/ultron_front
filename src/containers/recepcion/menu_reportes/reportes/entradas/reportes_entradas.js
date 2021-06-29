@@ -8,7 +8,7 @@ import myStyles from '../../../../../css';
 import TableComponent from '../../../../../components/table/TableComponent';
 import { ButtonCustom } from '../../../../../components/basic/ButtonCustom';
 
-export const ReportesIngresosContainer = (props) => {
+export const ReportesEntradasContainer = (props) => {
 
 	const classes = myStyles();
 

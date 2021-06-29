@@ -9,8 +9,8 @@ import {
   updatePago,
 } from '../../../services';
 import {
-  createIngreso, /*findIngresoByPago,*/ updateIngreso,
-} from '../../../services/ingresos';
+  createEntrada, /*findEntradaByPago,*/ updateEntrada,
+} from '../../../services/entradas';
 import { generateFolio } from '../../../utils/utils';
 import ModalFormPago from './ModalFormPago';
 import { findEsquemaById } from '../../../services/esquemas';
@@ -40,14 +40,14 @@ const ModalPago = (props) => {
   const enConsultorioStatusId = process.env.REACT_APP_EN_CONSULTORIO_STATUS_ID;
 
   const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
-  const tipoIngresoConsultaId = process.env.REACT_APP_TIPO_INGRESO_CONSULTA_ID;
-  const tipoIngresoCirugiaId = process.env.REACT_APP_TIPO_INGRESO_CIRUGIA_ID;
-  const tipoIngresoFacialesId = process.env.REACT_APP_TIPO_INGRESO_FACIALES_ID;
-  const tipoIngresoEsteticaId = process.env.REACT_APP_TIPO_INGRESO_ESTETICA_ID;
-  const tipoIngresoAparatologiaId = process.env.REACT_APP_TIPO_INGRESO_APARATOLOGIA_ID;
-  const tipoIngresoLaserId = process.env.REACT_APP_TIPO_INGRESO_LASER_ID;
-  const tipoIngresoDermapenId = process.env.REACT_APP_TIPO_INGRESO_DERMAPEN_ID;
-  const tipoIngresoOtrosId = process.env.REACT_APP_TIPO_INGRESO_OTROS_ID;
+  const tipoEntradaConsultaId = process.env.REACT_APP_TIPO_INGRESO_CONSULTA_ID;
+  const tipoEntradaCirugiaId = process.env.REACT_APP_TIPO_INGRESO_CIRUGIA_ID;
+  const tipoEntradaFacialesId = process.env.REACT_APP_TIPO_INGRESO_FACIALES_ID;
+  const tipoEntradaEsteticaId = process.env.REACT_APP_TIPO_INGRESO_ESTETICA_ID;
+  const tipoEntradaAparatologiaId = process.env.REACT_APP_TIPO_INGRESO_APARATOLOGIA_ID;
+  const tipoEntradaLaserId = process.env.REACT_APP_TIPO_INGRESO_LASER_ID;
+  const tipoEntradaDermapenId = process.env.REACT_APP_TIPO_INGRESO_DERMAPEN_ID;
+  const tipoEntradaOtrosId = process.env.REACT_APP_TIPO_INGRESO_OTROS_ID;
   const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
   const servicioDermapenlId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID;
   const servicioLaserId = process.env.REACT_APP_LASER_SERVICIO_ID;
@@ -203,35 +203,35 @@ const ModalPago = (props) => {
     rowData.tipo_servicio = tipoServicioId;
     rowData.hora_aplicacion = servicio.hora_aplicacion;
 
-    let tipoIngreso = '';
+    let tipoEntrada = '';
 
     switch (rowData.tipo_servicio) {
       case servicioFacialId:
-        tipoIngreso = tipoIngresoFacialesId;
+        tipoEntrada = tipoEntradaFacialesId;
         break;
       case servicioDermapenlId:
-        tipoIngreso = tipoIngresoDermapenId;
+        tipoEntrada = tipoEntradaDermapenId;
         break;
       case servicioLaserId:
-        tipoIngreso = tipoIngresoLaserId;
+        tipoEntrada = tipoEntradaLaserId;
         break;
       case servicioAparatologiaId:
-        tipoIngreso = tipoIngresoAparatologiaId;
+        tipoEntrada = tipoEntradaAparatologiaId;
         break;
       case servicioConsultaId:
-        tipoIngreso = tipoIngresoConsultaId;
+        tipoEntrada = tipoEntradaConsultaId;
         break;
       case servicioCirugiaId:
-        tipoIngreso = tipoIngresoCirugiaId;
+        tipoEntrada = tipoEntradaCirugiaId;
         break;
       case servicioBiopsiaId:
-        tipoIngreso = tipoIngresoOtrosId;
+        tipoEntrada = tipoEntradaOtrosId;
         break;
       case servicioEsteticaId:
-        tipoIngreso = tipoIngresoEsteticaId;
+        tipoEntrada = tipoEntradaEsteticaId;
         break
       default:
-        tipoIngreso = tipoIngresoOtrosId;
+        tipoEntrada = tipoEntradaOtrosId;
         break;
     }
 
@@ -239,44 +239,44 @@ const ModalPago = (props) => {
     create_date.setHours(create_date.getHours());
 
     let response;
-    const ingreso = {
+    const entrada = {
       create_date: create_date,
       hora_aplicacion: servicio.hora_aplicacion,
       recepcionista: empleado._id,
       concepto: `FOLIO: ${generateFolio(servicio)}`,
       cantidad: rowData.total,
-      tipo_ingreso: tipoIngreso,
+      tipo_entrada: tipoEntrada,
       sucursal: sucursal,
       forma_pago: rowData.forma_pago,
       pago_anticipado: rowData.pago_anticipado,
     }
     //TODO: CUIDADO AQUI
-    /*const resExistIngreso = await findIngresoByPago(pago._id);
-    if (`${resExistIngreso.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      const existIngreso = resExistIngreso.data;
+    /*const resExistEntrada = await findEntradaByPago(pago._id);
+    if (`${resExistEntrada.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      const existEntrada = resExistEntrada.data;
 
-      if (existIngreso) {
-        response = await updateIngreso(existIngreso._id, ingreso);
+      if (existEntrada) {
+        response = await updateEntrada(existEntrada._id, entrada);
       } else {
-        response = await createIngreso(ingreso);
+        response = await createEntrada(entrada);
       }
     }*/
 
-    if (pago.ingreso) {
-      response = await updateIngreso(pago.ingreso, ingreso);
+    if (pago.entrada) {
+      response = await updateEntrada(pago.entrada, entrada);
     } else {
-      response = await createIngreso(ingreso);
+      response = await createEntrada(entrada);
     }
 
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED
       || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      const resIngreso = response.data;
-      rowData.ingreso = resIngreso._id;
+      const resEntrada = response.data;
+      rowData.entrada = resEntrada._id;
       const res = pago._id ? await updatePago(pago._id, rowData) : await createPago(rowData);
       if (`${res.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
         || `${res.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-        resIngreso.pago = res.data._id;
-        await updateIngreso(resIngreso._id, resIngreso);
+        resEntrada.pago = res.data._id;
+        await updateEntrada(resEntrada._id, resEntrada);
         setIsLoading(false);
         onClose();
         loadPagos();

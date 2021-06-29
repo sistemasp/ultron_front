@@ -12,10 +12,10 @@ import {
   showAllMetodoPago,
 } from "../../../services";
 import {
-  updateIngreso,
-  deleteIngreso,
-  findIngresoById,
-} from "../../../services/ingresos";
+  updateEntrada,
+  deleteEntrada,
+  findEntradaById,
+} from "../../../services/entradas";
 import ModalFormDermapen from './ModalFormDermapen';
 import { Backdrop, CircularProgress, makeStyles } from '@material-ui/core';
 import { addZero } from '../../../utils/utils';
@@ -185,17 +185,17 @@ const ModalDermapen = (props) => {
       if (rowData.status === canceloCPStatusId) {
         rowData.pagos.forEach(async (pago) => {
           pago.pago_anticipado = true;
-          const ingreso = await findIngresoById(pago.ingreso);
-          if (`${ingreso.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-            const updateIngresoData = ingreso.data;
-            updateIngresoData.pago_anticipado = true;
-            await updateIngreso(updateIngresoData._id, updateIngresoData);
+          const entrada = await findEntradaById(pago.entrada);
+          if (`${entrada.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+            const updateEntradaData = entrada.data;
+            updateEntradaData.pago_anticipado = true;
+            await updateEntrada(updateEntradaData._id, updateEntradaData);
             await updatePago(pago._id, pago);
           }
         });
       } else if (rowData.status === canceloSPStatusId) {
         rowData.pagos.forEach(async (pago) => {
-          await deleteIngreso(pago.ingreso);
+          await deleteEntrada(pago.entrada);
           await deletePago(pago._id);
         });
         rowData.pagado = false;

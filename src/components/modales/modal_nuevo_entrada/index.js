@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import ModalFormNuevoIngreso from './ModalFormNuevoIngreso';
+import ModalFormNuevoEntrada from './ModalFormNuevoEntrada';
 import {
-  showAllTipoIngresos,
+  showAllTipoEntradas,
   showAllMetodoPago,
 } from "../../../services";
 import {
-  createIngreso,
-} from "../../../services/ingresos";
+  createEntrada,
+} from "../../../services/entradas";
 
-const ModalNuevoIngreso = (props) => {
+const ModalNuevoEntrada = (props) => {
   const {
     open,
     onClose,
@@ -27,10 +27,10 @@ const ModalNuevoIngreso = (props) => {
     turno: corte.turno === 'm' ? 'MATUTINO' : 'VESPERTINO',
   });
 
-  const [tipoIngresos, setTipoIngresos] = useState([]);
+  const [tipoEntradas, setTipoEntradas] = useState([]);
   const [formaPagos, setMetodoPagos] = useState([]);
 
-  const dataComplete = !values.concepto || !values.cantidad || !values.tipo_ingreso || !values.forma_pago;
+  const dataComplete = !values.concepto || !values.cantidad || !values.tipo_entrada || !values.forma_pago;
 
   const handleChange = (e) => {
     setValues({
@@ -39,10 +39,10 @@ const ModalNuevoIngreso = (props) => {
     });
   }
 
-  const handleChangeTipoIngreso = (e) => {
+  const handleChangeTipoEntrada = (e) => {
     setValues({
       ...values,
-      tipo_ingreso: e.target.value
+      tipo_entrada: e.target.value
     });
   }
 
@@ -58,7 +58,7 @@ const ModalNuevoIngreso = (props) => {
     create_date.setHours(create_date.getHours());
     values.create_date = create_date;
     values.hora_aplicacion = corte.hora_apertura;
-    const response = await createIngreso(values);
+    const response = await createEntrada(values);
         if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
           setSeverity('success');
           setMessage("INGRESO AGREGADO CORRECTAMENTE");
@@ -70,10 +70,10 @@ const ModalNuevoIngreso = (props) => {
 
   useEffect(() => {
 
-    const loadTipoIngreso = async () => {
-      const response = await showAllTipoIngresos();
+    const loadTipoEntrada = async () => {
+      const response = await showAllTipoEntradas();
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-        setTipoIngresos(response.data);
+        setTipoEntradas(response.data);
       }
     }
 
@@ -84,26 +84,26 @@ const ModalNuevoIngreso = (props) => {
       }
     }
 
-    loadTipoIngreso();
+    loadTipoEntrada();
     loadMetodoPago();
   }, []);
 
   return (
-    <ModalFormNuevoIngreso
+    <ModalFormNuevoEntrada
       aria-labelledby="simple-modal-title"
       aria-describedby="simple-modal-description"
       open={open}
       onClickCancel={onClose}
       dataComplete={dataComplete}
       values={values}
-      tipoIngresos={tipoIngresos}
+      tipoEntradas={tipoEntradas}
       formaPagos={formaPagos}
       onAgregarConceto={handleAgregarConceto}
       onChange={handleChange}
-      onChangeTipoIngreso={(e) => handleChangeTipoIngreso(e)}
+      onChangeTipoEntrada={(e) => handleChangeTipoEntrada(e)}
       onChangeMetodoPago={(e) => handleChangeMetodoPago(e)}
       {...props} />
   );
 }
 
-export default ModalNuevoIngreso;
+export default ModalNuevoEntrada;

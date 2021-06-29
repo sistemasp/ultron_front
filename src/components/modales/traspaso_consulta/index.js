@@ -4,7 +4,7 @@ import { addZero, generateFolio } from '../../../utils/utils';
 import ModalFormTraspasoConsulta from './ModalFormTraspasoConsulta';
 import { createConsult, updateConsult } from '../../../services/consultas';
 import { showAllStatusVisibles } from '../../../services/status';
-import { createIngreso, deleteIngreso, updateIngreso } from '../../../services/ingresos';
+import { createEntrada, deleteEntrada, updateEntrada } from '../../../services/entradas';
 
 const ModalTraspasoConsulta = (props) => {
   const {
@@ -22,7 +22,7 @@ const ModalTraspasoConsulta = (props) => {
   const consultaServicioId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
   const canceladoSPStatusId = process.env.REACT_APP_CANCELO_SP_STATUS_ID;
   const asistioStatusId = process.env.REACT_APP_ASISTIO_STATUS_ID;
-  const tipoIngresoConsultaId = process.env.REACT_APP_TIPO_INGRESO_CONSULTA_ID;
+  const tipoEntradaConsultaId = process.env.REACT_APP_TIPO_INGRESO_CONSULTA_ID;
 
   const [isLoading, setIsLoading] = useState(true);
   const [sucursales, setSucursales] = useState([]);
@@ -50,7 +50,7 @@ const ModalTraspasoConsulta = (props) => {
     const pagos = [];
     servicio.pagos.forEach(async (pago) => {
       pagos.push(pago);
-      await deleteIngreso(pago.ingreso);
+      await deleteEntrada(pago.entrada);
       await deletePago(pago._id);
     });
     servicio.pagado = false;
@@ -92,28 +92,28 @@ const ModalTraspasoConsulta = (props) => {
             pago.servicio = servicioRes._id;
             pago.hora_aplicacion = servicioRes.hora_aplicacion;
 
-            const ingreso = {
+            const entrada = {
               create_date: dateNow,
               hora_aplicacion: servicioRes.hora_aplicacion,
               recepcionista: empleado,
               concepto: `TRASPASO FOLIO: ${generateFolio(servicioRes)}`,
               cantidad: pago.total,
-              tipo_ingreso: tipoIngresoConsultaId,
+              tipo_entrada: tipoEntradaConsultaId,
               sucursal: servicioRes.sucursal,
               forma_pago: pago.forma_pago,
               pago_anticipado: pago.pago_anticipado,
             }
 
-            const response = await createIngreso(ingreso);
+            const response = await createEntrada(entrada);
 
             if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-              const resIngreso = response.data;
-              pago.ingreso = resIngreso._id;
+              const resEntrada = response.data;
+              pago.entrada = resEntrada._id;
 
               const res = await createPago(pago);
               if (`${res.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-                resIngreso.pago = res.data._id;
-                await updateIngreso(resIngreso._id, resIngreso);
+                resEntrada.pago = res.data._id;
+                await updateEntrada(resEntrada._id, resEntrada);
                 confirmacion();
               }
             }

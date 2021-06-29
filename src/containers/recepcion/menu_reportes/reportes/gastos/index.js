@@ -11,7 +11,7 @@ import { findCirugiasByRangeDateAndSucursal } from "../../../../../services/ciru
 import { findDermapenByRangeDateAndSucursal } from "../../../../../services/dermapens";
 import { showAllBanco, showAllMetodoPago, showAllTipoTarjeta } from "../../../../../services";
 import { findRazonSocialById } from "../../../../../services/razones_sociales";
-import { findEgresosByRangeDateAndSucursal } from "../../../../../services/egresos";
+import { findSalidasByRangeDateAndSucursal } from "../../../../../services/salidas";
 
 const useStyles = makeStyles(theme => ({
 	backdrop: {
@@ -28,11 +28,11 @@ const ReportesGastos = (props) => {
 		sucursal,
 	} = props;
 
-	const tipoEgresoPagoDermatologo = process.env.REACT_APP_TIPO_EGRESO_PAGO_DERMATOLOGO_ID;
-	const tipoEgresoRetiroParcial = process.env.REACT_APP_TIPO_EGRESO_RETIRO_PARCIAL_ID;
+	const tipoSalidaPagoDermatologo = process.env.REACT_APP_TIPO_EGRESO_PAGO_DERMATOLOGO_ID;
+	const tipoSalidaRetiroParcial = process.env.REACT_APP_TIPO_EGRESO_RETIRO_PARCIAL_ID;
 
 	const [isLoading, setIsLoading] = useState(true);
-	const [egresos, setEgresos] = useState([]);
+	const [salidas, setSalidas] = useState([]);
 	const [datos, setDatos] = useState([]);
 
 	const date = new Date();
@@ -54,7 +54,7 @@ const ReportesGastos = (props) => {
 		{ title: 'FECHA', field: 'fecha_show' },
 		{ title: 'TURNO', field: 'turno' },
 		{ title: 'SUCURSAL', field: 'sucursal.nombre' },
-		{ title: 'TIPO EGRESO', field: 'tipo_egreso.nombre' },
+		{ title: 'TIPO EGRESO', field: 'tipo_salida.nombre' },
 		{ title: 'CONCEPTO', field: 'concepto' },
 		{ title: 'DESCRIPCIÓN', field: 'descripcion' },
 		{ title: 'RECEPCIONISTA', field: 'recepcionista.nombre' },
@@ -75,11 +75,11 @@ const ReportesGastos = (props) => {
 
 	const procesarDatos = () => {
 		const datos = [];
-		egresos.forEach((item, index) => {
+		salidas.forEach((item, index) => {
 			const fecha = new Date(item.hora_aplicacion);
 			item.fecha_show = `${addZero(fecha.getDate())}/${addZero(fecha.getMonth() + 1)}/${fecha.getFullYear()}`;
 			item.cantidad_moneda = toFormatterCurrency(item.cantidad);
-			if (item.tipo_egreso._id !== tipoEgresoPagoDermatologo && item.tipo_egreso._id !== tipoEgresoRetiroParcial) {
+			if (item.tipo_salida._id !== tipoSalidaPagoDermatologo && item.tipo_salida._id !== tipoSalidaRetiroParcial) {
 				datos.push(item);
 			}
 		});
@@ -92,11 +92,11 @@ const ReportesGastos = (props) => {
 		setIsLoading(false);
 	}
 
-	const loadEgresos = async (startDate, endDate) => {
-		const response = await findEgresosByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
+	const loadSalidas = async (startDate, endDate) => {
+		const response = await findSalidasByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
 			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			setEgresos(response.data);
+			setSalidas(response.data);
 			procesarDatos();
 		}
 	}
@@ -128,7 +128,7 @@ const ReportesGastos = (props) => {
 
 	const loadInfo = async (startDate, endDate) => {
 		setIsLoading(true);
-		await loadEgresos(startDate, endDate);
+		await loadSalidas(startDate, endDate);
 	}
 
 	const handleReportes = async () => {

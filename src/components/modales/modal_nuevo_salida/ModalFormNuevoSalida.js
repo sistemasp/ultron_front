@@ -5,6 +5,7 @@ import { Button, Grid, IconButton, InputAdornment, OutlinedInput, InputLabel, Fo
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { ButtonCustom } from '../../basic/ButtonCustom';
+import ModalConfirmacion from '../modal_confirmacion';
 
 function getModalStyle() {
   const top = 50;
@@ -39,7 +40,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const ModalFormNuevoIngreso = (props) => {
+const ModalFormNuevoSalida = (props) => {
   const classes = useStyles();
 
   // getModalStyle is not a pure function, we roll the style only on the first render
@@ -51,12 +52,18 @@ const ModalFormNuevoIngreso = (props) => {
     onClickGuardar,
     open,
     dataComplete,
-    onChangeTipoIngreso,
-    tipoIngresos,
-    onChangeMetodoPago,
-    formaPagos,
+    onChangeTipoSalida,
+    tipoSalidas,
     onChange,
-    onAgregarConceto,
+    onAgregarSalida,
+    empleado,
+    previousTipoSalida,
+    openModalConfirmacion,
+    onCloseModalConfirmacion,
+    onConfirmModalConfirmacion,
+    setMessage,
+    setSeverity,
+    setOpenAlert,
   } = props;
 
   return (
@@ -65,9 +72,22 @@ const ModalFormNuevoIngreso = (props) => {
       aria-describedby="simple-modal-description"
       open={open} >
       <div style={modalStyle} className={classes.paper}>
+        {
+          openModalConfirmacion ?
+            <ModalConfirmacion
+              open={openModalConfirmacion}
+              onClose={onCloseModalConfirmacion}
+              onConfirm={onConfirmModalConfirmacion}
+              empleado={empleado}
+              status={values.status}
+              setMessage={setMessage}
+              setSeverity={setSeverity}
+              setOpenAlert={setOpenAlert} />
+            : ''
+        }
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <h2>AGREGAR INGRESO</h2>
+            <h2>AGREGAR EGRESO</h2>
           </Grid>
           <Grid item xs={12}>
             <TextField
@@ -75,6 +95,15 @@ const ModalFormNuevoIngreso = (props) => {
               name="concepto"
               label="CONCEPTO"
               value={values.concepto}
+              onChange={onChange}
+              variant="outlined" />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              className={classes.textField}
+              name="descripcion"
+              label="DESCRIPCIÓN"
+              value={values.descripcion}
               onChange={onChange}
               variant="outlined" />
           </Grid>
@@ -93,27 +122,14 @@ const ModalFormNuevoIngreso = (props) => {
           </Grid>
           <Grid item xs={12}>
             <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="simple-select-outlined-hora">TIPO INGRESO</InputLabel>
+              <InputLabel id="simple-select-outlined-hora">TIPO EGRESO</InputLabel>
               <Select
-                labelId="simple-select-outlined-tipo-ingreso"
-                id="simple-select-outlined-tipo-ingreso"
-                value={values.tipo_ingreso}
-                onChange={onChangeTipoIngreso}
-                label="TIPO INGRESO" >
-                {tipoIngresos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="simple-select-outlined-metodo-pago">METODO PAGO</InputLabel>
-              <Select
-                labelId="simple-select-outlined-metodo-pago"
-                id="simple-select-outlined-metodo-pago"
-                value={values.forma_pago}
-                onChange={onChangeMetodoPago}
-                label="METODO PAGO" >
-                {formaPagos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                labelId="simple-select-outlined-tipo-salida"
+                id="simple-select-outlined-tipo-salida"
+                value={values.tipo_salida}
+                onChange={onChangeTipoSalida}
+                label="TIPO EGRESO" >
+                {tipoSalidas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
               </Select>
             </FormControl>
           </Grid>
@@ -122,7 +138,7 @@ const ModalFormNuevoIngreso = (props) => {
               className={classes.button}
               color="primary"
               variant="contained"
-              onClick={onAgregarConceto}
+              onClick={onAgregarSalida}
               disabled={dataComplete}
               text='AGREGAR' />
           </Grid>
@@ -141,4 +157,4 @@ const ModalFormNuevoIngreso = (props) => {
   );
 }
 
-export default ModalFormNuevoIngreso;
+export default ModalFormNuevoSalida;

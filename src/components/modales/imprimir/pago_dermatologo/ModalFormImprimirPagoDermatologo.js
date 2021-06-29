@@ -77,7 +77,7 @@ const useStyles = makeStyles(theme => ({
     marginBottom: '0px',
     fontSize: '38px',
   },
-  label_title_ingresos: {
+  label_title_entradas: {
     //backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
     textAlign: 'center',
     fontWeight: 'bold',

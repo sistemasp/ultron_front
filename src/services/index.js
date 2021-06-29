@@ -711,52 +711,52 @@ export const showAllTipoEsteticas = async () => {
 
 // TIPO INGRESO
 
-export const showAllTipoIngresos = async () => {
+export const showAllTipoEntradas = async () => {
     try {
         const response = await axios({
-            url: `${baseUrl}/tipoingreso`,
+            url: `${baseUrl}/tipoentrada`,
             method: 'GET'
         });
         return response;
     } catch (error) {
-        console.log('showAllTipoIngresos', error);
+        console.log('showAllTipoEntradas', error);
     }
 }
 
-export const findTipoIngresoById = async (tipoIngresoId) => {
+export const findTipoEntradaById = async (tipoEntradaId) => {
     try {
         const response = await axios({
-            url: `${baseUrl}/tipoingreso/${tipoIngresoId}`,
+            url: `${baseUrl}/tipoentrada/${tipoEntradaId}`,
             method: 'GET'
         });
         return response;
     } catch (error) {
-        console.log('findTipoIngresoById', error);
+        console.log('findTipoEntradaById', error);
     }
 }
 
 // TIPO EGRESO
 
-export const showAllTipoEgresos = async () => {
+export const showAllTipoSalidas = async () => {
     try {
         const response = await axios({
-            url: `${baseUrl}/tipoegreso`,
+            url: `${baseUrl}/tiposalida`,
             method: 'GET'
         });
         return response;
     } catch (error) {
-        console.log('showAllTipoEgresos', error);
+        console.log('showAllTipoSalidas', error);
     }
 }
 
-export const findTipoEgresoById = async (tipoEgresoId) => {
+export const findTipoSalidaById = async (tipoSalidaId) => {
     try {
         const response = await axios({
-            url: `${baseUrl}/tipoegreso/${tipoEgresoId}`,
+            url: `${baseUrl}/tiposalida/${tipoSalidaId}`,
             method: 'GET'
         });
         return response;
     } catch (error) {
-        console.log('findTipoEgresoById', error);
+        console.log('findTipoSalidaById', error);
     }
 }

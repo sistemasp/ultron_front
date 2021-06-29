@@ -8,8 +8,8 @@ import {
   updateConsult,
 } from '../../../../services/consultas';
 import {
-  createEgreso,
-} from '../../../../services/egresos';
+  createSalida,
+} from '../../../../services/salidas';
 import { showCorteTodayBySucursalAndTurno } from '../../../../services/corte';
 import { findFacialesByPayOfDoctorHoraAplicacion, findFacialesByPayOfDoctorHoraAplicacionPA, updateFacial } from '../../../../services/faciales';
 import { findAparatologiasByPayOfDoctorHoraAplicacion, findAparatologiasByPayOfDoctorHoraAplicacionPA, updateAparatologia } from '../../../../services/aparatolgia';
@@ -69,7 +69,7 @@ const ModalImprimirPagoDermatologo = (props) => {
   const realizadoTipoCitaId = process.env.REACT_APP_TIPO_CITA_REALIZADO_ID;
   const noAplicaTipoCitaId = process.env.REACT_APP_TIPO_CITA_NO_APLICA_ID;
   const directoTipoCitaId = process.env.REACT_APP_TIPO_CITA_DIRECTO_ID;
-  const pagoDermatologoTipoEgresoId = process.env.REACT_APP_TIPO_EGRESO_PAGO_DERMATOLOGO_ID;
+  const pagoDermatologoTipoSalidaId = process.env.REACT_APP_TIPO_EGRESO_PAGO_DERMATOLOGO_ID;
   const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
   const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
   const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
@@ -406,10 +406,10 @@ const ModalImprimirPagoDermatologo = (props) => {
       || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
       const data = response.data;
 
-      const egreso = {
+      const salida = {
         create_date: new Date(),
         hora_aplicacion: corte.create_date,
-        tipo_egreso: pagoDermatologoTipoEgresoId,
+        tipo_salida: pagoDermatologoTipoSalidaId,
         recepcionista: empleado,
         turno: corte.turno === 'm' ? 'MATUTINO' : 'VESPERTINO',
         concepto: dermatologo.nombre,
@@ -419,7 +419,7 @@ const ModalImprimirPagoDermatologo = (props) => {
         forma_pago: efectivoMetodoPagoId,
       }
 
-      const resp = await createEgreso(egreso);
+      const resp = await createSalida(salida);
       if (`${resp.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
         setIsLoading(false);
       }

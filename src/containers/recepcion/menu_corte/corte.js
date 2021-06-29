@@ -4,8 +4,8 @@ import TableComponent from '../../../components/table/TableComponent';
 import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
-import ModalNuevoIngreso from '../../../components/modales/modal_nuevo_ingreso';
-import ModalNuevoEgreso from '../../../components/modales/modal_nuevo_egreso';
+import ModalNuevoEntrada from '../../../components/modales/modal_nuevo_entrada';
+import ModalNuevoSalida from '../../../components/modales/modal_nuevo_salida';
 import ModalImprimirCorte from '../../../components/modales/imprimir/corte';
 import { toFormatterCurrency } from '../../../utils/utils';
 
@@ -30,14 +30,14 @@ export const CorteContainer = (props) => {
   const classes = useStyles();
 
   const {
-    tituloIngreso,
-    tituloEgreso,
+    tituloEntrada,
+    tituloSalida,
     tituloPagoAnticipado,
-    columnsIngreso,
-    columnsEgreso,
-    dataIngresos,
+    columnsEntrada,
+    columnsSalida,
+    dataEntradas,
     dataPagosAnticipados,
-    dataEgresos,
+    dataSalidas,
     options,
     openModal,
     handleOpen,
@@ -47,44 +47,44 @@ export const CorteContainer = (props) => {
     onCambioTurno,
     onObtenerInformacion,
     onGenerarCorte,
-    openModalNuevoIngreso,
-    openModalNuevoEgreso,
+    openModalNuevoEntrada,
+    openModalNuevoSalida,
     openModalImprimir,
     handleOpenImprimir,
-    handleOpenNuevoIngreso,
-    handleOpenNuevoEgreso,
+    handleOpenNuevoEntrada,
+    handleOpenNuevoSalida,
     sucursal,
     empleado,
     setOpenAlert,
     setMessage,
     setSeverity,
-    detailPanelIngreso,
-    detailPanelEgreso,
+    detailPanelEntrada,
+    detailPanelSalida,
     handleCerrarCorte,
     corte,
   } = props;
 
-  let totalIngresos = 0;
-  let totalEgresos = 0;
+  let totalEntradas = 0;
+  let totalSalidas = 0;
   let totalEfectivo = 0;
 
-  dataIngresos.forEach(data => {
+  dataEntradas.forEach(data => {
     if (data.forma_pago === 'EFECTIVO') {
       totalEfectivo = data.total;
     }
-    totalIngresos += data.forma_pago !== 'NO PAGA' ? Number(data.total) : 0;
+    totalEntradas += data.forma_pago !== 'NO PAGA' ? Number(data.total) : 0;
   });
 
-  dataEgresos.forEach(data => {
-    totalEgresos += Number(data.total);
+  dataSalidas.forEach(data => {
+    totalSalidas += Number(data.total);
   });
 
   return (
     <Fragment>
       {
-        openModalNuevoIngreso ?
-          <ModalNuevoIngreso
-            open={openModalNuevoIngreso}
+        openModalNuevoEntrada ?
+          <ModalNuevoEntrada
+            open={openModalNuevoEntrada}
             onClose={handleClose}
             handleClickGuardar={handleClickGuardar}
             sucursal={sucursal}
@@ -97,9 +97,9 @@ export const CorteContainer = (props) => {
       }
 
       {
-        openModalNuevoEgreso ?
-          <ModalNuevoEgreso
-            open={openModalNuevoEgreso}
+        openModalNuevoSalida ?
+          <ModalNuevoSalida
+            open={openModalNuevoSalida}
             onClose={handleClose}
             handleClickGuardar={handleClickGuardar}
             sucursal={sucursal}
@@ -119,9 +119,9 @@ export const CorteContainer = (props) => {
             corte={corte}
             sucursal={sucursal}
             empleado={empleado}
-            dataIngresos={dataIngresos}
+            dataEntradas={dataEntradas}
             dataPagosAnticipados={dataPagosAnticipados}
-            dataEgresos={dataEgresos}
+            dataSalidas={dataSalidas}
             setOpenAlert={setOpenAlert}
             setMessage={setMessage}
             setSeverity={setSeverity} /> : ''
@@ -175,11 +175,11 @@ export const CorteContainer = (props) => {
         </Grid>
         <Grid item xs={12} sm={8}>
           <TableComponent
-            titulo={tituloIngreso}
-            columns={columnsIngreso}
-            data={dataIngresos}
+            titulo={tituloEntrada}
+            columns={columnsEntrada}
+            data={dataEntradas}
             options={options}
-            detailPanel={detailPanelIngreso} />
+            detailPanel={detailPanelEntrada} />
         </Grid>
         <Grid container xs={4} className={classes.label} spacing={2}>
           {
@@ -189,7 +189,7 @@ export const CorteContainer = (props) => {
                   className={classes.button}
                   color="primary"
                   variant="contained"
-                  onClick={handleOpenNuevoIngreso}
+                  onClick={handleOpenNuevoEntrada}
                   text='AGREGAR ENTRADA' />
               </Grid>
               : ''
@@ -198,7 +198,7 @@ export const CorteContainer = (props) => {
             <h1>TOTAL ENTRADAS</h1>
           </Grid>
           <Grid item sm={12}>
-            <h1>{toFormatterCurrency(totalIngresos)}</h1>
+            <h1>{toFormatterCurrency(totalEntradas)}</h1>
           </Grid>
         </Grid>
         {
@@ -206,20 +206,20 @@ export const CorteContainer = (props) => {
             <Grid item xs={12} sm={8}>
               <TableComponent
                 titulo={tituloPagoAnticipado}
-                columns={columnsIngreso}
+                columns={columnsEntrada}
                 data={dataPagosAnticipados}
                 options={options}
-                detailPanel={detailPanelIngreso} />
+                detailPanel={detailPanelEntrada} />
             </Grid>
             : ''
         }
         <Grid item xs={12} sm={8}>
           <TableComponent
-            titulo={tituloEgreso}
-            columns={columnsEgreso}
-            data={dataEgresos}
+            titulo={tituloSalida}
+            columns={columnsSalida}
+            data={dataSalidas}
             options={options}
-            detailPanel={detailPanelEgreso} />
+            detailPanel={detailPanelSalida} />
         </Grid>
         <Grid container xs={4} className={classes.label} spacing={2}>
           {
@@ -229,7 +229,7 @@ export const CorteContainer = (props) => {
                   className={classes.button}
                   color="primary"
                   variant="contained"
-                  onClick={handleOpenNuevoEgreso}
+                  onClick={handleOpenNuevoSalida}
                   text='AGREGAR SALIDA' />
               </Grid>
               : ''
@@ -238,11 +238,11 @@ export const CorteContainer = (props) => {
             <h1>TOTAL SALIDAS</h1>
           </Grid>
           <Grid item sm={12}>
-            <h1>{toFormatterCurrency(totalEgresos)}</h1>
+            <h1>{toFormatterCurrency(totalSalidas)}</h1>
           </Grid>
         </Grid>
         <Grid item sm={8}>
-          <h1 className={totalEfectivo < totalEgresos ? classes.label_positivo : classes.label_negativo} >TOTAL CORTE CAJA: {toFormatterCurrency(Number(totalEgresos) - Number(totalEfectivo))}</h1>
+          <h1 className={totalEfectivo < totalSalidas ? classes.label_positivo : classes.label_negativo} >TOTAL CORTE CAJA: {toFormatterCurrency(Number(totalSalidas) - Number(totalEfectivo))}</h1>
         </Grid>
 
       </Grid>

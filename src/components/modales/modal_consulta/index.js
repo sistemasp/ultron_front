@@ -14,10 +14,10 @@ import {
   createConsult,
 } from "../../../services/consultas";
 import {
-  findIngresoById,
-  updateIngreso,
-  deleteIngreso,
-} from "../../../services/ingresos";
+  findEntradaById,
+  updateEntrada,
+  deleteEntrada,
+} from "../../../services/entradas";
 import { Backdrop, CircularProgress, makeStyles } from '@material-ui/core';
 import { addZero } from '../../../utils/utils';
 import ModalFormConsulta from './ModalFormConsulta';
@@ -285,17 +285,17 @@ const ModalConsulta = (props) => {
       if (rowData.status === canceloCPStatusId) {
         rowData.pagos.forEach(async (pago) => {
           pago.pago_anticipado = true;
-          const ingreso = await findIngresoById(pago.ingreso);
-          if (`${ingreso.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-            const updateIngresoData = ingreso.data;
-            updateIngresoData.pago_anticipado = true;
-            await updateIngreso(updateIngresoData._id, updateIngresoData);
+          const entrada = await findEntradaById(pago.entrada);
+          if (`${entrada.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+            const updateEntradaData = entrada.data;
+            updateEntradaData.pago_anticipado = true;
+            await updateEntrada(updateEntradaData._id, updateEntradaData);
             await updatePago(pago._id, pago);
           }
         });
       } else if (rowData.status === canceloSPStatusId) {
         rowData.pagos.forEach(async (pago) => {
-          await deleteIngreso(pago.ingreso);
+          await deleteEntrada(pago.entrada);
           await deletePago(pago._id);
         });
         rowData.pagado = false;

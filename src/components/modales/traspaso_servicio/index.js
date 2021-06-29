@@ -3,7 +3,7 @@ import { createConsecutivo, createPago, deletePago, showAllOffices } from '../..
 import { addZero, generateFolio } from '../../../utils/utils';
 import ModalFormTraspasoServicio from './ModalFormTraspasoServicio';
 import { showAllStatusVisibles } from '../../../services/status';
-import { createIngreso, deleteIngreso, updateIngreso } from '../../../services/ingresos';
+import { createEntrada, deleteEntrada, updateEntrada } from '../../../services/entradas';
 import { createFacial, updateFacial } from '../../../services/faciales';
 import { createAparatologia, updateAparatologia } from '../../../services/aparatolgia';
 import { createCirugia, updateCirugia } from '../../../services/cirugias';
@@ -26,7 +26,7 @@ const ModalTraspasoServicio = (props) => {
   const consultaServicioId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
   const canceladoSPStatusId = process.env.REACT_APP_CANCELO_SP_STATUS_ID;
   const asistioStatusId = process.env.REACT_APP_ASISTIO_STATUS_ID;
-  const tipoIngresoServicioId = process.env.REACT_APP_TIPO_INGRESO_CONSULTA_ID;
+  const tipoEntradaServicioId = process.env.REACT_APP_TIPO_INGRESO_CONSULTA_ID;
   const pendienteStatusId = process.env.REACT_APP_PENDIENTE_STATUS_ID;
   const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
   const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
@@ -59,7 +59,7 @@ const ModalTraspasoServicio = (props) => {
     const pagos = [];
     servicio.pagos.forEach(async (pago) => {
       pagos.push(pago);
-      await deleteIngreso(pago.ingreso);
+      await deleteEntrada(pago.entrada);
       await deletePago(pago._id);
     });
     servicio.pagado = false;
@@ -123,28 +123,28 @@ const ModalTraspasoServicio = (props) => {
             pago.servicio = servicioRes._id;
             pago.hora_aplicacion = servicioRes.hora_aplicacion;
 
-            const ingreso = {
+            const entrada = {
               create_date: dateNow,
               hora_aplicacion: servicioRes.hora_aplicacion,
               recepcionista: empleado,
               concepto: `TRASPASO FOLIO: ${generateFolio(servicioRes)}`,
               cantidad: pago.total,
-              tipo_ingreso: tipoIngresoServicioId,
+              tipo_entrada: tipoEntradaServicioId,
               sucursal: servicioRes.sucursal,
               forma_pago: pago.forma_pago,
               pago_anticipado: pago.pago_anticipado,
             }
 
-            const response = await createIngreso(ingreso);
+            const response = await createEntrada(entrada);
 
             if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-              const resIngreso = response.data;
-              pago.ingreso = resIngreso._id;
+              const resEntrada = response.data;
+              pago.entrada = resEntrada._id;
 
               const res = await createPago(pago);
               if (`${res.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-                resIngreso.pago = res.data._id;
-                await updateIngreso(resIngreso._id, resIngreso);
+                resEntrada.pago = res.data._id;
+                await updateEntrada(resEntrada._id, resEntrada);
                 confirmacion();
               }
             }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import { ReportesIngresosContainer } from "./reportes_ingresos";
+import { ReportesEntradasContainer } from "./reportes_entradas";
 import { findConsultsByRangeDateAndSucursal } from "../../../../../services/consultas";
 import { Backdrop, CircularProgress } from "@material-ui/core";
 import { toFormatterCurrency, addZero, getPagoDermatologoByServicio } from "../../../../../utils/utils";
@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-const ReportesIngresos = (props) => {
+const ReportesEntradas = (props) => {
 
 	const classes = useStyles();
 
@@ -25,8 +25,8 @@ const ReportesIngresos = (props) => {
 	const formaPagoTarjeta = process.env.REACT_APP_FORMA_PAGO_TARJETA;
 	const formaPagoTransferencia = process.env.REACT_APP_FORMA_PAGO_TRANSFERENCIA;
 	const formaPagoDeposito = process.env.REACT_APP_FORMA_PAGO_DEPOSITO;
-	const tipoEgresoPagoDermatologo = process.env.REACT_APP_TIPO_EGRESO_PAGO_DERMATOLOGO_ID;
-	const tipoEgresoRetiroParcial = process.env.REACT_APP_TIPO_EGRESO_RETIRO_PARCIAL_ID;
+	const tipoSalidaPagoDermatologo = process.env.REACT_APP_TIPO_EGRESO_PAGO_DERMATOLOGO_ID;
+	const tipoSalidaRetiroParcial = process.env.REACT_APP_TIPO_EGRESO_RETIRO_PARCIAL_ID;
 
 	const [isLoading, setIsLoading] = useState(true);
 	const [cortes, setCortes] = useState([]);
@@ -52,8 +52,8 @@ const ReportesIngresos = (props) => {
 		{ title: 'TURNO', field: 'turno' },
 		{ title: 'SUCURSAL', field: 'sucursal' },
 		{ title: 'RECEPCIONISTA', field: 'recepcionista' },
-		{ title: 'INGRESOS TOTALES', field: 'ingresos_totales' },
-		{ title: 'INGRESOS TOTALES REALES', field: 'ingresos_totales_reales' },
+		{ title: 'INGRESOS TOTALES', field: 'entradas_totales' },
+		{ title: 'INGRESOS TOTALES REALES', field: 'entradas_totales_reales' },
 		{ title: 'PAGOS ANTICIPADOS', field: 'pagos_anticipados' },
 		{ title: 'PAGO CON TARJETA', field: 'tarjeta' },
 		{ title: 'TRANSFERENCIA', field: 'transferencia' },
@@ -91,59 +91,59 @@ const ReportesIngresos = (props) => {
 
 			// PAGOS EFECTIVO
 			let efectivo = 0;
-			const ingresosEfectivo = item.ingresos.filter(ingreso => {
-				return ingreso.forma_pago === formaPagoEfectivo;
+			const entradasEfectivo = item.entradas.filter(entrada => {
+				return entrada.forma_pago === formaPagoEfectivo;
 			});
-			ingresosEfectivo.forEach(ingresoEfectivo => {
-				efectivo += Number(ingresoEfectivo.cantidad);
+			entradasEfectivo.forEach(entradaEfectivo => {
+				efectivo += Number(entradaEfectivo.cantidad);
 			});
 
 			// PAGOS TARJETA
 			let tarjeta = 0;
-			const ingresosTarjeta = item.ingresos.filter(ingreso => {
-				return ingreso.forma_pago === formaPagoTarjeta;
+			const entradasTarjeta = item.entradas.filter(entrada => {
+				return entrada.forma_pago === formaPagoTarjeta;
 			});
-			ingresosTarjeta.forEach(ingresoTarjeta => {
-				tarjeta += Number(ingresoTarjeta.cantidad);
+			entradasTarjeta.forEach(entradaTarjeta => {
+				tarjeta += Number(entradaTarjeta.cantidad);
 			});
 
 			// PAGOS TRANSFERENCIA
 			let transferencia = 0;
-			const ingresosTransferencia = item.ingresos.filter(ingreso => {
-				return ingreso.forma_pago === formaPagoTransferencia;
+			const entradasTransferencia = item.entradas.filter(entrada => {
+				return entrada.forma_pago === formaPagoTransferencia;
 			});
-			ingresosTransferencia.forEach(ingresoTransferencia => {
-				transferencia += Number(ingresoTransferencia.cantidad);
+			entradasTransferencia.forEach(entradaTransferencia => {
+				transferencia += Number(entradaTransferencia.cantidad);
 			});
 
 			// PAGOS DEPÓSITO
 			let deposito = 0;
-			const ingresosDeposito = item.ingresos.filter(ingreso => {
-				return ingreso.forma_pago === formaPagoDeposito;
+			const entradasDeposito = item.entradas.filter(entrada => {
+				return entrada.forma_pago === formaPagoDeposito;
 			});
-			ingresosDeposito.forEach(ingresoDeposito => {
-				deposito += Number(ingresoDeposito.cantidad);
+			entradasDeposito.forEach(entradaDeposito => {
+				deposito += Number(entradaDeposito.cantidad);
 			});
 
-			const ingresosTotales = pagosAnticipados + efectivo + tarjeta + transferencia + deposito;
-			const ingresosTotalesReales = ingresosTotales - pagosAnticipados;
+			const entradasTotales = pagosAnticipados + efectivo + tarjeta + transferencia + deposito;
+			const entradasTotalesReales = entradasTotales - pagosAnticipados;
 
 			// EGRESOS 
 			let retirosParciales = 0;
 			let pagoDermatologoEfectivo = 0;
 			let pagoDermatologoRetencion = 0;
 			let gastos = 0;
-			item.egresos.forEach(egreso => {
-				switch (egreso.tipo_egreso) {
-					case tipoEgresoRetiroParcial:
-						retirosParciales += Number(egreso.cantidad);
+			item.salidas.forEach(salida => {
+				switch (salida.tipo_salida) {
+					case tipoSalidaRetiroParcial:
+						retirosParciales += Number(salida.cantidad);
 						break;
-					case tipoEgresoPagoDermatologo:
-						pagoDermatologoEfectivo += Number(egreso.cantidad);
-						pagoDermatologoRetencion += Number(egreso.retencion ? egreso.retencion : 0);
+					case tipoSalidaPagoDermatologo:
+						pagoDermatologoEfectivo += Number(salida.cantidad);
+						pagoDermatologoRetencion += Number(salida.retencion ? salida.retencion : 0);
 						break;
 					default:
-						gastos += Number(egreso.cantidad);
+						gastos += Number(salida.cantidad);
 				}
 			});
 
@@ -157,8 +157,8 @@ const ReportesIngresos = (props) => {
 				tarjeta: toFormatterCurrency(tarjeta),
 				transferencia: toFormatterCurrency(transferencia),
 				deposito: toFormatterCurrency(deposito),
-				ingresos_totales_reales: toFormatterCurrency(ingresosTotalesReales),
-				ingresos_totales: toFormatterCurrency(ingresosTotales),
+				entradas_totales_reales: toFormatterCurrency(entradasTotalesReales),
+				entradas_totales: toFormatterCurrency(entradasTotales),
 				pago_dermatologo_efectivo: toFormatterCurrency(pagoDermatologoEfectivo),
 				pago_dermatologo_retencion: toFormatterCurrency(pagoDermatologoRetencion),
 				gastos: toFormatterCurrency(gastos),
@@ -172,7 +172,7 @@ const ReportesIngresos = (props) => {
 		setIsLoading(false);
 	}
 
-	const loadEgresos = async (startDate, endDate) => {
+	const loadSalidas = async (startDate, endDate) => {
 		const response = await findCortesByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
 			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
@@ -208,7 +208,7 @@ const ReportesIngresos = (props) => {
 
 	const loadInfo = async (startDate, endDate) => {
 		setIsLoading(true);
-		await loadEgresos(startDate, endDate);
+		await loadSalidas(startDate, endDate);
 	}
 
 	const handleReportes = async () => {
@@ -226,7 +226,7 @@ const ReportesIngresos = (props) => {
 		<Fragment>
 			{
 				!isLoading ?
-					<ReportesIngresosContainer
+					<ReportesEntradasContainer
 						onChangeStartDate={(e) => handleChangeStartDate(e)}
 						onChangeEndDate={(e) => handleChangeEndDate(e)}
 						startDate={startDate.fecha_show}
@@ -246,4 +246,4 @@ const ReportesIngresos = (props) => {
 	);
 }
 
-export default ReportesIngresos;
+export default ReportesEntradas;
