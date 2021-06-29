@@ -253,15 +253,13 @@ const AgendarCirugia = (props) => {
 
 	const handleClickAgendar = async (data) => {
 		setIsLoading(true);
-		const dateNow = new Date();
 		data.total = data.precio;
 		data.quien_agenda = empleado._id;
 		data.sucursal = sucursal;
 		data.status = pendienteStatusId;
 		data.paciente = paciente._id;
 		data.status = pendienteStatusId;
-		data.hora_aplicacion = dateNow;
-		data.hora_llegada = `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;;
+		data.hora_llegada = '--:--';
 		data.hora_atencion = '--:--';
 		data.hora_salida = '--:--';
 		const response = await createCirugia(data, empleado.access_token);

@@ -262,7 +262,7 @@ const ModalImprimirPagoDermatologo = (props) => {
 
       let pagoDermatologo = Number(totalPagos) * Number(consulta.frecuencia === reconsultaFrecuenciaId ? dermatologo.esquema.porcentaje_reconsulta : dermatologo.esquema.porcentaje_consulta) / 100;
       consulta.pago_dermatologo = pagoDermatologo;
-      updateConsult(consulta._id, consulta);
+      updateConsult(consulta._id, consulta, empleado.access_token);
       total += Number(pagoDermatologo);
       console.log("KAOZ", pagoDermatologo);
     });
@@ -272,7 +272,7 @@ const ModalImprimirPagoDermatologo = (props) => {
     cirugias.forEach(async (cirugia) => {
       const pagoDermatologo = cirugia.has_descuento_dermatologo ? 0 : Number(cirugia.total_aplicacion) * Number(dermatologo.esquema.porcentaje_cirugias) / 100;
       cirugia.pago_dermatologo = pagoDermatologo;
-      updateCirugia(cirugia._id, cirugia)
+      updateCirugia(cirugia._id, cirugia, empleado.access_token)
       total += Number(pagoDermatologo);
       console.log("KAOZ", pagoDermatologo);
     });
@@ -281,7 +281,7 @@ const ModalImprimirPagoDermatologo = (props) => {
     dermapens.forEach(async (dermapen) => {
       const pagoDermatologo = dermapen.has_descuento_dermatologo ? 0 : Number(dermapen.total_aplicacion) * Number(dermatologo.esquema.porcentaje_dermocosmetica) / 100;
       dermapen.pago_dermatologo = pagoDermatologo;
-      updateDermapen(dermapen._id, dermapen);
+      updateDermapen(dermapen._id, dermapen, empleado.access_token);
       total += Number(pagoDermatologo);
       console.log("KAOZ", pagoDermatologo);
     });
@@ -335,7 +335,7 @@ const ModalImprimirPagoDermatologo = (props) => {
       }
       const pagoDermatologo = comisionDermatologo - ((comisionDermatologo * facial.porcentaje_descuento_clinica ? facial.porcentaje_descuento_clinica : 0) / 100);
       facial.pago_dermatologo = pagoDermatologo;
-      updateFacial(facial._id, facial);
+      updateFacial(facial._id, facial, empleado.access_token);
       total += Number(pagoDermatologo);
       console.log("KAOZ", pagoDermatologo);
 
@@ -369,7 +369,7 @@ const ModalImprimirPagoDermatologo = (props) => {
       }
       let pagoDermatologo = aparatologia.has_descuento_dermatologo ? 0 : comisionDermatologo;
       aparatologia.pago_dermatologo = pagoDermatologo;
-      updateAparatologia(aparatologia._id, aparatologia);
+      updateAparatologia(aparatologia._id, aparatologia, empleado.access_token);
       total += Number(pagoDermatologo);
     });
 
@@ -377,7 +377,7 @@ const ModalImprimirPagoDermatologo = (props) => {
     esteticas.map(async (estetica) => {
       const pagoDermatologo = estetica.has_descuento_dermatologo ? 0 : Number(estetica.total_aplicacion) * Number(dermatologo.esquema.porcentaje_dermocosmetica) / 100;
       estetica.pago_dermatologo = pagoDermatologo;
-      updateEstetica(estetica._id, estetica);
+      updateEstetica(estetica._id, estetica, empleado.access_token);
       total += Number(pagoDermatologo);
       console.log("KAOZ", pagoDermatologo);
 

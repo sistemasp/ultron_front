@@ -275,7 +275,6 @@ const AgendarEstetica = (props) => {
 
 	const handleClickAgendar = async (data) => {
 		setIsLoading(true);
-		const dateNow = new Date();
 		data.total = data.precio;
 		data.consultaId = consultaAgendada._id;
 		data.quien_agenda = empleado._id;
@@ -283,8 +282,9 @@ const AgendarEstetica = (props) => {
 		data.status = pendienteStatusId;
 		data.paciente = paciente._id;
 		data.status = pendienteStatusId;
-		data.hora_aplicacion = dateNow;
-		data.hora_llegada = `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;;
+		data.hora_llegada = '--:--';
+		data.hora_atencion = '--:--';
+		data.hora_salida = '--:--';
 		const response = await createEstetica(data, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			const consecutivo = {

@@ -160,6 +160,7 @@ const ReportesDetallesGeneral = (props) => {
 			const descuentoPorcentaje = 100 - (pago.total * 100 / consulta.precio);
 			const descuentoCantidad = (consulta.precio * descuentoPorcentaje / 100);
 			const pagoDermatologo = pago.total * consulta.pago_dermatologo / consulta.total;
+			console.log("KAOZ", pago.total, consulta.pago_dermatologo, consulta.total );
 			const pagoClinica = pago.total - pagoDermatologo;
 			const descuentoClinicaPorcentaje = consulta.porcentaje_descuento_clinica ? consulta.porcentaje_descuento_clinica : 0;
 			const descuentoDermatologoPorcentaje = consulta.descuento_dermatologo ? consulta.descuento_dermatologo : 0;
