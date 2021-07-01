@@ -125,6 +125,9 @@ const LoginForm = (props) => {
         || empleado.rol._id === rolSupervisorId
       ) {
         history.push('/recepcion', { empleado: empleado, sucursal: data.sucursal });
+      } else if (empleado.rol._id === rolAdministacionId 
+        || empleado.rol._id === rolAuxiliarAdministrativoId) {
+        history.push('/administracion', { empleado: empleado, sucursal: data.sucursal });
       }
     } else {
       setOpenAlert(true);

@@ -87,7 +87,7 @@ const ModalFormNuevoSalida = (props) => {
         }
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <h2>AGREGAR EGRESO</h2>
+            <h2>AGREGAR SALIDA</h2>
           </Grid>
           <Grid item xs={12}>
             <TextField
@@ -122,16 +122,24 @@ const ModalFormNuevoSalida = (props) => {
           </Grid>
           <Grid item xs={12}>
             <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="simple-select-outlined-hora">TIPO EGRESO</InputLabel>
+              <InputLabel id="simple-select-outlined-hora">TIPO SALIDA</InputLabel>
               <Select
                 labelId="simple-select-outlined-tipo-salida"
                 id="simple-select-outlined-tipo-salida"
                 value={values.tipo_salida}
                 onChange={onChangeTipoSalida}
-                label="TIPO EGRESO" >
+                label="TIPO SALIDA" >
                 {tipoSalidas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
               </Select>
             </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <ButtonCustom
+              className={classes.button}
+              color="secondary"
+              variant="contained"
+              onClick={onClickCancel}
+              text='CANCELAR' />
           </Grid>
           <Grid item xs={12} sm={6}>
             <ButtonCustom
@@ -141,14 +149,6 @@ const ModalFormNuevoSalida = (props) => {
               onClick={onAgregarSalida}
               disabled={dataComplete}
               text='AGREGAR' />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <ButtonCustom
-              className={classes.button}
-              color="secondary"
-              variant="contained"
-              onClick={onClickCancel}
-              text='CANCELAR' />
           </Grid>
         </Grid>
       </div>

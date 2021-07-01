@@ -112,19 +112,19 @@ const ModalFormPassword = (props) => {
           <Grid item xs={12} sm={6}>
             <ButtonCustom
               className={classes.button}
-              color="primary"
+              color="secondary"
               variant="contained"
-              onClick={onClickGuardar}
-              disabled={dataComplete}
-              text='Cambiar contraseña' />
+              onClick={onClickCancel}
+              text='CANCELAR' />
           </Grid>
           <Grid item xs={12} sm={6}>
             <ButtonCustom
               className={classes.button}
-              color="secondary"
+              color="primary"
               variant="contained"
-              onClick={onClickCancel}
-              text='Cancelar' />
+              onClick={onClickGuardar}
+              disabled={dataComplete}
+              text='CAMBIAR CONTRASEÑA' />
           </Grid>
         </Grid>
       </div>

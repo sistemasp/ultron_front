@@ -164,6 +164,8 @@ const ModalProximaCita = (props) => {
   const handleOnClickProximarCita = async (data) => {
     setIsLoading(true);
     data.hora_llegada = '--:--';
+		data.hora_atencion = '--:--';
+		data.hora_salida = '--:--';
     let response;
     switch (cita.servicio._id) {
       case servicioAparatologiaId:

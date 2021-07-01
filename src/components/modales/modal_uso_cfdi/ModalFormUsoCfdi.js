@@ -55,18 +55,18 @@ const ModalFormUsoCfdi = (props) => {
             <Grid item xs={6}>
               <ButtonCustom
                 className={classes.button}
-                color="primary"
-                variant="contained"
-                onClick={(e) => onGenerarFactura(e, values)}
-                text='FACTURAR' />
-            </Grid>
-            <Grid item xs={6}>
-              <ButtonCustom
-                className={classes.button}
                 color="secondary"
                 variant="contained"
                 onClick={onClose}
                 text='CANCELAR' />
+            </Grid>
+            <Grid item xs={6}>
+              <ButtonCustom
+                className={classes.button}
+                color="primary"
+                variant="contained"
+                onClick={(e) => onGenerarFactura(e, values)}
+                text='FACTURAR' />
             </Grid>
           </Grid>
         </div>

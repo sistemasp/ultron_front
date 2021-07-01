@@ -225,7 +225,14 @@ const ModalFormPago = (props) => {
                   onChange={onChangeObservaciones}
                   variant="outlined" />
               </Grid>
-
+              <Grid item xs={12} sm={6}>
+                <ButtonCustom
+                  className={classes.button}
+                  color="secondary"
+                  variant="contained"
+                  onClick={onClickCancel}
+                  text='CANCELAR' />
+              </Grid>
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
                   className={classes.button}
@@ -235,15 +242,6 @@ const ModalFormPago = (props) => {
                   disabled={isLoading}
                   text='GUARDAR' />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <ButtonCustom
-                  className={classes.button}
-                  color="secondary"
-                  variant="contained"
-                  onClick={onClickCancel}
-                  text='CANCELAR' />
-              </Grid>
-
               {/*
                 <Grid item xs={12}>
                   <CheckCustom

@@ -40,11 +40,11 @@ const ModalFormSalaCirugia = (props) => {
   const [modalStyle] = React.useState(getModalStyle);
 
   const {
-		values,
-		errors,
-		touched,
-		handleSubmit,
-		handleChange,
+    values,
+    errors,
+    touched,
+    handleSubmit,
+    handleChange,
     isValid,
     onClickCancel,
     onClickGuardar,
@@ -62,17 +62,25 @@ const ModalFormSalaCirugia = (props) => {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <h2>SALA DE CIRUGÍA</h2>
-                </Grid>
+              </Grid>
               <Grid item xs={12}>
                 <TextField
-                className={classes.textField}
-                name="nombre"
-                helperText={touched.nombre ? errors.nombre : ""}
-                error={Boolean(errors.nombre)}
-                label="NOMBRE"
-                value={values.nombre}
-                onChange={handleChange}
-                variant="outlined" />
+                  className={classes.textField}
+                  name="nombre"
+                  helperText={touched.nombre ? errors.nombre : ""}
+                  error={Boolean(errors.nombre)}
+                  label="NOMBRE"
+                  value={values.nombre}
+                  onChange={handleChange}
+                  variant="outlined" />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <ButtonCustom
+                  className={classes.button}
+                  color="secondary"
+                  variant="contained"
+                  onClick={onClickCancel}
+                  text="CANCELAR" />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
@@ -80,20 +88,10 @@ const ModalFormSalaCirugia = (props) => {
                   color="primary"
                   variant="contained"
                   onClick={(e) => onClickGuardar(e, values)}
-                  disabled={!isValid} 
+                  disabled={!isValid}
                   text='GUARDAR' />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <Button
-                  className={classes.button}
-                  color="secondary"
-                  variant="contained"
-                  onClick={onClickCancel} >
-                    CANCELAR
-                </Button>
-              </Grid>
             </Grid>
-            
           </form>
         </div>
       </Modal>
@@ -101,4 +99,4 @@ const ModalFormSalaCirugia = (props) => {
   );
 }
 
-  export default ModalFormSalaCirugia;
+export default ModalFormSalaCirugia;

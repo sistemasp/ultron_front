@@ -425,19 +425,18 @@ const ModalFormCirugia = (props) => {
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
                   className={classes.button}
-                  color="primary"
-                  variant="contained"
-                  onClick={(e) => onClickCrearCirugia(e, values)}
-                  text="GUARDAR" />
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <ButtonCustom
-                  className={classes.button}
                   color="secondary"
                   variant="contained"
                   onClick={onClose}
                   text="CANCELAR" />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <ButtonCustom
+                  className={classes.button}
+                  color="primary"
+                  variant="contained"
+                  onClick={(e) => onClickCrearCirugia(e, values)}
+                  text="GUARDAR" />
               </Grid>
             </Grid>
           </form>

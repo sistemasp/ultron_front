@@ -8,6 +8,7 @@ import { CheckCustom } from '../../basic/CheckCustom';
 import ModalPagos from '../modal_pagos';
 import ModalConfirmacion from '../modal_confirmacion';
 import { toFormatterCurrency } from '../../../utils/utils';
+import { ButtonCustom } from '../../basic/ButtonCustom';
 
 function getModalStyle() {
   const top = 50;
@@ -294,23 +295,21 @@ const ModalFormConsulta = (props) => {
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                <Button
+                <ButtonCustom
                   className={classes.button}
                   color="primary"
                   variant="contained"
-                  onClick={(e) => onClickActualizarCita(e, values)} >
-                  GUARDAR
-                </Button>
+                  onClick={(e) => onClickActualizarCita(e, values)} 
+                  text="GUARDAR" />
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                <Button
+                <ButtonCustom
                   className={classes.button}
                   color="secondary"
                   variant="contained"
-                  onClick={onClose} >
-                  CANCELAR
-              </Button>
+                  onClick={onClose}
+                  text="CANCELAR" />
               </Grid>
             </Grid>
           </form>

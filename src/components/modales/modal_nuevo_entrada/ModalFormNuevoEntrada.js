@@ -67,7 +67,7 @@ const ModalFormNuevoEntrada = (props) => {
       <div style={modalStyle} className={classes.paper}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <h2>AGREGAR INGRESO</h2>
+            <h2>AGREGAR ENTRADA</h2>
           </Grid>
           <Grid item xs={12}>
             <TextField
@@ -93,13 +93,13 @@ const ModalFormNuevoEntrada = (props) => {
           </Grid>
           <Grid item xs={12}>
             <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="simple-select-outlined-hora">TIPO INGRESO</InputLabel>
+              <InputLabel id="simple-select-outlined-hora">TIPO ENTRADA</InputLabel>
               <Select
                 labelId="simple-select-outlined-tipo-entrada"
                 id="simple-select-outlined-tipo-entrada"
                 value={values.tipo_entrada}
                 onChange={onChangeTipoEntrada}
-                label="TIPO INGRESO" >
+                label="TIPO ENTRADA" >
                 {tipoEntradas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
               </Select>
             </FormControl>
@@ -120,19 +120,19 @@ const ModalFormNuevoEntrada = (props) => {
           <Grid item xs={12} sm={6}>
             <ButtonCustom
               className={classes.button}
+              color="secondary"
+              variant="contained"
+              onClick={onClickCancel}
+              text='CANCELAR' />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <ButtonCustom
+              className={classes.button}
               color="primary"
               variant="contained"
               onClick={onAgregarConceto}
               disabled={dataComplete}
               text='AGREGAR' />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <ButtonCustom
-              className={classes.button}
-              color="secondary"
-              variant="contained"
-              onClick={onClickCancel}
-              text='CANCELAR' />
           </Grid>
         </Grid>
       </div>

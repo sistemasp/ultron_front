@@ -159,6 +159,14 @@ const ModalFormPagos = (props) => {
           </Grid>
 
           <Grid container xs={12}>
+            <Grid item xs={12} sm={6}>
+              <ButtonCustom
+                className={classes.button}
+                color="secondary"
+                variant="contained"
+                onClick={onClickCancel}
+                text={!servicio.pagado ? 'CANCELAR' : 'SALIRE'} />
+            </Grid>
             {
               //!servicio.pagado ?
               <Grid item xs={12} sm={6}>
@@ -168,18 +176,9 @@ const ModalFormPagos = (props) => {
                   variant="contained"
                   onClick={() => onGuardarModalPagos(servicio)}
                   disabled={pagos == ![]}
-                  text='Guardar' />
+                  text='GUARDAR' />
               </Grid> //: ''
             }
-            <Grid item xs={12} sm={6}>
-              <Button
-                className={classes.button}
-                color="secondary"
-                variant="contained"
-                onClick={onClickCancel} >
-                {!servicio.pagado ? 'Cancelar' : 'Salir'}
-              </Button>
-            </Grid>
           </Grid>
         </div>
       </Modal>

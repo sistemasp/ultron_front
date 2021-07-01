@@ -305,20 +305,19 @@ const ModalFormRazonSocial = (props) => {
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
                   className={classes.button}
+                  color="secondary"
+                  variant="contained"
+                  onClick={onClickCancel}
+                  text="CANCELAR" />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <ButtonCustom
+                  className={classes.button}
                   color="primary"
                   variant="contained"
                   onClick={(e) => onClickGuardar(e, values)}
                   disabled={!isValid}
                   text='GUARDAR' />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Button
-                  className={classes.button}
-                  color="secondary"
-                  variant="contained"
-                  onClick={onClickCancel} >
-                  CANCELAR
-                </Button>
               </Grid>
             </Grid>
           </form>

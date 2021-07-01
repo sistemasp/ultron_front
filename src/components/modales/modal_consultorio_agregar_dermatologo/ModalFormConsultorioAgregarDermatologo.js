@@ -96,16 +96,15 @@ const ModalFormConsultorioAgregarDermatologo = (props) => {
                   variant="contained"
                   onClick={(e) => onClickGuardar(e, values)}
                   disabled={!isValid}
-                  text='Guardar' />
+                  text='GUARDAR' />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Button
+                <ButtonCustom
                   className={classes.button}
                   color="secondary"
                   variant="contained"
-                  onClick={onClickCancel} >
-                  Cancelar
-                </Button>
+                  onClick={onClickCancel}
+                  text="CANCELAR" />
               </Grid>
             </Grid>
 

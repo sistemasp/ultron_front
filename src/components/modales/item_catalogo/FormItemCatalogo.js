@@ -85,10 +85,10 @@ const FormItemCatalogo = (props) => {
               </Grid>
               {
                 catalogo._id === dermatologosCatalogoId ?
-                <Fragment>
-                  <h2>DERMA</h2>
-                </Fragment>
-                : ''
+                  <Fragment>
+                    <h2>DERMA</h2>
+                  </Fragment>
+                  : ''
               }
 
               {
@@ -113,19 +113,19 @@ const FormItemCatalogo = (props) => {
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
                   className={classes.button}
-                  color="primary"
+                  color="secondary"
                   variant="contained"
-                  onClick={(e) => onGuardarItem(e, values)}
-                  text='GUARDAR' />
+                  onClick={onClickCancel}
+                  text='CANCELAR' />
               </Grid>
 
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
                   className={classes.button}
-                  color="secondary"
+                  color="primary"
                   variant="contained"
-                  onClick={onClickCancel}
-                  text='CANCELAR' />
+                  onClick={(e) => onGuardarItem(e, values)}
+                  text='GUARDAR' />
               </Grid>
             </Grid>
           </form>

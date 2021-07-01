@@ -73,7 +73,7 @@ const ModalFormBuscarRazonSocial = (props) => {
             color="primary"
             variant="contained"
             onClick={handleOpenNuevaRazonSocial}
-            text='Nuevo razon social' />
+            text='NUEVA RAZÓN SOCIAL' />
 
           <TableComponent
             titulo={titulo}
@@ -87,7 +87,7 @@ const ModalFormBuscarRazonSocial = (props) => {
             color="secondary"
             variant="contained"
             onClick={() => onClose(false)}
-            text='Cancelar' />
+            text='CANCELAR' />
         </div>
       </Modal>
     </div >

@@ -93,6 +93,18 @@ const ModalFormCabinaAgregarPaciente = (props) => {
                   </Select>
                 </FormControl>
               </Grid>
+              {!cambio
+                ? <Grid item xs={12} sm={6}>
+                  <ButtonCustom
+                    className={classes.button}
+                    color="secondary"
+                    variant="contained"
+                    onClick={onClickCancel} 
+                    text="CANCELAR" />
+                </Grid>
+                : ''
+              }
+
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
                   className={classes.button}
@@ -100,20 +112,8 @@ const ModalFormCabinaAgregarPaciente = (props) => {
                   variant="contained"
                   onClick={(e) => onClickGuardar(e, values)}
                   disabled={!isValid}
-                  text={cambio ? 'Cambio' : 'Pasar'} />
+                  text={cambio ? 'CAMBIO' : 'PASAR'} />
               </Grid>
-              {!cambio
-                ? <Grid item xs={12} sm={6}>
-                  <Button
-                    className={classes.button}
-                    color="secondary"
-                    variant="contained"
-                    onClick={onClickCancel} >
-                    Cancelar
-                </Button>
-                </Grid>
-                : ''
-              }
             </Grid>
 
           </form>

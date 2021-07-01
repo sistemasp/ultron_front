@@ -233,18 +233,18 @@ const ModalFormPacienteDomicilio = (props) => {
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
                   className={classes.button}
-                  color="primary"
-                  variant="contained"
-                  onClick={() => onClickGuardar()}
-                  text="GUARDAD" />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <ButtonCustom
-                  className={classes.button}
                   color="secondary"
                   variant="contained"
                   onClick={onClickCancel}
                   text="CANCELAR" />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <ButtonCustom
+                  className={classes.button}
+                  color="primary"
+                  variant="contained"
+                  onClick={() => onClickGuardar()}
+                  text="GUARDAR" />
               </Grid>
             </Grid>
           </form>

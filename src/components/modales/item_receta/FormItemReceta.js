@@ -117,19 +117,19 @@ const FormItemReceta = (props) => {
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
                   className={classes.button}
-                  color="primary"
-                  variant="contained"
-                  onClick={(e) => onAgregarProducto(e, values)}
-                  text='AGREGAR' />
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <ButtonCustom
-                  className={classes.button}
                   color="secondary"
                   variant="contained"
                   onClick={onClickCancel}
                   text='CANCELAR' />
+              </Grid>
+              
+              <Grid item xs={12} sm={6}>
+                <ButtonCustom
+                  className={classes.button}
+                  color="primary"
+                  variant="contained"
+                  onClick={(e) => onAgregarProducto(e, values)}
+                  text='AGREGAR' />
               </Grid>
             </Grid>
           </form>

@@ -8,6 +8,7 @@ import { CheckCustom } from '../../basic/CheckCustom';
 import ModalPagos from '../modal_pagos';
 import myStyles from '../../../css';
 import { toFormatterCurrency } from '../../../utils/utils';
+import { ButtonCustom } from '../../basic/ButtonCustom';
 
 function getModalStyle() {
   const top = 50;
@@ -188,23 +189,21 @@ const ModalFormProximaConsulta = (props) => {
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                <Button
-                  className={classes.button}
-                  color="primary"
-                  variant="contained"
-                  onClick={() => onClickProximarCita(values)} >
-                  REAGENDAR
-                </Button>
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <Button
+                <ButtonCustom
                   className={classes.button}
                   color="secondary"
                   variant="contained"
-                  onClick={onClose} >
-                  Cancelar
-              </Button>
+                  onClick={onClose}
+                  text="CANCELAR" />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <ButtonCustom
+                  className={classes.button}
+                  color="primary"
+                  variant="contained"
+                  onClick={() => onClickProximarCita(values)}
+                  text="REAGENDAR" />
               </Grid>
             </Grid>
           </form>
