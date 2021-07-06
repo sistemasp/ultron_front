@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -20,6 +20,7 @@ import AgendarDermapen from '../agendar_dermapen';
 import AgendarCirugia from '../agendar_cirugia';
 import AgendarEstetica from '../agendar_estetica';
 import Calendario from '../calendario';
+import myStyles from '../../../css';
 
 function TabPanel(props) {
 	const { children, value, index, ...other } = props;
@@ -51,28 +52,7 @@ function a11yProps(index) {
 	};
 }
 
-const useStyles = makeStyles(theme => ({
-	root: {
-		flexGrow: 1,
-		backgroundColor: theme.palette.background.paper,
-	},
-	menuButton: {
-		marginRight: theme.spacing(1),
-	},
-	title: {
-		flexGrow: 1,
-	},
-	bar: {
-		backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
-	},
-	tabs: {
-		fontSize: 16,
-		height: 65,
-	}
-}));
-
 export const MenuContainer = props => {
-	const classes = useStyles();
 
 	const {
 		pacienteAgendado,
@@ -90,10 +70,21 @@ export const MenuContainer = props => {
 		empleado,
 		sucursal,
 		history,
+		colorBase,
 	} = props;
 
+	const useStyles = makeStyles(theme => ({
+		root: {
+			flexGrow: 1,
+			backgroundColor: theme.palette.background.paper,
+		}		
+	}));
+
+	const classes = myStyles(colorBase)();
+	const classess = useStyles();
+
 	return (
-		<div className={classes.root}>
+		<div className={classess.root}>
 			<AppBar
 				className={classes.bar}
 				position="sticky" >
@@ -125,9 +116,11 @@ export const MenuContainer = props => {
 			<TabPanel value={value} index={0}>
 				<Pacientes
 					empleado={empleado}
+					sucursal={sucursal}
 					onClickAgendarFaciales={onClickAgendarFaciales}
 					onClickAgendarConsulta={onClickAgendarConsulta}
 					onClickAgendarAparatologia={onClickAgendarAparatologia}
+					colorBase={colorBase}
 					onChangeTab={onChangeTab} />
 			</TabPanel>
 			<TabPanel value={value} index={1}>
@@ -141,6 +134,7 @@ export const MenuContainer = props => {
 					onClickAgendarDermapen={onClickAgendarDermapen}
 					onClickAgendarFaciales={onClickAgendarFaciales}
 					onClickAgendarAparatologia={onClickAgendarAparatologia}
+					colorBase={colorBase}
 					history={history} />
 			</TabPanel>
 			<TabPanel value={value} index={2}>
@@ -148,6 +142,7 @@ export const MenuContainer = props => {
 					info={pacienteAgendado}
 					setPacienteAgendado={setPacienteAgendado}
 					empleado={empleado}
+					colorBase={colorBase}
 					sucursal={sucursal._id} />
 			</TabPanel>
 			<TabPanel value={value} index={3}>
@@ -155,6 +150,7 @@ export const MenuContainer = props => {
 					info={pacienteAgendado}
 					setPacienteAgendado={setPacienteAgendado}
 					empleado={empleado}
+					colorBase={colorBase}
 					sucursal={sucursal._id} />
 			</TabPanel>
 			<TabPanel value={value} index={4}>
@@ -163,6 +159,7 @@ export const MenuContainer = props => {
 					paciente={pacienteAgendado}
 					setPacienteAgendado={setPacienteAgendado}
 					empleado={empleado}
+					colorBase={colorBase}
 					sucursal={sucursal._id} />
 			</TabPanel>
 			<TabPanel value={value} index={5}>
@@ -171,6 +168,7 @@ export const MenuContainer = props => {
 					paciente={pacienteAgendado}
 					setPacienteAgendado={setPacienteAgendado}
 					empleado={empleado}
+					colorBase={colorBase}
 					sucursal={sucursal._id} />
 			</TabPanel>
 			<TabPanel value={value} index={6}>
@@ -179,25 +177,30 @@ export const MenuContainer = props => {
 					paciente={pacienteAgendado}
 					setPacienteAgendado={setPacienteAgendado}
 					empleado={empleado}
+					colorBase={colorBase}
 					sucursal={sucursal._id} />
 			</TabPanel>
 			<TabPanel value={value} index={7}>
 				<GeneralCitas
 					empleado={empleado}
+					colorBase={colorBase}
 					sucursal={sucursal._id} />
 			</TabPanel>
 			<TabPanel value={value} index={8}>
 				<Calendario
 					empleado={empleado}
+					colorBase={colorBase}
 					sucursal={sucursal._id} />
 			</TabPanel>
 			<TabPanel value={value} index={9}>
 				<Aparatologia
-					sucursal={sucursal._id} />
+					sucursal={sucursal._id}
+					colorBase={colorBase} />
 			</TabPanel>
 			<TabPanel value={value} index={10}>
 				<Faciales
-					sucursal={sucursal._id} />
+					sucursal={sucursal._id}
+					colorBase={colorBase} />
 			</TabPanel>
 		</div>
 	);

@@ -22,8 +22,6 @@ import ModalProximaEstetica from '../../../components/modales/modal_proxima_este
 
 export const AgendarEsteticaContainer = (props) => {
 
-	const classes = myStyles();
-
 	const {
 		values,
 		errors,
@@ -71,6 +69,7 @@ export const AgendarEsteticaContainer = (props) => {
 		frecuenciaReconsultaId,
 		onChangePaymentMethod,
 		formasPago,
+		colorBase,
 		// TABLE DATES PROPERTIES
 		titulo,
 		columns,
@@ -103,6 +102,8 @@ export const AgendarEsteticaContainer = (props) => {
 		openModalTraspaso,
 		onCloseTraspasos,
 	} = props;
+
+	const classes = myStyles(colorBase)();
 
 	return (
 		<Fragment>

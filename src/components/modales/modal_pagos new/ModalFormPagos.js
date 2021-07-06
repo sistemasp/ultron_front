@@ -25,7 +25,7 @@ function getModalStyle() {
 }
 
 const ModalFormPagos = (props) => {
-  const classes = myStyles();
+  const classes = myStyles(colorBase)();
 
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
@@ -65,6 +65,7 @@ const ModalFormPagos = (props) => {
     tiposTarjeta,
     onChangeCantidad,
     onChange,
+    colorBase,
   } = props;
 
   return (

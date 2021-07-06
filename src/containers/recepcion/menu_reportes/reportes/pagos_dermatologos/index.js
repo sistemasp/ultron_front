@@ -27,6 +27,7 @@ const ReportePagosDermatologos = (props) => {
 	const {
 		empleado,
 		sucursal,
+		colorBase,
 	} = props;
 
 	const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
@@ -94,7 +95,7 @@ const ReportePagosDermatologos = (props) => {
 			};
 		},*/
 		headerStyle: {
-			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+			backgroundColor: colorBase,
 			color: '#FFF',
 			fontWeight: 'bolder',
 			fontSize: '18px'

@@ -13,7 +13,7 @@ import myStyles from '../../css';
 import Crud from './crud';
 
 export const MenuSuperAdminContainer = props => {
-	const classes = myStyles();
+	const classes = myStyles(colorBase)();
 
 	const {
 		onClickCatalogo,
@@ -24,6 +24,7 @@ export const MenuSuperAdminContainer = props => {
 		setSeverity,
 		setOpenAlert,
 		sucursal,
+		colorBase,
 	} = props;
 
 	return (

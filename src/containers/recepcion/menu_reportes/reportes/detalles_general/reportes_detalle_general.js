@@ -10,8 +10,6 @@ import myStyles from '../../../../../css';
 
 export const ReportesDetalleGeneralContainer = (props) => {
 
-	const classes = myStyles();
-
 	const {
 		onChangeStartDate,
 		onChangeEndDate,
@@ -24,8 +22,10 @@ export const ReportesDetalleGeneralContainer = (props) => {
 		datos,
 		actions,
 		options,
-
+		colorBase,
 	} = props;
+
+	const classes = myStyles(colorBase)();
 
 	return (
 		<Fragment>

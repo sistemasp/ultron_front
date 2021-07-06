@@ -1,7 +1,6 @@
 import 'date-fns';
 import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
@@ -21,11 +20,8 @@ import ModalTraspasoConsulta from '../../../components/modales/traspaso_consulta
 import myStyles from '../../../css';
 import { CheckCustom } from '../../../components/basic/CheckCustom';
 //import Select from 'react-select';
-import SelectSearch from 'react-select-search';
 
 export const AgendarConsultaContainer = (props) => {
-
-  const classes = myStyles();
 
   const {
     values,
@@ -58,6 +54,7 @@ export const AgendarConsultaContainer = (props) => {
     dataComplete,
     frecuenciaPrimeraVezId,
     frecuenciaReconsultaId,
+    colorBase,
     // TABLE DATES PROPERTIES
     titulo,
     columns,
@@ -96,6 +93,8 @@ export const AgendarConsultaContainer = (props) => {
     openModalTraspaso,
   } = props;
 
+  const classes = myStyles(colorBase)();
+
   return (
     <Fragment>
       {
@@ -122,6 +121,7 @@ export const AgendarConsultaContainer = (props) => {
             setMessage={setMessage}
             setSeverity={setSeverity}
             setFilterDate={setFilterDate}
+            colorBase={colorBase}
           /> : ''
       }
       {
@@ -147,6 +147,7 @@ export const AgendarConsultaContainer = (props) => {
             setOpenAlert={setOpenAlert}
             setMessage={setMessage}
             setFilterDate={setFilterDate}
+            colorBase={colorBase}
           /> : ''
       }
       {
@@ -160,6 +161,7 @@ export const AgendarConsultaContainer = (props) => {
             setMessage={setMessage}
             setOpenAlert={setOpenAlert}
             tipoServicioId={tipoServicioId}
+            colorBase={colorBase}
             onGuardarModalPagos={onGuardarModalPagos} />
           : ''
       }
@@ -174,35 +176,8 @@ export const AgendarConsultaContainer = (props) => {
             setMessage={setMessage}
             setOpenAlert={setOpenAlert}
             tipoServicioId={tipoServicioId}
+            colorBase={colorBase}
             loadConsultas={loadConsultas} />
-          : ''
-      }
-      {
-        openModalCirugias ?
-          <ModalCirugia
-            open={openModalCirugias}
-            onClose={onCloseCirugia}
-            consulta={consulta}
-            cirugia={cirugia}
-            empleado={empleado}
-            sucursal={sucursal._id}
-            setMessage={setMessage}
-            loadConsultas={loadConsultas}
-            setOpenAlert={setOpenAlert} />
-          : ''
-      }
-      {
-        openModalEstetica ?
-          <ModalEstetica
-            open={openModalEstetica}
-            onClose={onCloseEstetica}
-            consulta={consulta}
-            estetica={estetica}
-            empleado={empleado}
-            sucursal={sucursal._id}
-            setMessage={setMessage}
-            loadConsultas={loadConsultas}
-            setOpenAlert={setOpenAlert} />
           : ''
       }
       {
@@ -211,6 +186,7 @@ export const AgendarConsultaContainer = (props) => {
             open={openModalImprimirConsultas}
             onClose={onCloseImprimirConsulta}
             servicio="CONSULTA"
+            colorBase={colorBase}
             datos={datosImpresion} />
           : ''
       }
@@ -363,7 +339,7 @@ export const AgendarConsultaContainer = (props) => {
           </Grid>
           <Grid item xs={12} sm={2}>
             <TextField
-              className={classes.button}
+              className={classes.formControl}
               name="observaciones"
               //helperText={touched.observaciones ? errors.observaciones : ""}
               label="OBSERVACIONES"

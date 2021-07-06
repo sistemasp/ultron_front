@@ -9,8 +9,6 @@ import myStyles from '../../../css';
 
 export const PacientesContainer = (props) => {
 
-  const classes = myStyles();
-
   const {
     empleado,
     titulo,
@@ -24,8 +22,11 @@ export const PacientesContainer = (props) => {
     handleOpen,
     handleClose,
     onClickGuardar,
-    onClickGuardarAgendar
+    onClickGuardarAgendar,
+    colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   const pacientes = query =>
     new Promise((resolve, reject) => {
@@ -55,6 +56,7 @@ export const PacientesContainer = (props) => {
             paciente={paciente}
             onClickGuardar={onClickGuardar}
             onClickGuardarAgendar={onClickGuardarAgendar}
+            colorBase={colorBase}
             empleado={empleado} /> : ''
       }
       {
@@ -63,6 +65,7 @@ export const PacientesContainer = (props) => {
             open={openHistoric}
             onClose={handleClose}
             paciente={paciente}
+            colorBase={colorBase}
             empleado={empleado} /> : ''
       }
       <Grid container>

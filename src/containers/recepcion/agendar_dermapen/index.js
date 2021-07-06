@@ -57,6 +57,7 @@ const AgendarDermapen = (props) => {
 		consultaAgendada,
 		empleado,
 		sucursal,
+		colorBase,
 	} = props;
 
 	const paciente = consultaAgendada.paciente ? consultaAgendada.paciente : {};
@@ -172,7 +173,7 @@ const AgendarDermapen = (props) => {
 			};
 		},
 		headerStyle: {
-			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+			backgroundColor: colorBase,
 			color: '#FFF',
 			fontWeight: 'bolder',
 			fontSize: '18px'

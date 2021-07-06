@@ -11,13 +11,14 @@ import { createProductoComercial, showProductoComercialByLaboratorioId, updatePr
 
 const ModalItemReceta = (props) => {
 
-  const classes = myStyles();
+  const classes = myStyles(colorBase)();
 
   const {
     open,
     onClose,
     producto,
     onAgregarProducto,
+    colorBase,
   } = props;
 
   const [isLoading, setIsLoading] = useState(true);

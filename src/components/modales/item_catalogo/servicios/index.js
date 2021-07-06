@@ -6,7 +6,7 @@ import myStyles from '../../../../css';
 
 const ItemServicio = (props) => {
 
-  const classes = myStyles();
+  const classes = myStyles(colorBase)();
 
   const {
     open,
@@ -16,6 +16,7 @@ const ItemServicio = (props) => {
     setMessage,
     setSeverity,
     setOpenAlert,
+    colorBase,
   } = props;
 
   const [isLoading, setIsLoading] = useState(true);

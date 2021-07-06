@@ -61,6 +61,7 @@ const AgendarFacial = (props) => {
 		empleado,
 		setPacienteAgendado,
 		sucursal,
+		colorBase,
 	} = props;
 
 	const paciente = info.paciente ? info.paciente : info;
@@ -170,7 +171,7 @@ const AgendarFacial = (props) => {
 			};
 		},
 		headerStyle: {
-			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+			backgroundColor: colorBase,
 			color: '#FFF',
 			fontWeight: 'bolder',
 			fontSize: '18px'

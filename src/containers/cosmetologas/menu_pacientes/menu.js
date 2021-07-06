@@ -10,6 +10,7 @@ import Pacientes from '../pacientes/index';
 import AgendarFacial from '../agendar_facial';
 import GeneralCitas from '../general_citas';
 import AgendarAparatologia from '../agendar_aparatologia';
+import myStyles from '../../../css';
 
 function TabPanel(props) {
 	const { children, value, index, ...other } = props;
@@ -40,7 +41,7 @@ function a11yProps(index) {
 		'aria-controls': `simple-tabpanel-${index}`,
 	};
 }
-
+/*
 const useStyles = makeStyles(theme => ({
 	root: {
 		flexGrow: 1,
@@ -53,16 +54,15 @@ const useStyles = makeStyles(theme => ({
 		flexGrow: 1,
 	},
 	bar: {
-		backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+		backgroundColor: colorBase,
 	},
 	tabs: {
 		fontSize: 16,
 		height: 65,
 	}
-}));
+}));*/
 
 export const MenuContainer = props => {
-	const classes = useStyles();
 
 	const {
 		pacienteAgendado,
@@ -74,7 +74,10 @@ export const MenuContainer = props => {
 		empleado,
 		sucursal,
 		history,
+		colorBase,
 	} = props;
+
+	const classes = myStyles(colorBase)();
 
 	return (
 		<div className={classes.root}>

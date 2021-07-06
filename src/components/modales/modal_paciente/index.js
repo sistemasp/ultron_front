@@ -10,7 +10,8 @@ const ModalPaciente = (props) => {
     onClose,
     paciente,
     onClickGuardar,
-    onClickGuardarAgendar
+    onClickGuardarAgendar,
+    colorBase,
   } = props;
 
   const [sexos, setSexos] = useState([]);
@@ -83,6 +84,7 @@ const ModalPaciente = (props) => {
       onChangeSexo={handleChangeSexo}
       onChangeEmail={handleChangeEmail}
       onChangeFamiliar={handleChangeFamiliar}
+      colorBase={colorBase}
       sexos={sexos} />
 
   );

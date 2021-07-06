@@ -4,9 +4,8 @@ import LoginForm from "./containers/login/index";
 import MenuMainRecepcion from "./containers/recepcion/main/index";
 import './App.css';
 import MenuMainDermatologos from './containers/dermatologos/main';
-import MenuMainCallCenter from './containers/call_center/main';
 import MenuMainCosmetologas from './containers/cosmetologas/main';
-import MenuMainAdministracion from './containers/administracion/main';
+//import MenuMainAdministracion from './containers/administracion/main';
 
 const App = () => {
 
@@ -16,12 +15,9 @@ const App = () => {
         <Route
           exact path="/"
           component={LoginForm} />
-        <Route
+        {/*<Route
           exact path="/administracion"
-          component={MenuMainAdministracion} />
-        <Route
-          exact path="/call_center"
-          component={MenuMainCallCenter} />
+        component={MenuMainAdministracion} />*/}
         <Route
           exact path="/cabinas"
           component={MenuMainCosmetologas} />

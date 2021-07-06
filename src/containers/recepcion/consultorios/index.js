@@ -67,6 +67,7 @@ const Consultorios = (props) => {
 	const {
 		sucursal,
 		empleado,
+		colorBase,
 	} = props;
 
 	const columnsConsultorio = [
@@ -89,7 +90,7 @@ const Consultorios = (props) => {
 
 	const options = {
 		headerStyle: {
-			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+			backgroundColor: colorBase,
 			color: '#FFF',
 			fontWeight: 'bolder',
 			fontSize: '18px'

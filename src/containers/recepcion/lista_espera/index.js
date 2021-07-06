@@ -116,6 +116,7 @@ const ListaEspera = (props) => {
 	const {
 		sucursal,
 		empleado,
+		colorBase,
 	} = props;
 
 	const columnsConsultorios = [
@@ -159,7 +160,7 @@ const ListaEspera = (props) => {
 			};
 		},
 		headerStyle: {
-			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+			backgroundColor: colorBase,
 			color: '#FFF',
 			fontWeight: 'bolder',
 			fontSize: '18px'
@@ -177,7 +178,7 @@ const ListaEspera = (props) => {
 			};
 		},
 		headerStyle: {
-			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+			backgroundColor: colorBase,
 			color: '#FFF',
 			fontWeight: 'bolder',
 			fontSize: '18px'

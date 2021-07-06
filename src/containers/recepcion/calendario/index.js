@@ -26,7 +26,8 @@ const Calendario = (props) => {
 
     const {
         empleado,
-        sucursal
+        sucursal,
+        colorBase,
     } = props;
 
     const pendienteStatusId = process.env.REACT_APP_PENDIENTE_STATUS_ID;

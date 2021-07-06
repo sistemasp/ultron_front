@@ -71,6 +71,7 @@ const Corte = (props) => {
   const {
     sucursal,
     empleado,
+		colorBase,
   } = props;
 
   const columnsEntrada = [
@@ -106,7 +107,7 @@ const Corte = (props) => {
 
   const options = {
     headerStyle: {
-      backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+      backgroundColor: colorBase,
       color: '#FFF',
       fontWeight: 'bolder',
       fontSize: '18px'

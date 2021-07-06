@@ -22,8 +22,6 @@ import ModalTraspasoServicio from '../../../components/modales/traspaso_servicio
 
 export const AgendarFacialContainer = (props) => {
 
-	const classes = myStyles();
-
 	const {
 		values,
 		servicios,
@@ -61,6 +59,7 @@ export const AgendarFacialContainer = (props) => {
 		medios,
 		dermatologoDirectoId,
 		selectedAreas,
+		colorBase,
 		// TABLE DATES PROPERTIES
 		titulo,
 		columns,
@@ -94,6 +93,8 @@ export const AgendarFacialContainer = (props) => {
 		openModalTraspaso,
 		onCloseTraspasos,
 	} = props;
+
+	const classes = myStyles(colorBase)();
 
 	return (
 		<Fragment>

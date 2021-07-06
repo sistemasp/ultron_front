@@ -21,6 +21,7 @@ const MenuPatient = (props) => {
         sucursal,
         empleado,
         history,
+        colorBase,
     } = props;
 
     const handleChangeTab = (event, newValue) => {
@@ -98,6 +99,7 @@ const MenuPatient = (props) => {
                 onClickAgendarDermapen={handleAgendarDermapen}
                 empleado={empleado}
                 sucursal={sucursal}
+                colorBase={colorBase}
                 open={open}
                 onClickLogout={handleLogout}
                 onClickCambioPassword={handleClickCambioPassword}

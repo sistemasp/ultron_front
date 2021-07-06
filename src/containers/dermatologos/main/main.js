@@ -62,9 +62,10 @@ export const MainDermatologosContainer = props => {
 		setSeverity,
 		setOpenAlert,
 		history,
+		colorBase,
 	} = props;
 
-	const classes = myStyles();
+	const classes = myStyles(colorBase)();
 	const theme = useTheme();
 	const [openDrawer, setOpenDrawer] = useState(false);
 

@@ -54,6 +54,7 @@ const AgendarEstetica = (props) => {
 		empleado,
 		consultaAgendada,
 		sucursal,
+		colorBase,
 	} = props;
 
 	const asistioStatusId = process.env.REACT_APP_ASISTIO_STATUS_ID;
@@ -165,7 +166,7 @@ const AgendarEstetica = (props) => {
 			};
 		},
 		headerStyle: {
-			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+			backgroundColor: colorBase,
 			color: '#FFF',
 			fontWeight: 'bolder',
 			fontSize: '18px'

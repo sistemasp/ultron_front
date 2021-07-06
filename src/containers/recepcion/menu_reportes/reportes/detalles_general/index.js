@@ -27,6 +27,7 @@ const ReportesDetallesGeneral = (props) => {
 	const {
 		empleado,
 		sucursal,
+		colorBase,
 	} = props;
 
 	const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
@@ -121,7 +122,7 @@ const ReportesDetallesGeneral = (props) => {
 			};
 		},*/
 		headerStyle: {
-			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+			backgroundColor: colorBase,
 			color: '#FFF',
 			fontWeight: 'bolder',
 			fontSize: '18px'

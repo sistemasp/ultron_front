@@ -18,37 +18,9 @@ function getModalStyle() {
   };
 }
 
-const useStyles = makeStyles(theme => ({
-  paper: {
-    position: 'absolute',
-    width: 400,
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    paddingLeft: 15,
-    paddingRight: 15
-  },
-  textField: {
-    width: '100%',
-  },
-  formControl: {
-    minWidth: 120,
-    width: '100%',
-  },
-  button: {
-    width: '100%',
-    color: '#FFFFFF',
-  },
-  label: {
-    marginTop: '0px',
-    marginBottom: '0px',
-    textAlign: 'center',
-  }
-}));
-
 const ModalFormImprimirDermapen = (props) => {
-  //const classes = useStyles();
-  const classes = myStyles();
+
+  const classes = myStyles(colorBase)();
 
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
@@ -59,6 +31,7 @@ const ModalFormImprimirDermapen = (props) => {
     onClickImprimir,
     open,
     show,
+    colorBase,
   } = props;
 
   const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;

@@ -6,7 +6,7 @@ import EditIcon from '@material-ui/icons/Edit';
 
 const Crud = (props) => {
 
-    const classes = myStyles();
+    const classes = myStyles(colorBase)();
 
     const serviciosCatalogoId = process.env.REACT_APP_SERVICIOS_CATALOGO_ID;
 
@@ -16,6 +16,7 @@ const Crud = (props) => {
         setMessage,
         setSeverity,
         setOpenAlert,
+        colorBase,
     } = props;
 
     const [openModal, setOpenModal] = useState(false);
@@ -61,7 +62,7 @@ const Crud = (props) => {
 
     const options = {
         headerStyle: {
-            backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+            backgroundColor: colorBase,
             color: '#FFF',
             fontWeight: 'bolder',
             fontSize: '18px',

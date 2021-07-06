@@ -47,6 +47,7 @@ const ModalConsulta = (props) => {
     setMessage,
     setSeverity,
     setFilterDate,
+    colorBase,
   } = props;
 
   const [isLoading, setIsLoading] = useState(true);
@@ -471,6 +472,7 @@ const ModalConsulta = (props) => {
             setSeverity={setSeverity}
             sucursal={sucursal}
             tipoServicioId={consultaServicioId}
+            colorBase={colorBase}
             frecuenciaReconsultaId={frecuenciaReconsultaId} /> :
           <Backdrop className={classes.backdrop} open={isLoading} >
             <CircularProgress color="inherit" />

@@ -23,8 +23,6 @@ import ModalProximaDermapen from '../../../components/modales/modal_proxima_derm
 
 export const AgendarDermapenContainer = (props) => {
 
-	const classes = myStyles();
-
 	const {
 		values,
 		errors,
@@ -66,6 +64,7 @@ export const AgendarDermapenContainer = (props) => {
 		onChangeCosto,
 		onChangePaymentMethod,
 		formasPago,
+		colorBase,
 		// TABLE DATES PROPERTIES
 		titulo,
 		columns,
@@ -98,6 +97,8 @@ export const AgendarDermapenContainer = (props) => {
 		openModalTraspaso,
 		onCloseTraspasos,
 	} = props;
+
+	const classes = myStyles(colorBase)();
 
 	return (
 		<Fragment>

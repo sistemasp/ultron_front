@@ -5,6 +5,7 @@ import { TextField, Grid, FormControl, InputLabel, Select, MenuItem } from '@mat
 import { ButtonCustom } from "../../basic/ButtonCustom";
 import { CheckCustom } from '../../basic/CheckCustom';
 import { toFormatterCurrency } from '../../../utils/utils';
+import myStyles from '../../../css';
 
 function getModalStyle() {
   const top = 50;
@@ -49,7 +50,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ModalFormPago = (props) => {
-  const classes = useStyles();
 
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
@@ -73,7 +73,10 @@ const ModalFormPago = (props) => {
     onChangePagoAnticipado,
     onChangDescuentoDermatologo,
     open,
+    colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   return (
     <div>
@@ -227,7 +230,7 @@ const ModalFormPago = (props) => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
-                  className={classes.button}
+                  className={classes.buttonCancel}
                   color="secondary"
                   variant="contained"
                   onClick={onClickCancel}

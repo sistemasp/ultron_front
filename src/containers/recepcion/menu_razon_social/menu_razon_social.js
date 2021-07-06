@@ -7,6 +7,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import RazonSocial from '../razon_social';
+import myStyles from '../../../css';
 
 
 function TabPanel(props) {
@@ -39,6 +40,7 @@ function a11yProps(index) {
 	};
 }
 
+/*
 const useStyles = makeStyles(theme => ({
 	root: {
 		flexGrow: 1,
@@ -51,18 +53,20 @@ const useStyles = makeStyles(theme => ({
 		flexGrow: 1,
 	},
 	bar: {
-		backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+		backgroundColor: colorBase,
 	}
-}));
+}));*/
 
 export const MenuRazonSocialContainer = props => {
-	const classes = useStyles();
 
 	const {
 		onChangeTab,
 		value,
 		sucursal,
+		colorBase,
 	} = props;
+
+	const classes = myStyles(colorBase)();
 
 	return (
 		<div className={classes.root}>

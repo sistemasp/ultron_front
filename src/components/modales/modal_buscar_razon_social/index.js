@@ -45,6 +45,7 @@ const ModalBuscarRazonSocial = (props) => {
     onClose,
     pago,
     servicio,
+    colorBase,
   } = props;
 
   const columns = [
@@ -59,7 +60,7 @@ const ModalBuscarRazonSocial = (props) => {
 
   const options = {
     headerStyle: {
-      backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+      backgroundColor: colorBase,
       color: '#FFF',
       fontWeight: 'bolder',
       fontSize: '18px'

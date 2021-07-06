@@ -63,6 +63,7 @@ const Pacientes = (props) => {
 		onClickAgendarLaser,
 		onClickAgendarAparatologia,
 		onClickAgendarDermapen,
+		colorBase,
 	} = props;
 
 	const columns = [
@@ -76,7 +77,7 @@ const Pacientes = (props) => {
 
 	const options = {
 		headerStyle: {
-			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+			backgroundColor: colorBase,
 			color: '#FFF',
 			fontWeight: 'bolder',
 			fontSize: '18px',

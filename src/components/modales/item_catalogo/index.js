@@ -13,7 +13,7 @@ import { createEspecialidad, updateEspecialidad } from '../../../services/especi
 
 const ModalItemCatalogo = (props) => {
 
-  const classes = myStyles();
+  const classes = myStyles(colorBase)();
 
   const laboratoriosCatalogoId = process.env.REACT_APP_LABORATORIOS_CATALOGO_ID;
   const productoComercialCatalogoId = process.env.REACT_APP_PRODUCTO_COMERCIAL_CATALOGO_ID;
@@ -29,6 +29,7 @@ const ModalItemCatalogo = (props) => {
     setMessage,
     setSeverity,
     setOpenAlert,
+    colorBase,
   } = props;
 
   const [isLoading, setIsLoading] = useState(true);

@@ -9,6 +9,7 @@ import ModalPagos from '../modal_pagos';
 import ModalConfirmacion from '../modal_confirmacion';
 import { toFormatterCurrency } from '../../../utils/utils';
 import { ButtonCustom } from '../../basic/ButtonCustom';
+import myStyles from '../../../css';
 
 function getModalStyle() {
   const top = 50;
@@ -54,7 +55,6 @@ const noAsistioStatusId = process.env.REACT_APP_NO_ASISTIO_STATUS_ID;
 const reagendoStatusId = process.env.REACT_APP_REAGENDO_STATUS_ID;
 
 const ModalFormConsulta = (props) => {
-  const classes = useStyles();
 
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
@@ -96,7 +96,10 @@ const ModalFormConsulta = (props) => {
     setMessage,
     setSeverity,
     frecuenciaReconsultaId,
+    colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   return (
     <div>
@@ -296,6 +299,15 @@ const ModalFormConsulta = (props) => {
 
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
+                  className={classes.buttonCancel}
+                  color="secondary"
+                  variant="contained"
+                  onClick={onClose}
+                  text="CANCELAR" />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <ButtonCustom
                   className={classes.button}
                   color="primary"
                   variant="contained"
@@ -303,14 +315,6 @@ const ModalFormConsulta = (props) => {
                   text="GUARDAR" />
               </Grid>
 
-              <Grid item xs={12} sm={6}>
-                <ButtonCustom
-                  className={classes.button}
-                  color="secondary"
-                  variant="contained"
-                  onClick={onClose}
-                  text="CANCELAR" />
-              </Grid>
             </Grid>
           </form>
         </div>

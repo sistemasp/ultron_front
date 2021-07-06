@@ -23,8 +23,6 @@ import ModalTraspasoServicio from '../../../components/modales/traspaso_servicio
 
 export const AgendarCirugiaContainer = (props) => {
 
-	const classes = myStyles();
-
 	const {
 		values,
 		errors,
@@ -69,6 +67,7 @@ export const AgendarCirugiaContainer = (props) => {
 		productos,
 		formasPago,
 		frecuenciaReconsultaId,
+		colorBase,
 		// TABLE DATES PROPERTIES
 		titulo,
 		columns,
@@ -101,6 +100,8 @@ export const AgendarCirugiaContainer = (props) => {
 		openModalTraspaso,
 		onCloseTraspasos,
 	} = props;
+
+	const classes = myStyles(colorBase)();
 
 	return (
 		<Fragment>

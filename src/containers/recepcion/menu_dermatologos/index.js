@@ -40,6 +40,7 @@ const Dermatologos = (props) => {
 	const {
 		sucursal,
 		empleado,
+		colorBase,
 	} = props;
 
 	const [openPagoDermatologo, setOpenPagoDermatologo] = useState(false);
@@ -70,7 +71,7 @@ const Dermatologos = (props) => {
 
 	const optionsDermatologos = {
 		headerStyle: {
-			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+			backgroundColor: colorBase,
 			color: '#FFF',
 			fontWeight: 'bolder',
 			fontSize: '18px'
@@ -82,7 +83,7 @@ const Dermatologos = (props) => {
 
 	const optionsPatologos = {
 		headerStyle: {
-			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+			backgroundColor: colorBase,
 			color: '#FFF',
 			fontWeight: 'bolder',
 			fontSize: '18px'

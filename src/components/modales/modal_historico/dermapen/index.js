@@ -22,6 +22,7 @@ const TabDermapen = (props) => {
     sucursal,
     servicio,
     empleado,
+    colorBase,
   } = props;
 
   const [historial, setHistorial] = useState([]);
@@ -45,7 +46,7 @@ const TabDermapen = (props) => {
       };
     },
     headerStyle: {
-      backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+      backgroundColor: colorBase,
       color: '#FFF',
       fontWeight: 'bolder',
       fontSize: '18px'

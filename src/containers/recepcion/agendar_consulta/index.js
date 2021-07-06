@@ -64,6 +64,7 @@ const AgendarConsulta = (props) => {
 		onClickAgendarDermapen,
 		onClickAgendarFaciales,
 		onClickAgendarAparatologia,
+		colorBase,
 	} = props;
 
 	const dermatologoRolId = process.env.REACT_APP_DERMATOLOGO_ROL_ID;
@@ -186,7 +187,7 @@ const AgendarConsulta = (props) => {
 			};
 		},
 		headerStyle: {
-			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+			backgroundColor: colorBase,
 			color: '#FFF',
 			fontWeight: 'bolder',
 			fontSize: '18px'
@@ -785,6 +786,7 @@ const AgendarConsulta = (props) => {
 						empleado={empleado}
 						sucursal={sucursal}
 						isHoliDay={isHoliDay}
+						colorBase={colorBase}
 						onClickCancel={handleCloseModal}
 						loadConsultas={loadConsultas}
 						tipoCitas={tipoCitas}
