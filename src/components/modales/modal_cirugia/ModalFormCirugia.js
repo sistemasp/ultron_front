@@ -9,6 +9,7 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/picker
 import { Multiselect } from 'multiselect-react-dropdown';
 import { toFormatterCurrency } from '../../../utils/utils';
 import { ButtonCustom } from '../../basic/ButtonCustom';
+import myStyles from '../../../css';
 
 function getModalStyle() {
   const top = 50;
@@ -59,8 +60,6 @@ const noAsistioStatusId = process.env.REACT_APP_NO_ASISTIO_STATUS_ID;
 const reagendoStatusId = process.env.REACT_APP_REAGENDO_STATUS_ID;
 
 const ModalFormCirugia = (props) => {
-  const classes = useStyles();
-
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
 
@@ -107,7 +106,10 @@ const ModalFormCirugia = (props) => {
     onChangeHora,
     onChangeMinutos,
     horarios,
+    colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   return (
     <div>
@@ -115,7 +117,7 @@ const ModalFormCirugia = (props) => {
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
         open={open} >
-        <div style={modalStyle} className={classes.paper}>
+        <div style={modalStyle} className={classes.paper_95}>
           <form onSubmit={handleSubmit}>
             {
               openModalPagos ?
@@ -332,7 +334,7 @@ const ModalFormCirugia = (props) => {
                 values.materiales.map((item, index) =>
                   <Grid item xs={12} sm={4}>
                     <TextField
-                      className={classes.button}
+                      className={classes.formControl}
                       name={item.precio}
                       label={`PRECIO: ${item.nombre}`}
                       value={item.precio}
@@ -424,7 +426,7 @@ const ModalFormCirugia = (props) => {
 
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
-                  className={classes.button}
+                  className={classes.buttonCancel}
                   color="secondary"
                   variant="contained"
                   onClick={onClose}

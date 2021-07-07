@@ -710,6 +710,7 @@ const AgendarDermapen = (props) => {
 								tipoCitas={tipoCitas}
 								medios={medios}
 								formasPago={formasPago}
+								colorBase={colorBase}
 								onChangeFrecuencia={(e) => handleChangeFrecuencia(e)}
 								frecuencias={frecuencias}
 								onChangeTipoCita={(e) => handleChangeTipoCita(e)}

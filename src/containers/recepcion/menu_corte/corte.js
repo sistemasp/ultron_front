@@ -9,25 +9,7 @@ import ModalNuevoSalida from '../../../components/modales/modal_nuevo_salida';
 import ModalImprimirCorte from '../../../components/modales/imprimir/corte';
 import { toFormatterCurrency } from '../../../utils/utils';
 
-const useStyles = makeStyles(theme => ({
-  button: {
-    color: '#FFFFFF',
-    width: '100%',
-    fontSize: '32px',
-  },
-  label_positivo: {
-    color: '#42C58F',
-    fontSize: '45px',
-  },
-  label_negativo: {
-    color: '#E13838',
-    fontSize: '45px',
-  },
-}));
-
 export const CorteContainer = (props) => {
-
-  const classes = useStyles();
 
   const {
     tituloEntrada,
@@ -62,7 +44,27 @@ export const CorteContainer = (props) => {
     detailPanelSalida,
     handleCerrarCorte,
     corte,
+    colorBase,
   } = props;
+
+  const useStyles = makeStyles(theme => ({
+    button: {
+      background: colorBase,
+      color: '#FFFFFF',
+      width: '100%',
+      fontSize: '32px',
+    },
+    label_positivo: {
+      color: '#42C58F',
+      fontSize: '45px',
+    },
+    label_negativo: {
+      color: '#E13838',
+      fontSize: '45px',
+    },
+  }));
+
+  const classes = useStyles();
 
   let totalEntradas = 0;
   let totalSalidas = 0;
@@ -93,6 +95,7 @@ export const CorteContainer = (props) => {
             onObtenerInformacion={onObtenerInformacion}
             setOpenAlert={setOpenAlert}
             setMessage={setMessage}
+            colorBase={colorBase}
             setSeverity={setSeverity} /> : ''
       }
 
@@ -107,6 +110,7 @@ export const CorteContainer = (props) => {
             corte={corte}
             onObtenerInformacion={onObtenerInformacion}
             setOpenAlert={setOpenAlert}
+            colorBase={colorBase}
             setMessage={setMessage}
             setSeverity={setSeverity} /> : ''
       }
@@ -123,6 +127,7 @@ export const CorteContainer = (props) => {
             dataPagosAnticipados={dataPagosAnticipados}
             dataSalidas={dataSalidas}
             setOpenAlert={setOpenAlert}
+            colorBase={colorBase}
             setMessage={setMessage}
             setSeverity={setSeverity} /> : ''
       }

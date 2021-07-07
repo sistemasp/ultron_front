@@ -17,6 +17,7 @@ const ModalImprimirDermapen = (props) => {
     open,
     onClose,
     datos,
+    colorBase,
   } = props;
 
   const [show, setShow] = useState(true);
@@ -38,6 +39,7 @@ const ModalImprimirDermapen = (props) => {
         open={open}
         onClose={onClose}
         datos={datos}
+        colorBase={colorBase}
         onClickImprimir={handleClickImprimir}
         show={show} />
     </Fragment>

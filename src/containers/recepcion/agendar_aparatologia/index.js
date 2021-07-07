@@ -766,6 +766,7 @@ const AgendarAparatologia = (props) => {
 								frecuencias={frecuencias}
 								productos={productos}
 								formasPago={formasPago}
+								colorBase={colorBase}
 								onChangeFrecuencia={(e) => handleChangeFrecuencia(e)}
 								onChangeTipoCita={(e) => handleChangeTipoCita(e)}
 								onChangeMedio={(e) => handleChangeMedio(e)}

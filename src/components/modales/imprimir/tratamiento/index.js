@@ -17,6 +17,7 @@ const ModalImprimirTratamiento = (props) => {
     open,
     onClose,
     datos,
+    colorBase,
   } = props;
     
   const [show, setShow] = useState(true);
@@ -39,6 +40,7 @@ const ModalImprimirTratamiento = (props) => {
         onClose={onClose}
         datos={datos}
         onClickImprimir={handleClickImprimir}
+        colorBase={colorBase}
         show={show} />
     </Fragment>
 

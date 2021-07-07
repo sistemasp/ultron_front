@@ -214,6 +214,7 @@ const Dermatologos = (props) => {
 						empleado={empleado}
 						openPagoPatologo={openPagoPatologo}
 						patologo={patologo}
+						colorBase={colorBase}
 						handleClose={handleClose} /> :
 					<Backdrop className={classes.backdrop} open={isLoading} >
 						<CircularProgress color="inherit" />

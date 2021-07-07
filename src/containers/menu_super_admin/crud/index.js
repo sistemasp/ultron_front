@@ -5,9 +5,6 @@ import { CrudContainer } from "./crud";
 import EditIcon from '@material-ui/icons/Edit';
 
 const Crud = (props) => {
-
-    const classes = myStyles(colorBase)();
-
     const serviciosCatalogoId = process.env.REACT_APP_SERVICIOS_CATALOGO_ID;
 
     const {
@@ -18,6 +15,8 @@ const Crud = (props) => {
         setOpenAlert,
         colorBase,
     } = props;
+
+    const classes = myStyles(colorBase)();
 
     const [openModal, setOpenModal] = useState(false);
     const [openModalServicios, setOpenModalServicios] = useState(false);
@@ -136,6 +135,7 @@ const Crud = (props) => {
                 setMessage={setMessage}
                 setSeverity={setSeverity}
                 setOpenAlert={setOpenAlert}
+                colorBase={colorBase}
             />
         </Fragment>
     );

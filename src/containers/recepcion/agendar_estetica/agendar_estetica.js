@@ -130,6 +130,7 @@ export const AgendarEsteticaContainer = (props) => {
 						sucursal={sucursal}
 						setOpenAlert={setOpenAlert}
 						setMessage={setMessage}
+						colorBase={colorBase}
 						setFilterDate={setFilterDate} /> : ''
 			}
 			{
@@ -147,6 +148,7 @@ export const AgendarEsteticaContainer = (props) => {
 						onChangeMedio={onChangeMedio}
 						onChangeAsistio={onChangeAsistio}
 						servicios={servicios}
+						colorBase={colorBase}
 						tratamientos={tratamientos}
 						horarios={horarios}
 						empleado={empleado}
@@ -164,6 +166,7 @@ export const AgendarEsteticaContainer = (props) => {
 						servicio={estetica}
 						empleado={empleado}
 						sucursal={sucursal}
+						colorBase={colorBase}
 						setMessage={setMessage}
 						setOpenAlert={setOpenAlert}
 						onGuardarModalPagos={onGuardarModalPagos}
@@ -176,6 +179,7 @@ export const AgendarEsteticaContainer = (props) => {
 						open={openModalImprimirCita}
 						onClose={onCloseImprimirConsulta}
 						servicio="TOXINAS Y RELLENOS"
+						colorBase={colorBase}
 						datos={datosImpresion} />
 					: ''
 			}
@@ -188,6 +192,7 @@ export const AgendarEsteticaContainer = (props) => {
 						empleado={empleado}
 						sucursal={sucursal._id}
 						setMessage={setMessage}
+						colorBase={colorBase}
 						setOpenAlert={setOpenAlert}
 						loadServicios={loadEsteticas} />
 					: ''
@@ -306,7 +311,7 @@ export const AgendarEsteticaContainer = (props) => {
 						</Grid>
 						<Grid item xs={12} sm={2}>
 							<TextField
-								className={classes.button}
+								className={classes.formControl}
 								name="observaciones"
 								error={Boolean(errors.observaciones)}
 								label="OBSERVACIONES"
@@ -321,7 +326,7 @@ export const AgendarEsteticaContainer = (props) => {
 									justify="center"
 									alignItems="center" >
 									<KeyboardDatePicker
-										className={classes.button}
+										className={classes.formControl}
 										disableToolbar
 										//disablePast
 										autoOk

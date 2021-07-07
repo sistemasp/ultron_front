@@ -19,8 +19,6 @@ const Alert = (props) => {
 
 const MenuSuperAdmin = (props) => {
 
-    const classes = myStyles(colorBase)();
-
     const laboratoriosCatalogoId = process.env.REACT_APP_LABORATORIOS_CATALOGO_ID;
     const productoComercialCatalogoId = process.env.REACT_APP_PRODUCTO_COMERCIAL_CATALOGO_ID;
     const ocupacionCatalogoId = process.env.REACT_APP_OCUPACION_CATALOGO_ID;
@@ -45,6 +43,8 @@ const MenuSuperAdmin = (props) => {
         history,
         colorBase,
     } = props;
+
+    const classes = myStyles(colorBase)();
 
     const loadLaboratorios = async () => {
         const response = await showAllLaboratorios();
@@ -168,6 +168,7 @@ const MenuSuperAdmin = (props) => {
                         catalogos={catalogos}
                         catalogo={catalogo}
                         data={data}
+                        colorBase={colorBase}
                         setMessage={setMessage}
                         setSeverity={setSeverity}
                         setOpenAlert={setOpenAlert} />

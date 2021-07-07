@@ -42,6 +42,7 @@ const ModalEstetica = (props) => {
     estetica,
     loadEsteticas,
     setFilterDate,
+    colorBase,
   } = props;
 
   const [isLoading, setIsLoading] = useState(true);
@@ -487,6 +488,7 @@ const ModalEstetica = (props) => {
             onChangeMateriales={handleChangeMateriales}
             values={values}
             dataComplete={dataComplete}
+            colorBase={colorBase}
             productos={productos}
             onChangePagado={(e) => handleChangePagado(e)}
             onChangeProductos={(e) => handleChangeProductos(e)}

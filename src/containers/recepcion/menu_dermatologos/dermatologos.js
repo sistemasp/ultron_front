@@ -26,6 +26,7 @@ export const DermatologosContainer = (props) => {
     handleClose,
     sucursal,
     empleado,
+    colorBase,
   } = props;
 
   return (
@@ -37,6 +38,7 @@ export const DermatologosContainer = (props) => {
             onClose={handleClose}
             dermatologo={dermatologo}
             sucursal={sucursal}
+            colorBase={colorBase}
             empleado={empleado} /> : ''
       }
       {
@@ -45,6 +47,7 @@ export const DermatologosContainer = (props) => {
             open={openPagoPatologo}
             onClose={handleClose}
             patologo={patologo}
+            colorBase={colorBase}
             sucursal={sucursal}
             empleado={empleado} /> : ''
       }
@@ -52,6 +55,7 @@ export const DermatologosContainer = (props) => {
         openHistoric ?
           <ModHistorico
             open={openHistoric}
+            colorBase={colorBase}
             onClose={handleClose} /> : ''
       }
 

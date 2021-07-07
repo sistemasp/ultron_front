@@ -122,6 +122,7 @@ export const AgendarAparatologiaContainer = (props) => {
 						setOpenAlert={setOpenAlert}
 						setMessage={setMessage}
 						setSeverity={setSeverity}
+						colorBase={colorBase}
 						setFilterDate={setFilterDate} /> : ''
 			}
 			{
@@ -147,6 +148,7 @@ export const AgendarAparatologiaContainer = (props) => {
 						setOpenAlert={setOpenAlert}
 						setMessage={setMessage}
 						setSeverity={setSeverity}
+						colorBase={colorBase}
 						setFilterDate={setFilterDate} /> : ''
 			}
 			{
@@ -160,6 +162,7 @@ export const AgendarAparatologiaContainer = (props) => {
 						setMessage={setMessage}
 						setSeverity={setSeverity}
 						setOpenAlert={setOpenAlert}
+						colorBase={colorBase}
 						tipoServicioId={aparatologia.servicio._id}
 						onGuardarModalPagos={onGuardarModalPagos} />
 					: ''
@@ -169,6 +172,7 @@ export const AgendarAparatologiaContainer = (props) => {
 					<ModalImprimirTratamiento
 						open={openModalImprimirCita}
 						onClose={onCloseImprimirConsulta}
+						colorBase={colorBase}
 						datos={datosImpresion} />
 					: ''
 			}
@@ -182,6 +186,7 @@ export const AgendarAparatologiaContainer = (props) => {
 						sucursal={sucursal._id}
 						setMessage={setMessage}
 						setOpenAlert={setOpenAlert}
+						colorBase={colorBase}
 						loadServicios={loadAparatologias} />
 					: ''
 			}
@@ -346,7 +351,7 @@ export const AgendarAparatologiaContainer = (props) => {
 					</Grid>
 					<Grid item xs={12} sm={2}>
 						<TextField
-							className={classes.button}
+							className={classes.formControl}
 							name="observaciones"
 							error={Boolean(errors.observaciones)}
 							label="OBSERVACIONES"
@@ -361,7 +366,7 @@ export const AgendarAparatologiaContainer = (props) => {
 								justify="center"
 								alignItems="center" >
 								<KeyboardDatePicker
-									className={classes.button}
+									className={classes.formControl}
 									disableToolbar
 									//disablePast
 									autoOk
@@ -397,7 +402,7 @@ export const AgendarAparatologiaContainer = (props) => {
 					</Grid>
 					<Grid item xs={12} sm={2}>
 						<TextField
-							className={classes.button}
+							className={classes.formControl}
 							name="tiempo"
 							error={Boolean(errors.tiempo)}
 							label="TIEMPO"

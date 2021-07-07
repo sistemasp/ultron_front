@@ -336,6 +336,7 @@ const Consultorios = (props) => {
 						salaCirugias={salaCirugias}
 						salaCirugia={salaCirugia}
 						empleado={empleado}
+						colorBase={colorBase}
 						handleOpenConsultorio={handleOpenConsultorio}
 						handleOpenCabina={handleOpenCabina}
 						handleOpenSalaCirugia={handleOpenSalaCirugia}

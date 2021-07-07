@@ -124,6 +124,7 @@ export const AgendarDermapenContainer = (props) => {
 						sucursal={sucursal}
 						setOpenAlert={setOpenAlert}
 						setMessage={setMessage}
+						colorBase={colorBase}
 						setFilterDate={setFilterDate} /> : ''
 			}
 			{
@@ -148,6 +149,7 @@ export const AgendarDermapenContainer = (props) => {
 						sucursal={sucursal}
 						setOpenAlert={setOpenAlert}
 						setMessage={setMessage}
+						colorBase={colorBase}
 						setFilterDate={setFilterDate} /> : ''
 			}
 			{
@@ -160,6 +162,7 @@ export const AgendarDermapenContainer = (props) => {
 						sucursal={sucursal}
 						setMessage={setMessage}
 						setOpenAlert={setOpenAlert}
+						colorBase={colorBase}
 						onGuardarModalPagos={onGuardarModalPagos}
 						tipoServicioId={dermapen.servicio._id} />
 					: ''
@@ -169,6 +172,7 @@ export const AgendarDermapenContainer = (props) => {
 					<ModalImprimirDermapen
 						open={openModalImprimirCita}
 						onClose={onCloseImprimirConsulta}
+						colorBase={colorBase}
 						datos={datosImpresion} />
 					: ''
 			}
@@ -182,6 +186,7 @@ export const AgendarDermapenContainer = (props) => {
 						sucursal={sucursal._id}
 						setMessage={setMessage}
 						setOpenAlert={setOpenAlert}
+						colorBase={colorBase}
 						loadServicios={loadDermapens} />
 					: ''
 			}
@@ -298,7 +303,7 @@ export const AgendarDermapenContainer = (props) => {
 					</Grid>
 					<Grid item xs={12} sm={2}>
 						<TextField
-							className={classes.button}
+							className={classes.formControl}
 							name="observaciones"
 							error={Boolean(errors.observaciones)}
 							label="OBSERVACIONES"
@@ -313,7 +318,7 @@ export const AgendarDermapenContainer = (props) => {
 								justify="center"
 								alignItems="center" >
 								<KeyboardDatePicker
-									className={classes.button}
+									className={classes.formControl}
 									disableToolbar
 									//disablePast
 									autoOk
@@ -349,7 +354,7 @@ export const AgendarDermapenContainer = (props) => {
 					</Grid>
 					<Grid item xs={12} sm={2}>
 						<TextField
-							className={classes.button}
+							className={classes.formControl}
 							name="tiempo"
 							error={Boolean(errors.tiempo)}
 							label="TIEMPO"

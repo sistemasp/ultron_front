@@ -13,8 +13,6 @@ import myStyles from '../../css';
 import Crud from './crud';
 
 export const MenuSuperAdminContainer = props => {
-	const classes = myStyles(colorBase)();
-
 	const {
 		onClickCatalogo,
 		catalogos,
@@ -26,6 +24,8 @@ export const MenuSuperAdminContainer = props => {
 		sucursal,
 		colorBase,
 	} = props;
+
+	const classes = myStyles(colorBase)();
 
 	return (
 		<Fragment >
@@ -58,6 +58,7 @@ export const MenuSuperAdminContainer = props => {
 							setMessage={setMessage}
 							setSeverity={setSeverity}
 							setOpenAlert={setOpenAlert}
+							colorBase={colorBase}
 						/>
 					</Paper>
 				</Grid>

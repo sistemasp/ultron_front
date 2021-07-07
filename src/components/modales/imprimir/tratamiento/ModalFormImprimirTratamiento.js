@@ -20,8 +20,6 @@ function getModalStyle() {
 
 const ModalFormImprimirTratamiento = (props) => {
   //const classes = useStyles();
-  const classes = myStyles(colorBase)();
-
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
 
@@ -33,6 +31,8 @@ const ModalFormImprimirTratamiento = (props) => {
     show,
     colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
   const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
@@ -78,6 +78,7 @@ const ModalFormImprimirTratamiento = (props) => {
             <hr />
             {
               datos.tratamientos.map(tratamiento => {
+                console.log("KAOZ", tratamiento);
                 return <Fragment>
                   <Grid item xs={12}>
                     <h3 className={classes.labelItemLeft}>{`${tratamiento.nombre}:`}</h3>
@@ -85,6 +86,7 @@ const ModalFormImprimirTratamiento = (props) => {
                   <br />
                   {
                     tratamiento.areasSeleccionadas.map(area => {
+                      console.log("KAOZ", area);
                       return <Fragment>
                         <Grid item xs={9}>
                           <h4 className={classes.labelSubItemLeft}>{`${area.nombre}`}</h4>
@@ -123,22 +125,22 @@ const ModalFormImprimirTratamiento = (props) => {
             {
               show ?
                 <Fragment>
-                  <Grid item xs={12}>
+                  <Grid item xs={6}>
+                    <ButtonCustom
+                      className={classes.buttonCancel}
+                      color="secondary"
+                      variant="contained"
+                      onClick={onClose}
+                      text='CERRAR' />
+                  </Grid>
+
+                  <Grid item xs={6}>
                     <ButtonCustom
                       className={classes.button}
                       color="primary"
                       variant="contained"
                       onClick={onClickImprimir}
                       text='IMPRIMIR' />
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <ButtonCustom
-                      className={classes.button}
-                      color="secondary"
-                      variant="contained"
-                      onClick={onClose}
-                      text='CERRAR' />
                   </Grid>
                 </Fragment> : ''
             }

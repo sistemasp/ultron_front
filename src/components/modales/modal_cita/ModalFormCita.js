@@ -378,7 +378,7 @@ const ModalFormCita = (props) => {
 
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
-                  className={classes.button}
+                  className={classes.buttonCancel}
                   color="secondary"
                   variant="contained"
                   onClick={onClickCancel}

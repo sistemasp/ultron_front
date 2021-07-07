@@ -128,6 +128,7 @@ export const AgendarCirugiaContainer = (props) => {
 						sucursal={sucursal}
 						setOpenAlert={setOpenAlert}
 						setMessage={setMessage}
+						colorBase={colorBase}
 						setFilterDate={setFilterDate} /> : ''
 			}
 			{
@@ -152,6 +153,7 @@ export const AgendarCirugiaContainer = (props) => {
 						sucursal={sucursal}
 						setOpenAlert={setOpenAlert}
 						setMessage={setMessage}
+						colorBase={colorBase}
 						setFilterDate={setFilterDate} /> : ''
 			}
 			{
@@ -164,6 +166,7 @@ export const AgendarCirugiaContainer = (props) => {
 						sucursal={sucursal}
 						setMessage={setMessage}
 						setOpenAlert={setOpenAlert}
+						colorBase={colorBase}
 						onGuardarModalPagos={onGuardarModalPagos}
 						tipoServicioId={cirugia.servicio._id} />
 					: ''
@@ -174,6 +177,7 @@ export const AgendarCirugiaContainer = (props) => {
 						open={openModalImprimirCita}
 						onClose={onCloseImprimirConsulta}
 						servicio="CIRUGÍA"
+						colorBase={colorBase}
 						datos={datosImpresion} />
 					: ''
 			}
@@ -187,6 +191,7 @@ export const AgendarCirugiaContainer = (props) => {
 						sucursal={sucursal._id}
 						setMessage={setMessage}
 						setOpenAlert={setOpenAlert}
+						colorBase={colorBase}
 						loadServicios={loadCirugias} />
 					: ''
 			}
@@ -283,7 +288,7 @@ export const AgendarCirugiaContainer = (props) => {
 					</Grid>
 					<Grid item xs={12} sm={2}>
 						<TextField
-							className={classes.button}
+							className={classes.formControl}
 							name="observaciones"
 							error={Boolean(errors.observaciones)}
 							label="OBSERVACIONES"
@@ -298,7 +303,7 @@ export const AgendarCirugiaContainer = (props) => {
 								justify="center"
 								alignItems="center" >
 								<KeyboardDatePicker
-									className={classes.button}
+									className={classes.formControl}
 									disableToolbar
 									//disablePast
 									autoOk

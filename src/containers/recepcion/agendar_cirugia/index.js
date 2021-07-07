@@ -639,6 +639,7 @@ const AgendarCirugia = (props) => {
 								dermatologos={dermatologos}
 								medios={medios}
 								formasPago={formasPago}
+								colorBase={colorBase}
 								onChangeMedio={(e) => handleChangeMedio(e)}
 								onChangeDermatologos={(e) => handleChangeDermatologos(e)}
 								onCloseVerPagos={handleCloseVerPagos}

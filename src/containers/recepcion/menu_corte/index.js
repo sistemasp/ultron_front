@@ -529,6 +529,7 @@ const Corte = (props) => {
             onObtenerInformacion={() => handleObtenerInformacion()}
             sucursal={sucursal}
             empleado={empleado}
+            colorBase={colorBase}
             setOpenAlert={setOpenAlert}
             setMessage={setMessage}
             setSeverity={setSeverity}

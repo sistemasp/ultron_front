@@ -121,6 +121,7 @@ export const AgendarFacialContainer = (props) => {
 						setOpenAlert={setOpenAlert}
 						setMessage={setMessage}
 						setSeverity={setSeverity}
+						colorBase={colorBase}
 						setFilterDate={setFilterDate} /> : ''
 			}
 			{
@@ -158,6 +159,7 @@ export const AgendarFacialContainer = (props) => {
 						setMessage={setMessage}
 						setOpenAlert={setOpenAlert}
 						onGuardarModalPagos={onGuardarModalPagos}
+						colorBase={colorBase}
 						tipoServicioId={facial.servicio._id} />
 					: ''
 			}
@@ -166,6 +168,7 @@ export const AgendarFacialContainer = (props) => {
 					<ModalImprimirTratamiento
 						open={openModalImprimirCita}
 						onClose={onCloseImprimirConsulta}
+						colorBase={colorBase}
 						datos={datosImpresion} />
 					: ''
 			}
@@ -179,6 +182,7 @@ export const AgendarFacialContainer = (props) => {
 						sucursal={sucursal._id}
 						setMessage={setMessage}
 						setOpenAlert={setOpenAlert}
+						colorBase={colorBase}
 						loadServicios={loadFaciales} />
 					: ''
 			}
@@ -340,7 +344,7 @@ export const AgendarFacialContainer = (props) => {
 					</Grid>
 					<Grid item xs={12} sm={2}>
 						<TextField
-							className={classes.button}
+							className={classes.formControl}
 							name="observaciones"
 							label="OBSERVACIONES"
 							value={values.observaciones}
@@ -354,7 +358,7 @@ export const AgendarFacialContainer = (props) => {
 								justify="center"
 								alignItems="center" >
 								<KeyboardDatePicker
-									className={classes.button}
+									className={classes.formControl}
 									disableToolbar
 									//disablePast
 									autoOk
@@ -389,7 +393,7 @@ export const AgendarFacialContainer = (props) => {
 					</Grid>
 					<Grid item xs={12} sm={2}>
 						<TextField
-							className={classes.button}
+							className={classes.formControl}
 							name="tiempo"
 							label="TIEMPO"
 							value={values.tiempo}

@@ -736,6 +736,7 @@ const AgendarEstetica = (props) => {
 								openModalImprimirCita={openModalImprimirCita}
 								openModalTraspaso={openModalTraspaso}
 								datosImpresion={datosImpresion}
+								colorBase={colorBase}
 								onCloseImprimirConsulta={handleCloseImprimirConsulta}
 								onCloseTraspasos={handleCloseTraspasos}
 								sucursal={sucursal}

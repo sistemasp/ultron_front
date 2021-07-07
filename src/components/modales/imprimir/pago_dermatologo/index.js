@@ -37,6 +37,7 @@ const ModalImprimirPagoDermatologo = (props) => {
     empleado,
     setOpenAlert,
     setMessage,
+    colorBase,
   } = props;
 
   const [show, setShow] = useState(true);
@@ -483,6 +484,7 @@ const ModalImprimirPagoDermatologo = (props) => {
             findCorte={findCorte}
             onClickPagar={() => handleClickPagar()}
             show={show}
+            colorBase={colorBase}
             empleado={empleado} /> :
           <Backdrop className={classes.backdrop} open={isLoading} >
             <CircularProgress color="inherit" />

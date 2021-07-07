@@ -19,9 +19,6 @@ function getModalStyle() {
 }
 
 const ModalFormImprimirDermapen = (props) => {
-
-  const classes = myStyles(colorBase)();
-
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
 
@@ -33,6 +30,8 @@ const ModalFormImprimirDermapen = (props) => {
     show,
     colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
   const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
@@ -101,22 +100,22 @@ const ModalFormImprimirDermapen = (props) => {
             {
               show ?
                 <Fragment>
-                  <Grid item xs={12}>
+                  <Grid item xs={6}>
+                    <ButtonCustom
+                      className={classes.buttonCancel}
+                      color="secondary"
+                      variant="contained"
+                      onClick={onClose}
+                      text='CERRAR' />
+                  </Grid>
+
+                  <Grid item xs={6}>
                     <ButtonCustom
                       className={classes.button}
                       color="primary"
                       variant="contained"
                       onClick={onClickImprimir}
                       text='IMPRIMIR' />
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <ButtonCustom
-                      className={classes.button}
-                      color="secondary"
-                      variant="contained"
-                      onClick={onClose}
-                      text='CERRAR' />
                   </Grid>
                 </Fragment> : ''
             }

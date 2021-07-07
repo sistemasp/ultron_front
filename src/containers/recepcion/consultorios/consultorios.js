@@ -6,16 +6,9 @@ import ModalConsultorioAgregarDermatologo from '../../../components/modales/moda
 import ModalCabina from '../../../components/modales/modal_cabina';
 import ModalSalaCirugia from '../../../components/modales/modal_sala_cirugia';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
-
-const useStyles = makeStyles(theme => ({
-  button: {
-    color: '#FFFFFF'
-  }
-}));
+import myStyles from '../../../css';
 
 export const ConsultorioContainer = (props) => {
-
-  const classes = useStyles();
 
   const {
     tituloConsultorio,
@@ -49,7 +42,11 @@ export const ConsultorioContainer = (props) => {
     setMessage,
     loadConsultorios,
     empleado,
+    colorBase,
   } = props;
+
+  console.log("KAOZ", empleado);
+  const classes = myStyles(colorBase)();
 
   return (
     <Fragment>
@@ -62,6 +59,7 @@ export const ConsultorioContainer = (props) => {
             consultorio={consultorio}
             handleClickGuardar={handleClickGuardarConsultorio}
             setOpenAlert={setOpenAlert}
+            colorBase={colorBase}
             setMessage={setMessage} /> : ''
       }
       {
@@ -73,6 +71,7 @@ export const ConsultorioContainer = (props) => {
             empleado={empleado}
             handleClickGuardar={handleClickGuardarCabina}
             setOpenAlert={setOpenAlert}
+            colorBase={colorBase}
             setMessage={setMessage} /> : ''
       }
       {
@@ -84,6 +83,7 @@ export const ConsultorioContainer = (props) => {
             salaCirugia={salaCirugia}
             handleClickGuardar={handleClickGuardarSalaCirugia}
             setOpenAlert={setOpenAlert}
+            colorBase={colorBase}
             setMessage={setMessage} /> : ''
       }
       {
@@ -95,17 +95,23 @@ export const ConsultorioContainer = (props) => {
             consultorio={consultorio}
             setOpenAlert={setOpenAlert}
             setMessage={setMessage}
+            colorBase={colorBase}
             loadConsultorios={loadConsultorios} /> : ''
       }
 
       <Grid container spacing={3}>
         <Grid item xs={12} sm={4}>
-          <ButtonCustom
-            className={classes.button}
-            color="primary"
-            variant="contained"
-            onClick={handleOpenConsultorio}
-            text='Nuevo Consultorio' />
+          {
+            empleado.super_admin ?
+              <ButtonCustom
+                className={classes.button}
+                color="primary"
+                variant="contained"
+                onClick={handleOpenConsultorio}
+                text='NUEVO CONSULTORIO' />
+              : ''
+          }
+
 
           <TableComponent
             titulo={tituloConsultorio}
@@ -116,12 +122,17 @@ export const ConsultorioContainer = (props) => {
         </Grid>
 
         <Grid item xs={12} sm={4}>
-          <ButtonCustom
-            className={classes.button}
-            color="primary"
-            variant="contained"
-            onClick={handleOpenCabina}
-            text='Nueva Cabina' />
+
+          {
+            empleado.super_admin ?
+              <ButtonCustom
+                className={classes.button}
+                color="primary"
+                variant="contained"
+                onClick={handleOpenCabina}
+                text='NUEVA CABINA' />
+              : ''
+          }
 
           <TableComponent
             titulo={tituloCabina}
@@ -131,12 +142,17 @@ export const ConsultorioContainer = (props) => {
             options={options} />
         </Grid>
         <Grid item xs={12} sm={4}>
-          <ButtonCustom
-            className={classes.button}
-            color="primary"
-            variant="contained"
-            onClick={handleOpenSalaCirugia}
-            text='Nueva Sala de cirugia' />
+          {
+            empleado.super_admin ?
+              <ButtonCustom
+                className={classes.button}
+                color="primary"
+                variant="contained"
+                onClick={handleOpenSalaCirugia}
+                text='NUEVA SALA DE CIRUGÍA' />
+              : ''
+          }
+
 
           <TableComponent
             titulo={tituloSalaCirugia}
