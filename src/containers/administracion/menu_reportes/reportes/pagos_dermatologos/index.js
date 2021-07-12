@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import { ReportesGeneralCitasContainer } from "./general_citas";
+import { ReportesPagosDermatologosContainer } from "./pagos_dermatologos";
 import { findConsultsByRangeDateAndSucursal } from "../../../../../services/consultas";
 import { Backdrop, CircularProgress } from "@material-ui/core";
 import { toFormatterCurrency, addZero, getPagoDermatologoByServicio } from "../../../../../utils/utils";
@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-const ReporteGeneralCitas = (props) => {
+const ReportePagosDermatologos = (props) => {
 
 	const classes = useStyles();
 
@@ -135,9 +135,9 @@ const ReporteGeneralCitas = (props) => {
 			item.cosmetologa_nombre = item.cosmetologa ? item.cosmetologa.nombre : 'SIN ASIGNAR';
 			item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
 			item.show_tratamientos = item.tratamientos ? item.tratamientos.map(tratamiento => {
-				const show_areas = tratamiento.areasSeleccionadas ? tratamiento.areasSeleccionadas.map(area => {
+				const show_areas = tratamiento.areasSeleccionadas.map(area => {
 					return `${area.nombre}`;
-				}) : '';
+				});
 				return `►${tratamiento.nombre}(${show_areas}) `;
 			}) : 'NO APLICA';
 		});
@@ -253,12 +253,12 @@ const ReporteGeneralCitas = (props) => {
 		<Fragment>
 			{
 				!isLoading ?
-					<ReportesGeneralCitasContainer
+					<ReportesPagosDermatologosContainer
 						onChangeStartDate={(e) => handleChangeStartDate(e)}
 						onChangeEndDate={(e) => handleChangeEndDate(e)}
 						startDate={startDate.fecha_show}
 						endDate={endDate.fecha_show}
-						titulo={`REPORTES CITAS GENERAL(${startDate.fecha} - ${endDate.fecha})`}
+						titulo={`REPORTES PAGOS DERMATOLOGOS (${startDate.fecha} - ${endDate.fecha})`}
 						columns={columns}
 						options={options}
 						datos={datos}
@@ -273,4 +273,4 @@ const ReporteGeneralCitas = (props) => {
 	);
 }
 
-export default ReporteGeneralCitas;
+export default ReportePagosDermatologos;

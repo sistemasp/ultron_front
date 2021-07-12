@@ -53,6 +53,8 @@ const ModalFormImprimirPagoDermatologo = (props) => {
     colorBase,
   } = props;
 
+  console.log("KAOZ", pagoDermatologo);
+
   const useStyles = makeStyles(theme => ({
     paper: {
       position: 'absolute',
@@ -242,7 +244,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
               show ?
                 <Fragment>
                   {
-                    pagoDermatologo.pagado || dermatologo._id === dermatologoDirectoId?
+                    pagoDermatologo.pagado ?
                       <Grid item xs={12}>
                         <ButtonCustom
                           className={classes.button}
@@ -263,6 +265,18 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                             text='PAGAR' />
                         </Grid>
                         : ''
+                  }
+                  {
+                    dermatologo._id === dermatologoDirectoId ?
+                    <Grid item xs={12}>
+                        <ButtonCustom
+                          className={classes.button}
+                          color="primary"
+                          variant="contained"
+                          onClick={onClickImprimir}
+                          text='IMPRIMIR' />
+                      </Grid>
+                      : ''
                   }
                   {
                     corte.hora_cierre || corte.turno === 'v' ?
