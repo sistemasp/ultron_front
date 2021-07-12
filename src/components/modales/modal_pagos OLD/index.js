@@ -9,7 +9,7 @@ import myStyles from '../../../css';
 
 const ModalPagos = (props) => {
 
-  const classes = myStyles();
+  const classes = myStyles(colorBase)();
 
   const {
     open,
@@ -20,6 +20,7 @@ const ModalPagos = (props) => {
     empleado,
     onGuardarModalPagos,
     tipoServicioId,
+    colorBase,
   } = props;
 
   const dermatologoDirectoId = process.env.REACT_APP_DERMATOLOGO_DIRECTO_ID;
@@ -82,7 +83,7 @@ const ModalPagos = (props) => {
 
   const options = {
     headerStyle: {
-      backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+      backgroundColor: colorBase,
       color: '#FFF',
       fontWeight: 'bolder',
       fontSize: '18px'

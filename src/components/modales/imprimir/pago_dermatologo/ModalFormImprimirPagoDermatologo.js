@@ -5,6 +5,7 @@ import { Button, Grid } from '@material-ui/core';
 import { ButtonCustom } from '../../../basic/ButtonCustom';
 import bannerMePiel from './../../../../bannerMePiel.PNG';
 import { addZero, dateToString, toFormatterCurrency } from '../../../../utils/utils';
+import myStyles from '../../../../css';
 
 function getModalStyle() {
   return {
@@ -13,132 +14,7 @@ function getModalStyle() {
   };
 }
 
-const useStyles = makeStyles(theme => ({
-  paper: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: 10
-  },
-  textField: {
-    width: '100%',
-  },
-  formControl: {
-    minWidth: 120,
-    width: '100%',
-  },
-  button: {
-    color: '#FFFFFF',
-    width: '100%',
-    fontSize: '18px',
-    margin: 3,
-  },
-  label: {
-    marginTop: '0px',
-    marginBottom: '0px',
-  },
-  label_left: {
-    marginTop: '0px',
-    marginBottom: '0px',
-    marginLeft: '10px',
-  },
-  label_line: {
-    marginTop: '40px',
-    marginBottom: '0px',
-    marginLeft: '10px',
-    marginRight: '10px',
-  },
-  labelItemRight: {
-    marginTop: '0px',
-    marginBottom: '0px',
-    textAlign: 'right',
-  },
-  label_title: {
-    //backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
-    color: '#000000',
-    textAlign: 'center',
-    padding: 10,
-    margin: 0,
-  },
-  label_title_descripcion: {
-    //backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
-    color: '#000000',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    fontSize: '15px',
-    margin: 0,
-    padding: 3,
-  },
-  label_utilidad_perdida: {
-    textAlign: 'center',
-    marginTop: '0px',
-    marginBottom: '0px',
-    fontSize: '38px',
-  },
-  label_title_entradas: {
-    //backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: '12px',
-    paddingTop: 1,
-    paddingBottom: 1,
-    color: '#000000',
-  },
-  label_cells: {
-    textAlign: 'center',
-    fontSize: '10px',
-    marginTop: '0px',
-    marginBottom: '0px',
-  },
-  label_cells_concepto: {
-    textAlign: 'left',
-    fontSize: '10px',
-    marginTop: '0px',
-    marginBottom: '0px',
-    marginLeft: 10
-  },
-  label_cells_total: {
-    textAlign: 'center',
-    fontSize: '10px',
-    fontWeight: 'bold',
-    marginTop: '0px',
-    marginBottom: '0px',
-  },
-  label_cells_totales: {
-    textAlign: 'center',
-    fontSize: '12px',
-    fontWeight: 'bold',
-    marginTop: '0px',
-    marginBottom: '0px',
-  },
-  grid_left: {
-    marginTop: '10px',
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-  },
-  grid_right: {
-    marginTop: '10px',
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-  },
-  container: {
-    marginTop: 18,
-    border: '2px solid #000',
-  },
-  container_buttom: {
-    marginTop: 35,
-  },
-  hr: {
-    borderTop: '1px solid #000',
-  }
-}));
-
 const ModalFormImprimirPagoDermatologo = (props) => {
-  const classes = useStyles();
 
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
@@ -174,7 +50,142 @@ const ModalFormImprimirPagoDermatologo = (props) => {
     turno,
     pagoDermatologo,
     empleado,
+    colorBase,
   } = props;
+
+  console.log("KAOZ", pagoDermatologo);
+
+  const useStyles = makeStyles(theme => ({
+    paper: {
+      position: 'absolute',
+      width: '100%',
+      height: '100%',
+      backgroundColor: theme.palette.background.paper,
+      boxShadow: theme.shadows[5],
+      padding: 10
+    },
+    textField: {
+      width: '100%',
+    },
+    formControl: {
+      minWidth: 120,
+      width: '100%',
+    },
+    button: {
+      backgroundColor: colorBase,
+      color: '#FFFFFF',
+      width: '100%',
+      fontSize: '18px',
+      margin: 3,
+    },
+    buttonCancel: {
+      width: '100%',
+      color: '#FFFFFF',
+      backgroundColor: "#FF2233",
+  },
+    label: {
+      marginTop: '0px',
+      marginBottom: '0px',
+    },
+    label_left: {
+      marginTop: '0px',
+      marginBottom: '0px',
+      marginLeft: '10px',
+    },
+    label_line: {
+      marginTop: '40px',
+      marginBottom: '0px',
+      marginLeft: '10px',
+      marginRight: '10px',
+    },
+    labelItemRight: {
+      marginTop: '0px',
+      marginBottom: '0px',
+      textAlign: 'right',
+    },
+    label_title: {
+      //backgroundColor: colorBase,
+      color: '#000000',
+      textAlign: 'center',
+      padding: 10,
+      margin: 0,
+    },
+    label_title_descripcion: {
+      //backgroundColor: colorBase,
+      color: '#000000',
+      fontWeight: 'bold',
+      textAlign: 'center',
+      fontSize: '15px',
+      margin: 0,
+      padding: 3,
+    },
+    label_utilidad_perdida: {
+      textAlign: 'center',
+      marginTop: '0px',
+      marginBottom: '0px',
+      fontSize: '38px',
+    },
+    label_title_entradas: {
+      //backgroundColor: colorBase,
+      textAlign: 'center',
+      fontWeight: 'bold',
+      fontSize: '12px',
+      paddingTop: 1,
+      paddingBottom: 1,
+      color: '#000000',
+    },
+    label_cells: {
+      textAlign: 'center',
+      fontSize: '10px',
+      marginTop: '0px',
+      marginBottom: '0px',
+    },
+    label_cells_concepto: {
+      textAlign: 'left',
+      fontSize: '10px',
+      marginTop: '0px',
+      marginBottom: '0px',
+      marginLeft: 10
+    },
+    label_cells_total: {
+      textAlign: 'center',
+      fontSize: '10px',
+      fontWeight: 'bold',
+      marginTop: '0px',
+      marginBottom: '0px',
+    },
+    label_cells_totales: {
+      textAlign: 'center',
+      fontSize: '12px',
+      fontWeight: 'bold',
+      marginTop: '0px',
+      marginBottom: '0px',
+    },
+    grid_left: {
+      marginTop: '10px',
+      backgroundColor: theme.palette.background.paper,
+      border: '2px solid #000',
+      boxShadow: theme.shadows[5],
+    },
+    grid_right: {
+      marginTop: '10px',
+      backgroundColor: theme.palette.background.paper,
+      border: '2px solid #000',
+      boxShadow: theme.shadows[5],
+    },
+    container: {
+      marginTop: 18,
+      border: '2px solid #000',
+    },
+    container_buttom: {
+      marginTop: 35,
+    },
+    hr: {
+      borderTop: '1px solid #000',
+    }
+  }));
+
+  const classes = useStyles();
 
   let pagoTotal = 0;
 
@@ -233,7 +244,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
               show ?
                 <Fragment>
                   {
-                    pagoDermatologo.pagado || dermatologo._id === dermatologoDirectoId?
+                    pagoDermatologo.pagado ?
                       <Grid item xs={12}>
                         <ButtonCustom
                           className={classes.button}
@@ -254,6 +265,18 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                             text='PAGAR' />
                         </Grid>
                         : ''
+                  }
+                  {
+                    dermatologo._id === dermatologoDirectoId ?
+                    <Grid item xs={12}>
+                        <ButtonCustom
+                          className={classes.button}
+                          color="primary"
+                          variant="contained"
+                          onClick={onClickImprimir}
+                          text='IMPRIMIR' />
+                      </Grid>
+                      : ''
                   }
                   {
                     corte.hora_cierre || corte.turno === 'v' ?
@@ -281,7 +304,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                   <br />
                   <Grid item xs={12}>
                     <Button
-                      className={classes.button}
+                      className={classes.buttonCancel}
                       color="secondary"
                       variant="contained"
                       onClick={onClose} >

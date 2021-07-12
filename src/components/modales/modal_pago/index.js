@@ -20,8 +20,6 @@ import { Fragment } from 'react';
 
 const ModalPago = (props) => {
 
-  const classes = myStyles();
-
   const {
     open,
     onClose,
@@ -34,7 +32,10 @@ const ModalPago = (props) => {
     pago,
     restante,
     tipoServicioId,
+    colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   const porcetanjeComision = process.env.REACT_APP_COMISION_PAGO_TARJETA;
   const enConsultorioStatusId = process.env.REACT_APP_EN_CONSULTORIO_STATUS_ID;
@@ -339,6 +340,7 @@ const ModalPago = (props) => {
             formasPago={formasPago}
             tiposTarjeta={tiposTarjeta}
             onClickCancel={onClose}
+            colorBase={colorBase}
             onClickGuardar={handleClickGuardarPago}
             onChangePaymentMethod={(e) => handleChangePaymentMethod(e)}
             onChangeBank={(e) => handleChangeBank(e)}

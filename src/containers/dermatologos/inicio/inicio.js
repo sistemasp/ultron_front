@@ -16,7 +16,7 @@ import ModalImprimirReceta from "../../../components/modales/imprimir/receta";
 
 export const InicioContainer = (props) => {
 
-	const classes = myStyles();
+	const classes = myStyles(colorBase)();
 
 	const {
 		dermatologo,
@@ -49,6 +49,7 @@ export const InicioContainer = (props) => {
 		actions,
 		options,
 		components,
+		colorBase,
 	} = props;
 
 	return (

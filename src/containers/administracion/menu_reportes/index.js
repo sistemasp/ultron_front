@@ -20,6 +20,7 @@ const MenuReports = (props) => {
         sucursal,
         empleado,
         history,
+        colorBase,
     } = props;
 
     const handleChangeTab = (event, newValue) => {
@@ -55,6 +56,7 @@ const MenuReports = (props) => {
                 empleado={empleado}
                 sucursal={sucursal}
                 open={open}
+                colorBase={colorBase}
                 onClickLogout={handleLogout}
                 onClickCambioPassword={handleClickCambioPassword}
                 onOpen={handleOpen}

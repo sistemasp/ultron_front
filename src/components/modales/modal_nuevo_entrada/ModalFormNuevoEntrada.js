@@ -5,6 +5,7 @@ import { Button, Grid, IconButton, InputAdornment, OutlinedInput, InputLabel, Fo
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { ButtonCustom } from '../../basic/ButtonCustom';
+import myStyles from '../../../css';
 
 function getModalStyle() {
   const top = 50;
@@ -40,7 +41,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ModalFormNuevoEntrada = (props) => {
-  const classes = useStyles();
 
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
@@ -57,7 +57,10 @@ const ModalFormNuevoEntrada = (props) => {
     formaPagos,
     onChange,
     onAgregarConceto,
+    colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   return (
     <Modal
@@ -119,7 +122,7 @@ const ModalFormNuevoEntrada = (props) => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <ButtonCustom
-              className={classes.button}
+              className={classes.buttonCancel}
               color="secondary"
               variant="contained"
               onClick={onClickCancel}

@@ -21,6 +21,7 @@ const ModalTraspasoServicio = (props) => {
     tipoServicioId,
     setOpenAlert,
     setMessage,
+    colorBase,
   } = props;
 
   const consultaServicioId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
@@ -193,6 +194,7 @@ const ModalTraspasoServicio = (props) => {
         empleado={empleado}
         sucursal={sucursal}
         sucursales={sucursales}
+        colorBase={colorBase}
         onClickTraspasar={(e) => handleClickTraspasar(e)}
         tipoServicioId={tipoServicioId} />
     </Fragment>

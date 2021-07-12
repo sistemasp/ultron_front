@@ -8,6 +8,7 @@ import { Multiselect } from 'multiselect-react-dropdown';
 import ModalConfirmacion from '../modal_confirmacion';
 import { ButtonCustom } from '../../basic/ButtonCustom';
 import { toFormatterCurrency } from '../../../utils/utils';
+import myStyles from '../../../css';
 
 function getModalStyle() {
   const top = 50;
@@ -53,8 +54,6 @@ const noAsistioStatusId = process.env.REACT_APP_NO_ASISTIO_STATUS_ID;
 const reagendoStatusId = process.env.REACT_APP_REAGENDO_STATUS_ID;
 
 const ModalFormDermapen = (props) => {
-  const classes = useStyles();
-
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
 
@@ -98,7 +97,10 @@ const ModalFormDermapen = (props) => {
     onConfirmModalConfirmacion,
     onChangeMateriales,
     onChangeItemPrecio,
+    colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   return (
     <div>
@@ -114,6 +116,7 @@ const ModalFormDermapen = (props) => {
                   open={openModalConfirmacion}
                   onClose={onCloseModalConfirmacion}
                   onConfirm={onConfirmModalConfirmacion}
+                  colorBase={colorBase}
                   empleado={empleado} />
                 : ''
             }
@@ -365,7 +368,7 @@ const ModalFormDermapen = (props) => {
 
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
-                  className={classes.button}
+                  className={classes.buttonCancel}
                   color="secondary"
                   variant="contained"
                   onClick={onClickCancel}

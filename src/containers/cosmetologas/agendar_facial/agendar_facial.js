@@ -22,8 +22,6 @@ import ModalTraspasoServicio from '../../../components/modales/traspaso_servicio
 
 export const AgendarFacialContainer = (props) => {
 
-	const classes = myStyles();
-
 	const {
 		values,
 		errors,

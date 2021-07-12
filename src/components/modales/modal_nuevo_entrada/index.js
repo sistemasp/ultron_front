@@ -19,6 +19,7 @@ const ModalNuevoEntrada = (props) => {
     setOpenAlert,
     onObtenerInformacion,
     corte,
+    colorBase,
   } = props;
 
   const [values, setValues] = useState({
@@ -102,6 +103,7 @@ const ModalNuevoEntrada = (props) => {
       onChange={handleChange}
       onChangeTipoEntrada={(e) => handleChangeTipoEntrada(e)}
       onChangeMetodoPago={(e) => handleChangeMetodoPago(e)}
+      colorBase={colorBase}
       {...props} />
   );
 }

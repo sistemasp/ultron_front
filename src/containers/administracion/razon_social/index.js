@@ -55,7 +55,8 @@ const RazonSocial = (props) => {
 		empleado,
 		onClickAgendar,
 		onClickAgendarTratamiento,
-		onClickAgendarConsulta
+		onClickAgendarConsulta,
+		colorBase,
 	} = props;
 
 	const columns = [
@@ -73,7 +74,7 @@ const RazonSocial = (props) => {
 
 	const options = {
 		headerStyle: {
-			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+			backgroundColor: colorBase,
 			color: '#FFF',
 			fontWeight: 'bolder',
 			fontSize: '18px'

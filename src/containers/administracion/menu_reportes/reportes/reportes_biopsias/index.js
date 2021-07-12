@@ -18,6 +18,7 @@ const ReportesBiopsias = (props) => {
 
 	const {
 		sucursal,
+		colorBase,
 	} = props;
 
 	const [isLoading, setIsLoading] = useState(true);
@@ -69,7 +70,7 @@ const ReportesBiopsias = (props) => {
 			};
 		},*/
 		headerStyle: {
-			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+			backgroundColor: colorBase,
 			color: '#FFF',
 			fontWeight: 'bolder',
 			fontSize: '18px'

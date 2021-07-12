@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
     marginBottom: '0px',
   },
   label_title: {
-    //backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+    //backgroundColor: colorBase,
     color: '#000000',
     textAlign: 'center',
   },
@@ -57,7 +57,7 @@ const useStyles = makeStyles(theme => ({
     fontSize: '38px',
   },
   label_title_entradas: {
-    //backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+    //backgroundColor: colorBase,
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: '13px',

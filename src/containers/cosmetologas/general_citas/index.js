@@ -11,11 +11,12 @@ import { findCirugiaByDateAndSucursal } from "../../../services/cirugias";
 import { findEsteticaByDateAndSucursal } from "../../../services/esteticas";
 
 const GeneralCitas = (props) => {
-	const classes = myStyles();
+	const classes = myStyles(colorBase)();
 
 	const {
 		empleado,
 		sucursal,
+		colorBase,
 	} = props;
 
 	const [faciales, setFaciales] = useState([]);
@@ -64,7 +65,7 @@ const GeneralCitas = (props) => {
 			};
 		},
 		headerStyle: {
-			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+			backgroundColor: colorBase,
 			color: '#FFF',
 			fontWeight: 'bolder',
 			fontSize: '18px'

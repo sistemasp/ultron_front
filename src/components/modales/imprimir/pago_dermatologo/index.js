@@ -37,6 +37,7 @@ const ModalImprimirPagoDermatologo = (props) => {
     empleado,
     setOpenAlert,
     setMessage,
+    colorBase,
   } = props;
 
   const [show, setShow] = useState(true);
@@ -75,6 +76,7 @@ const ModalImprimirPagoDermatologo = (props) => {
   const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
   const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
   const sucursalFedeId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
+  const dermatologoDirectoId = process.env.REACT_APP_DERMATOLOGO_DIRECTO_ID;
 
   const loadConsultas = async (hora_apertura, hora_cierre) => {
     const response = await findConsultsByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), empleado.access_token);
@@ -264,7 +266,6 @@ const ModalImprimirPagoDermatologo = (props) => {
       consulta.pago_dermatologo = pagoDermatologo;
       updateConsult(consulta._id, consulta, empleado.access_token);
       total += Number(pagoDermatologo);
-      console.log("KAOZ", pagoDermatologo);
     });
 
 
@@ -274,7 +275,6 @@ const ModalImprimirPagoDermatologo = (props) => {
       cirugia.pago_dermatologo = pagoDermatologo;
       updateCirugia(cirugia._id, cirugia, empleado.access_token)
       total += Number(pagoDermatologo);
-      console.log("KAOZ", pagoDermatologo);
     });
 
     // TOTAL DERMAPENS
@@ -283,7 +283,6 @@ const ModalImprimirPagoDermatologo = (props) => {
       dermapen.pago_dermatologo = pagoDermatologo;
       updateDermapen(dermapen._id, dermapen, empleado.access_token);
       total += Number(pagoDermatologo);
-      console.log("KAOZ", pagoDermatologo);
     });
 
     // TOTAL DE LOS FACIALES
@@ -337,8 +336,6 @@ const ModalImprimirPagoDermatologo = (props) => {
       facial.pago_dermatologo = pagoDermatologo;
       updateFacial(facial._id, facial, empleado.access_token);
       total += Number(pagoDermatologo);
-      console.log("KAOZ", pagoDermatologo);
-
     });
 
     // TOTAL DE LAS APARATOLOGIAS
@@ -379,52 +376,49 @@ const ModalImprimirPagoDermatologo = (props) => {
       estetica.pago_dermatologo = pagoDermatologo;
       updateEstetica(estetica._id, estetica, empleado.access_token);
       total += Number(pagoDermatologo);
-      console.log("KAOZ", pagoDermatologo);
-
     });
 
-    const pagoDermatologo = {
-      fecha_pago: new Date(),
-      dermatologo: dermatologo,
-      consultas: consultas,
-      cirugias: cirugias,
-      faciales: faciales,
-      dermapens: dermapens,
-      aparatologias: aparatologias,
-      esteticas: esteticas,
-      sucursal: sucursal._id,
-      turno: turno,
-      retencion: (dermatologo.pago_completo ? 0 : (total / 2)),
-      total: total,
-      pagado: true,
-    }
-
-    console.log("KAOZ", pagoDermatologo);
-
-    const response = await createPagoDermatologo(pagoDermatologo, empleado.access_token);
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
-      || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-      const data = response.data;
-
-      const salida = {
-        create_date: new Date(),
-        hora_aplicacion: corte.create_date,
-        tipo_salida: pagoDermatologoTipoSalidaId,
-        recepcionista: empleado,
-        turno: corte.turno === 'm' ? 'MATUTINO' : 'VESPERTINO',
-        concepto: dermatologo.nombre,
-        cantidad: dermatologo.pago_completo ? data.total : data.retencion,
-        retencion: data.retencion,
+    if (dermatologo._id == !dermatologoDirectoId) {
+      const pagoDermatologo = {
+        fecha_pago: new Date(),
+        dermatologo: dermatologo,
+        consultas: consultas,
+        cirugias: cirugias,
+        faciales: faciales,
+        dermapens: dermapens,
+        aparatologias: aparatologias,
+        esteticas: esteticas,
         sucursal: sucursal._id,
-        forma_pago: efectivoMetodoPagoId,
+        turno: turno,
+        retencion: (dermatologo.pago_completo ? 0 : (total / 2)),
+        total: total,
+        pagado: true,
       }
 
-      const resp = await createSalida(salida);
-      if (`${resp.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-        setIsLoading(false);
-      }
-    } 
+      const response = await createPagoDermatologo(pagoDermatologo, empleado.access_token);
+      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
+        || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+        const data = response.data;
 
+        const salida = {
+          create_date: new Date(),
+          hora_aplicacion: corte.create_date,
+          tipo_salida: pagoDermatologoTipoSalidaId,
+          recepcionista: empleado,
+          turno: corte.turno === 'm' ? 'MATUTINO' : 'VESPERTINO',
+          concepto: dermatologo.nombre,
+          cantidad: dermatologo.pago_completo ? data.total : data.retencion,
+          retencion: data.retencion,
+          sucursal: sucursal._id,
+          forma_pago: efectivoMetodoPagoId,
+        }
+
+        const resp = await createSalida(salida);
+        if (`${resp.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+          setIsLoading(false);
+        }
+      }
+    }
     findCorte();
   };
 
@@ -483,6 +477,7 @@ const ModalImprimirPagoDermatologo = (props) => {
             findCorte={findCorte}
             onClickPagar={() => handleClickPagar()}
             show={show}
+            colorBase={colorBase}
             empleado={empleado} /> :
           <Backdrop className={classes.backdrop} open={isLoading} >
             <CircularProgress color="inherit" />

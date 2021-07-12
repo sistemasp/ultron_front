@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { Grid, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 import { ButtonCustom } from "../../basic/ButtonCustom";
+import myStyles from '../../../css';
 
 function getModalStyle() {
   const top = 50;
@@ -15,38 +16,7 @@ function getModalStyle() {
   };
 }
 
-const useStyles = makeStyles(theme => ({
-  formControl: {
-    minWidth: 120,
-    width: '100%',
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-  paper: {
-    position: 'absolute',
-    width: '25%',
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-  },
-  textField: {
-    width: '100%',
-  },
-  button: {
-    width: '100%',
-    color: '#FFFFFF',
-  },
-  label: {
-    marginTop: '0px',
-    marginBottom: '0px',
-  }
-}));
-
 const ModalFormTraspasoConsulta = (props) => {
-  const classes = useStyles();
-
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
 
@@ -57,7 +27,10 @@ const ModalFormTraspasoConsulta = (props) => {
     open,
     onChangeSucursal,
     values,
+    colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   return (
     <div>
@@ -90,7 +63,7 @@ const ModalFormTraspasoConsulta = (props) => {
 
             <Grid item xs={12} sm={6}>
               <ButtonCustom
-                className={classes.button}
+                className={classes.buttonCancel}
                 color="secondary"
                 variant="contained"
                 onClick={onClickCancel}

@@ -18,6 +18,7 @@ const ModalNuevoSalida = (props) => {
     setOpenAlert,
     onObtenerInformacion,
     corte,
+    colorBase,
   } = props;
 
   const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
@@ -109,6 +110,7 @@ const ModalNuevoSalida = (props) => {
       onAgregarSalida={handleAgregarSalida}
       onChange={handleChange}
       onChangeTipoSalida={(e) => handleChangeTipoSalida(e)}
+      colorBase={colorBase}
       {...props} />
   );
 }

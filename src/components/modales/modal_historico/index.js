@@ -12,6 +12,7 @@ const MenuHistoricos = (props) => {
         paciente,
         open,
         onClose,
+        colorBase,
     } = props;
 
     const handleChangeTab = (event, newValue) => {
@@ -38,6 +39,7 @@ const MenuHistoricos = (props) => {
                 value={value}
                 paciente={paciente}
                 onClickCancel={onClose}
+                colorBase={colorBase}
                 servicios={servicios} />
         </Fragment>
     );

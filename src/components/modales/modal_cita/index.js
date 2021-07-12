@@ -79,6 +79,7 @@ const ModalCita = (props) => {
     setSeverity,
     setFilterDate,
     tratamientos,
+    colorBase,
   } = props;
 
   const promovendedorRolId = process.env.REACT_APP_PROMOVENDEDOR_ROL_ID;
@@ -601,6 +602,7 @@ const ModalCita = (props) => {
                 tipoCitas={tipoCitas}
                 formasPago={formasPago}
                 statements={statements}
+                colorBase={colorBase}
                 onChangeSesion={handleChangeSesion}
                 onChangePrecio={handleChangePrecio}
                 onChangeMotivos={handleChangeMotivos}

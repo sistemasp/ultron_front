@@ -29,6 +29,7 @@ const InicioDermatologos = (props) => {
   const {
     dermatologo,
     sucursal,
+    colorBase,
   } = props;
 
   const classes = props;
@@ -82,7 +83,7 @@ const InicioDermatologos = (props) => {
 
   const options = {
     headerStyle: {
-      backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+      backgroundColor: colorBase,
       color: '#FFF',
       fontWeight: 'bolder',
       fontSize: '18px',

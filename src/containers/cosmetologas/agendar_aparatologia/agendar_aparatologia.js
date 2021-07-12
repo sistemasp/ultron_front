@@ -21,8 +21,6 @@ import myStyles from '../../../css';
 
 export const AgendarAparatologiaContainer = (props) => {
 
-	const classes = myStyles();
-
 	const {
 		values,
 		errors,

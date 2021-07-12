@@ -10,7 +10,7 @@ import myStyles from '../../../../../css';
 
 export const ReportesGastosContainer = (props) => {
 
-	const classes = myStyles();
+	const classes = myStyles(colorBase)();
 
 	const {
 		onChangeStartDate,
@@ -18,6 +18,7 @@ export const ReportesGastosContainer = (props) => {
 		startDate,
 		endDate,
 		onClickReportes,
+		colorBase,
 		// TABLE DATES PROPERTIES
 		titulo,
 		columns,

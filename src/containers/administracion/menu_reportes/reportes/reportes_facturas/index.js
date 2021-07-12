@@ -25,6 +25,7 @@ const ReportesFacturas = (props) => {
 
 	const {
 		sucursal,
+		colorBase,
 	} = props;
 
 	const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID
@@ -74,7 +75,7 @@ const ReportesFacturas = (props) => {
 			}
 		},
 		headerStyle: {
-			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+			backgroundColor: colorBase,
 			color: '#FFF',
 			fontWeight: 'bolder',
 			fontSize: '18px'

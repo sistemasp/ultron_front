@@ -40,6 +40,7 @@ const ModalCirugia = (props) => {
     setMessage,
     setFilterDate,
     cirugia,
+    colorBase,
   } = props;
 
   const promovendedorRolId = process.env.REACT_APP_PROMOVENDEDOR_ROL_ID;
@@ -478,6 +479,7 @@ const ModalCirugia = (props) => {
             values={values}
             dataComplete={dataComplete}
             horarios={horarios}
+            colorBase={colorBase}
             onChangePagado={(e) => handleChangePagado(e)}
             onChangeBiopsia={(e) => handleChangeBiopsia(e)}
             onChangeCostoBiopsias={handleChangeCostoBiopsias}

@@ -18,6 +18,7 @@ const ReportesPagos = (props) => {
 
 	const {
 		sucursal,
+		colorBase,
 	} = props;
 
 	const [isLoading, setIsLoading] = useState(true);
@@ -67,7 +68,7 @@ const ReportesPagos = (props) => {
 			};
 		},*/
 		headerStyle: {
-			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+			backgroundColor: colorBase,
 			color: '#FFF',
 			fontWeight: 'bolder',
 			fontSize: '18px'

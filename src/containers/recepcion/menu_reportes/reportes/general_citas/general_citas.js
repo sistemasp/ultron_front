@@ -10,22 +10,22 @@ import myStyles from '../../../../../css';
 
 export const ReportesGeneralCitasContainer = (props) => {
 
-	const classes = myStyles();
-
 	const {
 		onChangeStartDate,
 		onChangeEndDate,
 		startDate,
 		endDate,
 		onClickReportes,
+		colorBase,
 		// TABLE DATES PROPERTIES
 		titulo,
 		columns,
 		datos,
 		actions,
 		options,
-
 	} = props;
+
+	const classes = myStyles(colorBase)();
 
 	return (
 		<Fragment>

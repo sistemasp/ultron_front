@@ -8,8 +8,6 @@ import ModalItemCatalogo from '../../../components/modales/item_catalogo';
 import ItemServicio from '../../../components/modales/item_catalogo/servicios';
 
 export const CrudContainer = props => {
-	const classes = myStyles();
-
 	const {
 		catalogo,
 		data,
@@ -28,7 +26,10 @@ export const CrudContainer = props => {
 		actions,
 		options,
 		components,
+		colorBase,
 	} = props;
+
+	const classes = myStyles(colorBase)();
 
 	return (
 		<Fragment >

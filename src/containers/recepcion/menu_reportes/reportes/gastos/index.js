@@ -26,6 +26,7 @@ const ReportesGastos = (props) => {
 
 	const {
 		sucursal,
+		colorBase,
 	} = props;
 
 	const tipoSalidaPagoDermatologo = process.env.REACT_APP_TIPO_EGRESO_PAGO_DERMATOLOGO_ID;
@@ -63,7 +64,7 @@ const ReportesGastos = (props) => {
 
 	const options = {
 		headerStyle: {
-			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+			backgroundColor: colorBase,
 			color: '#FFF',
 			fontWeight: 'bolder',
 			fontSize: '18px'

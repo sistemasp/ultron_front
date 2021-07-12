@@ -27,6 +27,7 @@ const ReporteGeneralCitas = (props) => {
 	const {
 		empleado,
 		sucursal,
+		colorBase,
 	} = props;
 
 	const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
@@ -94,7 +95,7 @@ const ReporteGeneralCitas = (props) => {
 			};
 		},*/
 		headerStyle: {
-			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+			backgroundColor: colorBase,
 			color: '#FFF',
 			fontWeight: 'bolder',
 			fontSize: '18px'
@@ -134,9 +135,9 @@ const ReporteGeneralCitas = (props) => {
 			item.cosmetologa_nombre = item.cosmetologa ? item.cosmetologa.nombre : 'SIN ASIGNAR';
 			item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
 			item.show_tratamientos = item.tratamientos ? item.tratamientos.map(tratamiento => {
-				const show_areas = tratamiento.areasSeleccionadas.map(area => {
+				const show_areas = tratamiento.areasSeleccionadas ? tratamiento.areasSeleccionadas.map(area => {
 					return `${area.nombre}`;
-				});
+				}) : '';
 				return `►${tratamiento.nombre}(${show_areas}) `;
 			}) : 'NO APLICA';
 		});

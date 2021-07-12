@@ -22,7 +22,6 @@ function getModalStyle() {
 }
 
 const ModalFormPagos = (props) => {
-  const classes = myStyles();
 
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
@@ -55,7 +54,10 @@ const ModalFormPagos = (props) => {
     onChangeDescuento,
     onChangDescuentoDermatologo,
     values,
+    colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   return (
     <div>
@@ -70,6 +72,7 @@ const ModalFormPagos = (props) => {
             sucursal={sucursal}
             loadPagos={loadPagos}
             restante={restante}
+            colorBase={colorBase}
             tipoServicioId={tipoServicioId} />
           : ''
       }
@@ -79,6 +82,7 @@ const ModalFormPagos = (props) => {
             open={openModalFactura}
             onClose={onCloseBuscarRazonSocial}
             pago={pago}
+            colorBase={colorBase}
             servicio={servicio}
           /> : ''
       }
@@ -161,7 +165,7 @@ const ModalFormPagos = (props) => {
           <Grid container xs={12}>
             <Grid item xs={12} sm={6}>
               <ButtonCustom
-                className={classes.button}
+                className={classes.buttonCancel}
                 color="secondary"
                 variant="contained"
                 onClick={onClickCancel}

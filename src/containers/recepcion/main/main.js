@@ -23,7 +23,7 @@ import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import AirlineSeatReclineNormalIcon from '@material-ui/icons/AirlineSeatReclineNormal';
 import AndroidIcon from '@material-ui/icons/Android';
-import { Button, Grid } from '@material-ui/core';
+import { Button, Grid, makeStyles } from '@material-ui/core';
 import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
 import ModalPassword from '../../../components/modales/modal_password';
 import Dermatologos from '../menu_dermatologos';
@@ -40,6 +40,7 @@ import {
 } from '../../../services/corte';
 import myStyles from '../../../css';
 import MenuSuperAdmin from '../../menu_super_admin';
+import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 
 const TabPanel = (props) => {
 	const { children, value, index, ...other } = props;
@@ -87,7 +88,9 @@ export const MainContainer = props => {
 		history,
 	} = props;
 
-	const classes = myStyles();
+	const colorBase = sucursal.color;
+
+	const classes = myStyles(colorBase)();
 	const theme = useTheme();
 	const [openDrawer, setOpenDrawer] = useState(false);
 
@@ -126,7 +129,7 @@ export const MainContainer = props => {
 	}
 
 	useEffect(() => {
-		if (sucursal._id === sucursalManuelAcunaId || sucursal._id === sucursalRubenDarioId ) findCorte();
+		if (sucursal._id === sucursalManuelAcunaId || sucursal._id === sucursalRubenDarioId) findCorte();
 	}, []);
 
 	return (
@@ -165,14 +168,16 @@ export const MainContainer = props => {
 					<Typography variant="h6" className={classes.title}>
 						{`SUCURSAL: ${sucursal.nombre} - ${empleado.numero_empleado} : ${empleado.nombre ? empleado.nombre : ''} ( ${empleado.rol ? empleado.rol.nombre : ''} )`}
 					</Typography>
-					<Button
+					<ButtonCustom
 						color="default"
 						variant="contained"
-						onClick={onClickCambioPassword}>CAMBIAR CONTRASEÑA</Button>
-					<Button
+						onClick={onClickCambioPassword}
+						text="CAMBIAR CONTRASEÑA" />
+					<ButtonCustom
 						color="secondary"
 						variant="contained"
-						onClick={onClickLogout}>CERRAR SESION</Button>
+						onClick={onClickLogout}
+						text="CERRAR SESIÓN" />
 				</Toolbar>
 			</AppBar>
 			<Drawer
@@ -251,11 +256,13 @@ export const MainContainer = props => {
 						<MenuPatient
 							empleado={empleado}
 							sucursal={sucursal}
+							colorBase={colorBase}
 							history={history} />
 					</TabPanel>
 					<TabPanel value={value} index={1}>
 						<Dermatologos
 							empleado={empleado}
+							colorBase={colorBase}
 							sucursal={sucursal} />
 					</TabPanel>
 					<TabPanel value={value} index={2}>
@@ -263,6 +270,7 @@ export const MainContainer = props => {
 							paciente={pacienteAgendado}
 							setPacienteAgendado={setPacienteAgendado}
 							empleado={empleado}
+							colorBase={colorBase}
 							sucursal={sucursal._id} />
 					</TabPanel>
 					<TabPanel value={value} index={3}>
@@ -270,6 +278,7 @@ export const MainContainer = props => {
 							paciente={pacienteAgendado}
 							setPacienteAgendado={setPacienteAgendado}
 							empleado={empleado}
+							colorBase={colorBase}
 							sucursal={sucursal._id} />
 					</TabPanel>
 					<TabPanel value={value} index={4}>
@@ -277,6 +286,7 @@ export const MainContainer = props => {
 							paciente={pacienteAgendado}
 							setPacienteAgendado={setPacienteAgendado}
 							empleado={empleado}
+							colorBase={colorBase}
 							sucursal={sucursal._id} />
 					</TabPanel>
 					<TabPanel value={value} index={5}>
@@ -284,6 +294,7 @@ export const MainContainer = props => {
 							paciente={pacienteAgendado}
 							setPacienteAgendado={setPacienteAgendado}
 							empleado={empleado}
+							colorBase={colorBase}
 							sucursal={sucursal._id} />
 					</TabPanel>
 					<TabPanel value={value} index={6}>
@@ -291,12 +302,14 @@ export const MainContainer = props => {
 							paciente={pacienteAgendado}
 							setPacienteAgendado={setPacienteAgendado}
 							empleado={empleado}
+							colorBase={colorBase}
 							sucursal={sucursal._id} />
 					</TabPanel>
 					<TabPanel value={value} index={7}>
 						<MenuSuperAdmin
 							empleado={empleado}
 							sucursal={sucursal}
+							colorBase={colorBase}
 							history={history} />
 					</TabPanel>
 				</Fragment>

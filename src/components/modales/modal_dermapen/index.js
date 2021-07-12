@@ -45,6 +45,7 @@ const ModalDermapen = (props) => {
     setOpenAlert,
     setMessage,
     setFilterDate,
+    colorBase,
   } = props;
 
   const promovendedorRolId = process.env.REACT_APP_PROMOVENDEDOR_ROL_ID;
@@ -531,6 +532,7 @@ const ModalDermapen = (props) => {
             onGuardarModalPagos={handleGuardarModalPagos}
             sucursal={sucursal}
             empleado={empleado}
+            colorBase={colorBase}
             openModalConfirmacion={openModalConfirmacion}
             onCloseModalConfirmacion={handleCloseModalConfirmacion}
             onConfirmModalConfirmacion={handleConfirmModalConfirmacion}

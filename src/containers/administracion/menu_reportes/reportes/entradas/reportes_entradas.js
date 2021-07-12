@@ -10,7 +10,7 @@ import { ButtonCustom } from '../../../../../components/basic/ButtonCustom';
 
 export const ReportesEntradasContainer = (props) => {
 
-	const classes = myStyles();
+	const classes = myStyles(colorBase)();
 
 	const {
 		onChangeStartDate,
@@ -18,6 +18,7 @@ export const ReportesEntradasContainer = (props) => {
 		startDate,
 		endDate,
 		onClickReportes,
+		colorBase,
 		// TABLE DATES PROPERTIES
 		titulo,
 		columns,

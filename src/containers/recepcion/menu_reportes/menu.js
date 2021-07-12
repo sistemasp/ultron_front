@@ -20,6 +20,7 @@ import ReportesGastos from './reportes/gastos';
 import ReportesEntradas from './reportes/entradas';
 import ReporteGeneralCitas from './reportes/general_citas';
 import ReportePagosDermatologos from './reportes/pagos_dermatologos';
+import myStyles from '../../../css';
 
 function TabPanel(props) {
 	const { children, value, index, ...other } = props;
@@ -51,7 +52,7 @@ function a11yProps(index) {
 	};
 }
 
-const useStyles = makeStyles(theme => ({
+/*const useStyles = makeStyles(theme => ({
 	root: {
 		flexGrow: 1,
 		backgroundColor: theme.palette.background.paper,
@@ -63,22 +64,24 @@ const useStyles = makeStyles(theme => ({
 		flexGrow: 1,
 	},
 	bar: {
-		backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+		backgroundColor: colorBase,
 	}
-}));
+}));*/
 
 export const MenuContainer = props => {
-	const classes = useStyles();
 
 	const {
 		onChangeTab,
 		value,
 		sucursal,
 		empleado,
+		colorBase,
 	} = props;
 
+	const classes = myStyles(colorBase)();
+
 	return (
-		<div className={classes.root}>
+		<div className={classes.subRoot}>
 			<AppBar
 				className={classes.bar}
 				position="static"
@@ -98,6 +101,7 @@ export const MenuContainer = props => {
 
 					<Tab label="CITAS GENERAL" {...a11yProps(0)} />
 					<Tab label="DETALLES GENERAL" {...a11yProps(1)} />
+					<Tab label="PAGOS DERMATOLÓGOS" {...a11yProps(2)} />
 					{/*
 					<Tab label="APARATOLOGÍA" {...a11yProps(3)} />
 					<Tab label="PAGOS" {...a11yProps(4)} />
@@ -128,16 +132,19 @@ export const MenuContainer = props => {
 			<TabPanel value={value} index={0}>
 				<ReporteGeneralCitas
 					empleado={empleado}
+					colorBase={colorBase}
 					sucursal={sucursal} />
 			</TabPanel>
 			<TabPanel value={value} index={1}>
 				<ReportesDetallesGeneral
 					empleado={empleado}
+					colorBase={colorBase}
 					sucursal={sucursal} />
 			</TabPanel>
-			<TabPanel value={value} index={1}>
+			<TabPanel value={value} index={2}>
 				<ReportePagosDermatologos
 					empleado={empleado}
+					colorBase={colorBase}
 					sucursal={sucursal} />
 			</TabPanel>
 			

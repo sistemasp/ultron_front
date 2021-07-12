@@ -16,7 +16,7 @@ function getModalStyle() {
 }
 
 const ModalFormUsoCfdi = (props) => {
-  const classes = myStyles();
+  const classes = myStyles(colorBase)();
 
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
@@ -28,6 +28,7 @@ const ModalFormUsoCfdi = (props) => {
     values,
     onChangeUsoCfdi,
     onGenerarFactura,
+    colorBase,
   } = props;
 
   return (

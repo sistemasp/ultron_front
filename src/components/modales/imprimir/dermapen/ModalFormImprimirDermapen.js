@@ -18,38 +18,7 @@ function getModalStyle() {
   };
 }
 
-const useStyles = makeStyles(theme => ({
-  paper: {
-    position: 'absolute',
-    width: 400,
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    paddingLeft: 15,
-    paddingRight: 15
-  },
-  textField: {
-    width: '100%',
-  },
-  formControl: {
-    minWidth: 120,
-    width: '100%',
-  },
-  button: {
-    width: '100%',
-    color: '#FFFFFF',
-  },
-  label: {
-    marginTop: '0px',
-    marginBottom: '0px',
-    textAlign: 'center',
-  }
-}));
-
 const ModalFormImprimirDermapen = (props) => {
-  //const classes = useStyles();
-  const classes = myStyles();
-
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
 
@@ -59,7 +28,10 @@ const ModalFormImprimirDermapen = (props) => {
     onClickImprimir,
     open,
     show,
+    colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
   const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
@@ -128,22 +100,22 @@ const ModalFormImprimirDermapen = (props) => {
             {
               show ?
                 <Fragment>
-                  <Grid item xs={12}>
+                  <Grid item xs={6}>
+                    <ButtonCustom
+                      className={classes.buttonCancel}
+                      color="secondary"
+                      variant="contained"
+                      onClick={onClose}
+                      text='CERRAR' />
+                  </Grid>
+
+                  <Grid item xs={6}>
                     <ButtonCustom
                       className={classes.button}
                       color="primary"
                       variant="contained"
                       onClick={onClickImprimir}
                       text='IMPRIMIR' />
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <ButtonCustom
-                      className={classes.button}
-                      color="secondary"
-                      variant="contained"
-                      onClick={onClose}
-                      text='CERRAR' />
                   </Grid>
                 </Fragment> : ''
             }

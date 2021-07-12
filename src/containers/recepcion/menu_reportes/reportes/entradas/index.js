@@ -19,6 +19,7 @@ const ReportesEntradas = (props) => {
 
 	const {
 		sucursal,
+		colorBase,
 	} = props;
 
 	const formaPagoEfectivo = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
@@ -68,7 +69,7 @@ const ReportesEntradas = (props) => {
 
 	const options = {
 		headerStyle: {
-			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+			backgroundColor: colorBase,
 			color: '#FFF',
 			fontWeight: 'bolder',
 			fontSize: '18px'

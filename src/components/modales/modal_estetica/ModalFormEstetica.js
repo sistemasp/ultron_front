@@ -9,6 +9,7 @@ import ModalPagos from '../modal_pagos';
 import { CheckCustom } from '../../basic/CheckCustom';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import myStyles from '../../../css';
 
 function getModalStyle() {
   const top = 50;
@@ -80,8 +81,6 @@ const noAsistioStatusId = process.env.REACT_APP_NO_ASISTIO_STATUS_ID;
 const reagendoStatusId = process.env.REACT_APP_REAGENDO_STATUS_ID;
 
 const ModalFormEstetica = (props) => {
-  const classes = useStyles();
-
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
 
@@ -128,7 +127,10 @@ const ModalFormEstetica = (props) => {
     empleado,
     tipoServicioId,
     estetica,
+    colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   return (
     <div>
@@ -425,7 +427,7 @@ const ModalFormEstetica = (props) => {
 
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
-                  className={classes.button}
+                  className={classes.buttonCancel}
                   color="secondary"
                   variant="contained"
                   onClick={onClose}
