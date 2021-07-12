@@ -35,6 +35,7 @@ const ModalProximaConsulta = (props) => {
     setOpenAlert,
     setMessage,
     setFilterDate,
+    colorBase,
   } = props;
 
   const [isLoading, setIsLoading] = useState(true);
@@ -245,6 +246,7 @@ const ModalProximaConsulta = (props) => {
             horarios={horarios}
             onChangeDermatologo={(e) => handleChangeDermatologo(e)}
             dermatologos={dermatologos}
+            colorBase={colorBase}
             onChangeObservaciones={handleChangeObservaciones}
             sucursal={sucursal}
             onChangeProductos={(e) => handleChangeProductos(e)}

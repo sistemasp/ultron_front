@@ -18,10 +18,12 @@ import ModalImprimirTratamiento from '../../../components/modales/imprimir/trata
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import ModalProximaCita from '../../../components/modales/modal_proxima_cita';
 import myStyles from '../../../css';
+import ModalTraspasoServicio from '../../../components/modales/traspaso_servicio';
 
 export const AgendarAparatologiaContainer = (props) => {
 
 	const {
+		isSubmitting,
 		values,
 		errors,
 		servicios,
@@ -43,7 +45,6 @@ export const AgendarAparatologiaContainer = (props) => {
 		paciente,
 		onClickAgendar,
 		isValid,
-		isSubmitting,
 		onChangeTiempo,
 		onChangeObservaciones,
 		empleado,
@@ -58,6 +59,8 @@ export const AgendarAparatologiaContainer = (props) => {
 		onChangeMedio,
 		medios,
 		dermatologoDirectoId,
+		selectedAreas,
+		colorBase,
 		// TABLE DATES PROPERTIES
 		titulo,
 		columns,
@@ -92,6 +95,8 @@ export const AgendarAparatologiaContainer = (props) => {
 		onCloseTraspasos,
 	} = props;
 
+	const classes = myStyles(colorBase)();
+
 	return (
 		<Fragment>
 			{
@@ -117,7 +122,73 @@ export const AgendarAparatologiaContainer = (props) => {
 						setOpenAlert={setOpenAlert}
 						setMessage={setMessage}
 						setSeverity={setSeverity}
+						colorBase={colorBase}
 						setFilterDate={setFilterDate} /> : ''
+			}
+			{
+				openModalProxima ?
+					<ModalProximaCita
+						open={openModalProxima}
+						cita={aparatologia}
+						onClickActualizarCita={onClickActualizarCita}
+						onClose={onClickCancel}
+						onChangeServicio={onChangeServicio}
+						onChangeTratamientos={onChangeTratamientos}
+						onChangeFecha={onChangeFecha}
+						onChangeHora={onChangeHora}
+						onChangeTipoCita={onChangeTipoCita}
+						onChangeMedio={onChangeMedio}
+						onChangeAsistio={onChangeAsistio}
+						servicios={servicios}
+						tratamientos={tratamientos}
+						horarios={horarios}
+						empleado={empleado}
+						loadAparatologias={loadAparatologias}
+						sucursal={sucursal}
+						setOpenAlert={setOpenAlert}
+						setMessage={setMessage}
+						setSeverity={setSeverity}
+						colorBase={colorBase}
+						setFilterDate={setFilterDate} /> : ''
+			}
+			{
+				openModalPagos ?
+					<ModalPagos
+						open={openModalPagos}
+						onClose={onCloseVerPagos}
+						servicio={aparatologia}
+						empleado={empleado}
+						sucursal={sucursal}
+						setMessage={setMessage}
+						setSeverity={setSeverity}
+						setOpenAlert={setOpenAlert}
+						colorBase={colorBase}
+						tipoServicioId={aparatologia.servicio._id}
+						onGuardarModalPagos={onGuardarModalPagos} />
+					: ''
+			}
+			{
+				openModalImprimirCita ?
+					<ModalImprimirTratamiento
+						open={openModalImprimirCita}
+						onClose={onCloseImprimirConsulta}
+						colorBase={colorBase}
+						datos={datosImpresion} />
+					: ''
+			}
+			{
+				openModalTraspaso ?
+					<ModalTraspasoServicio
+						open={openModalTraspaso}
+						onClose={onCloseTraspasos}
+						servicio={aparatologia}
+						empleado={empleado}
+						sucursal={sucursal._id}
+						setMessage={setMessage}
+						setOpenAlert={setOpenAlert}
+						colorBase={colorBase}
+						loadServicios={loadAparatologias} />
+					: ''
 			}
 			<Paper>
 				<MuiPickersUtilsProvider utils={DateFnsUtils}>

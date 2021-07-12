@@ -50,8 +50,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ModalFormProximaConsulta = (props) => {
-  const classes = myStyles(colorBase)();
-
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
 
@@ -75,6 +73,8 @@ const ModalFormProximaConsulta = (props) => {
     dermatologos,
     colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   return (
     <div>
@@ -191,7 +191,7 @@ const ModalFormProximaConsulta = (props) => {
 
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
-                  className={classes.button}
+                  className={classes.buttonCancel}
                   color="secondary"
                   variant="contained"
                   onClick={onClose}

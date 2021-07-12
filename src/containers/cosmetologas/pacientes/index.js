@@ -13,39 +13,16 @@ import TodayIcon from '@material-ui/icons/Today';
 import HistoryIcon from '@material-ui/icons/History';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import { findCabinaBySucursalId } from "../../../services";
+import myStyles from "../../../css";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-const useStyles = makeStyles(theme => ({
-	formControl: {
-		width: '100%',
-		margin: '5px',
-	},
-	backdrop: {
-		zIndex: theme.zIndex.drawer + 1,
-		color: '#fff',
-	},
-	root: {
-		width: '100%',
-		'& > * + *': {
-			marginTop: theme.spacing(2),
-		},
-	},
-	paper: {
-		position: 'absolute',
-		width: 400,
-		backgroundColor: theme.palette.background.paper,
-		border: '2px solid #000',
-		boxShadow: theme.shadows[5],
-		padding: theme.spacing(2, 4, 3),
-	}
-}));
-
 const Pacientes = (props) => {
 
-	const classes = useStyles();
+	const classes = myStyles();
 
 	const [open, setOpen] = useState(false);
 	const [openHistoric, setOpenHistoric] = useState(false);
@@ -177,31 +154,6 @@ const Pacientes = (props) => {
 	}
 
 	const actions = [
-		/*{
-			icon: TodayIcon,
-			tooltip: 'AGREGAR CONSULTA',
-			onClick: onClickAgendarConsulta
-		},
-		{
-			icon: EventAvailableIcon,
-			tooltip: 'AGREGAR FACIAL',
-			onClick: onClickAgendarFaciales
-		},
-		{
-			icon: EventAvailableIcon,
-			tooltip: 'AGREGAR LÁSER',
-			onClick: onClickAgendarLaser
-		},
-		{
-			icon: EventAvailableIcon,
-			tooltip: 'AGREGAR APARATOLOGÍA',
-			onClick: onClickAgendarAparatologia
-		},
-		{
-			icon: EditIcon,
-			tooltip: 'ACTUALIZAR REGISTRO',
-			onClick: handleOnClickEditar
-		},*/
 		{
 			icon: HistoryIcon,
 			tooltip: 'HISTÓRICO',
@@ -212,21 +164,6 @@ const Pacientes = (props) => {
 	const onChangeActions = (e, rowData) => {
 		const action = e.target.value;
 		switch (action) {
-			case 'AGREGAR CONSULTA':
-				onClickAgendarConsulta(e, rowData);
-				break;
-			case 'AGREGAR FACIAL':
-				onClickAgendarFaciales(e, rowData);
-				break;
-			/*case 'AGREGAR LÁSER':
-				onClickAgendarLaser(e, rowData);
-				break;*/
-			case 'AGREGAR APARATOLOGÍA':
-				onClickAgendarAparatologia(e, rowData);
-				break;
-			case 'ACTUALIZAR REGISTRO':
-				handleOnClickEditar(e, rowData);
-				break;
 			case 'HISTÓRICO':
 				handleClickHistorico(e, rowData);
 				break;
@@ -276,6 +213,7 @@ const Pacientes = (props) => {
 						onClickGuardarAgendar={handleOnClickGuardarAgendar}
 						handleOpen={handleOpen}
 						handleClose={handleClose}
+						colorBase={colorBase}
 						components={components} /> :
 					<Backdrop className={classes.backdrop} open={isLoading} >
 						<CircularProgress color="inherit" />

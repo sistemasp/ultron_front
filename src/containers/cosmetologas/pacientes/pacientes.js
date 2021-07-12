@@ -1,7 +1,9 @@
 import React, { Fragment } from 'react';
 import TableComponent from '../../../components/table/TableComponent';
 import { Grid, makeStyles } from '@material-ui/core';
+import ModalPaciente from '../../../components/modales/modal_paciente';
 import MenuHistoricos from '../../../components/modales/modal_historico';
+import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import { baseUrl } from '../../../services';
 import myStyles from '../../../css';
 
@@ -19,7 +21,12 @@ export const PacientesContainer = (props) => {
     openHistoric,
     handleOpen,
     handleClose,
+    onClickGuardar,
+    onClickGuardarAgendar,
+    colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   const pacientes = query =>
     new Promise((resolve, reject) => {
@@ -45,9 +52,10 @@ export const PacientesContainer = (props) => {
         openHistoric ?
           <MenuHistoricos
             open={openHistoric}
-            empleado={empleado}
             onClose={handleClose}
-            paciente={paciente} /> : ''
+            paciente={paciente}
+            colorBase={colorBase}
+            empleado={empleado} /> : ''
       }
       <Grid container>
         <Grid item xs={12}>

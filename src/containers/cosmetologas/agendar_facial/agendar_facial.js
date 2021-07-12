@@ -24,7 +24,6 @@ export const AgendarFacialContainer = (props) => {
 
 	const {
 		values,
-		errors,
 		servicios,
 		tratamientos,
 		areas,
@@ -59,6 +58,8 @@ export const AgendarFacialContainer = (props) => {
 		onChangeMedio,
 		medios,
 		dermatologoDirectoId,
+		selectedAreas,
+		colorBase,
 		// TABLE DATES PROPERTIES
 		titulo,
 		columns,
@@ -93,6 +94,8 @@ export const AgendarFacialContainer = (props) => {
 		onCloseTraspasos,
 	} = props;
 
+	const classes = myStyles(colorBase)();
+
 	return (
 		<Fragment>
 			{
@@ -118,6 +121,7 @@ export const AgendarFacialContainer = (props) => {
 						setOpenAlert={setOpenAlert}
 						setMessage={setMessage}
 						setSeverity={setSeverity}
+						colorBase={colorBase}
 						setFilterDate={setFilterDate} /> : ''
 			}
 			{
@@ -155,6 +159,7 @@ export const AgendarFacialContainer = (props) => {
 						setMessage={setMessage}
 						setOpenAlert={setOpenAlert}
 						onGuardarModalPagos={onGuardarModalPagos}
+						colorBase={colorBase}
 						tipoServicioId={facial.servicio._id} />
 					: ''
 			}
@@ -163,6 +168,7 @@ export const AgendarFacialContainer = (props) => {
 					<ModalImprimirTratamiento
 						open={openModalImprimirCita}
 						onClose={onCloseImprimirConsulta}
+						colorBase={colorBase}
 						datos={datosImpresion} />
 					: ''
 			}
@@ -176,10 +182,10 @@ export const AgendarFacialContainer = (props) => {
 						sucursal={sucursal._id}
 						setMessage={setMessage}
 						setOpenAlert={setOpenAlert}
+						colorBase={colorBase}
 						loadServicios={loadFaciales} />
 					: ''
 			}
-
 			<Paper>
 				<MuiPickersUtilsProvider utils={DateFnsUtils}>
 					<Grid

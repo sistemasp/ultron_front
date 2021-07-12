@@ -23,7 +23,7 @@ import { toFormatterCurrency, addZero, generateFolio, dateToString } from "../..
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import PrintIcon from '@material-ui/icons/Print';
 import { AgendarAparatologiaContainer } from "./agendar_aparatologia";
-import { 
+import {
 	createAparatologia,
 	findAparatologiaByDateAndSucursal,
 	updateAparatologia
@@ -71,6 +71,11 @@ const AgendarAparatologia = (props) => {
 	const cosmetologaRolId = process.env.REACT_APP_COSMETOLOGA_ROL_ID;
 	const pendienteStatusId = process.env.REACT_APP_PENDIENTE_STATUS_ID;
 	const atendidoStatusId = process.env.REACT_APP_ATENDIDO_STATUS_ID;
+	const confirmadoStatusId = process.env.REACT_APP_CONFIRMADO_STATUS_ID;
+	const noAsistioStatusId = process.env.REACT_APP_NO_ASISTIO_STATUS_ID;
+	const reagendoStatusId = process.env.REACT_APP_REAGENDO_STATUS_ID;
+	const canceladoCPStatusId = process.env.REACT_APP_CANCELO_CP_STATUS_ID;
+	const canceladoSPStatusId = process.env.REACT_APP_CANCELO_SP_STATUS_ID;
 	const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
 	const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
 	const sucursalFedeId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
@@ -100,6 +105,7 @@ const AgendarAparatologia = (props) => {
 	const [productos, setProductos] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [disableDate, setDisableDate] = useState(true);
+	const [selectedAreas, setSelectedAreas] = useState(false);
 	const [values, setValues] = useState({
 		servicio: servicioAparatologiaId,
 		tratamientos: [],
@@ -252,6 +258,7 @@ const AgendarAparatologia = (props) => {
 	}
 
 	const handleChangeTratamientos = (e) => {
+		setSelectedAreas(false);
 		e.map(async (tratamiento) => {
 			setIsLoading(true);
 			const response = await findAreasByTreatmentServicio(tratamiento.servicio, tratamiento._id);
@@ -272,6 +279,7 @@ const AgendarAparatologia = (props) => {
 	};
 
 	const handleChangeAreas = async (items, tratamiento) => {
+		setSelectedAreas(items.length > 0);
 		tratamiento.areasSeleccionadas = items;
 		setIsLoading(true);
 		let precio = 0;
@@ -285,6 +293,7 @@ const AgendarAparatologia = (props) => {
 									: (sucursal === sucursalRubenDarioId ? item.precio_rd // PRECIO RUBEN DARIO
 										: 0))); // ERROR
 					precio = Number(precio) + Number(itemPrecio);
+					item.precio_real = itemPrecio;
 				});
 			}
 		});
@@ -293,6 +302,7 @@ const AgendarAparatologia = (props) => {
 			fecha_hora: '',
 			precio: precio,
 			total: precio,
+			hora: '',
 			tiempo: getTimeToTratamiento(),
 		});
 		setDisableDate(false);
@@ -304,6 +314,7 @@ const AgendarAparatologia = (props) => {
 		setValues({
 			...values,
 			fecha_hora: date,
+			hora: '',
 		});
 		loadHorarios(date);
 		setIsLoading(false);
@@ -373,7 +384,7 @@ const AgendarAparatologia = (props) => {
 		data.tipo_cita = data.dermatologo._id === dermatologoDirectoId ? directoTipoCitaId : data.tipo_cita;
 		const response = await createAparatologia(data, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-			/*const consecutivo = {
+			const consecutivo = {
 				consecutivo: response.data.consecutivo,
 				tipo_servicio: response.data.servicio,
 				servicio: response.data._id,
@@ -382,26 +393,26 @@ const AgendarAparatologia = (props) => {
 				status: response.data.status,
 			}
 			const responseConsecutivo = await createConsecutivo(consecutivo);
-			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
-			setOpenAlert(true);
-			setSeverity('success');
-			setMessage('APARATOLOGIA AGREGADA CORRECTAMENTE');
-			setValues({
-				servicio: '',
-				tratamientos: [],
-				dermatologo: '',
-				promovendedor: '',
-				cosmetologa: '',
-				paciente: `${paciente._id}`,
-				precio: 0,
-				total: 0,
-				tipo_cita: {},
-				tiempo: '30',
-			});
-			setDisableDate(true);
-			setPacienteAgendado({});
-			loadAparatologias(new Date());
-			//}
+			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+				setOpenAlert(true);
+				setSeverity('success');
+				setMessage('APARATOLOGIA AGREGADA CORRECTAMENTE');
+				setValues({
+					servicio: '',
+					tratamientos: [],
+					dermatologo: '',
+					promovendedor: '',
+					cosmetologa: '',
+					paciente: `${paciente._id}`,
+					precio: 0,
+					total: 0,
+					tipo_cita: {},
+					tiempo: '30',
+				});
+				setDisableDate(true);
+				setPacienteAgendado({});
+				loadAparatologias(new Date());
+			}
 		}
 
 		setIsLoading(false);
@@ -566,10 +577,47 @@ const AgendarAparatologia = (props) => {
 							label="ACCIONES">
 							{
 								props.actions.map((item, index) => {
-									return <MenuItem
+									let menuItem = <MenuItem
 										key={index}
 										value={item.tooltip}
-									>{item.tooltip}</MenuItem>
+									>{item.tooltip}</MenuItem>;
+									switch (item.tooltip) {
+										case 'EDITAR':
+											menuItem = props.data.status._id !== canceladoCPStatusId && props.data.status._id !== canceladoSPStatusId
+												?
+												<MenuItem
+													key={index}
+													value={item.tooltip}
+												>{item.tooltip}</MenuItem>
+												: '';
+											break;
+										case 'PAGOS':
+											menuItem = props.data.status._id !== pendienteStatusId && props.data.status._id !== confirmadoStatusId ?
+												<MenuItem
+													key={index}
+													value={item.tooltip}
+												>{item.tooltip}</MenuItem>
+												: '';
+											break;
+										case 'TRASPASO':
+											menuItem = props.data.status._id !== atendidoStatusId && props.data.status._id !== confirmadoStatusId ?
+												<MenuItem
+													key={index}
+													value={item.tooltip}
+												>{item.tooltip}</MenuItem>
+												: '';
+											break;
+										case 'NUEVA CITA':
+											menuItem = props.data.status._id === atendidoStatusId ?
+												<MenuItem
+													key={index}
+													value={item.tooltip}
+												>{item.tooltip}</MenuItem>
+												: '';
+									}
+									if (menuItem !== '' && props.data.status._id !== reagendoStatusId && props.data.status._id !== noAsistioStatusId) {
+										return menuItem;
+									}
 								})
 							}
 						</Select>
@@ -718,6 +766,7 @@ const AgendarAparatologia = (props) => {
 								frecuencias={frecuencias}
 								productos={productos}
 								formasPago={formasPago}
+								colorBase={colorBase}
 								onChangeFrecuencia={(e) => handleChangeFrecuencia(e)}
 								onChangeTipoCita={(e) => handleChangeTipoCita(e)}
 								onChangeMedio={(e) => handleChangeMedio(e)}
@@ -741,6 +790,7 @@ const AgendarAparatologia = (props) => {
 								onGuardarModalPagos={handleGuardarModalPagos}
 								openModalTraspaso={openModalTraspaso}
 								onCloseTraspasos={handleCloseTraspasos}
+								selectedAreas={selectedAreas}
 								{...props} />
 						}
 					</Formik> :

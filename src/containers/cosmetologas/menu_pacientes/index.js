@@ -21,6 +21,7 @@ const MenuPatient = (props) => {
         sucursal,
         empleado,
         history,
+        colorBase,
     } = props;
 
     const handleChangeTab = (event, newValue) => {
@@ -32,9 +33,34 @@ const MenuPatient = (props) => {
         setValue(Number(process.env.REACT_APP_PAGE_AGENDAR_FACIALES));
     }
 
+    const handleAgendarLaser = (event, rowData) => {
+        setPacienteAgendado(rowData);
+        setValue(Number(process.env.REACT_APP_PAGE_AGENDAR_LASER));
+    }
+
     const handleAgendarAparatologia = (event, rowData) => {
         setPacienteAgendado(rowData);
         setValue(Number(process.env.REACT_APP_PAGE_AGENDAR_APARATOLOGIA));
+    }
+
+    const handleAgendarDermapen = (event, rowData) => {
+        setConsultaAgendada(rowData);
+        setValue(Number(process.env.REACT_APP_PAGE_AGENDAR_DERMAPEN));
+    }
+
+    const handleClickAgendarConsulta = (event, rowData) => {
+        setPacienteAgendado(rowData);
+        setValue(Number(process.env.REACT_APP_PAGE_AGENDAR_CONSULTA));
+    }
+
+    const handleClickAgendarCirugia = (event, rowData) => {
+        setConsultaAgendada(rowData);
+        setValue(Number(process.env.REACT_APP_PAGE_AGENDAR_CIRUGIA));
+    }
+
+    const handleClickAgendarEstetica = (event, rowData) => {
+        setConsultaAgendada(rowData);
+        setValue(Number(process.env.REACT_APP_PAGE_AGENDAR_ESTETICA));
     }
 
     const handleLogout = () => {
@@ -66,9 +92,14 @@ const MenuPatient = (props) => {
                 consultaAgendada={consultaAgendada}
                 onChangeTab={handleChangeTab}
                 onClickAgendarFaciales={handleAgendarFaciales}
+                onClickAgendarConsulta={handleClickAgendarConsulta}
+                onClickAgendarCirugia={handleClickAgendarCirugia}
+                onClickAgendarEstetica={handleClickAgendarEstetica}
                 onClickAgendarAparatologia={handleAgendarAparatologia}
+                onClickAgendarDermapen={handleAgendarDermapen}
                 empleado={empleado}
                 sucursal={sucursal}
+                colorBase={colorBase}
                 open={open}
                 onClickLogout={handleLogout}
                 onClickCambioPassword={handleClickCambioPassword}

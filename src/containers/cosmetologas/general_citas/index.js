@@ -11,7 +11,6 @@ import { findCirugiaByDateAndSucursal } from "../../../services/cirugias";
 import { findEsteticaByDateAndSucursal } from "../../../services/esteticas";
 
 const GeneralCitas = (props) => {
-	const classes = myStyles(colorBase)();
 
 	const {
 		empleado,
@@ -19,8 +18,14 @@ const GeneralCitas = (props) => {
 		colorBase,
 	} = props;
 
+	const classes = myStyles(colorBase)();
+
+	const [consultas, setConsultas] = useState([]);
 	const [faciales, setFaciales] = useState([]);
 	const [aparatologias, setAparatologias] = useState([]);
+	const [dermapens, setDermapens] = useState([]);
+	const [cirugias, setCirugias] = useState([]);
+	const [esteticas, setEsteticas] = useState([]);
 
 	const [isLoading, setIsLoading] = useState(true);
 
@@ -84,6 +89,24 @@ const GeneralCitas = (props) => {
 
 	const actions = [];
 
+	const loadConsultas = async (filterDate) => {
+		const response = await findConsultsByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal, empleado.access_token);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			response.data.forEach(item => {
+				const fecha = new Date(item.fecha_hora);
+				item.folio = generateFolio(item);
+				item.hora = `${addZero(fecha.getHours())}:${addZero(fecha.getMinutes())}`;
+				item.precio_moneda = toFormatterCurrency(item.precio);
+				item.total_moneda = toFormatterCurrency(item.total);
+				item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
+				item.promovendedor_nombre = item.promovendedor ? item.promovendedor.nombre : 'SIN ASIGNAR';
+				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
+				item.show_tratamientos = 'NO APLICA';
+			});
+			setConsultas(response.data);
+		}
+	}
+
 	const loadFaciales = async (filterDate) => {
 		const response = await findFacialByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
@@ -97,12 +120,12 @@ const GeneralCitas = (props) => {
 				item.promovendedor_nombre = item.promovendedor ? item.promovendedor.nombre : 'SIN ASIGNAR';
 				item.cosmetologa_nombre = item.cosmetologa ? item.cosmetologa.nombre : 'SIN ASIGNAR';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
-				item.show_tratamientos = item.tratamientos.map(tratamiento => {
-					const show_areas = tratamiento.areasSeleccionadas.map(area => {
+				item.show_tratamientos = item.tratamientos ? item.tratamientos.map(tratamiento => {
+					const show_areas = tratamiento.areasSeleccionadas ? tratamiento.areasSeleccionadas.map(area => {
 						return `${area.nombre}`;
-					});
+					}) : '';
 					return `►${tratamiento.nombre}(${show_areas}) `;
-				});
+				}) : 'NO APLICA';
 			});
 			setFaciales(response.data);
 		}
@@ -121,27 +144,98 @@ const GeneralCitas = (props) => {
 				item.promovendedor_nombre = item.promovendedor ? item.promovendedor.nombre : 'SIN ASIGNAR';
 				item.cosmetologa_nombre = item.cosmetologa ? item.cosmetologa.nombre : 'SIN ASIGNAR';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
-				item.show_tratamientos = item.tratamientos.map(tratamiento => {
-					const show_areas = tratamiento.areasSeleccionadas.map(area => {
+				item.show_tratamientos = item.tratamientos ? item.tratamientos.map(tratamiento => {
+					const show_areas = tratamiento.areasSeleccionadas ? tratamiento.areasSeleccionadas.map(area => {
 						return `${area.nombre}`;
-					});
+					}) : '';
 					return `►${tratamiento.nombre}(${show_areas}) `;
-				});
+				}) : 'NO APLICA';
 			});
 			setAparatologias(response.data);
 		}
 	}
 
+	const loadDermapens = async (filterDate) => {
+		const response = await findDermapenByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal, empleado.access_token);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			response.data.forEach(item => {
+				item.folio = generateFolio(item);
+				const fecha = new Date(item.fecha_hora);
+				item.hora = `${addZero(fecha.getHours())}:${addZero(fecha.getMinutes())}`;
+				item.precio_moneda = toFormatterCurrency(item.precio);
+				item.total_moneda = toFormatterCurrency(item.total);
+				item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
+				item.promovendedor_nombre = item.promovendedor ? item.promovendedor.nombre : 'SIN ASIGNAR';
+				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
+				item.show_tratamientos = `►${item.producto.nombre}`;
+			});
+			setDermapens(response.data);
+		}
+	}
+
+	const loadCirugias = async (filterDate) => {
+		const response = await findCirugiaByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal, empleado.access_token, empleado.access_token);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			response.data.forEach(item => {
+				item.folio = generateFolio(item);
+				const fecha = new Date(item.fecha_hora);
+				item.hora = `${addZero(fecha.getHours())}:${addZero(fecha.getMinutes())}`;
+				item.precio_moneda = toFormatterCurrency(item.precio);
+				item.total_moneda = toFormatterCurrency(item.total);
+				item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
+				item.promovendedor_nombre = item.promovendedor ? item.promovendedor.nombre : 'SIN ASIGNAR';
+				item.cosmetologa_nombre = item.cosmetologa ? item.cosmetologa.nombre : 'SIN ASIGNAR';
+				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
+				item.show_tratamientos = 'NO APLICA';
+			});
+			setCirugias(response.data);
+		}
+	}
+
+	const loadEsteticas = async (filterDate) => {
+		const response = await findEsteticaByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal, empleado.access_token);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			response.data.forEach(item => {
+				item.folio = generateFolio(item);
+				const fecha = new Date(item.fecha_hora);
+				item.hora = `${addZero(fecha.getHours())}:${addZero(fecha.getMinutes())}`;
+				item.precio_moneda = toFormatterCurrency(item.precio);
+				item.total_moneda = toFormatterCurrency(item.total);
+				item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
+				item.dermatologo_nombre = item.dermatologo.nombre;
+				item.promovendedor_nombre = item.promovendedor.nombre;
+				item.show_tratamientos = item.producto.map(product => {
+					const toxinasRellenos = item.toxinas_rellenos.filter(toxina_relleno => {
+						return toxina_relleno.producto._id === product._id;
+					});
+					const show_toxinas = toxinasRellenos.map(toxinaRelleno => {
+						return `${toxinaRelleno.nombre}`;
+					});
+					return `►${product.nombre}(${show_toxinas}) `;
+				});
+			});
+			setEsteticas(response.data);
+		}
+	}
+
 	const loadAll = async (date) => {
 		setIsLoading(true);
+		await loadConsultas(date);
 		await loadFaciales(date);
 		await loadAparatologias(date);
+		await loadDermapens(date);
+		await loadCirugias(date);
+		await loadEsteticas(date);
 		setIsLoading(false);
 	}
 
 	const handleChangeFilterDate = async (date) => {
+		setConsultas([]);
 		setFaciales([]);
 		setAparatologias([]);
+		setDermapens([]);
+		setCirugias([]);
+		setEsteticas([]);
 		const dia = addZero(date.getDate());
 		const mes = addZero(date.getMonth() + 1);
 		const anio = date.getFullYear();
@@ -163,8 +257,12 @@ const GeneralCitas = (props) => {
 					<GeneralCitasContainer
 						onChangeFilterDate={(e) => handleChangeFilterDate(e)}
 						filterDate={filterDate.fecha_show}
+						consultas={consultas}
 						faciales={faciales}
 						aparatologias={aparatologias}
+						dermapens={dermapens}
+						cirugias={cirugias}
+						esteticas={esteticas}
 						titulo={`LISTADO GENERAL DE CITAS (${dateToString(filterDate.fecha_show)})`}
 						columns={columns}
 						options={options}

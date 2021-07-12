@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -11,6 +11,7 @@ import AgendarFacial from '../agendar_facial';
 import GeneralCitas from '../general_citas';
 import AgendarAparatologia from '../agendar_aparatologia';
 import myStyles from '../../../css';
+import Calendario from '../calendario';
 
 function TabPanel(props) {
 	const { children, value, index, ...other } = props;
@@ -41,26 +42,6 @@ function a11yProps(index) {
 		'aria-controls': `simple-tabpanel-${index}`,
 	};
 }
-/*
-const useStyles = makeStyles(theme => ({
-	root: {
-		flexGrow: 1,
-		backgroundColor: theme.palette.background.paper,
-	},
-	menuButton: {
-		marginRight: theme.spacing(1),
-	},
-	title: {
-		flexGrow: 1,
-	},
-	bar: {
-		backgroundColor: colorBase,
-	},
-	tabs: {
-		fontSize: 16,
-		height: 65,
-	}
-}));*/
 
 export const MenuContainer = props => {
 
@@ -77,10 +58,18 @@ export const MenuContainer = props => {
 		colorBase,
 	} = props;
 
-	const classes = myStyles(colorBase)();
+	const useStyles = makeStyles(theme => ({
+		root: {
+			flexGrow: 1,
+			backgroundColor: theme.palette.background.paper,
+		}		
+	}));
 
+	const classes = myStyles(colorBase)();
+	const classess = useStyles();
+	
 	return (
-		<div className={classes.root}>
+		<div className={classess.root}>
 			<AppBar
 				className={classes.bar}
 				position="sticky" >
@@ -94,20 +83,23 @@ export const MenuContainer = props => {
 					<Tab className={classes.tabs} label="FACIALES" {...a11yProps(1)} />
 					<Tab className={classes.tabs} label="APARATOLOGÍA" {...a11yProps(2)} />
 					<Tab className={classes.tabs} label="GENERAL" {...a11yProps(3)} />
+					<Tab className={classes.tabs} label="CALENDARIO" {...a11yProps(4)} />
 				</Tabs>
 			</AppBar>
 			<TabPanel value={value} index={0}>
 				<Pacientes
 					empleado={empleado}
-					onClickAgendarFaciales={onClickAgendarFaciales}
-					onClickAgendarAparatologia={onClickAgendarAparatologia}
+					sucursal={sucursal}
+					colorBase={colorBase}
 					onChangeTab={onChangeTab} />
 			</TabPanel>
+			
 			<TabPanel value={value} index={1}>
 				<AgendarFacial
 					info={pacienteAgendado}
 					setPacienteAgendado={setPacienteAgendado}
 					empleado={empleado}
+					colorBase={colorBase}
 					sucursal={sucursal._id} />
 			</TabPanel>
 			<TabPanel value={value} index={2}>
@@ -115,14 +107,21 @@ export const MenuContainer = props => {
 					info={pacienteAgendado}
 					setPacienteAgendado={setPacienteAgendado}
 					empleado={empleado}
+					colorBase={colorBase}
 					sucursal={sucursal._id} />
 			</TabPanel>
 			<TabPanel value={value} index={3}>
 				<GeneralCitas
 					empleado={empleado}
+					colorBase={colorBase}
 					sucursal={sucursal._id} />
 			</TabPanel>
-
+			<TabPanel value={value} index={4}>
+				<Calendario
+					empleado={empleado}
+					colorBase={colorBase}
+					sucursal={sucursal._id} />
+			</TabPanel>
 		</div>
 	);
 }
