@@ -53,8 +53,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
     colorBase,
   } = props;
 
-  console.log("KAOZ", pagoDermatologo);
-
   const useStyles = makeStyles(theme => ({
     paper: {
       position: 'absolute',

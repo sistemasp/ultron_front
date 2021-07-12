@@ -378,7 +378,7 @@ const ModalImprimirPagoDermatologo = (props) => {
       total += Number(pagoDermatologo);
     });
 
-    if (dermatologo._id == !dermatologoDirectoId) {
+    if (dermatologo._id !== dermatologoDirectoId) {
       const pagoDermatologo = {
         fecha_pago: new Date(),
         dermatologo: dermatologo,
