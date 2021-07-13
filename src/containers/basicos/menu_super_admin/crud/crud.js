@@ -1,11 +1,11 @@
 import React from 'react';
 import { Fragment } from 'react';
 import { Grid } from '@material-ui/core';
-import myStyles from '../../../css';
-import TableComponent from '../../../components/table/TableComponent';
-import { ButtonCustom } from '../../../components/basic/ButtonCustom';
-import ModalItemCatalogo from '../../../components/modales/item_catalogo';
-import ItemServicio from '../../../components/modales/item_catalogo/servicios';
+import myStyles from '../../../../css';
+import TableComponent from '../../../../components/table/TableComponent';
+import { ButtonCustom } from '../../../../components/basic/ButtonCustom';
+import ModalItemCatalogo from '../../../../components/modales/item_catalogo';
+import ItemServicio from '../../../../components/modales/item_catalogo/servicios';
 
 export const CrudContainer = props => {
 	const {

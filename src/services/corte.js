@@ -29,6 +29,18 @@ export const showCorteTodayBySucursalAndTurno = async (sucursalId, turno) => {
     }
 }
 
+export const findTurnoActualBySucursal = async (sucursalId) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/corte/sucursal/${sucursalId}/turnoactual`,
+            method: 'GET'
+        });
+        return response;
+    } catch (error) {
+        console.log('findTurnoActualBySucursal', error);
+    }
+}
+
 export const showCorteTodayBySucursalAndSchedule = async (sucursalId, hora_apertura, hora_cierre) => {
     try {
         const response = await axios({

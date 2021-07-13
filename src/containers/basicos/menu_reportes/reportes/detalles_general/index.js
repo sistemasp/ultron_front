@@ -71,6 +71,7 @@ const ReportesDetallesGeneral = (props) => {
 	const columns = [
 		{ title: 'FECHA', field: 'fecha_show' },
 		{ title: 'SUCURSAL', field: 'sucursal.nombre' },
+		{ title: 'TURNO', field: 'turno' },
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
 		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
@@ -100,6 +101,8 @@ const ReportesDetallesGeneral = (props) => {
 		{ title: '$ IMPUESTO', field: 'impuesto_cantidad' },
 		{ title: 'TOTAL', field: 'total_moneda' },
 		{ title: 'TOTAL DOCTOR', field: 'total_doctor' },
+		{ title: 'DOCTOR EFECTIVO', field: 'doctor_efectivo' },
+		{ title: 'DOCTOR RETENCIÓN', field: 'doctor_retencion' },
 		{ title: 'TOTAL CLÍNICA', field: 'total_clinica' },
 		{ title: 'FORMA DE PAGO', field: 'metodo_pago_nombre' },
 		{ title: 'FACTURA', field: 'requiere_factura' },
@@ -161,7 +164,6 @@ const ReportesDetallesGeneral = (props) => {
 			const descuentoPorcentaje = 100 - (pago.total * 100 / consulta.precio);
 			const descuentoCantidad = (consulta.precio * descuentoPorcentaje / 100);
 			const pagoDermatologo = pago.total * consulta.pago_dermatologo / consulta.total;
-			console.log("KAOZ", pago.total, consulta.pago_dermatologo, consulta.total );
 			const pagoClinica = pago.total - pagoDermatologo;
 			const descuentoClinicaPorcentaje = consulta.porcentaje_descuento_clinica ? consulta.porcentaje_descuento_clinica : 0;
 			const descuentoDermatologoPorcentaje = consulta.descuento_dermatologo ? consulta.descuento_dermatologo : 0;
@@ -187,6 +189,8 @@ const ReportesDetallesGeneral = (props) => {
 				cantidad_servicios: 1 / consulta.pagos.length,
 				total_moneda: toFormatterCurrency(pago.total),
 				total_doctor: toFormatterCurrency(pagoDermatologo),
+				doctor_efectivo: toFormatterCurrency(consulta.dermatologo.pago_completo ? pagoDermatologo : (pagoDermatologo / 2)),
+				doctor_retencion: toFormatterCurrency(consulta.dermatologo.pago_completo ? 0 : (pagoDermatologo / 2)),
 				total_clinica: toFormatterCurrency(pagoClinica),
 			}
 			datos.push(dato);
@@ -271,7 +275,10 @@ const ReportesDetallesGeneral = (props) => {
 							total_pagos: totalPagos,
 							total_moneda: toFormatterCurrency(total),
 							total_doctor: toFormatterCurrency(pagoDermatologo),
+							doctor_efectivo: toFormatterCurrency(facial.dermatologo.pago_completo ? pagoDermatologo : (pagoDermatologo / 2)),
+							doctor_retencion: toFormatterCurrency(facial.dermatologo.pago_completo ? 0 : (pagoDermatologo / 2)),
 							total_clinica: toFormatterCurrency(pagoClinica),
+							turno : pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO' ) : "SIN TURNO",
 						}
 						datos.push(dato);
 					}
@@ -285,6 +292,7 @@ const ReportesDetallesGeneral = (props) => {
 			const producto = tratamiento;
 			let totalPagos = 0;
 			aparatologia.pagos.forEach(pago => {
+				console.log("KAOZ", aparatologia);
 				const metodoPago = metodosPago.find(metodoPago => {
 					return metodoPago._id === pago.forma_pago;
 				});
@@ -361,7 +369,10 @@ const ReportesDetallesGeneral = (props) => {
 							total_pagos: totalPagos,
 							total_moneda: toFormatterCurrency(total),
 							total_doctor: toFormatterCurrency(pagoDermatologo),
+							doctor_efectivo: toFormatterCurrency(aparatologia.dermatologo.pago_completo ? pagoDermatologo : (pagoDermatologo / 2)),
+							doctor_retencion: toFormatterCurrency(aparatologia.dermatologo.pago_completo ? 0 : (pagoDermatologo / 2)),
 							total_clinica: toFormatterCurrency(pagoClinica),
+							turno : pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO' ) : "SIN TURNO",
 						}
 						datos.push(dato);
 					}
@@ -443,6 +454,8 @@ const ReportesDetallesGeneral = (props) => {
 					cantidad_servicios: 1 / cirugia.pagos.length,
 					total_moneda: toFormatterCurrency(total),
 					total_doctor: toFormatterCurrency(pagoDermatologo),
+					doctor_efectivo: toFormatterCurrency(cirugia.dermatologo.pago_completo ? pagoDermatologo : (pagoDermatologo / 2)),
+					doctor_retencion: toFormatterCurrency(cirugia.dermatologo.pago_completo ? 0 : (pagoDermatologo / 2)),
 					total_clinica: toFormatterCurrency(pagoClinica),
 				}
 				datos.push(dato);
@@ -495,6 +508,8 @@ const ReportesDetallesGeneral = (props) => {
 						cantidad_servicios: 1,
 						total_moneda: toFormatterCurrency(total),
 						total_doctor: "NO APLICA",
+						doctor_efectivo: "NO APLICA",
+						doctor_retencion: "NO APLICA",
 						total_clinica: toFormatterCurrency(total),
 					}
 					datos.push(dato);
@@ -548,6 +563,8 @@ const ReportesDetallesGeneral = (props) => {
 						cantidad_servicios: 1 / cirugia.biopsias.length,
 						total_moneda: toFormatterCurrency(total),
 						total_doctor: "NO APLICA",
+						doctor_efectivo: "NO APLICA",
+						doctor_retencion: "NO APLICA",
 						total_clinica: "NO APLICA",
 					}
 					datos.push(dato);
@@ -629,6 +646,8 @@ const ReportesDetallesGeneral = (props) => {
 					cantidad_servicios: 1 / dermapen.pagos.length,
 					total_moneda: toFormatterCurrency(total),
 					total_doctor: toFormatterCurrency(pagoDermatologo),
+					doctor_efectivo: toFormatterCurrency(dermapen.dermatologo.pago_completo ? pagoDermatologo : (pagoDermatologo / 2)),
+					doctor_retencion: toFormatterCurrency(dermapen.dermatologo.pago_completo ? 0 : (pagoDermatologo / 2)),
 					total_clinica: toFormatterCurrency(pagoClinica),
 				}
 				datos.push(dato);
@@ -681,6 +700,8 @@ const ReportesDetallesGeneral = (props) => {
 						cantidad_servicios: 1,
 						total_moneda: toFormatterCurrency(total),
 						total_doctor: "NO APLICA",
+						doctor_efectivo: "NO APLICA",
+						doctor_retencion: "NO APLICA",
 						total_clinica: toFormatterCurrency(total),
 					}
 					datos.push(dato);
@@ -760,6 +781,8 @@ const ReportesDetallesGeneral = (props) => {
 					impuesto_cantidad: toFormatterCurrency(impuesto),
 					total_moneda: toFormatterCurrency(total),
 					total_doctor: toFormatterCurrency(pagoDermatologo),
+					doctor_efectivo: toFormatterCurrency(estetica.dermatologo.pago_completo ? pagoDermatologo : (pagoDermatologo / 2)),
+					doctor_retencion: toFormatterCurrency(estetica.dermatologo.pago_completo ? 0 : (pagoDermatologo / 2)),
 					total_clinica: toFormatterCurrency(pagoClinica),
 				}
 				datos.push(dato);
@@ -812,6 +835,8 @@ const ReportesDetallesGeneral = (props) => {
 						cantidad_servicios: 1,
 						total_moneda: toFormatterCurrency(total),
 						total_doctor: "NO APLICA",
+						doctor_efectivo: "NO APLICA",
+						doctor_retencion: "NO APLICA",
 						total_clinica: toFormatterCurrency(total),
 					}
 					datos.push(dato);
@@ -865,6 +890,8 @@ const ReportesDetallesGeneral = (props) => {
 						cantidad_servicios: toxina_relleno.unidades,
 						total_moneda: toFormatterCurrency(total),
 						total_doctor: "NO APLICA",
+						doctor_efectivo: "NO APLICA",
+						doctor_retencion: "NO APLICA",
 						total_clinica: toFormatterCurrency(total),
 					}
 					datos.push(dato);

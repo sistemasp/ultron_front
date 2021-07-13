@@ -31,15 +31,11 @@ import Consultorios from '../consultorios';
 import Corte from '../menu_corte';
 import ListaEspera from '../lista_espera';
 import AssignmentIcon from '@material-ui/icons/Assignment';
-import MenuReports from '../menu_reportes';
+import MenuReports from '../../basicos/menu_reportes';
 import Description from '@material-ui/icons/Description';
 import MenuRazonSocial from '../menu_razon_social';
-import {
-	createCorte,
-	showCorteTodayBySucursalAndTurno
-} from '../../../services/corte';
 import myStyles from '../../../css';
-import MenuSuperAdmin from '../../menu_super_admin';
+import MenuSuperAdmin from '../../basicos/menu_super_admin';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 
 const TabPanel = (props) => {

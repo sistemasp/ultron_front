@@ -26,7 +26,7 @@ export const ReportesDetalleGeneralContainer = (props) => {
 	} = props;
 
 	const classes = myStyles(colorBase)();
-
+	
 	return (
 		<Fragment>
 			<Paper>

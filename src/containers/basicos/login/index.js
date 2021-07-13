@@ -2,15 +2,15 @@ import React, { Fragment, useEffect, useState } from "react";
 import { Formik } from "formik";
 import io from 'socket.io-client';
 import socketIOClient from "socket.io-client";
-import { showAllOffices } from "../../services";
+import { showAllOffices } from "../../../services";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { LoginContainer } from "./login";
 import { withRouter } from 'react-router-dom';
 import * as Yup from "yup";
 import { Snackbar, Grid } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
-import bannerMePiel from './../../bannerMePiel.PNG';
-import { login } from "../../services/empleados";
+import bannerMePiel from './../../../bannerMePiel.PNG';
+import { login } from "../../../services/empleados";
 
 const styles = theme => ({
   paper: {

@@ -2,16 +2,16 @@ import React, { useState, Fragment, useEffect } from "react";
 import { MenuSuperAdminContainer } from "./menu_super_admin";
 import { Backdrop, CircularProgress, Snackbar } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
-import { showAllCatalogos } from "../../services/catalogos";
-import myStyles from "../../css";
-import { showAllLaboratorios } from "../../services/laboratorios";
-import { showAllProductoComercials } from "../../services/productos_comerciales";
-import { showAllOcupacions } from "../../services/ocupacion";
-import { showAllEspecialidades } from "../../services/especialidades";
-import { addZero } from "../../utils/utils";
-import { getAllServices } from "../../services/servicios";
-import { getAllTreatments } from "../../services/tratamientos";
-import { findEmployeesByRolIdAvailable } from "../../services/empleados";
+import { showAllCatalogos } from "../../../services/catalogos";
+import myStyles from "../../../css";
+import { showAllLaboratorios } from "../../../services/laboratorios";
+import { showAllProductoComercials } from "../../../services/productos_comerciales";
+import { showAllOcupacions } from "../../../services/ocupacion";
+import { showAllEspecialidades } from "../../../services/especialidades";
+import { addZero } from "../../../utils/utils";
+import { getAllServices } from "../../../services/servicios";
+import { getAllTreatments } from "../../../services/tratamientos";
+import { findEmployeesByRolIdAvailable } from "../../../services/empleados";
 
 const Alert = (props) => {
     return <MuiAlert elevation={6} variant="filled" {...props} />;

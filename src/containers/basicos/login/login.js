@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core";
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import { ButtonCustom } from "../../components/basic/ButtonCustom";
+import { ButtonCustom } from "../../../components/basic/ButtonCustom";
 
 const useStyles = makeStyles(theme => ({
 	root: {

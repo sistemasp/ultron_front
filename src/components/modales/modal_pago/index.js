@@ -17,6 +17,7 @@ import { findEsquemaById } from '../../../services/esquemas';
 import { Backdrop, CircularProgress } from '@material-ui/core';
 import myStyles from '../../../css';
 import { Fragment } from 'react';
+import { findTurnoActualBySucursal } from '../../../services/corte';
 
 const ModalPago = (props) => {
 
@@ -68,6 +69,7 @@ const ModalPago = (props) => {
   const [formasPago, setFormasPago] = useState([]);
   const [tiposTarjeta, setTiposTarjeta] = useState([]);
   const [esquema, setEsquema] = useState({});
+  const [turno, setTurno] = useState({});
 
   const [values, setValues] = useState({
     forma_pago: pago.forma_pago ? pago.forma_pago._id : '',
@@ -203,6 +205,7 @@ const ModalPago = (props) => {
     rowData.servicio = servicio._id;
     rowData.tipo_servicio = tipoServicioId;
     rowData.hora_aplicacion = servicio.hora_aplicacion;
+    rowData.turno = turno;
 
     let tipoEntrada = '';
 
@@ -313,12 +316,21 @@ const ModalPago = (props) => {
     }
   }
 
+  const getTurno = async () => {
+    const response = await findTurnoActualBySucursal(sucursal);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      const corte = response.data;
+      setTurno(corte.turno);
+    }
+  }
+
   const loadAll = async () => {
     setIsLoading(true);
     await loadBancos();
     await loadMetodosPago();
     await loadTipoTarjeta();
     await loadEsquema();
+    await getTurno();
     setIsLoading(false);
   }
 
