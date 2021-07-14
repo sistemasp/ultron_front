@@ -157,7 +157,7 @@ export const AgendarConsultaContainer = (props) => {
             onClose={OnCloseVerPagos}
             servicio={consulta}
             empleado={empleado}
-            sucursal={sucursal}
+            sucursal={sucursal._id}
             setMessage={setMessage}
             setOpenAlert={setOpenAlert}
             tipoServicioId={tipoServicioId}
