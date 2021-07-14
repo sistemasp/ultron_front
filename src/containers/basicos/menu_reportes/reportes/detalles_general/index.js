@@ -192,6 +192,7 @@ const ReportesDetallesGeneral = (props) => {
 				doctor_efectivo: toFormatterCurrency(consulta.dermatologo.pago_completo ? pagoDermatologo : (pagoDermatologo / 2)),
 				doctor_retencion: toFormatterCurrency(consulta.dermatologo.pago_completo ? 0 : (pagoDermatologo / 2)),
 				total_clinica: toFormatterCurrency(pagoClinica),
+				turno : pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO' ) : "SIN TURNO",
 			}
 			datos.push(dato);
 		});
@@ -457,6 +458,7 @@ const ReportesDetallesGeneral = (props) => {
 					doctor_efectivo: toFormatterCurrency(cirugia.dermatologo.pago_completo ? pagoDermatologo : (pagoDermatologo / 2)),
 					doctor_retencion: toFormatterCurrency(cirugia.dermatologo.pago_completo ? 0 : (pagoDermatologo / 2)),
 					total_clinica: toFormatterCurrency(pagoClinica),
+					turno : pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO' ) : "SIN TURNO",
 				}
 				datos.push(dato);
 			}
@@ -511,6 +513,7 @@ const ReportesDetallesGeneral = (props) => {
 						doctor_efectivo: "NO APLICA",
 						doctor_retencion: "NO APLICA",
 						total_clinica: toFormatterCurrency(total),
+						turno : pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO' ) : "SIN TURNO",
 					}
 					datos.push(dato);
 				}
@@ -566,6 +569,7 @@ const ReportesDetallesGeneral = (props) => {
 						doctor_efectivo: "NO APLICA",
 						doctor_retencion: "NO APLICA",
 						total_clinica: "NO APLICA",
+						turno : pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO' ) : "SIN TURNO",
 					}
 					datos.push(dato);
 				}
@@ -649,6 +653,7 @@ const ReportesDetallesGeneral = (props) => {
 					doctor_efectivo: toFormatterCurrency(dermapen.dermatologo.pago_completo ? pagoDermatologo : (pagoDermatologo / 2)),
 					doctor_retencion: toFormatterCurrency(dermapen.dermatologo.pago_completo ? 0 : (pagoDermatologo / 2)),
 					total_clinica: toFormatterCurrency(pagoClinica),
+					turno : pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO' ) : "SIN TURNO",
 				}
 				datos.push(dato);
 			}
@@ -703,6 +708,7 @@ const ReportesDetallesGeneral = (props) => {
 						doctor_efectivo: "NO APLICA",
 						doctor_retencion: "NO APLICA",
 						total_clinica: toFormatterCurrency(total),
+						turno : pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO' ) : "SIN TURNO",
 					}
 					datos.push(dato);
 				}
@@ -784,6 +790,7 @@ const ReportesDetallesGeneral = (props) => {
 					doctor_efectivo: toFormatterCurrency(estetica.dermatologo.pago_completo ? pagoDermatologo : (pagoDermatologo / 2)),
 					doctor_retencion: toFormatterCurrency(estetica.dermatologo.pago_completo ? 0 : (pagoDermatologo / 2)),
 					total_clinica: toFormatterCurrency(pagoClinica),
+					turno : pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO' ) : "SIN TURNO",
 				}
 				datos.push(dato);
 			}
@@ -838,6 +845,7 @@ const ReportesDetallesGeneral = (props) => {
 						doctor_efectivo: "NO APLICA",
 						doctor_retencion: "NO APLICA",
 						total_clinica: toFormatterCurrency(total),
+						turno : pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO' ) : "SIN TURNO",
 					}
 					datos.push(dato);
 				}
@@ -893,6 +901,7 @@ const ReportesDetallesGeneral = (props) => {
 						doctor_efectivo: "NO APLICA",
 						doctor_retencion: "NO APLICA",
 						total_clinica: toFormatterCurrency(total),
+						turno : pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO' ) : "SIN TURNO",
 					}
 					datos.push(dato);
 				}
