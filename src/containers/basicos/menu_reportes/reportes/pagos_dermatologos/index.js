@@ -65,26 +65,11 @@ const ReportePagosDermatologos = (props) => {
 	});
 
 	const columns = [
-		{ title: 'FOLIO', field: 'consecutivo' },
+		{ title: 'SUCURSAL', field: 'sucursal.nombre' },
 		{ title: 'FECHA', field: 'fecha_show' },
-		{ title: 'HORA', field: 'hora' },
-		{ title: 'PACIENTE', field: 'paciente_nombre' },
-		{ title: 'TELÉFONO', field: 'paciente.telefono' },
-		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
-		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
-		{ title: 'HORA SALIDA', field: 'hora_salida' },
-		{ title: 'SERVICIO', field: 'servicio.nombre' },
-		{ title: 'PRODUCTO (ÁREAS)', field: 'show_tratamientos' },
-		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
-		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
-		{ title: 'MEDIO', field: 'medio.nombre' },
-		{ title: 'TIPO', field: 'tipo_cita.nombre' },
-		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
-		{ title: 'PROMOVENDEDOR (A)', field: 'promovendedor_nombre' },
-		{ title: 'STATUS', field: 'status.nombre' },
-		{ title: 'PRECIO', field: 'precio_moneda' },
-		{ title: 'TIEMPO', field: 'tiempo' },
-		{ title: 'OBSERVACIONES', field: 'observaciones' },
+		{ title: 'TURNO', field: 'turno' },
+		{ title: 'CANTIDAD', field: 'cantidad_moneda' },
+		{ title: 'RETENCIÓN', field: 'retencion' },
 	];
 
 	const options = {

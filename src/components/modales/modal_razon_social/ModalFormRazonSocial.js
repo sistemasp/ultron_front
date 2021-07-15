@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { TextField, Button, Grid, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 import { ButtonCustom } from '../../basic/ButtonCustom';
+import myStyles from '../../../css';
 
 function getModalStyle() {
   const top = 50;
@@ -44,7 +45,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ModalFormRazonSocial = (props) => {
-  const classes = useStyles();
 
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
@@ -58,6 +58,7 @@ const ModalFormRazonSocial = (props) => {
     isValid,
     onClickCancel,
     onClickGuardar,
+    colorBase,
     estados,
     municipios,
     ciudades,
@@ -77,6 +78,8 @@ const ModalFormRazonSocial = (props) => {
     onChangeTelefono,
     onChangeCiudad,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   return (
     <div>
@@ -304,7 +307,7 @@ const ModalFormRazonSocial = (props) => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
-                  className={classes.button}
+                  className={classes.buttonCancel}
                   color="secondary"
                   variant="contained"
                   onClick={onClickCancel}

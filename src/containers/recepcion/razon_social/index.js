@@ -177,12 +177,12 @@ const RazonSocial = (props) => {
 	const actions = [
 		{
 			icon: EditIcon,
-			tooltip: 'Actualizar registro',
+			tooltip: 'ACTUALIZAR REGISTRO',
 			onClick: handleOnClickEditar
 		},
 		{
 			icon: HistoryIcon,
-			tooltip: 'Ver Historico',
+			tooltip: 'VER HISTORICO',
 			onClick: handleClickHistorico
 		}
 	];
@@ -209,6 +209,7 @@ const RazonSocial = (props) => {
 						openHistoric={openHistoric}
 						razonSocial={razonSocial}
 						telefono={razonSocial.telefono}
+						colorBase={colorBase}
 						onClickGuardar={handleOnClickGuardar}
 						onClickGuardarAgendar={handleOnClickGuardarAgendar}
 						handleOpen={handleOpen}

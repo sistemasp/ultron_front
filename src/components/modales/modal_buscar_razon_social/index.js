@@ -143,6 +143,7 @@ const ModalBuscarRazonSocial = (props) => {
             handleCloseNuevaRazonSocial={handleCloseNuevaRazonSocial}
             openNuevaRazonSocial={openNuevaRazonSocial}
             pago={pago}
+            colorBase={colorBase}
             loadRazonSocial={loadRazonSocial} /> :
           <Backdrop className={classes.backdrop} open={isLoading} >
             <CircularProgress color="inherit" />

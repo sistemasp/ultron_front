@@ -18,8 +18,6 @@ function getModalStyle() {
 }
 
 const ModalFormBuscarRazonSocial = (props) => {
-  const classes = myStyles(colorBase)();
-
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
 
@@ -42,6 +40,8 @@ const ModalFormBuscarRazonSocial = (props) => {
     handleCloseNuevaRazonSocial,
     colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   return (
     <div>
@@ -84,7 +84,7 @@ const ModalFormBuscarRazonSocial = (props) => {
             options={options} />
 
           <ButtonCustom
-            className={classes.button}
+            className={classes.buttonCancel}
             color="secondary"
             variant="contained"
             onClick={() => onClose(false)}

@@ -5,6 +5,8 @@ import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import { Paper, Button } from '@material-ui/core';
 import TableComponent from '../../../../../components/table/TableComponent';
+import { ButtonCustom } from '../../../../../components/basic/ButtonCustom';
+import myStyles from '../../../../../css';
 
 export const ReportesFacturasContainer = (props) => {
 
@@ -14,6 +16,7 @@ export const ReportesFacturasContainer = (props) => {
 		startDate,
 		endDate,
 		onClickReportes,
+		colorBase,
         // TABLE DATES PROPERTIES
         titulo,
         columns,
@@ -21,7 +24,11 @@ export const ReportesFacturasContainer = (props) => {
         actions,
         options,
     } = props;
+
+	const classes = myStyles(colorBase)();
 	
+	console.log("KAOZ", facturas);
+
     return (
         <Fragment>
             <Paper>
@@ -73,12 +80,12 @@ export const ReportesFacturasContainer = (props) => {
 						</MuiPickersUtilsProvider>
 					</Grid>
 					<Grid item xs={12} sm={2}>
-                        <Button
+                        <ButtonCustom
+						className={classes.button}
                             variant="contained"
                             color="primary"
-                            onClick={() => onClickReportes()} >
-                            OBTENER DATOS
-                        </Button>
+                            onClick={() => onClickReportes()} 
+							text="OBTENER DATOS" />
                     </Grid>
 				</Grid>
             </Paper>

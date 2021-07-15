@@ -23,38 +23,6 @@ function getModalStyle() {
   };
 }
 
-const useStyles = makeStyles(theme => ({
-  paper: {
-    position: 'absolute',
-    width: 700,
-    height: '90%',
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-  },
-  textField: {
-    width: '100%',
-  },
-  formControl: {
-    minWidth: 120,
-    width: '100%',
-  },
-  button: {
-    width: '100%',
-    color: '#FFFFFF',
-  },
-  label: {
-    marginTop: '0px',
-    marginBottom: '0px',
-  },
-  labelItemRight: {
-    marginTop: '0px',
-    marginBottom: '0px',
-    textAlign: 'right',
-  }
-}));
-
 const canceloStatusId = process.env.REACT_APP_CANCELO_STATUS_ID;
 const noAsistioStatusId = process.env.REACT_APP_NO_ASISTIO_STATUS_ID;
 const reagendoStatusId = process.env.REACT_APP_REAGENDO_STATUS_ID;

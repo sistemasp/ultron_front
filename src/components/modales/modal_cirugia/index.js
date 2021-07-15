@@ -149,6 +149,15 @@ const ModalCirugia = (props) => {
       }
     }
     data.biopsias = data.hasBiopsia ? idBiopsias : [];
+    if (data.status._id !== pendienteStatusId) {
+      data.quien_confirma_asistencia = empleado._id;
+
+      if (data.status === asistioStatusId) {
+        const dateNow = new Date();
+        data.hora_aplicacion = data.hora_aplicacion ? data.hora_aplicacion : dateNow;
+        data.hora_llegada = (data.hora_llegada && data.hora_llegada !== '--:--') ? data.hora_llegada : `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;
+      }
+    }
     if (data.status === reagendoStatusId) {
       await updateCirugia(data._id, data, empleado.access_token);
       data.quien_agenda = empleado._id;

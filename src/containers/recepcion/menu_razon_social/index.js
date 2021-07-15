@@ -20,6 +20,7 @@ const MenuRazonSocial = (props) => {
         sucursal,
         empleado,
         history,
+        colorBase,
     } = props;
 
     const handleChangeTab = (event, newValue) => {
@@ -72,6 +73,7 @@ const MenuRazonSocial = (props) => {
                 onOpen={handleOpen}
                 onClose={handleClose}
                 value={value}
+                colorBase={colorBase}
                 setMessage={setMessage}
                 setSeverity={setSeverity}
                 setOpenAlert={setOpenAlert}/>

@@ -3,16 +3,9 @@ import TableComponent from '../../../components/table/TableComponent';
 import { makeStyles } from '@material-ui/core';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import ModalRazonSocial from '../../../components/modales/modal_razon_social';
-
-const useStyles = makeStyles(theme => ({
-	button: {
-		color: '#FFFFFF'
-	}
-}));
+import myStyles from '../../../css';
 
 export const RazonSocialContainer = (props) => {
-
-  const classes = useStyles();
 
   const {
     titulo,
@@ -26,7 +19,10 @@ export const RazonSocialContainer = (props) => {
     handleOpen,
     handleClose,
     loadRazonSocial,
+    colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   return (
     <Fragment>
@@ -36,6 +32,7 @@ export const RazonSocialContainer = (props) => {
           open={open}
           onClose={handleClose}
           razonSocial={razonSocial}
+          colorBase={colorBase}
           loadRazonSocial={loadRazonSocial} /> : ''
       }
 

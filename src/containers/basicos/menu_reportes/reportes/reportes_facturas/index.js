@@ -11,6 +11,7 @@ import { findBiopsiaById } from "../../../../../services/biopsias";
 import { findEsteticaById } from "../../../../../services/esteticas";
 import { findDermapenById } from "../../../../../services/dermapens";
 import { findFacturasByRangeDateAndSucursal } from "../../../../../services/facturas";
+import myStyles from "../../../../../css";
 
 const useStyles = makeStyles(theme => ({
 	backdrop: {
@@ -21,12 +22,15 @@ const useStyles = makeStyles(theme => ({
 
 const ReportesFacturas = (props) => {
 
-	const classes = useStyles();
-
 	const {
+		empleado,
 		sucursal,
 		colorBase,
 	} = props;
+
+	const token = empleado.access_token;
+
+	const classes = myStyles(colorBase)();
 
 	const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID
 	const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID
@@ -55,25 +59,19 @@ const ReportesFacturas = (props) => {
 	});
 
 	const columns = [
+		{ title: 'SUCURSAL', field: 'sucursal.nombre' },
 		{ title: 'FECHA', field: 'fecha_show' },
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'RAZÓN SOCIAL', field: 'razon_social.nombre_completo' },
+		{ title: 'RFC', field: 'razon_social.rfc' },
+		{ title: 'SERVICIO', field: 'servicio' },
+		{ title: 'PRODUCTO', field: 'producto' },
 		{ title: 'CANTIDAD', field: 'cantidad_moneda' },
-		{ title: 'SUCURSAL', field: 'sucursal.nombre' },
+		{ title: 'USO CFDI', field: 'uso_cfdi.nombre' },
 	];
 
 	const options = {
-		rowStyle: rowData => {
-			const { asistio } = rowData;
-			if (asistio === 'NO ASISTIO') {
-				return { color: '#B7B4A1' };
-			} else if (asistio === 'CANCELO') {
-				return { color: '#FF0000', fontWeight: 'bold' };
-			} else if (asistio === 'REAGENDO') {
-				return { color: '#FBD014' };
-			}
-		},
 		headerStyle: {
 			backgroundColor: colorBase,
 			color: '#FFF',
@@ -85,64 +83,126 @@ const ReportesFacturas = (props) => {
 		exportDelimiter: ';'
 	}
 
-	useEffect(() => {
-
-		const loadFacturas = async () => {
-			setIsLoading(true);
-			const response = await findFacturasByRangeDateAndSucursal(date.getDate(), date.getMonth(), date.getFullYear(),
-				date.getDate(), date.getMonth(), date.getFullYear(), sucursal);
-
+	const loadFacturas = async (startDate, endDate) => {
+		const response = await findFacturasByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
+			endDate.getDate(), (endDate.getMonth() + 1), endDate.getFullYear(), sucursal);
 			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				await response.data.forEach(async (item) => {
-					let servicioResponse = { data: '' };
-					switch (item.tipo_servicio._id) {
-						case servicioAparatologiaId:
-							servicioResponse = await findAparatologiaById(item.servicio);
-							break;
-						case servicioFacialId:
-							servicioResponse = await findFacialById(item.servicio);
-							break;
-						case servicioConsultaId:
-							servicioResponse = await findConsultById(item.servicio);
-							break;
-						case servicioCirugiaId:
-							servicioResponse = await findCirugiaById(item.servicio);
-							break;
-						case servicioBiopsiaId:
-							servicioResponse = await findBiopsiaById(item.servicio);
-							break;
-						case servicioEsteticaId:
-							servicioResponse = await findEsteticaById(item.servicio);
-							break;
-						case servicioDermapenId:
-							servicioResponse = await findDermapenById(item.servicio);
-							break;
-					}
+				const resData = response.data;
+				// resData.forEach(async (item) => {
+				// 	let servicioResponse = { data: '' };
+				// 	switch (item.tipo_servicio._id) {
+				// 		case servicioAparatologiaId:
+				// 			servicioResponse = await findAparatologiaById(item.servicio, token);
+				// 			break;
+				// 		case servicioFacialId:
+				// 			servicioResponse = await findFacialById(item.servicio, token);
+				// 			break;
+				// 		case servicioConsultaId:
+				// 			servicioResponse = await findConsultById(item.servicio, token);
+				// 			break;
+				// 		case servicioCirugiaId:
+				// 			servicioResponse = await findCirugiaById(item.servicio, token);
+				// 			break;
+				// 		case servicioBiopsiaId:
+				// 			servicioResponse = await findBiopsiaById(item.servicio, token);
+				// 			break;
+				// 		case servicioEsteticaId:
+				// 			servicioResponse = await findEsteticaById(item.servicio, token);
+				// 			break;
+				// 		case servicioDermapenId:
+				// 			servicioResponse = await findDermapenById(item.servicio, token);
+				// 			break;
+				// 	}
+	
+				// 	if (`${servicioResponse.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 
-					if (`${servicioResponse.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-						item.servicio = servicioResponse.data;
+				// 		item.servicio = servicioResponse.data;
+	
+				// 		let cantidad = 0;
+				// 		item.servicio.pagos.forEach(pago => {
+				// 			cantidad += Number(pago.total);
+				// 		});
+				// 		const fecha = new Date(item.fecha_hora);
+				// 		item.hora = `${addZero(fecha.getHours())}:${addZero(fecha.getMinutes())}`;
+				// 		item.fecha_show = `${addZero(fecha.getDate())}/${addZero(fecha.getMonth() + 1)}/${fecha.getFullYear()}`;
+	
+				// 		item.cantidad_moneda = toFormatterCurrency(cantidad);
+				// 		item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
+	
+				// 		item.uso_cfdi.nombre = `${item.uso_cfdi.clave}: ${item.uso_cfdi.descripcion}`;
+				// 		//console.log("KAOZ", ...facturas, item);
 
-						let cantidad = 0;
-						item.servicio.pagos.forEach(pago => {
-							cantidad += Number(pago.total);
-						});
-						const fecha = new Date(item.fecha_hora);
-						item.hora = `${addZero(fecha.getHours())}:${addZero(fecha.getMinutes())}`;
-						item.fecha_show = `${addZero(fecha.getDate())}/${addZero(fecha.getMonth() + 1)}/${fecha.getFullYear()}`;
-
-						item.cantidad_moneda = toFormatterCurrency(cantidad);
-						item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
-					}
-
-					setFacturas(response.data);
-					setIsLoading(false);
-
-				});
-
+				// 	}
+				// });
+				setFacturas(resData);
 			}
-		}
-		loadFacturas();
+	}
+/*
+	const loadFacturas = async () => {
+		const response = await findFacturasByRangeDateAndSucursal(date.getDate(), date.getMonth(), date.getFullYear(),
+			date.getDate(), date.getMonth(), date.getFullYear(), sucursal);
 
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			const facturasResponse = [];
+			response.data.forEach(async (item) => {
+				let servicioResponse = { data: '' };
+				switch (item.tipo_servicio._id) {
+					case servicioAparatologiaId:
+						servicioResponse = await findAparatologiaById(item.servicio, token);
+						break;
+					case servicioFacialId:
+						servicioResponse = await findFacialById(item.servicio, token);
+						break;
+					case servicioConsultaId:
+						servicioResponse = await findConsultById(item.servicio, token);
+						break;
+					case servicioCirugiaId:
+						servicioResponse = await findCirugiaById(item.servicio, token);
+						break;
+					case servicioBiopsiaId:
+						servicioResponse = await findBiopsiaById(item.servicio, token);
+						break;
+					case servicioEsteticaId:
+						servicioResponse = await findEsteticaById(item.servicio, token);
+						break;
+					case servicioDermapenId:
+						servicioResponse = await findDermapenById(item.servicio, token);
+						break;
+				}
+
+				if (`${servicioResponse.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+					item.servicio = servicioResponse.data;
+
+					let cantidad = 0;
+					item.servicio.pagos.forEach(pago => {
+						cantidad += Number(pago.total);
+					});
+					const fecha = new Date(item.fecha_hora);
+					item.hora = `${addZero(fecha.getHours())}:${addZero(fecha.getMinutes())}`;
+					item.fecha_show = `${addZero(fecha.getDate())}/${addZero(fecha.getMonth() + 1)}/${fecha.getFullYear()}`;
+
+					item.cantidad_moneda = toFormatterCurrency(cantidad);
+					item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
+
+					item.uso_cfdi.nombre = `${item.uso_cfdi.clave}: ${item.uso_cfdi.descripcion}`;
+				}
+				
+				console.log("KAOZ", item);
+				facturasResponse.push(item);
+			});
+
+			setFacturas(facturasResponse);
+		}
+	}*/
+
+	const loadAll = async() => {
+		setIsLoading(true);
+		await loadFacturas(startDate.fecha_show, endDate.fecha_show);
+		setIsLoading(false);
+	}
+
+	useEffect(() => {
+		loadAll();
 	}, [sucursal]);
 
 	const handleChangeStartDate = async (date) => {
@@ -174,58 +234,6 @@ const ReportesFacturas = (props) => {
 		await loadFacturas(startDate.fecha_show, endDate.fecha_show);
 	}
 
-	const loadFacturas = async (startDate, endDate) => {
-		setIsLoading(true);
-		const response = await findFacturasByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
-			endDate.getDate(), (endDate.getMonth() + 1), endDate.getFullYear(), sucursal);
-		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			await response.data.forEach(async (item) => {
-				let servicioResponse = { data: '' };
-				switch (item.tipo_servicio._id) {
-					case servicioAparatologiaId:
-						servicioResponse = await findAparatologiaById(item.servicio);
-						break;
-					case servicioFacialId:
-						servicioResponse = await findFacialById(item.servicio);
-						break;
-					case servicioConsultaId:
-						servicioResponse = await findConsultById(item.servicio);
-						break;
-					case servicioCirugiaId:
-						servicioResponse = await findCirugiaById(item.servicio);
-						break;
-					case servicioBiopsiaId:
-						servicioResponse = await findBiopsiaById(item.servicio);
-						break;
-					case servicioEsteticaId:
-						servicioResponse = await findEsteticaById(item.servicio);
-						break;
-					case servicioDermapenId:
-						servicioResponse = await findDermapenById(item.servicio);
-						break;
-				}
-
-				if (`${servicioResponse.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-					item.servicio = servicioResponse.data;
-					let cantidad = 0;
-					item.servicio.pagos.forEach(pago => {
-						cantidad += Number(pago.total);
-					});
-					const fecha = new Date(item.fecha_hora);
-					item.hora = `${addZero(fecha.getHours())}:${addZero(fecha.getMinutes())}`;
-					item.fecha_show = `${addZero(fecha.getDate())}/${addZero(fecha.getMonth() + 1)}/${fecha.getFullYear()}`;
-
-					item.cantidad_moneda = toFormatterCurrency(cantidad);
-					item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
-				}
-
-				setFacturas(response.data);
-				setIsLoading(false);
-			});
-		}
-
-	}
-
 	const actions = [
 	];
 
@@ -243,6 +251,7 @@ const ReportesFacturas = (props) => {
 						options={options}
 						facturas={facturas}
 						actions={actions}
+						colorBase={colorBase}
 						onClickReportes={handleReportes}
 						{...props} />
 					: <Backdrop className={classes.backdrop} open={isLoading} >

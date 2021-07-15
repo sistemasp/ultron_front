@@ -69,7 +69,7 @@ export const MenuRazonSocialContainer = props => {
 	const classes = myStyles(colorBase)();
 
 	return (
-		<div className={classes.root}>
+		<div className={classes.subRoot}>
 			<AppBar className={classes.bar} position="static">
 				<Tabs value={value} onChange={onChangeTab} aria-label="simple tabs">
 					<Tab label="RAZÓN SOCIAL" {...a11yProps(0)} />
@@ -77,6 +77,7 @@ export const MenuRazonSocialContainer = props => {
 			</AppBar>
 			<TabPanel value={value} index={0}>
 				<RazonSocial
+					colorBase={colorBase}
 					sucursal={sucursal} />
 			</TabPanel>
 		</div>

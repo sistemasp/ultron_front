@@ -21,6 +21,7 @@ const ModalRazonSocial = (props) => {
     onClose,
     razonSocial,
     loadRazonSocial,
+    colorBase,
   } = props;
 
   const [openAlert, setOpenAlert] = useState(false);
@@ -184,6 +185,7 @@ const ModalRazonSocial = (props) => {
             municipios={municipios}
             ciudades={ciudades}
             colonias={colonias}
+            colorBase={colorBase}
             onChangeEstado={(e) => handleChangeEstado(e)}
             onChangeMunicipio={(e) => handleChangeMunicipio(e)}
             onChangeColonia={(e) => handleChangeColonia(e)}

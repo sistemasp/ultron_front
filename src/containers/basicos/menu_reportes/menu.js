@@ -102,10 +102,10 @@ export const MenuContainer = props => {
 					<Tab label="CITAS GENERAL" {...a11yProps(0)} />
 					<Tab label="DETALLES GENERAL" {...a11yProps(1)} />
 					<Tab label="PAGOS DERMATOLÓGOS" {...a11yProps(2)} />
+					<Tab label="FACTURAS" {...a11yProps(3)} />
 					{/*
 					<Tab label="APARATOLOGÍA" {...a11yProps(3)} />
 					<Tab label="PAGOS" {...a11yProps(4)} />
-					<Tab label="FACTURAS" {...a11yProps(5)} />
 					<Tab label="CIRGIAS" {...a11yProps(6)} />
 					<Tab label="BIOPSIAS" {...a11yProps(7)} />
 					*/}
@@ -128,7 +128,7 @@ export const MenuContainer = props => {
 					sucursal={sucursal} />
 			</TabPanel>
 			*/}
-			
+
 			<TabPanel value={value} index={0}>
 				<ReporteGeneralCitas
 					empleado={empleado}
@@ -147,18 +147,20 @@ export const MenuContainer = props => {
 					colorBase={colorBase}
 					sucursal={sucursal} />
 			</TabPanel>
-			
+			<TabPanel value={value} index={3}>
+				<ReportesFacturas
+					empleado={empleado}
+					colorBase={colorBase}
+					sucursal={sucursal} />
+			</TabPanel>
+
 			{/*
 			<TabPanel value={value} index={4}>
 				<ReportesPagos
 					empleado={empleado}
 					sucursal={sucursal} />
 			</TabPanel>
-			<TabPanel value={value} index={5}>
-				<ReportesFacturas
-					empleado={empleado}
-					sucursal={sucursal} />
-			</TabPanel>
+			
 			<TabPanel value={value} index={6}>
 				<ReportesCirugias
 					empleado={empleado}
