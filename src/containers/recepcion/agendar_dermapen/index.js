@@ -415,11 +415,11 @@ const AgendarDermapen = (props) => {
 			tooltip: 'NUEVA CITA',
 			onClick: handleOnClickNuevaCita
 		},
-		{
-			icon: AttachMoneyIcon,
-			tooltip: 'TRASPASO',
-			onClick: handleClickTraspaso
-		},
+		// {
+		// 	icon: AttachMoneyIcon,
+		// 	tooltip: 'TRASPASO',
+		// 	onClick: handleClickTraspaso
+		// },
 	];
 
 	const onChangeActions = (e, rowData) => {

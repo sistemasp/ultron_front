@@ -538,11 +538,11 @@ const AgendarConsulta = (props) => {
 			onClick: handleClickVerPagos
 
 		},
-		{
-			icon: AttachMoneyIcon,
-			tooltip: 'TRASPASO',
-			onClick: handleClickTraspaso
-		},
+		// {
+		// 	icon: AttachMoneyIcon,
+		// 	tooltip: 'TRASPASO',
+		// 	onClick: handleClickTraspaso
+		// },
 		//: ''
 		/*rowData => {
 			return (rowData.status._id === enProcedimientoStatusId || rowData.status._id === enConsultorioStatusId

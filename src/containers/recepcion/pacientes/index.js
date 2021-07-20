@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import { Backdrop, CircularProgress, Select, FormControl, InputLabel, MenuItem } from '@material-ui/core';
 import { PacientesContainer } from './pacientes';
-import { 
+import {
 	updatePatient,
 	createPatient,
 	findPatientByPhoneNumber
@@ -26,6 +26,7 @@ const Pacientes = (props) => {
 
 	const [open, setOpen] = useState(false);
 	const [openHistoric, setOpenHistoric] = useState(false);
+	const [openPagosAnticipados, setOpenPagosAnticipados] = useState(false);
 	const [openAlert, setOpenAlert] = useState(false);
 	const [paciente, setPaciente] = useState({});
 	const [isLoading, setIsLoading] = useState(false);
@@ -79,6 +80,7 @@ const Pacientes = (props) => {
 		setPaciente({});
 		setOpen(false);
 		setOpenHistoric(false);
+		setOpenPagosAnticipados(false)
 	};
 
 	const handleCloseAlert = () => {
@@ -103,7 +105,7 @@ const Pacientes = (props) => {
 			}
 		}
 
-		const response = paciente._id ? await updatePatient(paciente._id, val,  empleado.access_token) : await createPatient(val, empleado.access_token);
+		const response = paciente._id ? await updatePatient(paciente._id, val, empleado.access_token) : await createPatient(val, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
 			|| `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			setSeverity('success');
@@ -153,6 +155,11 @@ const Pacientes = (props) => {
 		setOpenHistoric(true);
 	}
 
+	const handleClickPagosAnticipados = (event, rowData) => {
+		setPaciente(rowData);
+		setOpenPagosAnticipados(true);
+	}
+
 	const actions = [
 		{
 			icon: TodayIcon,
@@ -180,9 +187,10 @@ const Pacientes = (props) => {
 			onClick: handleOnClickEditar
 		},
 		{
-			icon: HistoryIcon,
 			tooltip: 'HISTÓRICO',
-			onClick: handleClickHistorico
+		},
+		{
+			tooltip: 'PAGOS ANTICIPADOS',
 		}
 	];
 
@@ -206,6 +214,9 @@ const Pacientes = (props) => {
 				break;
 			case 'HISTÓRICO':
 				handleClickHistorico(e, rowData);
+				break;
+			case 'PAGOS ANTICIPADOS':
+				handleClickPagosAnticipados(e, rowData);
 				break;
 		}
 	}
@@ -247,6 +258,7 @@ const Pacientes = (props) => {
 						options={options}
 						open={open}
 						openHistoric={openHistoric}
+						openPagosAnticipados={openPagosAnticipados}
 						paciente={paciente}
 						telefono={paciente.telefono}
 						onClickGuardar={handleOnClickGuardar}

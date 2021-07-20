@@ -415,11 +415,11 @@ const AgendarEstetica = (props) => {
 			tooltip: 'NUEVA CITA',
 			onClick: handleOnClickNuevaCita
 		},
-		{
-			icon: AttachMoneyIcon,
-			tooltip: 'TRASPASO',
-			onClick: handleClickTraspaso
-		},
+		// {
+		// 	icon: AttachMoneyIcon,
+		// 	tooltip: 'TRASPASO',
+		// 	onClick: handleClickTraspaso
+		// },
 	];
 
 

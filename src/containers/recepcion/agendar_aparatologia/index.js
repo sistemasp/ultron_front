@@ -531,11 +531,11 @@ const AgendarAparatologia = (props) => {
 			tooltip: 'NUEVA CITA',
 			onClick: handleOnClickNuevaCita
 		},
-		{
-			icon: EventAvailableIcon,
-			tooltip: 'TRASPASO',
-			onClick: handleClickTraspaso
-		},
+		// {
+		// 	icon: EventAvailableIcon,
+		// 	tooltip: 'TRASPASO',
+		// 	onClick: handleClickTraspaso
+		// },
 	];
 
 	const onChangeActions = (e, rowData) => {
