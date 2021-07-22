@@ -19,6 +19,7 @@ const ModalConsultorioAgregarDermatologo = (props) => {
     setMessage,
     loadConsultorios,
     empleado,
+    colorBase,
   } = props;
 
   const [isLoading, setIsLoading] = useState(true);
@@ -75,6 +76,7 @@ const ModalConsultorioAgregarDermatologo = (props) => {
           onClickGuardar={handleClickGuardar}
           isLoading={isLoading}
           dermatologos={dermatologos}
+          colorBase={colorBase}
           onChangeDermatologos={(e) => handleChangeDermatologos(e)}
           {...props} />
       }

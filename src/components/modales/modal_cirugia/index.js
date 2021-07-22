@@ -75,6 +75,8 @@ const ModalCirugia = (props) => {
   const fecha = `${addZero(fecha_cita.getDate())}/${addZero(Number(fecha_cita.getMonth()) + 1)}/${addZero(fecha_cita.getFullYear())}`;
   const hora = `${addZero(Number(fecha_cita.getHours()))}:${addZero(fecha_cita.getMinutes())}`;
 
+  console.log("KAOZ", cirugia);
+
   const [values, setValues] = useState({
     _id: cirugia._id,
     fecha_hora: cirugia.fecha_hora,
@@ -124,10 +126,10 @@ const ModalCirugia = (props) => {
     setIsLoading(true);
     const fecha_actual = new Date();
     data.servicio = cirugiaServicioId;
-    const idBiopsias = [];
 
     if (data.hasBiopsia && cirugia.biopsias.length === 0) {
       const biopsias = [];
+      const idBiopsias = [];
 
       for (var i = 0; i < data.cantidad_biopsias; i++) {
         const biopsia = {
@@ -137,7 +139,7 @@ const ModalCirugia = (props) => {
           sucursal: data.sucursal,
           patologo: data.patologo,
           tipo_servicio: biopsiaServicioId,
-          hora_aplicacion: data.hora_aplicacion,
+          hora_aplicacion: data.hora_aplicacion ? data.hora_aplicacion : new Date(),
         };
         biopsias.push(biopsia);
       }
@@ -147,8 +149,9 @@ const ModalCirugia = (props) => {
           idBiopsias.push(item._id);
         });
       }
+      data.biopsias = data.hasBiopsia ? idBiopsias : [];
     }
-    data.biopsias = data.hasBiopsia ? idBiopsias : [];
+    
     if (data.status._id !== pendienteStatusId) {
       data.quien_confirma_asistencia = empleado._id;
 
@@ -204,30 +207,52 @@ const ModalCirugia = (props) => {
     });
   }
 
-  const handleChangeTotal = e => {
-    let total_aplicacion = Number(e.target.value);
+  const calcularTotal = (val) => {
+    let total_aplicacion = Number(val.total);
     values.materiales.map(item => {
       total_aplicacion -= Number(item.precio);
     });
-    total_aplicacion -= Number(values.costo_biopsias);
+    total_aplicacion -= Number(val.costo_biopsias);
     setValues({
       ...values,
-      total: e.target.value,
+      precio: val.total,
+      total: val.total,
       total_aplicacion: total_aplicacion,
+      materiales: val.materiales,
+      costo_biopsias: val.costo_biopsias,
     });
+  }
+
+  const handleChangeTotal = e => {
+    const val = {
+      total: e.target.value,
+      total_aplicacion: values.total_aplicacion,
+      materiales: values.materiales,
+      costo_biopsias: values.costo_biopsias,
+    }
+    calcularTotal(val);
   };
 
+  const handleChangeItemPrecio = (e, index) => {
+    const newMateriales = values.materiales;
+    newMateriales[index].precio = e.target.value;
+    const val = {
+      total: values.total,
+      total_aplicacion: values.total_aplicacion,
+      materiales: newMateriales,
+      costo_biopsias: values.costo_biopsias,
+    }
+    calcularTotal(val);
+  }
+
   const handleChangeCostoBiopsias = e => {
-    let total_aplicacion = Number(values.total);
-    values.materiales.map(item => {
-      total_aplicacion -= Number(item.precio);
-    });
-    total_aplicacion -= Number(e.target.value);
-    setValues({
-      ...values,
+    const val = {
+      total: values.total,
+      total_aplicacion: values.total_aplicacion,
+      materiales: values.materiales,
       costo_biopsias: e.target.value,
-      total_aplicacion: total_aplicacion
-    });
+    }
+    calcularTotal(val);
   }
 
   const handleCloseModalPagos = () => {
@@ -257,31 +282,23 @@ const ModalCirugia = (props) => {
         hasBiopsia: newValue,
       });
     } else {
+      const val = {
+        total: values.total,
+        total_aplicacion: values.total_aplicacion,
+        materiales: values.materiales,
+        costo_biopsias: 0,
+      }
+      calcularTotal(val);
       setValues({
         ...values,
-        total: (values.total - values.costo_biopsias),
         hasBiopsia: newValue,
+        biopsias: [],
         cantidad_biopsias: 0,
         costo_biopsias: 0,
         patologo: {},
       });
 
     }
-  }
-
-  const handleChangeItemPrecio = (e, index) => {
-    const newMateriales = values.materiales;
-    newMateriales[index].precio = e.target.value;
-    let total_aplicacion = Number(values.total);
-    newMateriales.map((item) => {
-      total_aplicacion -= Number(item.precio);
-    });
-    total_aplicacion -= Number(values.costo_biopsias);
-    setValues({
-      ...values,
-      materiales: newMateriales,
-      total_aplicacion: total_aplicacion,
-    });
   }
 
   const handleChangeDermatologos = (e) => {

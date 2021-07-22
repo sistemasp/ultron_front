@@ -64,6 +64,7 @@ export const ListaEsperaContainer = (props) => {
     listaEsperaEstetica,
     actionsEsperaSalaCirugia,
     componentsConsultorio,
+    colorBase,
   } = props;
 
   const listaEsperaSalaCirugia = [...listaEsperaEstetica, ...listaEsperaCirugias];
@@ -83,6 +84,7 @@ export const ListaEsperaContainer = (props) => {
             loadAll={loadAll}
             sucursal={sucursal}
             empleado={empleado}
+            colorBase={colorBase}
             cambio={cambio}
             paciente={paciente} /> : ''
       }
@@ -100,6 +102,7 @@ export const ListaEsperaContainer = (props) => {
             loadAll={loadAll}
             sucursal={sucursal}
             cambio={cambio}
+            colorBase={colorBase}
             paciente={paciente} />
           : ''
       }
@@ -117,6 +120,7 @@ export const ListaEsperaContainer = (props) => {
             loadAll={loadAll}
             sucursal={sucursal}
             cambio={cambio}
+            colorBase={colorBase}
             paciente={paciente} />
           : ''
       }

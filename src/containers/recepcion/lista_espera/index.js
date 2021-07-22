@@ -664,6 +664,7 @@ const ListaEspera = (props) => {
 						listaEsperaEstetica={listaEsperaEstetica}
 						actionsEsperaSalaCirugia={actionsEsperaSalaCirugia}
 						componentsConsultorio={componentsConsultorio}
+						colorBase={colorBase}
 					/> :
 					<Backdrop className={classes.backdrop} open={isLoading} >
 						<CircularProgress color="inherit" />

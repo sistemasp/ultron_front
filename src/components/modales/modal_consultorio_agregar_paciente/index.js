@@ -27,6 +27,7 @@ const ModalConsultorioAgregarPaciente = (props) => {
     sucursal,
     cambio,
     paciente,
+    colorBase,
   } = props;
 
   const [isLoading, setIsLoading] = useState(true);
@@ -111,6 +112,7 @@ const ModalConsultorioAgregarPaciente = (props) => {
           onChangeConsultorio={(e) => handleChangeConsultorio(e)}
           cambio={cambio}
           paciente={paciente}
+          colorBase={colorBase}
           {...props} />
       }
     </Formik>

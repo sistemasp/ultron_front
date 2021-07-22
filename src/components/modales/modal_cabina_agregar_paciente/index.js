@@ -30,6 +30,7 @@ const ModalCabinaAgregarPaciente = (props) => {
     sucursal,
     cambio,
     paciente,
+    colorBase,
   } = props;
 
   const [isLoading, setIsLoading] = useState(true);
@@ -144,6 +145,7 @@ const ModalCabinaAgregarPaciente = (props) => {
           onChangeCabina={(e) => handleChangeCabina(e)}
           cambio={cambio}
           paciente={paciente}
+          colorBase={colorBase}
           {...props} />
       }
     </Formik>

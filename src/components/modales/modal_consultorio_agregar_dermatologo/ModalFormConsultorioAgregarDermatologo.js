@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { TextField, Button, Grid, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 import { ButtonCustom } from "../../basic/ButtonCustom";
+import myStyles from '../../../css';
 
 function getModalStyle() {
   const top = 50;
@@ -45,7 +46,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ModalFormConsultorioAgregarDermatologo = (props) => {
-  const classes = useStyles();
 
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
@@ -61,7 +61,10 @@ const ModalFormConsultorioAgregarDermatologo = (props) => {
     onClickGuardar,
     open,
     dermatologos,
+    colorBase
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   return (
     <div>
@@ -91,20 +94,20 @@ const ModalFormConsultorioAgregarDermatologo = (props) => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
+                  className={classes.buttonCancel}
+                  color="secondary"
+                  variant="contained"
+                  onClick={onClickCancel}
+                  text="CANCELAR" />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <ButtonCustom
                   className={classes.button}
                   color="primary"
                   variant="contained"
                   onClick={(e) => onClickGuardar(e, values)}
                   disabled={!isValid}
                   text='GUARDAR' />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <ButtonCustom
-                  className={classes.button}
-                  color="secondary"
-                  variant="contained"
-                  onClick={onClickCancel}
-                  text="CANCELAR" />
               </Grid>
             </Grid>
 

@@ -45,7 +45,6 @@ export const ConsultorioContainer = (props) => {
     colorBase,
   } = props;
 
-  console.log("KAOZ", empleado);
   const classes = myStyles(colorBase)();
 
   return (

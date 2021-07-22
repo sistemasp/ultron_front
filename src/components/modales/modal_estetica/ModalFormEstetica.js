@@ -138,7 +138,7 @@ const ModalFormEstetica = (props) => {
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
         open={open} >
-        <div style={modalStyle} className={classes.paper}>
+        <div style={modalStyle} className={classes.paper_95}>
           <form onSubmit={handleSubmit}>
             {
               openModalPagos ?
