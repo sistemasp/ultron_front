@@ -80,7 +80,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
       width: '100%',
       color: '#FFFFFF',
       backgroundColor: "#FF2233",
-  },
+    },
     label: {
       marginTop: '0px',
       marginBottom: '0px',
@@ -266,7 +266,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                   }
                   {
                     dermatologo._id === dermatologoDirectoId ?
-                    <Grid item xs={12}>
+                      <Grid item xs={12}>
                         <ButtonCustom
                           className={classes.button}
                           color="primary"
@@ -307,13 +307,13 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                       variant="contained"
                       onClick={onClose} >
                       CERRAR
-              </Button>
+                    </Button>
                   </Grid>
                 </Fragment> : ''
             }
 
             {
-              
+
               consultasPrimeraVez.length > 0 ?
                 <Grid container className={classes.container}>
                   <Grid item xs={12}>
@@ -335,10 +335,10 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                     <p className={classes.label_cells_totales}>FORMA DE PAGO</p>
                   </Grid>
                   <Grid item xs={true} className={classes.label}>
-                    <p className={classes.label_cells_totales}>TOTAL(SERVICIO)</p>
+                    <p className={classes.label_cells_totales}>SERVICIO</p>
                   </Grid>
                   <Grid item xs={true} className={classes.label}>
-                    <p className={classes.label_cells_totales}>CANTIDAD</p>
+                    <p className={classes.label_cells_totales}>DERMATOLÓGO</p>
                   </Grid>
                   <Grid item xs={12} className={classes.label}>
                     <hr className={classes.label} />
@@ -402,7 +402,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                     <p className={classes.label_cells_totales}>CONSECUTIVO</p>
                   </Grid>
                   <Grid item xs={true} className={classes.label}>
-                    <p className={classes.label_cells_totales}>CANTIDAD</p>
+                    <p className={classes.label_cells_totales}>DERMATOLÓGO</p>
                   </Grid>
                   <Grid item xs={12} className={classes.label}>
                     <hr className={classes.label} />
@@ -458,10 +458,10 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                     <p className={classes.label_cells_totales}>FORMA DE PAGO</p>
                   </Grid>
                   <Grid item xs={true} className={classes.label}>
-                    <p className={classes.label_cells_totales}>TOTAL(SERVICIO)</p>
+                    <p className={classes.label_cells_totales}>SERVICIO</p>
                   </Grid>
                   <Grid item xs={true} className={classes.label}>
-                    <p className={classes.label_cells_totales}>CANTIDAD</p>
+                    <p className={classes.label_cells_totales}>DERMATOLÓGO</p>
                   </Grid>
                   <Grid item xs={12} className={classes.label}>
                     <hr className={classes.label} />
@@ -524,7 +524,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                     <p className={classes.label_cells_totales}>CONSECUTIVO</p>
                   </Grid>
                   <Grid item xs={true} className={classes.label}>
-                    <p className={classes.label_cells_totales}>CANTIDAD</p>
+                    <p className={classes.label_cells_totales}>DERMATOLÓGO</p>
                   </Grid>
                   <Grid item xs={12} className={classes.label}>
                     <hr className={classes.label} />
@@ -580,10 +580,10 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                       <p className={classes.label_cells_totales}>FORMA DE PAGO</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>TOTAL(SERVICIO)</p>
+                      <p className={classes.label_cells_totales}>SERVICIO</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>CANTIDAD</p>
+                      <p className={classes.label_cells_totales}>DERMATOLÓGO</p>
                     </Grid>
                     <Grid item xs={12} className={classes.label}>
                       <hr className={classes.label} />
@@ -642,7 +642,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                       <p className={classes.label_cells_totales}>CONSECUTIVO</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>CANTIDAD</p>
+                      <p className={classes.label_cells_totales}>DERMATOLÓGO</p>
                     </Grid>
                     <Grid item xs={12} className={classes.label}>
                       <hr className={classes.label} />
@@ -696,10 +696,10 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                       <p className={classes.label_cells_totales}>FORMA DE PAGO</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>TOTAL(SERVICIO)</p>
+                      <p className={classes.label_cells_totales}>SERVICIO</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>CANTIDAD</p>
+                      <p className={classes.label_cells_totales}>DERMATOLÓGO</p>
                     </Grid>
                     <Grid item xs={12} className={classes.label}>
                       <hr className={classes.label} />
@@ -758,7 +758,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                       <p className={classes.label_cells_totales}>CONSECUTIVO</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>CANTIDAD</p>
+                      <p className={classes.label_cells_totales}>DERMATOLÓGO</p>
                     </Grid>
                     <Grid item xs={12} className={classes.label}>
                       <hr className={classes.label} />
@@ -817,10 +817,10 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                       <p className={classes.label_cells_totales}>FORMA DE PAGO</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>TOTAL(SERVICIO)</p>
+                      <p className={classes.label_cells_totales}>SERVICIO</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>CANTIDAD</p>
+                      <p className={classes.label_cells_totales}>DERMATOLÓGO</p>
                     </Grid>
                     <Grid item xs={12} className={classes.label}>
                       <hr className={classes.label} />
@@ -925,7 +925,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                       <p className={classes.label_cells_totales}>CONSECUTIVO</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>CANTIDAD</p>
+                      <p className={classes.label_cells_totales}>DERMATOLÓGO</p>
                     </Grid>
                     <Grid item xs={12} className={classes.label}>
                       <hr className={classes.label} />
@@ -999,10 +999,10 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                       <p className={classes.label_cells_totales}>FORMA DE PAGO</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>TOTAL(SERVICIO)</p>
+                      <p className={classes.label_cells_totales}>SERVICIO</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>CANTIDAD</p>
+                      <p className={classes.label_cells_totales}>DERMATOLÓGO</p>
                     </Grid>
                     <Grid item xs={12} className={classes.label}>
                       <hr className={classes.label} />
@@ -1066,7 +1066,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                       <p className={classes.label_cells_totales}>CONSECUTIVO</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>CANTIDAD</p>
+                      <p className={classes.label_cells_totales}>DERMATOLÓGO</p>
                     </Grid>
                     <Grid item xs={12} className={classes.label}>
                       <hr className={classes.label} />
@@ -1127,10 +1127,10 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                       <p className={classes.label_cells_totales}>FORMA DE PAGO</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>TOTAL(SERVICIO)</p>
+                      <p className={classes.label_cells_totales}>SERVICIO</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>CANTIDAD</p>
+                      <p className={classes.label_cells_totales}>DERMATOLÓGO</p>
                     </Grid>
                     <Grid item xs={12} className={classes.label}>
                       <hr className={classes.label} />
@@ -1209,7 +1209,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                       <p className={classes.label_cells_totales}>CONSECUTIVO</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>CANTIDAD</p>
+                      <p className={classes.label_cells_totales}>DERMATOLÓGO</p>
                     </Grid>
                     <Grid item xs={12} className={classes.label}>
                       <hr className={classes.label} />

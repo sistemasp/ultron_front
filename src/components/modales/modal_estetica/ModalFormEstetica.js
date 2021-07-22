@@ -412,7 +412,7 @@ const ModalFormEstetica = (props) => {
                 values.materiales.map((item, index) =>
                   <Grid item xs={12} sm={4}>
                     <TextField
-                      className={classes.button}
+                      className={classes.textField}
                       name={item.precio}
                       label={`PRECIO: ${item.nombre}`}
                       value={item.precio}

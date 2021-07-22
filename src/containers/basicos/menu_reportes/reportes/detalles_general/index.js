@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { ReportesDetalleGeneralContainer } from "./reportes_detalle_general";
 import { findConsultsByRangeDateAndSucursal } from "../../../../../services/consultas";
 import { Backdrop, CircularProgress } from "@material-ui/core";
-import { toFormatterCurrency, addZero, getPagoDermatologoByServicio } from "../../../../../utils/utils";
+import { toFormatterCurrency, addZero, getPagoDermatologoByServicio, redondearDecimales, precioAreaBySucursal } from "../../../../../utils/utils";
 import { findFacialByRangeDateAndSucursal, findFacialByRangeDateAndSucursalAndService } from "../../../../../services/faciales";
 import { findAparatologiaByRangeDateAndSucursal, findAparatologiaByRangeDateAndSucursalAndService } from "../../../../../services/aparatolgia";
 import { findEsteticasByRangeDateAndSucursal } from "../../../../../services/esteticas";
@@ -177,11 +177,11 @@ const ReportesDetallesGeneral = (props) => {
 				digitos: pago.digitos,
 				importe_1: consulta.precio_moneda,
 				area: "NO APLICA",
-				descuento_porcentaje_clinica: `${descuentoClinicaPorcentaje}%`,
+				descuento_porcentaje_clinica: `${redondearDecimales(descuentoClinicaPorcentaje)}%`,
 				descuento_cantidad_clinica: toFormatterCurrency(descuentoClinica),
-				descuento_porcentaje_dermatologo: `${descuentoDermatologoPorcentaje}%`,
+				descuento_porcentaje_dermatologo: `${redondearDecimales(descuentoDermatologoPorcentaje)}%`,
 				descuento_cantidad_dermatologo: toFormatterCurrency(descuentoDermatologo),
-				descuento_porcentaje: `${descuentoPorcentaje}%`,
+				descuento_porcentaje: `${redondearDecimales(descuentoPorcentaje)}%`,
 				descuento_cantidad: toFormatterCurrency(descuentoCantidad),
 				impuesto_porcentaje: `${impuestoPorcentaje}%`,
 				importe_2: toFormatterCurrency(importe2),
@@ -222,6 +222,8 @@ const ReportesDetallesGeneral = (props) => {
 					pago.digitos = 'NO APLICA';
 				}
 				producto.areasSeleccionadas.forEach(areaSeleccionada => {
+					console.log("KAOZ", producto);
+					console.log("KAOZ", areaSeleccionada);
 					pago.cantidad = Number(pago.cantidad);
 					areaSeleccionada.precio_real = Number(areaSeleccionada.precio_real);
 					while (pago.cantidad !== 0 && areaSeleccionada.precio_real !== 0) {
@@ -263,10 +265,10 @@ const ReportesDetallesGeneral = (props) => {
 							impuesto_cantidad: toFormatterCurrency(impuesto),
 							importe_1: toFormatterCurrency(producto.importe1),
 							importe_2: toFormatterCurrency(importe2),
-							descuento_porcentaje: `${descuentoPorcentaje}%`,
+							descuento_porcentaje: `${redondearDecimales(descuentoPorcentaje)}%`,
 							descuento_cantidad: toFormatterCurrency(descuentoCantidad),
-							descuento_porcentaje_clinica: `${descuentoClinicaPorcentaje}%`,
-							descuento_porcentaje_dermatologo: `${descuentoDermatologoPorcentaje}%`,
+							descuento_porcentaje_clinica: `${redondearDecimales(descuentoClinicaPorcentaje)}%`,
+							descuento_porcentaje_dermatologo: `${redondearDecimales(descuentoDermatologoPorcentaje)}%`,
 							descuento_cantidad_dermatologo: toFormatterCurrency(descuentoDermatologo),
 							descuento_cantidad_clinica: toFormatterCurrency(descuentoClinica),
 							area: areaSeleccionada.nombre,
@@ -312,7 +314,9 @@ const ReportesDetallesGeneral = (props) => {
 					pago.digitos = 'NO APLICA';
 				}
 				producto.areasSeleccionadas.forEach(areaSeleccionada => {
+					console.log("KAOZ", areaSeleccionada);
 					pago.total = Number(pago.total);
+					const importe1 = Number(precioAreaBySucursal(sucursal, areaSeleccionada));
 					let precioReal = Number(areaSeleccionada.precio_real);
 					while (pago.total !== 0 && precioReal !== 0) {
 
@@ -332,20 +336,19 @@ const ReportesDetallesGeneral = (props) => {
 							pago.total = 0;
 						}
 
-						console.log("KAOZ", producto);
 						const impuestoPorcentaje = areaSeleccionada.iva ? iva : 0;
 						const importe2 = total / (1 + (impuestoPorcentaje / 100));
 						const impuesto = importe2 * (impuestoPorcentaje / 100);
-						const descuentoPorcentaje = 100 - (total * 100 / producto.importe1);
-						const descuentoCantidad = (producto.importe1 * descuentoPorcentaje / 100);
+						const descuentoPorcentaje = 100 - (total * 100 / importe1);
+						const descuentoCantidad = (importe1 * descuentoPorcentaje / 100);
 						const pagoDermatologo = aparatologia.dermatologo._id !== dermatologoDirectoId
 							? (total * areaSeleccionada.comision_real / areaSeleccionada.precio_real)
 							: 0;
 						const pagoClinica = total - pagoDermatologo;
 						const descuentoClinicaPorcentaje = aparatologia.porcentaje_descuento_clinica ? aparatologia.porcentaje_descuento_clinica : 0;
 						const descuentoDermatologoPorcentaje = aparatologia.descuento_dermatologo ? aparatologia.descuento_dermatologo : 0;
-						const descuentoClinica = descuentoClinicaPorcentaje * producto.importe1 / 100;
-						const descuentoDermatologo = descuentoDermatologoPorcentaje * (producto.importe1 - descuentoClinica) / 100;
+						const descuentoClinica = descuentoClinicaPorcentaje * importe1 / 100;
+						const descuentoDermatologo = descuentoDermatologoPorcentaje * (importe1 - descuentoClinica) / 100;
 						const dato = {
 							...aparatologia,
 							metodo_pago_nombre: metodoPago.nombre,
@@ -353,14 +356,14 @@ const ReportesDetallesGeneral = (props) => {
 							impuesto_porcentaje: `${impuestoPorcentaje}%`,
 							impuesto_cantidad: toFormatterCurrency(impuesto),
 							//importe_servicio: aparatologia.precio_moneda,
-							//importe_producto: toFormatterCurrency(producto.importe1),
+							//importe_producto: toFormatterCurrency(importe1),
 							//precio_real: toFormatterCurrency(areaSeleccionada.precio_real),
-							importe_1: toFormatterCurrency(producto.importe1),
+							importe_1: toFormatterCurrency(importe1),
 							importe_2: toFormatterCurrency(importe2),
-							descuento_porcentaje: `${descuentoPorcentaje}%`,
+							descuento_porcentaje: `${redondearDecimales(descuentoPorcentaje)}%`,
 							descuento_cantidad: toFormatterCurrency(descuentoCantidad),
-							descuento_porcentaje_clinica: `${descuentoClinicaPorcentaje}%`,
-							descuento_porcentaje_dermatologo: `${descuentoDermatologoPorcentaje}%`,
+							descuento_porcentaje_clinica: `${redondearDecimales(descuentoClinicaPorcentaje)}%`,
+							descuento_porcentaje_dermatologo: `${redondearDecimales(descuentoDermatologoPorcentaje)}%`,
 							descuento_cantidad_dermatologo: toFormatterCurrency(descuentoDermatologo),
 							descuento_cantidad_clinica: toFormatterCurrency(descuentoClinica),
 							area: areaSeleccionada.nombre,
@@ -443,11 +446,11 @@ const ReportesDetallesGeneral = (props) => {
 					digitos: pago.digitos,
 					importe_1: toFormatterCurrency(cirugia.total),
 					area: "NO APLICA",
-					descuento_porcentaje_clinica: `${descuentoClinicaPorcentaje}%`,
+					descuento_porcentaje_clinica: `${redondearDecimales(descuentoClinicaPorcentaje)}%`,
 					descuento_cantidad_clinica: toFormatterCurrency(descuentoClinica),
-					descuento_porcentaje_dermatologo: `${descuentoDermatologoPorcentaje}%`,
+					descuento_porcentaje_dermatologo: `${redondearDecimales(descuentoDermatologoPorcentaje)}%`,
 					descuento_cantidad_dermatologo: toFormatterCurrency(descuentoDermatologo),
-					descuento_porcentaje: `${descuentoPorcentaje}%`,
+					descuento_porcentaje: `${redondearDecimales(descuentoPorcentaje)}%`,
 					descuento_cantidad: toFormatterCurrency(descuentoCantidad),
 					impuesto_porcentaje: `${impuestoPorcentaje}%`,
 					importe_2: toFormatterCurrency(importe2),
@@ -502,7 +505,7 @@ const ReportesDetallesGeneral = (props) => {
 						descuento_cantidad_clinica: "NO APLICA",
 						descuento_porcentaje_dermatologo: "NO APLICA",
 						descuento_cantidad_dermatologo: "NO APLICA",
-						descuento_porcentaje: `${descuentoPorcentaje}%`,
+						descuento_porcentaje: `${redondearDecimales(descuentoPorcentaje)}%`,
 						descuento_cantidad: toFormatterCurrency(descuentoCantidad),
 						impuesto_porcentaje: `${impuestoPorcentaje}%`,
 						importe_2: toFormatterCurrency(importe2),
@@ -558,7 +561,7 @@ const ReportesDetallesGeneral = (props) => {
 						descuento_cantidad_clinica: "NO APLICA",
 						descuento_porcentaje_dermatologo: "NO APLICA",
 						descuento_cantidad_dermatologo: "NO APLICA",
-						descuento_porcentaje: `${descuentoPorcentaje}%`,
+						descuento_porcentaje: `${redondearDecimales(descuentoPorcentaje)}%`,
 						descuento_cantidad: toFormatterCurrency(descuentoCantidad),
 						impuesto_porcentaje: `${impuestoPorcentaje}%`,
 						importe_2: toFormatterCurrency(importe2),
@@ -638,11 +641,11 @@ const ReportesDetallesGeneral = (props) => {
 					digitos: pago.digitos,
 					importe_1: toFormatterCurrency(dermapen.total),
 					area: "NO APLICA",
-					descuento_porcentaje_clinica: `${descuentoClinicaPorcentaje}%`,
+					descuento_porcentaje_clinica: `${redondearDecimales(descuentoClinicaPorcentaje)}%`,
 					descuento_cantidad_clinica: toFormatterCurrency(descuentoClinica),
-					descuento_porcentaje_dermatologo: `${descuentoDermatologoPorcentaje}%`,
+					descuento_porcentaje_dermatologo: `${redondearDecimales(descuentoDermatologoPorcentaje)}%`,
 					descuento_cantidad_dermatologo: toFormatterCurrency(descuentoDermatologo),
-					descuento_porcentaje: `${descuentoPorcentaje}%`,
+					descuento_porcentaje: `${redondearDecimales(descuentoPorcentaje)}%`,
 					descuento_cantidad: toFormatterCurrency(descuentoCantidad),
 					impuesto_porcentaje: `${impuestoPorcentaje}%`,
 					importe_2: toFormatterCurrency(importe2),
@@ -697,7 +700,7 @@ const ReportesDetallesGeneral = (props) => {
 						descuento_cantidad_clinica: "NO APLICA",
 						descuento_porcentaje_dermatologo: "NO APLICA",
 						descuento_cantidad_dermatologo: "NO APLICA",
-						descuento_porcentaje: `${descuentoPorcentaje}%`,
+						descuento_porcentaje: `${redondearDecimales(descuentoPorcentaje)}%`,
 						descuento_cantidad: toFormatterCurrency(descuentoCantidad),
 						impuesto_porcentaje: `${impuestoPorcentaje}%`,
 						importe_2: toFormatterCurrency(importe2),
@@ -776,11 +779,11 @@ const ReportesDetallesGeneral = (props) => {
 					digitos: pago.digitos,
 					importe_1: toFormatterCurrency(estetica.total),
 					area: "NO APLICA",
-					descuento_porcentaje_clinica: `${descuentoClinicaPorcentaje}%`,
+					descuento_porcentaje_clinica: `${redondearDecimales(descuentoClinicaPorcentaje)}%`,
 					descuento_cantidad_clinica: toFormatterCurrency(descuentoClinica),
-					descuento_porcentaje_dermatologo: `${descuentoDermatologoPorcentaje}%`,
+					descuento_porcentaje_dermatologo: `${redondearDecimales(descuentoDermatologoPorcentaje)}%`,
 					descuento_cantidad_dermatologo: toFormatterCurrency(descuentoDermatologo),
-					descuento_porcentaje: `${descuentoPorcentaje}%`,
+					descuento_porcentaje: `${redondearDecimales(descuentoPorcentaje)}%`,
 					descuento_cantidad: toFormatterCurrency(descuentoCantidad),
 					impuesto_porcentaje: `${impuestoPorcentaje}%`,
 					importe_2: toFormatterCurrency(importe2),
@@ -834,7 +837,7 @@ const ReportesDetallesGeneral = (props) => {
 						descuento_cantidad_clinica: "NO APLICA",
 						descuento_porcentaje_dermatologo: "NO APLICA",
 						descuento_cantidad_dermatologo: "NO APLICA",
-						descuento_porcentaje: `${descuentoPorcentaje}%`,
+						descuento_porcentaje: `${redondearDecimales(descuentoPorcentaje)}%`,
 						descuento_cantidad: toFormatterCurrency(descuentoCantidad),
 						impuesto_porcentaje: `${impuestoPorcentaje}%`,
 						importe_2: toFormatterCurrency(importe2),
@@ -890,7 +893,7 @@ const ReportesDetallesGeneral = (props) => {
 						descuento_cantidad_clinica: "NO APLICA",
 						descuento_porcentaje_dermatologo: "NO APLICA",
 						descuento_cantidad_dermatologo: "NO APLICA",
-						descuento_porcentaje: `${descuentoPorcentaje}%`,
+						descuento_porcentaje: `${redondearDecimales(descuentoPorcentaje)}%`,
 						descuento_cantidad: toFormatterCurrency(descuentoCantidad),
 						impuesto_porcentaje: `${impuestoPorcentaje}%`,
 						importe_2: toFormatterCurrency(importe2),

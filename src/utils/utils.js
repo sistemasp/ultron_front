@@ -1,3 +1,8 @@
+const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
+const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
+const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
+const sucursalFedeId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
+
 export const toFormatterCurrency = (value) => {
     const formatterDolar = new Intl.NumberFormat('en-US', {
         style: 'currency',
@@ -98,4 +103,24 @@ export const optionSelect2 = (items) => {
         };
         return item;
     });
+}
+
+export const redondearDecimales = (value) => {
+    const porcentaje = value + '';
+    if (porcentaje.includes(".")) {
+        return porcentaje.substr(0, (porcentaje.indexOf(".") + 3));
+    } else {
+        return porcentaje;
+    }
+}
+
+export const precioAreaBySucursal = (sucursalId, area) => {
+    console.log("KAOZ", sucursalId, area);
+    const itemPrecio =
+            sucursalId === sucursalManuelAcunaId ? area.precio_ma // PRECIO MANUEL ACUÑA
+                : (sucursalId === sucursalOcciId ? area.precio_oc // PRECIO OCCIDENTAL
+                  : (sucursalId === sucursalFedeId ? area.precio_fe // PRECIO FEDERALISMO
+                    : (sucursalId === sucursalRubenDarioId ? area.precio_rd // PRECIO RUBEN DARIO
+                      : 0))); // ERROR
+    return itemPrecio;
 }

@@ -356,7 +356,7 @@ const ModalFormDermapen = (props) => {
                 values.materiales.map((item, index) =>
                   <Grid item xs={12}>
                     <TextField
-                      className={classes.button}
+                      className={classes.textField}
                       name={item.precio}
                       label={`PRECIO: ${item.nombre}`}
                       value={item.precio}
