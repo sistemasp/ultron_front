@@ -27,7 +27,6 @@ export const ReportesDetalleGeneralContainer = (props) => {
 
 	const classes = myStyles(colorBase)();
 
-	console.log("KAOZ", datos);
 	
 	return (
 		<Fragment>

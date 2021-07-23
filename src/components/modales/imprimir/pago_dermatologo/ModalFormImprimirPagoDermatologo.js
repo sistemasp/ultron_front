@@ -24,6 +24,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
   const {
     sucursal,
     corte,
+    consultasPrivada,
     consultasPrimeraVez,
     consultasPrimeraVezPA,
     consultasReconsultas,
@@ -252,7 +253,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                           text='IMPRIMIR' />
                       </Grid>
                       :
-                      consultasPrimeraVez.length > 0 || consultasReconsultas.length > 0 || cirugias.length > 0 || esteticas.length > 0 ||
+                      consultasPrimeraVez.length > 0 || consultasPrivada.length > 0 || consultasReconsultas.length > 0 || cirugias.length > 0 || esteticas.length > 0 ||
                         listaFaciales.length > 0 || dermapens.length > 0 || listaAparatologias.length > 0 ?
                         <Grid item xs={12}>
                           <ButtonCustom
@@ -312,6 +313,79 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                 </Fragment> : ''
             }
 
+            {
+
+              consultasPrivada.length > 0 ?
+                <Grid container className={classes.container}>
+                  <Grid item xs={12}>
+                    <p className={classes.label_title_descripcion}> {`${consultasPrivada.length} CONSULTAS PRIVADAS`}</p>
+                  </Grid>
+                  <Grid item xs={true} className={classes.label}>
+                    <p className={classes.label_cells_totales}>HORA</p>
+                  </Grid>
+                  <Grid item xs={true} className={classes.label}>
+                    <p className={classes.label_cells_totales}>PACIENTE</p>
+                  </Grid>
+                  <Grid item xs={true} className={classes.label}>
+                    <p className={classes.label_cells_totales}>CONSECUTIVO</p>
+                  </Grid>
+                  <Grid item xs={true} className={classes.label}>
+                    <p className={classes.label_cells_totales}>PRODUCTO</p>
+                  </Grid>
+                  <Grid item xs={true} className={classes.label}>
+                    <p className={classes.label_cells_totales}>FORMA DE PAGO</p>
+                  </Grid>
+                  <Grid item xs={true} className={classes.label}>
+                    <p className={classes.label_cells_totales}>SERVICIO</p>
+                  </Grid>
+                  <Grid item xs={true} className={classes.label}>
+                    <p className={classes.label_cells_totales}>DERMATOLÓGO</p>
+                  </Grid>
+                  <Grid item xs={12} className={classes.label}>
+                    <hr className={classes.label} />
+                  </Grid>
+
+                  {
+                    consultasPrivada ?
+                      consultasPrivada.map(consulta => {
+                        let totalPagos = 0;
+                        if (!consulta.has_descuento_dermatologo) {
+                          consulta.pagos.map(pago => {
+                            totalPagos += Number(pago.total);
+                          });
+                        }
+                        const pagoDermatologo = Number(totalPagos) * Number(dermatologo.esquema.porcentaje_consulta_privada) / 100;
+                        pagoTotal += Number(pagoDermatologo);
+
+                        return <Grid container>
+                          <Grid item xs={true} className={classes.label}>
+                            <p className={classes.label_cells}>{consulta.hora_llegada}</p>
+                          </Grid>
+                          <Grid item xs={true} className={classes.label}>
+                            <p className={classes.label_cells}>{`${consulta.paciente.nombres} ${consulta.paciente.apellidos}`}</p>
+                          </Grid>
+                          <Grid item xs={true} className={classes.label}>
+                            <p className={classes.label_cells}>{`${consulta.consecutivo}`}</p>
+                          </Grid>
+                          <Grid item xs={true} className={classes.label}>
+                            <p className={classes.label_cells}>{`${consulta.producto.nombre}`}</p>
+                          </Grid>
+                          <Grid item xs={true} className={classes.label}>
+                            <p className={classes.label_cells}>{`${consulta.forma_pago.nombre}`}</p>
+                          </Grid>
+                          <Grid item xs={true} className={classes.label}>
+                            <p className={classes.label_cells_total}> {`${toFormatterCurrency(totalPagos)}`} </p>
+                          </Grid>
+                          <Grid item xs={true} className={classes.label}>
+                            <p className={classes.label_cells_total}> {`${toFormatterCurrency(pagoDermatologo)}`} </p>
+                          </Grid>
+                        </Grid>
+                      })
+                      : ''
+                  }
+                </Grid>
+                : ''
+            }
             {
 
               consultasPrimeraVez.length > 0 ?

@@ -12,6 +12,7 @@ import { findDermapenByRangeDateAndSucursal } from "../../../../../services/derm
 import { showAllBanco, showAllMetodoPago, showAllTipoTarjeta } from "../../../../../services";
 import { findRazonSocialById } from "../../../../../services/razones_sociales";
 import { ControlCamera } from "@material-ui/icons";
+import { findEmployeeById } from "../../../../../services/empleados";
 
 const useStyles = makeStyles(theme => ({
 	backdrop: {
@@ -222,8 +223,6 @@ const ReportesDetallesGeneral = (props) => {
 					pago.digitos = 'NO APLICA';
 				}
 				producto.areasSeleccionadas.forEach(areaSeleccionada => {
-					console.log("KAOZ", producto);
-					console.log("KAOZ", areaSeleccionada);
 					pago.cantidad = Number(pago.cantidad);
 					areaSeleccionada.precio_real = Number(areaSeleccionada.precio_real);
 					while (pago.cantidad !== 0 && areaSeleccionada.precio_real !== 0) {
@@ -314,7 +313,6 @@ const ReportesDetallesGeneral = (props) => {
 					pago.digitos = 'NO APLICA';
 				}
 				producto.areasSeleccionadas.forEach(areaSeleccionada => {
-					console.log("KAOZ", areaSeleccionada);
 					pago.total = Number(pago.total);
 					const importe1 = Number(precioAreaBySucursal(sucursal, areaSeleccionada));
 					let precioReal = Number(areaSeleccionada.precio_real);
@@ -376,7 +374,7 @@ const ReportesDetallesGeneral = (props) => {
 							doctor_efectivo: toFormatterCurrency(aparatologia.dermatologo.pago_completo ? pagoDermatologo : (pagoDermatologo / 2)),
 							doctor_retencion: toFormatterCurrency(aparatologia.dermatologo.pago_completo ? 0 : (pagoDermatologo / 2)),
 							total_clinica: toFormatterCurrency(pagoClinica),
-							turno : pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO' ) : "SIN TURNO",
+							turno: pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO') : "SIN TURNO",
 						}
 						datos.push(dato);
 					}
@@ -444,14 +442,14 @@ const ReportesDetallesGeneral = (props) => {
 					tipo_tarjeta: pago.tipo_tarjeta_nombre,
 					banco_nombre: pago.banco_nombre,
 					digitos: pago.digitos,
-					importe_1: toFormatterCurrency(cirugia.total),
+					importe_1: toFormatterCurrency(cirugia.total_aplicacion),
 					area: "NO APLICA",
-					descuento_porcentaje_clinica: `${redondearDecimales(descuentoClinicaPorcentaje)}%`,
-					descuento_cantidad_clinica: toFormatterCurrency(descuentoClinica),
-					descuento_porcentaje_dermatologo: `${redondearDecimales(descuentoDermatologoPorcentaje)}%`,
-					descuento_cantidad_dermatologo: toFormatterCurrency(descuentoDermatologo),
-					descuento_porcentaje: `${redondearDecimales(descuentoPorcentaje)}%`,
-					descuento_cantidad: toFormatterCurrency(descuentoCantidad),
+					descuento_porcentaje_clinica: `${redondearDecimales(0)}%`,
+					descuento_cantidad_clinica: toFormatterCurrency(0),
+					descuento_porcentaje_dermatologo: `${redondearDecimales(0)}%`,
+					descuento_cantidad_dermatologo: toFormatterCurrency(0),
+					descuento_porcentaje: `${redondearDecimales(0)}%`,
+					descuento_cantidad: toFormatterCurrency(0),
 					impuesto_porcentaje: `${impuestoPorcentaje}%`,
 					importe_2: toFormatterCurrency(importe2),
 					impuesto_cantidad: toFormatterCurrency(impuesto),
@@ -499,22 +497,22 @@ const ReportesDetallesGeneral = (props) => {
 						tipo_tarjeta: pago.tipo_tarjeta_nombre,
 						banco_nombre: pago.banco_nombre,
 						digitos: pago.digitos,
-						importe_1: toFormatterCurrency(cirugia.total),
+						importe_1: toFormatterCurrency(material.precio),
 						area: "NO APLICA",
-						descuento_porcentaje_clinica: "NO APLICA",
-						descuento_cantidad_clinica: "NO APLICA",
-						descuento_porcentaje_dermatologo: "NO APLICA",
-						descuento_cantidad_dermatologo: "NO APLICA",
-						descuento_porcentaje: `${redondearDecimales(descuentoPorcentaje)}%`,
-						descuento_cantidad: toFormatterCurrency(descuentoCantidad),
+						descuento_porcentaje_clinica: "0%",
+						descuento_cantidad_clinica: "$0.00",
+						descuento_porcentaje_dermatologo: "0%",
+						descuento_cantidad_dermatologo: "$0.00",
+						descuento_porcentaje: `${redondearDecimales(0)}%`,
+						descuento_cantidad: toFormatterCurrency(0),
 						impuesto_porcentaje: `${impuestoPorcentaje}%`,
 						importe_2: toFormatterCurrency(importe2),
 						impuesto_cantidad: toFormatterCurrency(impuesto),
-						cantidad_servicios: 1,
+						cantidad_servicios: 0,
 						total_moneda: toFormatterCurrency(total),
-						total_doctor: "NO APLICA",
-						doctor_efectivo: "NO APLICA",
-						doctor_retencion: "NO APLICA",
+						total_doctor: toFormatterCurrency(0),
+						doctor_efectivo: toFormatterCurrency(0),
+						doctor_retencion: toFormatterCurrency(0),
 						total_clinica: toFormatterCurrency(total),
 						turno: pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO') : "SIN TURNO",
 					}
@@ -522,7 +520,8 @@ const ReportesDetallesGeneral = (props) => {
 				}
 			});
 
-			cirugia.biopsias.forEach(biopsia => {
+			cirugia.biopsias.forEach(async (biopsia) => {
+
 				let precioBiopsias = Number(cirugia.costo_biopsias);
 				while (totalPago !== 0 && precioBiopsias !== 0) {
 
@@ -550,39 +549,43 @@ const ReportesDetallesGeneral = (props) => {
 					const dato = {
 						...cirugia,
 						servicio: { nombre: "BIOPSIA" },
-						producto: { nombre: cirugia.patologo.nombre },
+						observaciones: cirugia.dermatologo.nombre,
+						dermatologo_nombre: biopsia.patologo.nombre,
+						producto: { nombre: "BIOPSIA" },
 						metodo_pago_nombre: metodoPago.nombre,
 						tipo_tarjeta: pago.tipo_tarjeta_nombre,
 						banco_nombre: pago.banco_nombre,
 						digitos: pago.digitos,
-						importe_1: toFormatterCurrency(cirugia.total),
+						importe_1: toFormatterCurrency(cirugia.costo_biopsias),
 						area: "NO APLICA",
-						descuento_porcentaje_clinica: "NO APLICA",
-						descuento_cantidad_clinica: "NO APLICA",
-						descuento_porcentaje_dermatologo: "NO APLICA",
-						descuento_cantidad_dermatologo: "NO APLICA",
-						descuento_porcentaje: `${redondearDecimales(descuentoPorcentaje)}%`,
-						descuento_cantidad: toFormatterCurrency(descuentoCantidad),
+						descuento_porcentaje_clinica: "0%",
+						descuento_cantidad_clinica: "$0.00",
+						descuento_porcentaje_dermatologo: "0%",
+						descuento_cantidad_dermatologo: "$0.00",
+						descuento_porcentaje: `${redondearDecimales(0)}%`,
+						descuento_cantidad: toFormatterCurrency(0),
 						impuesto_porcentaje: `${impuestoPorcentaje}%`,
 						importe_2: toFormatterCurrency(importe2),
 						impuesto_cantidad: toFormatterCurrency(impuesto),
 						cantidad_servicios: 1 / cirugia.biopsias.length,
 						total_moneda: toFormatterCurrency(total),
-						total_doctor: "NO APLICA",
-						doctor_efectivo: "NO APLICA",
-						doctor_retencion: "NO APLICA",
-						total_clinica: "NO APLICA",
+						total_doctor: toFormatterCurrency(total),
+						doctor_efectivo: toFormatterCurrency(biopsia.patologo.pago_completo ? total : 0),
+						doctor_retencion: toFormatterCurrency(biopsia.patologo.pago_completo ? 0 : total),
+						total_clinica: toFormatterCurrency(0),
 						turno: pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO') : "SIN TURNO",
 					}
 					datos.push(dato);
+
 				}
+
 			});
 
 		});
 	}
 
 	const procesarDermapen = (dermapen, datos) => {
-		let totalAplicacion = Number(dermapen.total_aplicacion) + Number(dermapen.costo);
+		let totalAplicacion = Number(dermapen.total);
 		dermapen.pagos.forEach(pago => {
 			let totalPago = Number(pago.total);
 			const metodoPago = metodosPago.find(metodoPago => {
@@ -635,6 +638,7 @@ const ReportesDetallesGeneral = (props) => {
 
 				const dato = {
 					...dermapen,
+					servicio: { nombre: "FACIAL" },
 					metodo_pago_nombre: metodoPago.nombre,
 					tipo_tarjeta: pago.tipo_tarjeta_nombre,
 					banco_nombre: pago.banco_nombre,
@@ -705,7 +709,7 @@ const ReportesDetallesGeneral = (props) => {
 						impuesto_porcentaje: `${impuestoPorcentaje}%`,
 						importe_2: toFormatterCurrency(importe2),
 						impuesto_cantidad: toFormatterCurrency(impuesto),
-						cantidad_servicios: 1,
+						cantidad_servicios: 0,
 						total_moneda: toFormatterCurrency(total),
 						total_doctor: "NO APLICA",
 						doctor_efectivo: "NO APLICA",
@@ -759,12 +763,15 @@ const ReportesDetallesGeneral = (props) => {
 					totalPago = 0;
 				}
 
+				console.log("KAOZ", estetica.dermatologo.esquema.porcentaje_dermocosmetica);
+
 				const impuestoPorcentaje = estetica.iva ? iva : 0;
 				const importe2 = total / (1 + (impuestoPorcentaje / 100));
 				const impuesto = importe2 * (impuestoPorcentaje / 100);
 				const descuentoPorcentaje = 100 - (total * 100 / estetica.total);
 				const descuentoCantidad = (estetica.total * descuentoPorcentaje / 100);
-				const pagoDermatologo = total / estetica.total * estetica.pago_dermatologo;
+				// const pagoDermatologo = total / estetica.total * estetica.pago_dermatologo;
+				const pagoDermatologo = Number(estetica.dermatologo.esquema.porcentaje_dermocosmetica) * total / 100;
 				const pagoClinica = total - pagoDermatologo;
 				const descuentoClinicaPorcentaje = estetica.porcentaje_descuento_clinica ? estetica.porcentaje_descuento_clinica : 0;
 				const descuentoDermatologoPorcentaje = estetica.descuento_dermatologo ? estetica.descuento_dermatologo : 0;
@@ -773,18 +780,20 @@ const ReportesDetallesGeneral = (props) => {
 
 				const dato = {
 					...estetica,
+					producto: { nombre: estetica.producto[0].nombre },
 					metodo_pago_nombre: metodoPago.nombre,
 					tipo_tarjeta: pago.tipo_tarjeta_nombre,
 					banco_nombre: pago.banco_nombre,
 					digitos: pago.digitos,
-					importe_1: toFormatterCurrency(estetica.total),
+					importe_1: toFormatterCurrency(total),
 					area: "NO APLICA",
-					descuento_porcentaje_clinica: `${redondearDecimales(descuentoClinicaPorcentaje)}%`,
-					descuento_cantidad_clinica: toFormatterCurrency(descuentoClinica),
-					descuento_porcentaje_dermatologo: `${redondearDecimales(descuentoDermatologoPorcentaje)}%`,
-					descuento_cantidad_dermatologo: toFormatterCurrency(descuentoDermatologo),
-					descuento_porcentaje: `${redondearDecimales(descuentoPorcentaje)}%`,
-					descuento_cantidad: toFormatterCurrency(descuentoCantidad),
+					cantidad_servicios: 1,
+					descuento_porcentaje_clinica: `${redondearDecimales(0)}%`,
+					descuento_cantidad_clinica: toFormatterCurrency(0),
+					descuento_porcentaje_dermatologo: `${redondearDecimales(0)}%`,
+					descuento_cantidad_dermatologo: toFormatterCurrency(0),
+					descuento_porcentaje: `${redondearDecimales(0)}%`,
+					descuento_cantidad: toFormatterCurrency(0),
 					impuesto_porcentaje: `${impuestoPorcentaje}%`,
 					importe_2: toFormatterCurrency(importe2),
 					impuesto_cantidad: toFormatterCurrency(impuesto),
@@ -833,16 +842,16 @@ const ReportesDetallesGeneral = (props) => {
 						digitos: pago.digitos,
 						importe_1: toFormatterCurrency(estetica.total),
 						area: "NO APLICA",
-						descuento_porcentaje_clinica: "NO APLICA",
-						descuento_cantidad_clinica: "NO APLICA",
-						descuento_porcentaje_dermatologo: "NO APLICA",
-						descuento_cantidad_dermatologo: "NO APLICA",
-						descuento_porcentaje: `${redondearDecimales(descuentoPorcentaje)}%`,
-						descuento_cantidad: toFormatterCurrency(descuentoCantidad),
+						descuento_porcentaje_clinica:  `${redondearDecimales(0)}%`,
+						descuento_cantidad_clinica: toFormatterCurrency(0),
+						descuento_porcentaje_dermatologo:  `${redondearDecimales(0)}%`,
+						descuento_cantidad_dermatologo: toFormatterCurrency(0),
+						descuento_porcentaje: `${redondearDecimales(0)}%`,
+						descuento_cantidad: toFormatterCurrency(0),
 						impuesto_porcentaje: `${impuestoPorcentaje}%`,
 						importe_2: toFormatterCurrency(importe2),
 						impuesto_cantidad: toFormatterCurrency(impuesto),
-						cantidad_servicios: 1,
+						cantidad_servicios: 0,
 						total_moneda: toFormatterCurrency(total),
 						total_doctor: "NO APLICA",
 						doctor_efectivo: "NO APLICA",
@@ -881,28 +890,28 @@ const ReportesDetallesGeneral = (props) => {
 
 					const dato = {
 						...estetica,
-						servicio: { nombre: "TOXINAS Y RELLENOS" },
+						servicio: { nombre: "ESTETICA" },
 						producto: { nombre: toxina_relleno.nombre },
 						metodo_pago_nombre: metodoPago.nombre,
 						tipo_tarjeta: pago.tipo_tarjeta_nombre,
 						banco_nombre: pago.banco_nombre,
 						digitos: pago.digitos,
-						importe_1: toFormatterCurrency(estetica.total),
+						importe_1: toFormatterCurrency(total),
 						area: "NO APLICA",
-						descuento_porcentaje_clinica: "NO APLICA",
-						descuento_cantidad_clinica: "NO APLICA",
-						descuento_porcentaje_dermatologo: "NO APLICA",
-						descuento_cantidad_dermatologo: "NO APLICA",
-						descuento_porcentaje: `${redondearDecimales(descuentoPorcentaje)}%`,
-						descuento_cantidad: toFormatterCurrency(descuentoCantidad),
+						descuento_porcentaje_clinica:  `${redondearDecimales(0)}%`,
+						descuento_cantidad_clinica: toFormatterCurrency(0),
+						descuento_porcentaje_dermatologo:  `${redondearDecimales(0)}%`,
+						descuento_cantidad_dermatologo: toFormatterCurrency(0),
+						descuento_porcentaje: `${redondearDecimales(0)}%`,
+						descuento_cantidad: toFormatterCurrency(0),
 						impuesto_porcentaje: `${impuestoPorcentaje}%`,
 						importe_2: toFormatterCurrency(importe2),
 						impuesto_cantidad: toFormatterCurrency(impuesto),
 						cantidad_servicios: toxina_relleno.unidades,
 						total_moneda: toFormatterCurrency(total),
-						total_doctor: "NO APLICA",
-						doctor_efectivo: "NO APLICA",
-						doctor_retencion: "NO APLICA",
+						total_doctor: toFormatterCurrency(0),
+						doctor_efectivo: toFormatterCurrency(0),
+						doctor_retencion: toFormatterCurrency(0),
 						total_clinica: toFormatterCurrency(total),
 						turno: pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO') : "SIN TURNO",
 					}
@@ -986,24 +995,24 @@ const ReportesDetallesGeneral = (props) => {
 			});
 			consulta.cantidad_servicios = 1 / coincidencias.length;
 		});
-		dermapensProcesadas.forEach(dermapen => {
-			const coincidencias = dermapensProcesadas.filter(dermapenProcesada => {
-				return dermapen._id === dermapenProcesada._id && dermapen.producto === dermapenProcesada.producto;
-			});
-			dermapen.cantidad_servicios = 1 / coincidencias.length;
-		});
-		cirugiasProcesadas.forEach(cirugia => {
-			const coincidencias = cirugiasProcesadas.filter(cirugiaProcesada => {
-				return cirugia._id === cirugiaProcesada._id && cirugia.producto === cirugiaProcesada.producto;
-			});
-			cirugia.cantidad_servicios = 1 / coincidencias.length;
-		});
-		esteticasProcesadas.forEach(estetica => {
-			const coincidencias = esteticasProcesadas.filter(esteticaProcesada => {
-				return estetica._id === esteticaProcesada._id && estetica.producto === esteticaProcesada.producto;
-			});
-			estetica.cantidad_servicios = 1 / coincidencias.length;
-		});
+		// dermapensProcesadas.forEach(dermapen => {
+		// 	const coincidencias = dermapensProcesadas.filter(dermapenProcesada => {
+		// 		return dermapen._id === dermapenProcesada._id && dermapen.producto === dermapenProcesada.producto;
+		// 	});
+		// 	dermapen.cantidad_servicios = 1 / coincidencias.length;
+		// });
+		// cirugiasProcesadas.forEach(cirugia => {
+		// 	const coincidencias = cirugiasProcesadas.filter(cirugiaProcesada => {
+		// 		return cirugia._id === cirugiaProcesada._id && cirugia.producto === cirugiaProcesada.producto;
+		// 	});
+		// 	cirugia.cantidad_servicios = 1 / coincidencias.length;
+		// });
+		// esteticasProcesadas.forEach(estetica => {
+		// 	const coincidencias = esteticasProcesadas.filter(esteticaProcesada => {
+		// 		return estetica._id === esteticaProcesada._id && estetica.producto === esteticaProcesada.producto;
+		// 	});
+		// 	estetica.cantidad_servicios = 1 / coincidencias.length;
+		// });
 		const datos = [...consultasProcesadas, ...facialesProcesadas, ...dermapensProcesadas, ...cirugiasProcesadas, ...esteticasProcesadas, ...aparatologiasProcesadas];
 		datos.sort((a, b) => {
 			if (a.consecutivo > b.consecutivo) return 1;

@@ -42,6 +42,7 @@ const ModalImprimirPagoDermatologo = (props) => {
 
   const [show, setShow] = useState(true);
   const [consultas, setConsultas] = useState([]);
+  const [consultasPrivada, setConsultasPrivada] = useState([]);
   const [consultasPrimeraVez, setConsultasPrimeraVez] = useState([]);
   const [consultasPrimeraVezPA, setConsultasPrimeraVezPA] = useState([]);
   const [consultasReconsultas, setConsultasReconsultas] = useState([]);
@@ -65,6 +66,7 @@ const ModalImprimirPagoDermatologo = (props) => {
   const canceladoCPId = process.env.REACT_APP_CANCELO_CP_STATUS_ID;
   const primeraVezFrecuenciaId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
   const reconsultaFrecuenciaId = process.env.REACT_APP_FRECUENCIA_RECONSULTA_ID;
+  const privadaFrecuenciaId = process.env.REACT_APP_FRECUENCIA_PRIVADA_ID;
   const revisadoTipoCitaId = process.env.REACT_APP_TIPO_CITA_REVISADO_ID;
   const derivadoTipoCitaId = process.env.REACT_APP_TIPO_CITA_DERIVADO_ID;
   const realizadoTipoCitaId = process.env.REACT_APP_TIPO_CITA_REALIZADO_ID;
@@ -82,6 +84,12 @@ const ModalImprimirPagoDermatologo = (props) => {
     const response = await findConsultsByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setConsultas(response.data);
+    }
+  }
+  const loadConsultasPrivada = async (hora_apertura, hora_cierre) => {
+    const response = await findConsultsByPayOfDoctorHoraAplicacionFrecuencia(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), privadaFrecuenciaId, empleado.access_token);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setConsultasPrivada(response.data);
     }
   }
 
@@ -233,6 +241,7 @@ const ModalImprimirPagoDermatologo = (props) => {
       await loadAparatologiasCPA(hora_apertura, hora_cierre);
       await loadEsteticas(hora_apertura, hora_cierre);
       await loadEsteticasPA(hora_apertura, hora_cierre);
+      await loadConsultasPrivada(hora_apertura, hora_cierre);
       await loadConsultasPrimeraVez(hora_apertura, hora_cierre);
       await loadConsultasPrimeraVezPA(hora_apertura, hora_cierre);
       await loadConsultasReconsulta(hora_apertura, hora_cierre);
@@ -455,6 +464,7 @@ const ModalImprimirPagoDermatologo = (props) => {
             dermatologo={dermatologo}
             sucursal={sucursal}
             corte={corte}
+            consultasPrivada={consultasPrivada}
             consultasPrimeraVez={consultasPrimeraVez}
             consultasPrimeraVezPA={consultasPrimeraVezPA}
             consultasReconsultas={consultasReconsultas}

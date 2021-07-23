@@ -15,6 +15,8 @@ const TabSesionesAnticipadas = (props) => {
 
   const classes = useStyles();
 
+  const [openModalAgregarSesionesAnticipadas, setOpenModalAgregarSesionesAnticipadas] = useState(false);
+
   const {
     open,
     onClose,
@@ -24,6 +26,8 @@ const TabSesionesAnticipadas = (props) => {
     empleado,
     colorBase,
   } = props;
+
+  console.log("kAOZ", sucursal);
 
   const [sesionesAnticipadas, setSesionesAnticipadas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -58,6 +62,14 @@ const TabSesionesAnticipadas = (props) => {
 		exportDelimiter: ';'
   }
 
+  const handleClickAgregarSesionesAnticipadas = (event, rowData) => {
+    setOpenModalAgregarSesionesAnticipadas(true);
+  }
+
+  const handleCerrarAgregarSesionesAnticipadas = (event, rowData) => {
+    setOpenModalAgregarSesionesAnticipadas(false);
+  }
+
   const loadSesionesAnticipadas = async () => {
 
   }
@@ -83,6 +95,10 @@ const TabSesionesAnticipadas = (props) => {
             columns={columns}
             options={options}
             sucursal={sucursal}
+            colorBase={colorBase}
+            onClickAgregarSesionesAnticipadas={handleClickAgregarSesionesAnticipadas}
+            onCerrarAgregarSesionesAnticipadas={handleCerrarAgregarSesionesAnticipadas}
+            openModalAgregarSesionesAnticipadas={openModalAgregarSesionesAnticipadas}
             titulo={''} /> :
           <Backdrop className={classes.backdrop} open={isLoading} >
             <CircularProgress color="inherit" />

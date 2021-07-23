@@ -42,6 +42,7 @@ const Pacientes = (props) => {
 		onClickAgendarAparatologia,
 		onClickAgendarDermapen,
 		colorBase,
+		sucursal,
 	} = props;
 
 	const columns = [
@@ -260,6 +261,7 @@ const Pacientes = (props) => {
 						openHistoric={openHistoric}
 						openPagosAnticipados={openPagosAnticipados}
 						paciente={paciente}
+						sucursal={sucursal}
 						telefono={paciente.telefono}
 						onClickGuardar={handleOnClickGuardar}
 						onClickGuardarAgendar={handleOnClickGuardarAgendar}

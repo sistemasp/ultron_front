@@ -34,6 +34,21 @@ export const findEmployeeByEmployeeNumber = async (employeeNumber) => {
     }
 }
 
+export const findEmployeeById = async (empleadoId, token) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/empleado/${empleadoId}`,
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response;
+    } catch (error) {
+        console.log('findEmployeeById', error);
+    }
+}
+
 export const loginEmployee = async (employeeNumber, password) => {
     try {
         const response = await axios({

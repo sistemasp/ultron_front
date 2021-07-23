@@ -75,7 +75,6 @@ const ModalCirugia = (props) => {
   const fecha = `${addZero(fecha_cita.getDate())}/${addZero(Number(fecha_cita.getMonth()) + 1)}/${addZero(fecha_cita.getFullYear())}`;
   const hora = `${addZero(Number(fecha_cita.getHours()))}:${addZero(fecha_cita.getMinutes())}`;
 
-  console.log("KAOZ", cirugia);
 
   const [values, setValues] = useState({
     _id: cirugia._id,
@@ -98,15 +97,14 @@ const ModalCirugia = (props) => {
     hasBiopsia: cirugia.hasBiopsia,
     cantidad_biopsias: cirugia.biopsias ? cirugia.biopsias.length : 0,
     costo_biopsias: cirugia.costo_biopsias ? cirugia.costo_biopsias : 0,
-    patologo: cirugia.patologo ? cirugia.patologo._id : undefined,
     hora_aplicacion: cirugia.hora_aplicacion,
     total_aplicacion: cirugia.total_aplicacion,
-    patologo: cirugia.patologo,
     frecuencia: cirugia.frecuencia._id,
     medio: cirugia.medio._id,
     forma_pago: cirugia.forma_pago._id,
     producto: cirugia.producto._id,
     observaciones: cirugia.observaciones,
+    patologo: cirugia.biopsias.length > 0 ? cirugia.biopsias[0].patologo : undefined,
     hora: 0,
     minutos: 0,
   });

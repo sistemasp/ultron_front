@@ -115,7 +115,6 @@ export const redondearDecimales = (value) => {
 }
 
 export const precioAreaBySucursal = (sucursalId, area) => {
-    console.log("KAOZ", sucursalId, area);
     const itemPrecio =
             sucursalId === sucursalManuelAcunaId ? area.precio_ma // PRECIO MANUEL ACUÑA
                 : (sucursalId === sucursalOcciId ? area.precio_oc // PRECIO OCCIDENTAL

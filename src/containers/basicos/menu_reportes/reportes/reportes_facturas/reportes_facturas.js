@@ -27,8 +27,6 @@ export const ReportesFacturasContainer = (props) => {
 
 	const classes = myStyles(colorBase)();
 	
-	console.log("KAOZ", facturas);
-
     return (
         <Fragment>
             <Paper>

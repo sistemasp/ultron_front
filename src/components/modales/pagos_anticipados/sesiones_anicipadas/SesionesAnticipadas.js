@@ -4,6 +4,9 @@ import Modal from '@material-ui/core/Modal';
 import { Button, Grid } from '@material-ui/core';
 
 import TableComponent from '../../../table/TableComponent';
+import myStyles from '../../../../css';
+import { ButtonCustom } from '../../../basic/ButtonCustom';
+import AgregarPagosAnticipados from '../../agregar_pagos_anticipados';
 
 function getModalStyle() {
   const top = 50;
@@ -38,8 +41,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SesionesAnticipadas = (props) => {
-  const classes = useStyles();
-
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
 
@@ -47,17 +48,42 @@ const SesionesAnticipadas = (props) => {
     historial,
     titulo,
     columns,
-    options
+    options,
+    colorBase,
+    sucursal,
+    onClickAgregarPagos,
+    openModalAgregarSesionesAnticipadas,
+    onClickAgregarSesionesAnticipadas,
+    onCerrarAgregarSesionesAnticipadas,
   } = props;
 
+  const classes = myStyles(colorBase)();
+
   return (
-    <div>
+    <Fragment>
+      {
+        openModalAgregarSesionesAnticipadas ?
+          <AgregarPagosAnticipados
+            open={openModalAgregarSesionesAnticipadas}
+            sucursal={sucursal}
+            onClose={onCerrarAgregarSesionesAnticipadas}
+            colorBase={colorBase} />
+          : ''
+      }
+      <Grid item xs={12} sm={12}>
+        <ButtonCustom
+          className={classes.button}
+          color="primary"
+          variant="contained"
+          onClick={onClickAgregarSesionesAnticipadas}
+          text='AGREGAR PAGOS ANTICIPADOS' />
+      </Grid>
       <TableComponent
         titulo={titulo}
         columns={columns}
         data={historial}
         options={options} />
-    </div>
+    </Fragment>
   );
 }
 

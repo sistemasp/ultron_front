@@ -130,7 +130,6 @@ const ReportesFacturas = (props) => {
 				// 		item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
 	
 				// 		item.uso_cfdi.nombre = `${item.uso_cfdi.clave}: ${item.uso_cfdi.descripcion}`;
-				// 		//console.log("KAOZ", ...facturas, item);
 
 				// 	}
 				// });
@@ -187,7 +186,6 @@ const ReportesFacturas = (props) => {
 					item.uso_cfdi.nombre = `${item.uso_cfdi.clave}: ${item.uso_cfdi.descripcion}`;
 				}
 				
-				console.log("KAOZ", item);
 				facturasResponse.push(item);
 			});
 

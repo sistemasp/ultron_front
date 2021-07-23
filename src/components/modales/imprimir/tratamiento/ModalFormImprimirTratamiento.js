@@ -78,7 +78,6 @@ const ModalFormImprimirTratamiento = (props) => {
             <hr />
             {
               datos.tratamientos.map(tratamiento => {
-                console.log("KAOZ", tratamiento);
                 return <Fragment>
                   <Grid item xs={12}>
                     <h3 className={classes.labelItemLeft}>{`${tratamiento.nombre}:`}</h3>
@@ -86,7 +85,6 @@ const ModalFormImprimirTratamiento = (props) => {
                   <br />
                   {
                     tratamiento.areasSeleccionadas.map(area => {
-                      console.log("KAOZ", area);
                       return <Fragment>
                         <Grid item xs={9}>
                           <h4 className={classes.labelSubItemLeft}>{`${area.nombre}`}</h4>
