@@ -7,6 +7,9 @@ import { ButtonCustom } from "../../basic/ButtonCustom";
 import { CheckCustom } from '../../basic/CheckCustom';
 import { toFormatterCurrency } from '../../../utils/utils';
 import myStyles from '../../../css';
+import SesionesAnticipadas from '../pagos_anticipados/sesiones_anicipadas/SesionesAnticipadas';
+import TableComponent from '../../table/TableComponent';
+import PagosMultiservicios from '../pagos_multiservicios';
 
 function getModalStyle() {
   const top = 50;
@@ -21,13 +24,16 @@ function getModalStyle() {
   };
 }
 
-const FormPagosAnticipados = (props) => {
+const FormAgregarPagosAnticipados = (props) => {
 
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
 
   const {
     values,
+    pagoAnticipado,
+    empleado,
+    sucursal,
     servicios,
     tratamientos,
     areas,
@@ -36,7 +42,7 @@ const FormPagosAnticipados = (props) => {
     formasPago,
     tiposTarjeta,
     onClickCancel,
-    onClickGuardar,
+    onClickPagar,
     onChangeServicio,
     onChangeTratamientos,
     onChangeAreas,
@@ -46,15 +52,30 @@ const FormPagosAnticipados = (props) => {
     onChangeCantidad,
     onChangeDescuento,
     onChangeConfirmado,
-    onChangeObservaciones,
+    onChange,
     onChangeDigitos,
     onChangePagoAnticipado,
     onChangDescuentoDermatologo,
+    onClickAgregarSesion,
     open,
     colorBase,
+    totalPagar,
+    onClickPagosMultiservicios,
+    // TABLE COMPONENT
+    titulo,
+    columns,
+    sesionesAnticipadas,
+    actions,
+    options,
+    components,
+    // MODALES
+    openModalPagosMultiservicios,
+    onClosePagosMultiservicios,
+    onGuardarModalPagosMultiservicios,
+    setMessage,
+    setSeverity,
+    setOpenAlert,
   } = props;
-
-  console.log("KAOZ", tratamientos);
 
   const classes = myStyles(colorBase)();
 
@@ -66,6 +87,21 @@ const FormPagosAnticipados = (props) => {
         open={open} >
         <div style={modalStyle} className={classes.paper_95}>
           <form>
+            {
+              openModalPagosMultiservicios ?
+                <PagosMultiservicios
+                  open={openModalPagosMultiservicios}
+                  onClose={onClosePagosMultiservicios}
+                  pagoAnticipado={pagoAnticipado}
+                  empleado={empleado}
+                  sucursal={sucursal}
+                  setMessage={setMessage}
+                  setSeverity={setSeverity}
+                  setOpenAlert={setOpenAlert}
+                  colorBase={colorBase}
+                  onGuardarModalPagosMultiservicios={onGuardarModalPagosMultiservicios} />
+                : ''
+            }
             <Grid container spacing={3}>
 
               <Grid item xs={3}>
@@ -78,7 +114,7 @@ const FormPagosAnticipados = (props) => {
                     onChange={onChangeServicio}
                     disabled={isLoading}
                     label="SERVICIO" >
-                    {servicios.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                    {servicios.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
                   </Select>
                 </FormControl>
               </Grid>
@@ -96,105 +132,32 @@ const FormPagosAnticipados = (props) => {
                     />
                   </Grid> : ''
               }
-              {/* {
-                values.tratamientos.map(tratamientoValue => {
-                  return <Grid item xs={3} sm={3}>
-                    <Multiselect
-                      options={tratamientoValue.areas} // Options to display in the dropdown
-                      displayValue="nombre" // Property name to display in the dropdown options
-                      onSelect={(e) => onChangeAreas(e, tratamientoValue)} // Function will trigger on select event
-                      onRemove={(e) => onChangeAreas(e, tratamientoValue)} // Function will trigger on remove event
-                      placeholder={`ÁREAS ${tratamientoValue.nombre}`}
-                      selectedValues={tratamientoValue.areasSeleccionadas} // Preselected value to persist in dropdown
-                    />
-                  </Grid>
-                })
-              } */}
-
-              <Grid item xs={12}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-payment">FORMA DE PAGO</InputLabel>
-                  <Select
-                    labelId="simple-select-outlined-payment"
-                    id="simple-select-outlined-payment"
-                    value={values.forma_pago}
-                    onChange={onChangePaymentMethod}
-                    disabled={isLoading}
-                    label="FORMA DE PAGO" >
-                    {formasPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                  </Select>
-                </FormControl>
-              </Grid>
               {
-                values.forma_pago !== process.env.REACT_APP_FORMA_PAGO_EFECTIVO &&
-                  values.forma_pago !== process.env.REACT_APP_FORMA_PAGO_NO_PAGA &&
-                  values.forma_pago !== '' ?
-                  <Fragment>
-
-                    <Grid item xs={12}>
-                      <FormControl variant="outlined" className={classes.formControl}>
-                        <InputLabel id="simple-select-outlined-banks">BANCOS</InputLabel>
-                        <Select
-                          labelId="simple-select-outlined-banks"
-                          id="simple-select-outlined-banks"
-                          value={values.banco}
-                          onChange={onChangeBank}
-                          label="BANCOS" >
-                          {bancos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                        </Select>
-                      </FormControl>
+                values.tratamientos ?
+                  values.tratamientos.map(tratamientoValue => {
+                    return <Grid item xs={3} sm={3}>
+                      <Multiselect
+                        options={tratamientoValue.areas} // Options to display in the dropdown
+                        displayValue="nombre" // Property name to display in the dropdown options
+                        onSelect={(e) => onChangeAreas(e, tratamientoValue)} // Function will trigger on select event
+                        onRemove={(e) => onChangeAreas(e, tratamientoValue)} // Function will trigger on remove event
+                        placeholder={`ÁREAS ${tratamientoValue.nombre}`}
+                        selectedValues={tratamientoValue.areasSeleccionadas} // Preselected value to persist in dropdown
+                      />
                     </Grid>
-
-                    <Grid item xs={6}>
-                      <FormControl variant="outlined" className={classes.formControl}>
-                        <InputLabel id="simple-select-outlined-card-type">TIPO TARJETA</InputLabel>
-                        <Select
-                          labelId="simple-select-outlined-card-type"
-                          id="simple-select-outlined-card-type"
-                          value={values.tipoTarjeta}
-                          onChange={onChangeCardType}
-                          label="TIPO TARJETA" >
-                          {tiposTarjeta.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-
-                    <Grid item xs={6}>
-                      <TextField
-                        className={classes.textField}
-                        name="digitos"
-                        //helperText={touched.numero_sesion ? errors.numero_sesion : ""}
-                        label="DÍGITOS"
-                        value={values.digitos}
-                        onInput={(e) => {
-                          e.target.value = (e.target.value).toString().slice(0, 4)
-                        }}
-                        onChange={onChangeDigitos}
-                        variant="outlined" />
-                    </Grid>
-                  </Fragment> : ''
+                  }) : ''
               }
 
-              <Grid item xs={12}>
-                <TextField
-                  className={classes.textField}
-                  name="cantidad"
-                  //helperText={touched.numero_sesion ? errors.numero_sesion : ""}
-                  label="CANTIDAD A COBRAR"
-                  value={values.cantidad}
-                  onChange={onChangeCantidad}
-                  type='Number'
-                  onInput={(e) => {
-                    e.target.value = Math.max(0, parseFloat(e.target.value)).toString().slice(0, 7)
-                  }}
-                  variant="outlined" />
+
+              <Grid item xs={12} />
+              <Grid item xs={12} sm={3} className={classes.grid_center}>
+                <h2 className={classes.label}>{`PRECIO: ${toFormatterCurrency(values.precio)}`}</h2>
               </Grid>
-              {/*
-              <Grid item xs={12}>
+
+              <Grid item xs={12} sm={3} className={classes.grid_center}>
                 <TextField
                   className={classes.textField}
                   name="porcentaje_descuento_clinica"
-                  error={Boolean(errors.porcentaje_descuento_clinica)}
                   label="% DESCUENTO"
                   value={values.porcentaje_descuento_clinica}
                   onChange={onChangeDescuento}
@@ -206,51 +169,45 @@ const FormPagosAnticipados = (props) => {
                   }}
                   variant="outlined" />
               </Grid>
-
-              <Grid item xs={12}>
-                <CheckCustom
-                  checked={values.has_descuento_dermatologo}
-                  onChange={onChangDescuentoDermatologo}
-                  name="checkedC"
-                  label="DESCUENTO DERMATÓLOGO" />
-              </Grid>
-
-              <Grid item xs={12}>
-                <h3 className={classes.label}>{`${values.porcentaje_descuento_clinica}% DESCUENTO CLINICA: ${toFormatterCurrency(values.descuento_clinica)}`}</h3>
-              </Grid>
-
-              <Grid item xs={12}>
-                <h3 className={classes.label}>{`DESCUENTO DERMATÓLOGO: ${toFormatterCurrency(values.descuento_dermatologo)}`}</h3>
-              </Grid>
-                */}
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={3} className={classes.grid_center}>
                 <h2 className={classes.label}>{`TOTAL: ${toFormatterCurrency(values.total)}`}</h2>
               </Grid>
 
-              {
-                values.forma_pago !== process.env.REACT_APP_FORMA_PAGO_EFECTIVO &&
-                  values.forma_pago !== process.env.REACT_APP_FORMA_PAGO_NO_PAGA &&
-                  values.forma_pago !== '' ?
-                  <Grid item xs={6}>
-                    <CheckCustom
-                      checked={values.confirmado}
-                      onChange={onChangeConfirmado}
-                      name="checkedC"
-                      label="PAGO CONFIRMADO"
-                    />
-                  </Grid> : ''
-              }
-
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={3}>
                 <TextField
                   className={classes.textField}
                   name="observaciones"
                   //helperText={touched.numero_sesion ? errors.numero_sesion : ""}
                   label="OBSERVACIONES"
                   value={values.observaciones}
-                  onChange={onChangeObservaciones}
+                  onChange={onChange}
                   variant="outlined" />
               </Grid>
+
+              <Grid item xs={12}>
+                <ButtonCustom
+                  className={classes.button}
+                  color="primary"
+                  variant="contained"
+                  onClick={(e) => onClickAgregarSesion(e, values)}
+                  disabled={isLoading}
+                  text='AGREGAR' />
+              </Grid>
+
+              <Grid item xs={12} sm={12}>
+                <TableComponent
+                  titulo={titulo}
+                  columns={columns}
+                  data={sesionesAnticipadas}
+                  actions={actions}
+                  options={options}
+                  components={components} />
+              </Grid>
+
+              <Grid item xs={12} sm={12} className={classes.label_right}>
+                <h1 className={classes.label}>{`TOTAL A PAGAR: ${toFormatterCurrency(totalPagar)}`}</h1>
+              </Grid>
+
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
                   className={classes.buttonCancel}
@@ -264,9 +221,9 @@ const FormPagosAnticipados = (props) => {
                   className={classes.button}
                   color="primary"
                   variant="contained"
-                  onClick={(e) => onClickGuardar(e, values)}
+                  onClick={(e) => onClickPagosMultiservicios(e, values)}
                   disabled={isLoading}
-                  text='GUARDAR' />
+                  text='PAGAR' />
               </Grid>
               {/*
                 <Grid item xs={12}>
@@ -286,4 +243,4 @@ const FormPagosAnticipados = (props) => {
   );
 }
 
-export default FormPagosAnticipados;
+export default FormAgregarPagosAnticipados;

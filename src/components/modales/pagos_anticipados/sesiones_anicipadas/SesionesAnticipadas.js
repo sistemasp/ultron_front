@@ -46,6 +46,7 @@ const SesionesAnticipadas = (props) => {
 
   const {
     historial,
+    paciente,
     titulo,
     columns,
     options,
@@ -55,6 +56,7 @@ const SesionesAnticipadas = (props) => {
     openModalAgregarSesionesAnticipadas,
     onClickAgregarSesionesAnticipadas,
     onCerrarAgregarSesionesAnticipadas,
+    token,
   } = props;
 
   const classes = myStyles(colorBase)();
@@ -66,8 +68,10 @@ const SesionesAnticipadas = (props) => {
           <AgregarPagosAnticipados
             open={openModalAgregarSesionesAnticipadas}
             sucursal={sucursal}
+            paciente={paciente}
             onClose={onCerrarAgregarSesionesAnticipadas}
-            colorBase={colorBase} />
+            colorBase={colorBase}
+            token={token} />
           : ''
       }
       <Grid item xs={12} sm={12}>

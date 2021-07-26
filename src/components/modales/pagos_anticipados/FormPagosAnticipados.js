@@ -74,6 +74,7 @@ export const PagosAnticipadosContainer = props => {
 		pagosAnticipados,
 		empleado,
 		colorBase,
+		token,
 	} = props;
 
 	const classes = myStyles(colorBase)();
@@ -100,6 +101,7 @@ export const PagosAnticipadosContainer = props => {
 						<TabSesionesAnticipadas
 							paciente={paciente}
 							sucursal={sucursal}
+							token={token}
 							sesionesAnticipadas={pagosAnticipados.sesionesAnticipadas}
 							colorBase={colorBase}
 							empleado={empleado} />

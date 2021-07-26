@@ -45,6 +45,7 @@ const PagosAnticipados = (props) => {
                 open={open}
                 value={value}
                 paciente={paciente}
+                token={token}
                 onClickCancel={onClose}
                 colorBase={colorBase}
                 pagosAnticipados={pagosAnticipados} />

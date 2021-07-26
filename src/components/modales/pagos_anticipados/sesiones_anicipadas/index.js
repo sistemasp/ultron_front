@@ -25,9 +25,8 @@ const TabSesionesAnticipadas = (props) => {
     pagosAnticipados,
     empleado,
     colorBase,
+    token,
   } = props;
-
-  console.log("kAOZ", sucursal);
 
   const [sesionesAnticipadas, setSesionesAnticipadas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -92,10 +91,12 @@ const TabSesionesAnticipadas = (props) => {
             open={open}
             onClickCancel={onClose}
             sesionesAnticipadas={sesionesAnticipadas}
+            paciente={paciente}
             columns={columns}
             options={options}
             sucursal={sucursal}
             colorBase={colorBase}
+            token={token}
             onClickAgregarSesionesAnticipadas={handleClickAgregarSesionesAnticipadas}
             onCerrarAgregarSesionesAnticipadas={handleCerrarAgregarSesionesAnticipadas}
             openModalAgregarSesionesAnticipadas={openModalAgregarSesionesAnticipadas}

@@ -78,7 +78,7 @@ export const PacientesContainer = (props) => {
             onClose={handleClose}
             paciente={paciente}
             colorBase={colorBase}
-            sucursal={sucursal}
+            sucursal={sucursal._id}
             empleado={empleado} /> : ''
       }
       <Grid container>
