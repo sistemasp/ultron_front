@@ -20,7 +20,7 @@ import { Fragment } from 'react';
 import { findTurnoActualBySucursal } from '../../../services/corte';
 
 const PagoMultiservicio = (props) => {
-console.log("KAOZ", "KDASDOASDKADAKS");
+
   const {
     open,
     onClose,
@@ -35,7 +35,7 @@ console.log("KAOZ", "KDASDOASDKADAKS");
     tipoServicioId,
     colorBase,
   } = props;
-
+  
   const classes = myStyles(colorBase)();
 
   const porcetanjeComision = process.env.REACT_APP_COMISION_PAGO_TARJETA;
@@ -49,6 +49,7 @@ console.log("KAOZ", "KDASDOASDKADAKS");
   const tipoEntradaAparatologiaId = process.env.REACT_APP_TIPO_INGRESO_APARATOLOGIA_ID;
   const tipoEntradaLaserId = process.env.REACT_APP_TIPO_INGRESO_LASER_ID;
   const tipoEntradaDermapenId = process.env.REACT_APP_TIPO_INGRESO_DERMAPEN_ID;
+  const tipoEntradaPagoAnticipadoId = process.env.REACT_APP_TIPO_INGRESO_PAGO_ANTICIPADO_ID;
   const tipoEntradaOtrosId = process.env.REACT_APP_TIPO_INGRESO_OTROS_ID;
   const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
   const servicioDermapenlId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID;
@@ -58,6 +59,7 @@ console.log("KAOZ", "KDASDOASDKADAKS");
   const servicioCirugiaId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID;
   const servicioBiopsiaId = process.env.REACT_APP_BIOPSIA_SERVICIO_ID;
   const servicioEsteticaId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
+  const servicioPagoAnticipadoId = process.env.REACT_APP_PAGO_ANTICIPADO_SERVICIO_ID;
   const dermatologoDirectoId = process.env.REACT_APP_DERMATOLOGO_DIRECTO_ID;
   const tipoCitaRevisadoId = process.env.REACT_APP_TIPO_CITA_REVISADO_ID;
   const tipoCitaDerivadoId = process.env.REACT_APP_TIPO_CITA_DERIVADO_ID;
@@ -195,7 +197,7 @@ console.log("KAOZ", "KDASDOASDKADAKS");
   }
 
   const handleClickGuardarPago = async (event, rowData) => {
-    setIsLoading(true);
+    //setIsLoading(true);
     rowData.fecha_pago = new Date();
     rowData.paciente = servicio.paciente._id;
     rowData.dermatologo = servicio.dermatologo._id;
@@ -206,6 +208,7 @@ console.log("KAOZ", "KDASDOASDKADAKS");
     rowData.tipo_servicio = tipoServicioId;
     rowData.hora_aplicacion = servicio.hora_aplicacion;
     rowData.turno = turno;
+    rowData.pago_anticipado = true;
 
     let tipoEntrada = '';
 
@@ -234,6 +237,9 @@ console.log("KAOZ", "KDASDOASDKADAKS");
       case servicioEsteticaId:
         tipoEntrada = tipoEntradaEsteticaId;
         break
+      case servicioPagoAnticipadoId:
+        tipoEntrada = tipoEntradaPagoAnticipadoId;
+        break
       default:
         tipoEntrada = tipoEntradaOtrosId;
         break;
@@ -247,24 +253,13 @@ console.log("KAOZ", "KDASDOASDKADAKS");
       create_date: create_date,
       hora_aplicacion: servicio.hora_aplicacion,
       recepcionista: empleado._id,
-      concepto: `FOLIO: ${generateFolio(servicio)}`,
+      concepto: `PAGO ANTICIPADO`,
       cantidad: rowData.total,
       tipo_entrada: tipoEntrada,
       sucursal: sucursal,
       forma_pago: rowData.forma_pago,
       pago_anticipado: rowData.pago_anticipado,
     }
-    //TODO: CUIDADO AQUI
-    /*const resExistEntrada = await findEntradaByPago(pago._id);
-    if (`${resExistEntrada.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      const existEntrada = resExistEntrada.data;
-
-      if (existEntrada) {
-        response = await updateEntrada(existEntrada._id, entrada);
-      } else {
-        response = await createEntrada(entrada);
-      }
-    }*/
 
     if (pago.entrada) {
       response = await updateEntrada(pago.entrada, entrada);
@@ -317,7 +312,7 @@ console.log("KAOZ", "KDASDOASDKADAKS");
   }
 
   const getTurno = async () => {
-    const response = await findTurnoActualBySucursal(sucursal);
+    const response = await findTurnoActualBySucursal(servicio.sucursal._id);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       const corte = response.data;
       setTurno(corte.turno);

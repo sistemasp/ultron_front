@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { Modal, Grid } from '@material-ui/core';
 import { ButtonCustom } from '../../basic/ButtonCustom';
-import TabSesionesAnticipadas from './sesiones_anicipadas';
+import TabSesionesAnticipadas from './sesiones_anticipadas';
 import myStyles from '../../../css';
 
 function getModalStyle() {

@@ -7,7 +7,7 @@ import { ButtonCustom } from "../../basic/ButtonCustom";
 import { CheckCustom } from '../../basic/CheckCustom';
 import { toFormatterCurrency } from '../../../utils/utils';
 import myStyles from '../../../css';
-import SesionesAnticipadas from '../pagos_anticipados/sesiones_anicipadas/SesionesAnticipadas';
+import SesionesAnticipadas from '../pagos_anticipados/sesiones_anticipadas/SesionesAnticipadas';
 import TableComponent from '../../table/TableComponent';
 import PagosMultiservicios from '../pagos_multiservicios';
 
@@ -36,6 +36,9 @@ const FormAgregarPagosAnticipados = (props) => {
     sucursal,
     servicios,
     tratamientos,
+    dermatologos,
+    tipoCitas,
+    dermatologoDirectoId,
     areas,
     bancos,
     isLoading,
@@ -53,6 +56,7 @@ const FormAgregarPagosAnticipados = (props) => {
     onChangeDescuento,
     onChangeConfirmado,
     onChange,
+    onChangeIds,
     onChangeDigitos,
     onChangePagoAnticipado,
     onChangDescuentoDermatologo,
@@ -92,6 +96,7 @@ const FormAgregarPagosAnticipados = (props) => {
                 <PagosMultiservicios
                   open={openModalPagosMultiservicios}
                   onClose={onClosePagosMultiservicios}
+                  tipoServicioId={pagoAnticipado.servicio._id}
                   pagoAnticipado={pagoAnticipado}
                   empleado={empleado}
                   sucursal={sucursal}
@@ -99,10 +104,44 @@ const FormAgregarPagosAnticipados = (props) => {
                   setSeverity={setSeverity}
                   setOpenAlert={setOpenAlert}
                   colorBase={colorBase}
-                  onGuardarModalPagosMultiservicios={onGuardarModalPagosMultiservicios} />
+                  onGuardarModalPagos={onGuardarModalPagosMultiservicios} />
                 : ''
             }
             <Grid container spacing={3}>
+
+              <Grid item xs={12} sm={3}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO (A)</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-dermatologo"
+                    id="simple-select-outlined-dermatologo"
+                    name="dermatologo"
+                    value={values.dermatologo}
+                    onChange={onChangeIds}
+                    label="DERMATÓLOGO (A)" >
+                    {dermatologos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              {
+                dermatologoDirectoId !== values.dermatologo ?
+                  <Grid item xs={12} sm={2}>
+                    <FormControl variant="outlined" className={classes.formControl}>
+                      <InputLabel id="simple-select-outlined-tipo-cita">TIPO</InputLabel>
+                      <Select
+                        labelId="simple-select-outlined-tipo-cita"
+                        id="simple-select-outlined-tipo-cita"
+                        name="tipo_cita"
+                        value={values.tipoCita}
+                        onChange={onChangeIds}
+                        label="TIPO" >
+                        {tipoCitas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  : ''
+              }
 
               <Grid item xs={3}>
                 <FormControl variant="outlined" className={classes.formControl}>
@@ -225,15 +264,6 @@ const FormAgregarPagosAnticipados = (props) => {
                   disabled={isLoading}
                   text='PAGAR' />
               </Grid>
-              {/*
-                <Grid item xs={12}>
-                  <CheckCustom
-                    checked={values.pago_anticipado}
-                    onChange={onChangePagoAnticipado}
-                    name="checkedC"
-                    label="PAGO ANTICIPADO" />
-              </Grid>
-              */}
             </Grid>
 
           </form>

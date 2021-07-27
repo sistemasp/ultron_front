@@ -52,11 +52,13 @@ const SesionesAnticipadas = (props) => {
     options,
     colorBase,
     sucursal,
-    onClickAgregarPagos,
+    onClickAgregarPagosAnticipados,
     openModalAgregarSesionesAnticipadas,
     onClickAgregarSesionesAnticipadas,
     onCerrarAgregarSesionesAnticipadas,
     token,
+    empleado,
+    sesionesAnticipadas,
   } = props;
 
   const classes = myStyles(colorBase)();
@@ -69,7 +71,9 @@ const SesionesAnticipadas = (props) => {
             open={openModalAgregarSesionesAnticipadas}
             sucursal={sucursal}
             paciente={paciente}
+            empleado={empleado}
             onClose={onCerrarAgregarSesionesAnticipadas}
+            onClickGuardar={onClickAgregarPagosAnticipados}
             colorBase={colorBase}
             token={token} />
           : ''
@@ -85,7 +89,7 @@ const SesionesAnticipadas = (props) => {
       <TableComponent
         titulo={titulo}
         columns={columns}
-        data={historial}
+        data={sesionesAnticipadas}
         options={options} />
     </Fragment>
   );

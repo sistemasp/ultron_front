@@ -34,6 +34,21 @@ export const showAllSesionesAnticipadasByPaciente = async (pacienteId, token) =>
     }
 }
 
+export const showAllSesionesAnticipadasByPacienteToday = async (pacienteId, token) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/sesionanticipada/paciente/${pacienteId}/today`,
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response;
+    } catch (error) {
+        console.log('showAllSesionesAnticipadasByPaciente', error);
+    }
+}
+
 export const createSesionAnticipada = async (sesionAnticipada, token) => {
     try {
         const response = await axios({
@@ -47,6 +62,24 @@ export const createSesionAnticipada = async (sesionAnticipada, token) => {
         return response;
     } catch (error) {
         console.log('createSesionAnticipada', error);
+        return error;
+    }
+}
+
+
+export const updateSesionAnticipada = async (sesionAnticipadaId, sesionAnticipada, token) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/sesionanticipada/${sesionAnticipadaId}`,
+            method: 'PUT',
+            data: sesionAnticipada,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response;
+    } catch (error) {
+        console.log('updateSesionAnticipada', error);
         return error;
     }
 }

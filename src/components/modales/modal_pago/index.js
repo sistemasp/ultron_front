@@ -18,6 +18,7 @@ import { Backdrop, CircularProgress } from '@material-ui/core';
 import myStyles from '../../../css';
 import { Fragment } from 'react';
 import { findTurnoActualBySucursal } from '../../../services/corte';
+import { showAllSesionesAnticipadasByPaciente } from '../../../services/sesiones_anticipadas';
 
 const ModalPago = (props) => {
 
@@ -63,6 +64,7 @@ const ModalPago = (props) => {
   const tipoCitaDerivadoId = process.env.REACT_APP_TIPO_CITA_DERIVADO_ID;
   const tipoCitaRealizadoId = process.env.REACT_APP_TIPO_CITA_REALIZADO_ID;
   const frecuenciaReconsultaId = process.env.REACT_APP_FRECUENCIA_RECONSULTA_ID;
+  const formaPagoPagoAnticipadoId = process.env.REACT_APP_FORMA_PAGO_PAGO_ANTICIPADO;
 
   const [isLoading, setIsLoading] = useState(true);
   const [bancos, setBancos] = useState([]);
@@ -70,6 +72,7 @@ const ModalPago = (props) => {
   const [tiposTarjeta, setTiposTarjeta] = useState([]);
   const [esquema, setEsquema] = useState({});
   const [turno, setTurno] = useState({});
+  const [sesionesAnticipadas, setSesionesAnticipadas] = useState([]);
 
   const [values, setValues] = useState({
     forma_pago: pago.forma_pago ? pago.forma_pago._id : '',
@@ -83,17 +86,22 @@ const ModalPago = (props) => {
     descuento_dermatologo: pago.descuento_dermatologo || 0,
   });
 
-
   const tarjetaMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_TARJETA;
   const consultaServicioId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
   const consultaTratamientoId = process.env.REACT_APP_CONSULTA_TRATAMIENTO_ID;
 
   const handleChangePaymentMethod = (event) => {
+    const formaPagoId = event.target.value;
     const datos = {
       ...values,
-      forma_pago: event.target.value,
+      forma_pago: formaPagoId,
     }
     calcularTotal(datos);
+
+  }
+
+  const handleChangeSesionAnticipada = (event) => {
+    setValues({ ...values, sesion_anicipada: event.target.value });
   }
 
   const handleChangeBank = (event) => {
@@ -243,48 +251,69 @@ const ModalPago = (props) => {
     create_date.setHours(create_date.getHours());
 
     let response;
-    const entrada = {
-      create_date: create_date,
-      hora_aplicacion: servicio.hora_aplicacion,
-      recepcionista: empleado._id,
-      concepto: `FOLIO: ${generateFolio(servicio)}`,
-      cantidad: rowData.total,
-      tipo_entrada: tipoEntrada,
-      sucursal: sucursal,
-      forma_pago: rowData.forma_pago,
-      pago_anticipado: rowData.pago_anticipado,
-    }
-    //TODO: CUIDADO AQUI
-    /*const resExistEntrada = await findEntradaByPago(pago._id);
-    if (`${resExistEntrada.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      const existEntrada = resExistEntrada.data;
 
-      if (existEntrada) {
-        response = await updateEntrada(existEntrada._id, entrada);
+    if (rowData.forma_pago === formaPagoPagoAnticipadoId && rowData.sesion_anicipada) {
+      console.log("KAOZ", rowData);
+    } else {
+      const entrada = {
+        create_date: create_date,
+        hora_aplicacion: servicio.hora_aplicacion,
+        recepcionista: empleado._id,
+        concepto: `FOLIO: ${generateFolio(servicio)}`,
+        cantidad: rowData.total,
+        tipo_entrada: tipoEntrada,
+        sucursal: sucursal,
+        forma_pago: rowData.forma_pago,
+        pago_anticipado: rowData.pago_anticipado,
+      }
+      //TODO: CUIDADO AQUI
+      /*const resExistEntrada = await findEntradaByPago(pago._id);
+      if (`${resExistEntrada.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+        const existEntrada = resExistEntrada.data;
+  
+        if (existEntrada) {
+          response = await updateEntrada(existEntrada._id, entrada);
+        } else {
+          response = await createEntrada(entrada);
+        }
+      }*/
+
+      if (pago.entrada) {
+        response = await updateEntrada(pago.entrada, entrada);
       } else {
         response = await createEntrada(entrada);
       }
-    }*/
 
-    if (pago.entrada) {
-      response = await updateEntrada(pago.entrada, entrada);
-    } else {
-      response = await createEntrada(entrada);
+      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED
+        || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+        const resEntrada = response.data;
+        rowData.entrada = resEntrada._id;
+        const res = pago._id ? await updatePago(pago._id, rowData) : await createPago(rowData);
+        if (`${res.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
+          || `${res.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+          resEntrada.pago = res.data._id;
+          await updateEntrada(resEntrada._id, resEntrada);
+          setIsLoading(false);
+          onClose();
+          loadPagos();
+        }
+      }
     }
 
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED
-      || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      const resEntrada = response.data;
-      rowData.entrada = resEntrada._id;
-      const res = pago._id ? await updatePago(pago._id, rowData) : await createPago(rowData);
-      if (`${res.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
-        || `${res.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-        resEntrada.pago = res.data._id;
-        await updateEntrada(resEntrada._id, resEntrada);
-        setIsLoading(false);
-        onClose();
-        loadPagos();
-      }
+  }
+
+  const findSesion = (sesionesAnticipadas) => {
+    return sesionesAnticipadas.filter((sesionAnticipada) => {
+      return !sesionAnticipada.fecha_asistencia;
+    });
+  }
+
+  const findPagoAnticipado = async () => {
+    const response = await showAllSesionesAnticipadasByPaciente(servicio.paciente._id, empleado.access_token);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      const sesionesAnticipadasResponse = response.data;
+      const sesionesVigenes = findSesion(sesionesAnticipadasResponse);
+      setSesionesAnticipadas(sesionesVigenes);
     }
   }
 
@@ -326,6 +355,7 @@ const ModalPago = (props) => {
 
   const loadAll = async () => {
     setIsLoading(true);
+    await findPagoAnticipado();
     await loadBancos();
     await loadMetodosPago();
     await loadTipoTarjeta();
@@ -353,8 +383,10 @@ const ModalPago = (props) => {
             tiposTarjeta={tiposTarjeta}
             onClickCancel={onClose}
             colorBase={colorBase}
+            sesionesAnticipadas={sesionesAnticipadas}
             onClickGuardar={handleClickGuardarPago}
             onChangePaymentMethod={(e) => handleChangePaymentMethod(e)}
+            onChangeSesionAnticipada={(e) => handleChangeSesionAnticipada(e)}
             onChangeBank={(e) => handleChangeBank(e)}
             onChangeCardType={(e) => handleChangeCardType(e)}
             onChangeCantidad={(e) => handleChangeCantidad(e)}

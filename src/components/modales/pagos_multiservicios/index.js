@@ -21,7 +21,6 @@ const PagosMultiservicios = (props) => {
     colorBase,
   } = props;
 
-  console.log("KAOZ", pagoAnticipado); 
   const classes = myStyles(colorBase)();
 
   const dermatologoDirectoId = process.env.REACT_APP_DERMATOLOGO_DIRECTO_ID;
@@ -55,7 +54,7 @@ const PagosMultiservicios = (props) => {
     cantidad: 0,
     porcentaje_descuento_clinica: 0,
     descuento_clinica: 0,
-    total: 0,
+    total: pagoAnticipado.total,
   });
 
   const handleOnClickEditarPago = (event, rowData) => {
@@ -108,10 +107,35 @@ const PagosMultiservicios = (props) => {
   const handleClickCancelPago = () => {
     setOpenModalPago(false);
   }
+
+  const loadPagos = async () => {
+    setIsLoading(true);
+    const response = await findPagosByTipoServicioAndServicio(tipoServicioId, pagoAnticipado._id);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      let acomulado = 0;
+      response.data.forEach(item => {
+        const fecha = new Date(item.fecha_pago);
+        item.fecha = `${addZero(fecha.getDate())}/${addZero(fecha.getMonth() + 1)}/${addZero(fecha.getFullYear())}`
+        item.hora = `${addZero(fecha.getHours())}:${addZero(fecha.getMinutes())}`;
+        item.cantidad_moneda = toFormatterCurrency(item.cantidad);
+        item.comision_moneda = toFormatterCurrency(item.comision);
+        item.total_moneda = toFormatterCurrency(item.total);
+        item.banco_nombre = item.banco ? item.banco.nombre : '-';
+        item.tipo_tarjeta_nombre = item.tipo_tarjeta ? item.tipo_tarjeta.nombre : '-';
+        item.digitos_show = item.digitos ? item.digitos : '-';
+        acomulado = Number(acomulado) + Number(item.cantidad);
+      });
+      setRestante(Number(values.total) - Number(acomulado));
+      pagoAnticipado.pagos = response.data;
+      setPagos(response.data);
+    }
+    setIsLoading(false);
+  }
   
 
   const loadAll = async () => {
     setIsLoading(true);
+    await loadPagos();
     setIsLoading(false);
   }
 
@@ -136,6 +160,7 @@ const PagosMultiservicios = (props) => {
             isLoading={isLoading}
             pagos={pagos}
             pago={pago}
+            loadPagos={loadPagos}
             columns={columns}
             options={options}
             actions={actions}

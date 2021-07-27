@@ -33,3 +33,53 @@ export const showAllPagoAnticipadosByPaciente = async (pacienteId, token) => {
         console.log('showAllPagoAnticipadosByPaciente', error);
     }
 }
+
+
+export const createPagoAnticipado = async (pagoAnticipado, token) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/pagoanticipado`,
+            method: 'POST',
+            data: pagoAnticipado,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response;
+    } catch (error) {
+        console.log('createPagoAnticipado', error);
+        return error;
+    }
+}
+
+export const updatePagoAnticipado = async (pagoAnticipadoId, pagoAnticipado, token) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/pagoanticipado/${pagoAnticipadoId}`,
+            method: 'PUT',
+            data: pagoAnticipado,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response;
+    } catch (error) {
+        console.log('updatePagoAnticipado', error);
+        return error;
+    }
+}
+
+export const deletePagoAnticipado = async (pagoAnticipadoId, token) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/pagoanticipado/${pagoAnticipadoId}`,
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response;
+    } catch (error) {
+        console.log('deleteSesionAnticipada', error);
+    }
+}

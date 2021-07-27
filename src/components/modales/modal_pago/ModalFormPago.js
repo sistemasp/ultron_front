@@ -60,6 +60,7 @@ const ModalFormPago = (props) => {
     isLoading,
     formasPago,
     tiposTarjeta,
+    sesionesAnticipadas,
     onClickCancel,
     onClickGuardar,
     onChangePaymentMethod,
@@ -72,6 +73,7 @@ const ModalFormPago = (props) => {
     onChangeDigitos,
     onChangePagoAnticipado,
     onChangDescuentoDermatologo,
+    onChangeSesionAnticipada,
     open,
     colorBase,
   } = props;
@@ -103,70 +105,86 @@ const ModalFormPago = (props) => {
                 </FormControl>
               </Grid>
               {
-                values.forma_pago !== process.env.REACT_APP_FORMA_PAGO_EFECTIVO &&
-                  values.forma_pago !== process.env.REACT_APP_FORMA_PAGO_NO_PAGA &&
-                  values.forma_pago !== '' ?
-                  <Fragment>
+                values.forma_pago === process.env.REACT_APP_FORMA_PAGO_PAGO_ANTICIPADO ?
+                  <Grid item xs={12}>
+                    <FormControl variant="outlined" className={classes.formControl}>
+                      <InputLabel id="simple-select-outlined-sesion-anticipada">SESION ANTICIPADA</InputLabel>
+                      <Select
+                        labelId="simple-select-outlined-banks"
+                        id="simple-select-outlined-banks"
+                        value={values.sesion_anticipada}
+                        onChange={onChangeSesionAnticipada}
+                        label="SESION ANTICIPADA" >
+                        {sesionesAnticipadas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.fecha_pago}</MenuItem>)}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  : <Fragment>
+                    {
+                      values.forma_pago !== process.env.REACT_APP_FORMA_PAGO_EFECTIVO &&
+                        values.forma_pago !== process.env.REACT_APP_FORMA_PAGO_NO_PAGA &&
+                        values.forma_pago !== '' ?
+                        <Fragment>
+
+                          <Grid item xs={12}>
+                            <FormControl variant="outlined" className={classes.formControl}>
+                              <InputLabel id="simple-select-outlined-banks">BANCOS</InputLabel>
+                              <Select
+                                labelId="simple-select-outlined-banks"
+                                id="simple-select-outlined-banks"
+                                value={values.banco}
+                                onChange={onChangeBank}
+                                label="BANCOS" >
+                                {bancos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                              </Select>
+                            </FormControl>
+                          </Grid>
+
+                          <Grid item xs={6}>
+                            <FormControl variant="outlined" className={classes.formControl}>
+                              <InputLabel id="simple-select-outlined-card-type">TIPO TARJETA</InputLabel>
+                              <Select
+                                labelId="simple-select-outlined-card-type"
+                                id="simple-select-outlined-card-type"
+                                value={values.tipoTarjeta}
+                                onChange={onChangeCardType}
+                                label="TIPO TARJETA" >
+                                {tiposTarjeta.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                              </Select>
+                            </FormControl>
+                          </Grid>
+
+                          <Grid item xs={6}>
+                            <TextField
+                              className={classes.textField}
+                              name="digitos"
+                              //helperText={touched.numero_sesion ? errors.numero_sesion : ""}
+                              label="DÍGITOS"
+                              value={values.digitos}
+                              onInput={(e) => {
+                                e.target.value = (e.target.value).toString().slice(0, 4)
+                              }}
+                              onChange={onChangeDigitos}
+                              variant="outlined" />
+                          </Grid>
+                        </Fragment> : ''
+                    }
 
                     <Grid item xs={12}>
-                      <FormControl variant="outlined" className={classes.formControl}>
-                        <InputLabel id="simple-select-outlined-banks">BANCOS</InputLabel>
-                        <Select
-                          labelId="simple-select-outlined-banks"
-                          id="simple-select-outlined-banks"
-                          value={values.banco}
-                          onChange={onChangeBank}
-                          label="BANCOS" >
-                          {bancos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-
-                    <Grid item xs={6}>
-                      <FormControl variant="outlined" className={classes.formControl}>
-                        <InputLabel id="simple-select-outlined-card-type">TIPO TARJETA</InputLabel>
-                        <Select
-                          labelId="simple-select-outlined-card-type"
-                          id="simple-select-outlined-card-type"
-                          value={values.tipoTarjeta}
-                          onChange={onChangeCardType}
-                          label="TIPO TARJETA" >
-                          {tiposTarjeta.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-
-                    <Grid item xs={6}>
                       <TextField
                         className={classes.textField}
-                        name="digitos"
+                        name="cantidad"
                         //helperText={touched.numero_sesion ? errors.numero_sesion : ""}
-                        label="DÍGITOS"
-                        value={values.digitos}
+                        label="CANTIDAD A COBRAR"
+                        value={values.cantidad}
+                        onChange={onChangeCantidad}
+                        type='Number'
                         onInput={(e) => {
-                          e.target.value = (e.target.value).toString().slice(0, 4)
+                          e.target.value = Math.max(0, parseFloat(e.target.value)).toString().slice(0, 7)
                         }}
-                        onChange={onChangeDigitos}
                         variant="outlined" />
                     </Grid>
-                  </Fragment> : ''
-              }
-
-              <Grid item xs={12}>
-                <TextField
-                  className={classes.textField}
-                  name="cantidad"
-                  //helperText={touched.numero_sesion ? errors.numero_sesion : ""}
-                  label="CANTIDAD A COBRAR"
-                  value={values.cantidad}
-                  onChange={onChangeCantidad}
-                  type='Number'
-                  onInput={(e) => {
-                    e.target.value = Math.max(0, parseFloat(e.target.value)).toString().slice(0, 7)
-                  }}
-                  variant="outlined" />
-              </Grid>
-{/*
+                    {/*
               <Grid item xs={12}>
                 <TextField
                   className={classes.textField}
@@ -200,23 +218,27 @@ const ModalFormPago = (props) => {
                 <h3 className={classes.label}>{`DESCUENTO DERMATÓLOGO: ${toFormatterCurrency(values.descuento_dermatologo)}`}</h3>
               </Grid>
                 */}
-              <Grid item xs={12}>
-                <h2 className={classes.label}>{`TOTAL: ${toFormatterCurrency(values.total)}`}</h2>
-              </Grid>
+                    <Grid item xs={12}>
+                      <h2 className={classes.label}>{`TOTAL: ${toFormatterCurrency(values.total)}`}</h2>
+                    </Grid>
 
-              {
-                values.forma_pago !== process.env.REACT_APP_FORMA_PAGO_EFECTIVO &&
-                  values.forma_pago !== process.env.REACT_APP_FORMA_PAGO_NO_PAGA &&
-                  values.forma_pago !== '' ?
-                  <Grid item xs={6}>
-                    <CheckCustom
-                      checked={values.confirmado}
-                      onChange={onChangeConfirmado}
-                      name="checkedC"
-                      label="PAGO CONFIRMADO"
-                    />
-                  </Grid> : ''
+                    {
+                      values.forma_pago !== process.env.REACT_APP_FORMA_PAGO_EFECTIVO &&
+                        values.forma_pago !== process.env.REACT_APP_FORMA_PAGO_NO_PAGA &&
+                        values.forma_pago !== '' ?
+                        <Grid item xs={6}>
+                          <CheckCustom
+                            checked={values.confirmado}
+                            onChange={onChangeConfirmado}
+                            name="checkedC"
+                            label="PAGO CONFIRMADO"
+                          />
+                        </Grid> : ''
+                    }
+                  </Fragment>
               }
+
+
 
               <Grid item xs={12}>
                 <TextField

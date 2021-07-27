@@ -1,8 +1,11 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { findHistoricAparatologiaByPaciente } from "../../../../services/aparatolgia";
 import SesionesAnticipadas from './SesionesAnticipadas';
-import { toFormatterCurrency, addZero } from '../../../../utils/utils';
+import { toFormatterCurrency, addZero, dateToString } from '../../../../utils/utils';
 import { Backdrop, CircularProgress, makeStyles } from '@material-ui/core';
+import { showAllPagoAnticipadosByPaciente } from '../../../../services/pagos_anticipados';
+import { showAllSesionesAnticipadasByPaciente } from '../../../../services/sesiones_anticipadas';
+import { date } from 'yup';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -32,22 +35,22 @@ const TabSesionesAnticipadas = (props) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const columns = [
-    { title: 'FECHA PAGO', field: 'fecha_show' },
-    { title: 'FECHA ASISTENCIA', field: 'fecha_show' },
+    { title: 'FECHA PAGO', field: 'fecha_pago_show' },
+    { title: 'FECHA ASISTENCIA', field: 'fecha_asistencia_show' },
     { title: 'SUCURSAL', field: 'sucursal.nombre' },
-    { title: 'PACIENTE', field: 'hora' },
-    { title: 'SERVICIO', field: 'show_tratamientos' },
-    { title: 'PRODUCTO (ÁREAS)', field: 'show_tratamientos' },
-    { title: 'PRECIO', field: 'tipo_cita.nombre' },
-    { title: 'TOTAL', field: 'status.nombre' },
-    { title: 'OBSERVACIONES', field: 'precio_moneda' },
+    { title: 'SERVICIO', field: 'servicio.nombre' },
+    { title: 'PRODUCTO (ÁREAS)', field: 'producto' },
+    { title: 'PRECIO', field: 'precio_moneda' },
+    { title: 'DESCUENTO PORCENTAJE', field: 'descuento_porcentaje' },
+    { title: 'DESCUENTO CANTIDAD', field: 'descuento_moneda' },
+    { title: 'TOTAL', field: 'total_moneda' },
+    { title: 'OBSERVACIONES', field: 'observaciones' },
   ];
 
   const options = {
     rowStyle: rowData => {
       return {
-        color: rowData.status.color,
-        backgroundColor: rowData.pagado ? process.env.REACT_APP_PAGADO_COLOR : ''
+        color: rowData.fecha_asistencia ? '#FF0000' : '#000000',
       };
     },
     headerStyle: {
@@ -56,9 +59,9 @@ const TabSesionesAnticipadas = (props) => {
       fontWeight: 'bolder',
       fontSize: '18px'
     },
-		exportAllData: true,
-		exportButton: true,
-		exportDelimiter: ';'
+    exportAllData: true,
+    exportButton: true,
+    exportDelimiter: ';'
   }
 
   const handleClickAgregarSesionesAnticipadas = (event, rowData) => {
@@ -69,13 +72,36 @@ const TabSesionesAnticipadas = (props) => {
     setOpenModalAgregarSesionesAnticipadas(false);
   }
 
-  const loadSesionesAnticipadas = async () => {
+  const handleClickAgregarPagosAnticipados = (event, rowData) => {
+    setOpenModalAgregarSesionesAnticipadas(false);
+    loadSesionesAnticipadas();
+  }
 
+  const loadSesionesAnticipadas = async () => {
+    const response = await showAllSesionesAnticipadasByPaciente(paciente._id, token);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      const sesionesAnticipadasResponse = response.data;
+      sesionesAnticipadasResponse.map((item) => {
+        item.fecha_pago_show = dateToString(item.fecha_pago);
+        item.fecha_asistencia_show = item.fecha_asistencia ? dateToString(item.fecha_asistencia) : 'PENDIENTE';
+        item.precio_moneda = toFormatterCurrency(item.precio);
+        item.descuento_porcentaje = `${item.porcentaje_descuento_clinica} %`;
+        item.descuento_moneda = toFormatterCurrency(item.descuento_clinica);
+        item.total_moneda = toFormatterCurrency(item.total);
+        item.producto = item.tratamientos.map(tratamiento => {
+          const show_areas = tratamiento.areasSeleccionadas.map(area => {
+            return `${area.nombre}`;
+          });
+          return `►${tratamiento.nombre}(${show_areas}) `;
+        });
+      });
+      setSesionesAnticipadas(sesionesAnticipadasResponse);
+    }
   }
 
   const loadAll = async () => {
     setIsLoading(true);
-    loadSesionesAnticipadas();
+    await loadSesionesAnticipadas();
     setIsLoading(false);
   }
 
@@ -97,9 +123,11 @@ const TabSesionesAnticipadas = (props) => {
             sucursal={sucursal}
             colorBase={colorBase}
             token={token}
+            empleado={empleado}
             onClickAgregarSesionesAnticipadas={handleClickAgregarSesionesAnticipadas}
             onCerrarAgregarSesionesAnticipadas={handleCerrarAgregarSesionesAnticipadas}
             openModalAgregarSesionesAnticipadas={openModalAgregarSesionesAnticipadas}
+            onClickAgregarPagosAnticipados={handleClickAgregarPagosAnticipados}
             titulo={''} /> :
           <Backdrop className={classes.backdrop} open={isLoading} >
             <CircularProgress color="inherit" />

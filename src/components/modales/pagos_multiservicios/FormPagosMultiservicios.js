@@ -57,7 +57,7 @@ const FormPagosMultiservicios = (props) => {
   } = props;
 
   const classes = myStyles(colorBase)();
-
+  
   return (
     <div>
       {
@@ -127,13 +127,10 @@ const FormPagosMultiservicios = (props) => {
 
           <Grid container xs={12}>
             <Grid item xs={true} sm={true}>
-              <h1 >{`PRECIO: ${toFormatterCurrency(pagoAnticipado.precio)}`}</h1>
+              <h1>{`TOTAL A PAGAR: ${toFormatterCurrency(pagoAnticipado.total)}`}</h1>
             </Grid>
             <Grid item xs={true} sm={true}>
-              <h1>{`TOTAL: ${toFormatterCurrency(pagoAnticipado.total)}`}</h1>
-            </Grid>
-            <Grid item xs={true} sm={true}>
-              <h1>{`RESTANTE: ${toFormatterCurrency(0)}`}</h1>
+              <h1>{`RESTANTE: ${toFormatterCurrency(restante)}`}</h1>
             </Grid>
           </Grid>
 

@@ -7,6 +7,7 @@ import {
   showAllTipoTarjeta,
   createPago,
   updatePago,
+  showAllTipoCitas,
 } from '../../../services';
 import {
   createEntrada, /*findEntradaByPago,*/ updateEntrada,
@@ -24,7 +25,10 @@ import { findAreasByTreatmentServicio } from '../../../services/areas';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
 import { useSelect } from 'react-select-search';
-import { createSesionAnticipada, deleteSesionAnticipada, showAllSesionesAnticipadasByPaciente } from '../../../services/sesiones_anticipadas';
+import { createSesionAnticipada, deleteSesionAnticipada, showAllSesionesAnticipadasByPaciente, showAllSesionesAnticipadasByPacienteToday, updateSesionAnticipada } from '../../../services/sesiones_anticipadas';
+import { findEmployeesByRolIdAvailable } from '../../../services/empleados';
+import SesionesAnticipadas from '../pagos_anticipados/sesiones_anticipadas/SesionesAnticipadas';
+import { createPagoAnticipado, deletePagoAnticipado, updatePagoAnticipado } from '../../../services/pagos_anticipados';
 
 const AgregarPagosAnticipados = (props) => {
 
@@ -34,6 +38,7 @@ const AgregarPagosAnticipados = (props) => {
     servicio,
     empleado,
     paciente,
+    onClickGuardar,
     setOpenAlert,
     setMessage,
     sucursal,
@@ -50,6 +55,8 @@ const AgregarPagosAnticipados = (props) => {
   const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
   const sucursalFedeId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
   const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
+  const dermatologoRolId = process.env.REACT_APP_DERMATOLOGO_ROL_ID;
+  const directoTipoCitaId = process.env.REACT_APP_TIPO_CITA_DIRECTO_ID;
   const tipoEntradaConsultaId = process.env.REACT_APP_TIPO_INGRESO_CONSULTA_ID;
   const tipoEntradaCirugiaId = process.env.REACT_APP_TIPO_INGRESO_CIRUGIA_ID;
   const tipoEntradaFacialesId = process.env.REACT_APP_TIPO_INGRESO_FACIALES_ID;
@@ -70,6 +77,7 @@ const AgregarPagosAnticipados = (props) => {
   const tipoCitaRevisadoId = process.env.REACT_APP_TIPO_CITA_REVISADO_ID;
   const tipoCitaDerivadoId = process.env.REACT_APP_TIPO_CITA_DERIVADO_ID;
   const tipoCitaRealizadoId = process.env.REACT_APP_TIPO_CITA_REALIZADO_ID;
+  const servicioPagoAnticipado = process.env.REACT_APP_PAGO_ANTICIPADO_SERVICIO_ID;
   const frecuenciaReconsultaId = process.env.REACT_APP_FRECUENCIA_RECONSULTA_ID;
 
   const [sesionesAnticipadas, setSesionesAnticipadas] = useState([]);
@@ -77,6 +85,8 @@ const AgregarPagosAnticipados = (props) => {
   const [precioPagar, setPrecioPagar] = useState([]);
   const [servicios, setServicios] = useState([]);
   const [tratamientos, setTratamientos] = useState([]);
+  const [dermatologos, setDermatologos] = useState([]);
+  const [tipoCitas, setTipoCitas] = useState([]);
   const [selectedAreas, setSelectedAreas] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [bancos, setBancos] = useState([]);
@@ -89,6 +99,8 @@ const AgregarPagosAnticipados = (props) => {
 
   const [values, setValues] = useState({
     porcentaje_descuento_clinica: 0,
+    dermatologo: dermatologoDirectoId,
+    tipo_cita: directoTipoCitaId,
   });
 
   const columns = [
@@ -242,6 +254,14 @@ const AgregarPagosAnticipados = (props) => {
     });
   }
 
+  const handleChangeIds = (e) => {
+    setValues({
+      ...values,
+      [e.target.name]: e.target.value
+    });
+  }
+
+
   const handleClickGuardarPago = async () => {
 
   }
@@ -256,25 +276,38 @@ const AgregarPagosAnticipados = (props) => {
     });
   }
 
-  const handleClickPagosMultiservicios = (event, rowData) => {
-    setPagoAnticipado({
+  const handleClickPagosMultiservicios = async (event, rowData) => {
+    const pagoAnticipado = {
       fecha_pago: "",
       sucursal: sucursal,
       paciente: paciente,
-      sesionesAnticipadas: sesionesAnticipadas,
+      dermatologo: sesionesAnticipadas[0].dermatologo,
+      tipo_cita: sesionesAnticipadas[0].tipo_cita,
+      servicio: servicioPagoAnticipado,
+      sesiones_anticipadas: sesionesAnticipadas,
       total: totalPagar,
       precio: precioPagar,
       observaciones: "",
-    });
-    setOpenModalPagosMultiservicios(true);
+    };
+    const response = await createPagoAnticipado(pagoAnticipado, token);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+      setPagoAnticipado(response.data);
+      setOpenModalPagosMultiservicios(true);
+    }
   }
 
-  const handleClosePagosMultiservicios = (event, rowData) => {
-    setOpenModalPagosMultiservicios(false);
+  const handleClosePagosMultiservicios = async (event, rowData) => {
+    setIsLoading(true);
+    const response = await deletePagoAnticipado(pagoAnticipado._id, token);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      await loadSesionesAnticipadas();
+      setOpenModalPagosMultiservicios(false);
+    }
+    setIsLoading(false);
   }
 
   const loadSesionesAnticipadas = async () => {
-    const response = await showAllSesionesAnticipadasByPaciente(paciente._id, token);
+    const response = await showAllSesionesAnticipadasByPacienteToday(paciente._id, token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       const sesionesAnticipadasResponse = response.data;
       let totalPago = 0;
@@ -297,6 +330,20 @@ const AgregarPagosAnticipados = (props) => {
       setPrecioPagar(precioPago);
       setSesionesAnticipadas(sesionesAnticipadasResponse);
     }
+  }
+
+  const handleGuardarModalPagosMultiservicios = async (servicio) => {
+    servicio.pagado = servicio.pagos.length > 0;
+    servicio.fecha_pago = new Date();
+    servicio.sesiones_anticipadas.map(async (sesionAnticipada, index) => {
+      sesionAnticipada.numero_sesion = index + 1;
+      sesionAnticipada.pagado = true;
+      await updateSesionAnticipada(sesionAnticipada._id, sesionAnticipada, token);
+    });
+    await updatePagoAnticipado(servicio._id, servicio, token);
+    await loadSesionesAnticipadas();
+    setOpenModalPagosMultiservicios(false);
+    onClickGuardar();
   }
 
   const loadBancos = async () => {
@@ -335,9 +382,25 @@ const AgregarPagosAnticipados = (props) => {
     }
   }
 
+  const loadDermatologos = async () => {
+    const response = await findEmployeesByRolIdAvailable(dermatologoRolId, token);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setDermatologos(response.data);
+    }
+  }
+
+  const loadTipoCitas = async () => {
+    const response = await showAllTipoCitas();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setTipoCitas(response.data);
+    }
+  }
+
   const loadAll = async () => {
     setIsLoading(true);
     await loadSesionesAnticipadas();
+    await loadDermatologos();
+    await loadTipoCitas();
     await loadServicios();
     await loadBancos();
     await loadMetodosPago();
@@ -363,8 +426,13 @@ const AgregarPagosAnticipados = (props) => {
             sesionesAnticipadas={sesionesAnticipadas}
             totalPagar={totalPagar}
             actions={actions}
+            sucursal={sucursal}
             options={options}
             components={components}
+            empleado={empleado}
+            dermatologos={dermatologos}
+            dermatologoDirectoId={dermatologoDirectoId}
+            tipoCitas={tipoCitas}
             servicios={servicios}
             tratamientos={tratamientos}
             isLoading={isLoading}
@@ -381,11 +449,12 @@ const AgregarPagosAnticipados = (props) => {
             onChangeDescuento={(e) => handleChangeDescuento(e)}
             onClickAgregarSesion={handleClickAgregarSesion}
             onChange={handleChange}
+            onChangeIds={handleChangeIds}
             onClickPagosMultiservicios={(e) => handleClickPagosMultiservicios(e)}
             onClosePagosMultiservicios={handleClosePagosMultiservicios}
             colorBase={colorBase}
             selectedAreas={selectedAreas}
-            onClickGuardar={handleClickGuardarPago} />
+            onGuardarModalPagosMultiservicios={handleGuardarModalPagosMultiservicios} />
           : <Backdrop className={classes.backdrop} open={isLoading} >
             <CircularProgress color="inherit" />
           </Backdrop>
