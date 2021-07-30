@@ -105,7 +105,7 @@ const ModalFormPago = (props) => {
                 </FormControl>
               </Grid>
               {
-                values.forma_pago === process.env.REACT_APP_FORMA_PAGO_PAGO_ANTICIPADO ?
+                values.forma_pago === process.env.REACT_APP_FORMA_PAGO_SESION_ANTICIPADA ?
                   <Grid item xs={12}>
                     <FormControl variant="outlined" className={classes.formControl}>
                       <InputLabel id="simple-select-outlined-sesion-anticipada">SESION ANTICIPADA</InputLabel>
@@ -115,7 +115,7 @@ const ModalFormPago = (props) => {
                         value={values.sesion_anticipada}
                         onChange={onChangeSesionAnticipada}
                         label="SESION ANTICIPADA" >
-                        {sesionesAnticipadas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.fecha_pago}</MenuItem>)}
+                        {sesionesAnticipadas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.descripcion}</MenuItem>)}
                       </Select>
                     </FormControl>
                   </Grid>

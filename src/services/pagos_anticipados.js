@@ -52,6 +52,39 @@ export const createPagoAnticipado = async (pagoAnticipado, token) => {
     }
 }
 
+export const findPagosAnticipadssByPayOfDoctorFechaPago = async (sucursalId, dermatologoId, hora_apertura, hora_cierre, token) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/pagoanticipado/sucursal/${sucursalId}/dermatologo/${dermatologoId}/apertura/${hora_apertura}/cierre/${hora_cierre}`,
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response;
+    } catch (error) {
+        console.log('findPagosAnticipadssByPayOfDoctorFechaPago', error);
+        return error;
+    }
+}
+
+export const findPagoAnticipadoByRangeDateAndSucursal = async (diai, mesi, anioi, diaf, mesf, aniof, sucursalId, token) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/pagoanticipado/fecha_inicio/${diai}/${mesi}/${anioi}/fecha_fin/${diaf}/${mesf}/${aniof}/sucursal/${sucursalId}`,
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response;
+    } catch (error) {
+        console.log('findPagoAnticipadoByRangeDateAndSucursal', error);
+        return error;
+    }
+}
+
+
 export const updatePagoAnticipado = async (pagoAnticipadoId, pagoAnticipado, token) => {
     try {
         const response = await axios({

@@ -60,6 +60,7 @@ const FormAgregarPagosAnticipados = (props) => {
     onChangeDigitos,
     onChangePagoAnticipado,
     onChangDescuentoDermatologo,
+frecuencias,
     onClickAgregarSesion,
     open,
     colorBase,
@@ -111,6 +112,22 @@ const FormAgregarPagosAnticipados = (props) => {
 
               <Grid item xs={12} sm={3}>
                 <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-frecuencia"
+                    id="simple-select-outlined-frecuencia"
+                    name="frecuencia"
+                    value={values.frecuencia}
+                    onChange={onChangeIds}
+                    label="FRECUENCIA" >
+                    {frecuencias.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+
+              <Grid item xs={12} sm={3}>
+                <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO (A)</InputLabel>
                   <Select
                     labelId="simple-select-outlined-dermatologo"
@@ -126,14 +143,14 @@ const FormAgregarPagosAnticipados = (props) => {
 
               {
                 dermatologoDirectoId !== values.dermatologo ?
-                  <Grid item xs={12} sm={2}>
+                  <Grid item xs={12} sm={3}>
                     <FormControl variant="outlined" className={classes.formControl}>
                       <InputLabel id="simple-select-outlined-tipo-cita">TIPO</InputLabel>
                       <Select
                         labelId="simple-select-outlined-tipo-cita"
                         id="simple-select-outlined-tipo-cita"
                         name="tipo_cita"
-                        value={values.tipoCita}
+                        value={values.tipo_cita}
                         onChange={onChangeIds}
                         label="TIPO" >
                         {tipoCitas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}

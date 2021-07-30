@@ -26,8 +26,8 @@ const ReportesEntradas = (props) => {
 	const formaPagoTarjeta = process.env.REACT_APP_FORMA_PAGO_TARJETA;
 	const formaPagoTransferencia = process.env.REACT_APP_FORMA_PAGO_TRANSFERENCIA;
 	const formaPagoDeposito = process.env.REACT_APP_FORMA_PAGO_DEPOSITO;
-	const tipoSalidaPagoDermatologo = process.env.REACT_APP_TIPO_EGRESO_PAGO_DERMATOLOGO_ID;
-	const tipoSalidaRetiroParcial = process.env.REACT_APP_TIPO_EGRESO_RETIRO_PARCIAL_ID;
+	const tipoSalidaPagoDermatologo = process.env.REACT_APP_TIPO_SALIDA_PAGO_DERMATOLOGO_ID;
+	const tipoSalidaRetiroParcial = process.env.REACT_APP_TIPO_SALIDA_RETIRO_PARCIAL_ID;
 
 	const [isLoading, setIsLoading] = useState(true);
 	const [cortes, setCortes] = useState([]);

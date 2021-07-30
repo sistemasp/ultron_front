@@ -13,6 +13,8 @@ import { showAllBanco, showAllMetodoPago, showAllTipoTarjeta } from "../../../..
 import { findRazonSocialById } from "../../../../../services/razones_sociales";
 import { ControlCamera } from "@material-ui/icons";
 import { findEmployeeById } from "../../../../../services/empleados";
+import { findSesionAnticipadaByRangeDateAndSucursal } from "../../../../../services/sesiones_anticipadas";
+import { findPagoAnticipadoByRangeDateAndSucursal } from "../../../../../services/pagos_anticipados";
 
 const useStyles = makeStyles(theme => ({
 	backdrop: {
@@ -31,6 +33,8 @@ const ReportesDetallesGeneral = (props) => {
 		colorBase,
 	} = props;
 
+	const token = empleado.access_token;
+
 	const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
 	const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
 	const servicioConsultaId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
@@ -38,6 +42,7 @@ const ReportesDetallesGeneral = (props) => {
 	const servicioEsteticaId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
 	const servicioDermapenId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID;
 	const formaPagoTarjetaId = process.env.REACT_APP_FORMA_PAGO_TARJETA;
+	const formaPagoSesionAnticipadaId = process.env.REACT_APP_FORMA_PAGO_SESION_ANTICIPADA;
 	const dermatologoDirectoId = process.env.REACT_APP_DERMATOLOGO_DIRECTO_ID;
 	const iva = process.env.REACT_APP_IVA;
 
@@ -46,6 +51,7 @@ const ReportesDetallesGeneral = (props) => {
 	const [faciales, setFaciales] = useState([]);
 	const [cirugias, setCirugias] = useState([]);
 	const [dermapens, setDermapens] = useState([]);
+	const [pagoAnticipados, setPagosAnticipados] = useState([]);
 	const [aparatologias, setAparatologias] = useState([]);
 	const [esteticas, setEsteticas] = useState([]);
 	const [datos, setDatos] = useState([]);
@@ -200,6 +206,7 @@ const ReportesDetallesGeneral = (props) => {
 	}
 
 	const procesarFacial = (facial, datos) => {
+
 		facial.tratamientos.forEach(tratamiento => {
 			const producto = tratamiento;
 			let totalPagos = 0;
@@ -225,6 +232,35 @@ const ReportesDetallesGeneral = (props) => {
 				producto.areasSeleccionadas.forEach(areaSeleccionada => {
 					pago.cantidad = Number(pago.cantidad);
 					areaSeleccionada.precio_real = Number(areaSeleccionada.precio_real);
+					if (facial.forma_pago === formaPagoSesionAnticipadaId) {
+						const dato = {
+							...facial,
+							metodo_pago_nombre: metodoPago.nombre,
+							producto: producto,
+							impuesto_porcentaje: `${0}%`,
+							impuesto_cantidad: toFormatterCurrency(0),
+							importe_1: toFormatterCurrency(0),
+							importe_2: toFormatterCurrency(0),
+							descuento_porcentaje: `${redondearDecimales(0)}%`,
+							descuento_cantidad: toFormatterCurrency(0),
+							descuento_porcentaje_clinica: `${redondearDecimales(0)}%`,
+							descuento_porcentaje_dermatologo: `${redondearDecimales(0)}%`,
+							descuento_cantidad_dermatologo: toFormatterCurrency(0),
+							descuento_cantidad_clinica: toFormatterCurrency(0),
+							area: areaSeleccionada.nombre,
+							tipo_tarjeta: pago.tipo_tarjeta_nombre,
+							banco_nombre: pago.banco_nombre,
+							digitos: pago.digitos,
+							total_pagos: 0,
+							total_moneda: toFormatterCurrency(0),
+							total_doctor: toFormatterCurrency(0),
+							doctor_efectivo: toFormatterCurrency(0),
+							doctor_retencion: toFormatterCurrency(0),
+							total_clinica: toFormatterCurrency(0),
+							turno: pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO') : "SIN TURNO",
+						}
+						datos.push(dato);
+					}
 					while (pago.cantidad !== 0 && areaSeleccionada.precio_real !== 0) {
 
 						totalPagos++;
@@ -316,6 +352,42 @@ const ReportesDetallesGeneral = (props) => {
 					pago.total = Number(pago.total);
 					const importe1 = Number(precioAreaBySucursal(sucursal, areaSeleccionada));
 					let precioReal = Number(areaSeleccionada.precio_real);
+					if (aparatologia.forma_pago === formaPagoSesionAnticipadaId) {
+						let total = 0;
+						const impuestoPorcentaje = 0; //areaSeleccionada.iva ? iva : 0;
+						const importe2 = total / (1 + (impuestoPorcentaje / 100));
+						const impuesto = importe2 * (impuestoPorcentaje / 100);
+						const dato = {
+							...aparatologia,
+							metodo_pago_nombre: metodoPago.nombre,
+							producto: producto,
+							impuesto_porcentaje: `${impuestoPorcentaje}%`,
+							impuesto_cantidad: toFormatterCurrency(impuesto),
+							//importe_servicio: aparatologia.precio_moneda,
+							//importe_producto: toFormatterCurrency(importe1),
+							//precio_real: toFormatterCurrency(areaSeleccionada.precio_real),
+							importe_1: toFormatterCurrency(importe1),
+							importe_2: toFormatterCurrency(importe2),
+							descuento_porcentaje: `${redondearDecimales(0)}%`,
+							descuento_cantidad: toFormatterCurrency(0),
+							descuento_porcentaje_clinica: `${redondearDecimales(0)}%`,
+							descuento_porcentaje_dermatologo: `${redondearDecimales(0)}%`,
+							descuento_cantidad_dermatologo: toFormatterCurrency(0),
+							descuento_cantidad_clinica: toFormatterCurrency(0),
+							area: areaSeleccionada.nombre,
+							tipo_tarjeta: pago.tipo_tarjeta_nombre,
+							banco_nombre: pago.banco_nombre,
+							digitos: pago.digitos,
+							total_pagos: 0,
+							total_moneda: toFormatterCurrency(0),
+							total_doctor: toFormatterCurrency(0),
+							doctor_efectivo: toFormatterCurrency(0),
+							doctor_retencion: toFormatterCurrency(0),
+							total_clinica: toFormatterCurrency(0),
+							turno: pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO') : "SIN TURNO",
+						}
+						datos.push(dato);
+					}
 					while (pago.total !== 0 && precioReal !== 0) {
 
 						totalPagos++;
@@ -576,11 +648,8 @@ const ReportesDetallesGeneral = (props) => {
 						turno: pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO') : "SIN TURNO",
 					}
 					datos.push(dato);
-
 				}
-
 			});
-
 		});
 	}
 
@@ -763,8 +832,6 @@ const ReportesDetallesGeneral = (props) => {
 					totalPago = 0;
 				}
 
-				console.log("KAOZ", estetica.dermatologo.esquema.porcentaje_dermocosmetica);
-
 				const impuestoPorcentaje = estetica.iva ? iva : 0;
 				const importe2 = total / (1 + (impuestoPorcentaje / 100));
 				const impuesto = importe2 * (impuestoPorcentaje / 100);
@@ -842,9 +909,9 @@ const ReportesDetallesGeneral = (props) => {
 						digitos: pago.digitos,
 						importe_1: toFormatterCurrency(estetica.total),
 						area: "NO APLICA",
-						descuento_porcentaje_clinica:  `${redondearDecimales(0)}%`,
+						descuento_porcentaje_clinica: `${redondearDecimales(0)}%`,
 						descuento_cantidad_clinica: toFormatterCurrency(0),
-						descuento_porcentaje_dermatologo:  `${redondearDecimales(0)}%`,
+						descuento_porcentaje_dermatologo: `${redondearDecimales(0)}%`,
 						descuento_cantidad_dermatologo: toFormatterCurrency(0),
 						descuento_porcentaje: `${redondearDecimales(0)}%`,
 						descuento_cantidad: toFormatterCurrency(0),
@@ -898,9 +965,9 @@ const ReportesDetallesGeneral = (props) => {
 						digitos: pago.digitos,
 						importe_1: toFormatterCurrency(total),
 						area: "NO APLICA",
-						descuento_porcentaje_clinica:  `${redondearDecimales(0)}%`,
+						descuento_porcentaje_clinica: `${redondearDecimales(0)}%`,
 						descuento_cantidad_clinica: toFormatterCurrency(0),
-						descuento_porcentaje_dermatologo:  `${redondearDecimales(0)}%`,
+						descuento_porcentaje_dermatologo: `${redondearDecimales(0)}%`,
 						descuento_cantidad_dermatologo: toFormatterCurrency(0),
 						descuento_porcentaje: `${redondearDecimales(0)}%`,
 						descuento_cantidad: toFormatterCurrency(0),
@@ -1025,7 +1092,7 @@ const ReportesDetallesGeneral = (props) => {
 
 	const loadConsultas = async (startDate, endDate) => {
 		const response = await findConsultsByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
-			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, empleado.access_token);
+			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setConsultas(response.data);
 			procesarDatos();
@@ -1034,7 +1101,7 @@ const ReportesDetallesGeneral = (props) => {
 
 	const loadFaciales = async (startDate, endDate) => {
 		const response = await findFacialByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
-			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, empleado.access_token);
+			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setFaciales(response.data);
 			await loadConsultas(startDate, endDate);
@@ -1043,7 +1110,7 @@ const ReportesDetallesGeneral = (props) => {
 
 	const loadAparatologias = async (startDate, endDate) => {
 		const response = await findAparatologiaByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
-			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, empleado.access_token);
+			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setAparatologias(response.data);
 			await loadFaciales(startDate, endDate);
@@ -1052,7 +1119,7 @@ const ReportesDetallesGeneral = (props) => {
 
 	const loadEsteticas = async (startDate, endDate) => {
 		const response = await findEsteticasByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
-			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, empleado.access_token);
+			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setEsteticas(response.data);
 			await loadAparatologias(startDate, endDate);
@@ -1061,7 +1128,7 @@ const ReportesDetallesGeneral = (props) => {
 
 	const loadCirugias = async (startDate, endDate) => {
 		const response = await findCirugiasByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
-			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, empleado.access_token);
+			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setCirugias(response.data);
 			await loadEsteticas(startDate, endDate);
@@ -1070,12 +1137,24 @@ const ReportesDetallesGeneral = (props) => {
 
 	const loadDermapens = async (startDate, endDate) => {
 		const response = await findDermapenByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
-			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, empleado.access_token);
+			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setDermapens(response.data);
 			await loadCirugias(startDate, endDate);
 		}
 	}
+
+	const loadPagosAnticipados = async (startDate, endDate) => {
+		const response = await findPagoAnticipadoByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
+			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, token);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			console.log("KAOZ", response.data);
+			setPagosAnticipados(response.data);
+			await loadDermapens(startDate, endDate);
+		}
+	}
+
+	
 
 	const handleChangeStartDate = async (date) => {
 		setIsLoading(true);
@@ -1128,7 +1207,7 @@ const ReportesDetallesGeneral = (props) => {
 		await loadMetodosPago();
 		await loadTipoTarjeta();
 		await loadBancos();
-		await loadDermapens(startDate, endDate);
+		await loadPagosAnticipados(startDate, endDate);
 	}
 
 	const handleReportes = async () => {

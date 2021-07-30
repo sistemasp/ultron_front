@@ -377,7 +377,7 @@ const Corte = (props) => {
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       const formaPagos = response.data;
       await loadEntradas(tipoEntradas, formaPagos, hora_apertura, hora_cierre);
-      await loadPagosAnticipados(tipoEntradas, formaPagos, hora_apertura, hora_cierre);
+      //await loadPagosAnticipados(tipoEntradas, formaPagos, hora_apertura, hora_cierre);
     }
   }
 

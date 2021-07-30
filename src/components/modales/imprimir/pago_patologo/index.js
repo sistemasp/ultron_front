@@ -43,7 +43,7 @@ const ModalImprimirPagoPatologo = (props) => {
   const [pagoDermatologo, setPagoDermatologo] = useState();
   const [corte, setCorte] = useState();
 
-  const pagoPatologoTipoSalidaId = process.env.REACT_APP_TIPO_EGRESO_PAGO_PATOLOGO_ID;
+  const pagoPatologoTipoSalidaId = process.env.REACT_APP_TIPO_SALIDA_PAGO_PATOLOGO_ID;
   const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
 
   const loadCirugias = async (hora_apertura, hora_cierre) => {

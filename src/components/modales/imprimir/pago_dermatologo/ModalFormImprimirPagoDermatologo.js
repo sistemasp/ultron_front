@@ -4,7 +4,7 @@ import Modal from '@material-ui/core/Modal';
 import { Button, Grid } from '@material-ui/core';
 import { ButtonCustom } from '../../../basic/ButtonCustom';
 import bannerMePiel from './../../../../bannerMePiel.PNG';
-import { addZero, dateToString, toFormatterCurrency } from '../../../../utils/utils';
+import { addZero, dateToString, precioAreaBySucursal, toFormatterCurrency } from '../../../../utils/utils';
 import myStyles from '../../../../css';
 
 function getModalStyle() {
@@ -39,6 +39,8 @@ const ModalFormImprimirPagoDermatologo = (props) => {
     dermapensPA,
     aparatologias,
     aparatologiasPA,
+    // sesionesAnticipadas,
+    pagosAnticipados,
     dermatologo,
     onClose,
     onClickImprimir,
@@ -198,9 +200,17 @@ const ModalFormImprimirPagoDermatologo = (props) => {
   const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
   const sucursalFedeId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
   const dermatologoDirectoId = process.env.REACT_APP_DERMATOLOGO_DIRECTO_ID;
+  const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
+  const formaPagoPagoAnticipadoId = process.env.REACT_APP_FORMA_PAGO_SESION_ANTICIPADA;
 
   const listaFaciales = [...faciales, ...facialesPA];
   const listaAparatologias = [...aparatologias, ...aparatologiasPA];
+  const sesionesAnticipadas = [];
+  pagosAnticipados.forEach((pagoAnticipado) => {
+    pagoAnticipado.sesiones_anticipadas.forEach((sesionAnticipada) => {
+      sesionesAnticipadas.push(sesionAnticipada);
+    });
+  });
 
   let totalConsultasPrimeraVez = 0;
 
@@ -254,7 +264,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                       </Grid>
                       :
                       consultasPrimeraVez.length > 0 || consultasPrivada.length > 0 || consultasReconsultas.length > 0 || cirugias.length > 0 || esteticas.length > 0 ||
-                        listaFaciales.length > 0 || dermapens.length > 0 || listaAparatologias.length > 0 ?
+                        listaFaciales.length > 0 || dermapens.length > 0 || listaAparatologias.length > 0 || pagosAnticipados.length > 0 ?
                         <Grid item xs={12}>
                           <ButtonCustom
                             className={classes.button}
@@ -371,7 +381,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                             <p className={classes.label_cells}>{`${consulta.producto.nombre}`}</p>
                           </Grid>
                           <Grid item xs={true} className={classes.label}>
-                            <p className={classes.label_cells}>{`${consulta.forma_pago.nombre}`}</p>
+                            <p className={classes.label_cells}>{`${consulta.forma_pago_nombre}`}</p>
                           </Grid>
                           <Grid item xs={true} className={classes.label}>
                             <p className={classes.label_cells_total}> {`${toFormatterCurrency(totalPagos)}`} </p>
@@ -444,7 +454,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                             <p className={classes.label_cells}>{`${consulta.producto.nombre}`}</p>
                           </Grid>
                           <Grid item xs={true} className={classes.label}>
-                            <p className={classes.label_cells}>{`${consulta.forma_pago.nombre}`}</p>
+                            <p className={classes.label_cells}>{`${consulta.forma_pago_nombre}`}</p>
                           </Grid>
                           <Grid item xs={true} className={classes.label}>
                             <p className={classes.label_cells_total}> {`${toFormatterCurrency(totalPagos)}`} </p>
@@ -566,7 +576,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                             <p className={classes.label_cells}>{`${consulta.producto.nombre}`}</p>
                           </Grid>
                           <Grid item xs={true} className={classes.label}>
-                            <p className={classes.label_cells}>{`${consulta.forma_pago.nombre}`}</p>
+                            <p className={classes.label_cells}>{`${consulta.forma_pago_nombre}`}</p>
                           </Grid>
                           <Grid item xs={true} className={classes.label}>
                             <p className={classes.label_cells_total}> {`${toFormatterCurrency(totalPagos)}`} </p>
@@ -682,7 +692,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                               <p className={classes.label_cells}>{`${cirugia.producto.nombre}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
-                              <p className={classes.label_cells}>{`${cirugia.forma_pago.nombre}`}</p>
+                              <p className={classes.label_cells}>{`${cirugia.forma_pago_nombre}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells_total}> {`${toFormatterCurrency(cirugia.total_aplicacion)}`} </p>
@@ -798,7 +808,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                               <p className={classes.label_cells}>{`${estetica.producto.nombre}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
-                              <p className={classes.label_cells}>{`${estetica.forma_pago.nombre}`}</p>
+                              <p className={classes.label_cells}>{`${estetica.forma_pago_nombre}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells_total}> {`${toFormatterCurrency(estetica.total_aplicacion)}`} </p>
@@ -904,7 +914,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                         faciales.map(facial => {
                           let comisionDermatologo = 0;
                           let pagoDermatologo = 0;
-                          if (!facial.has_descuento_dermatologo) {
+                          if (!facial.has_descuento_dermatologo && facial.forma_pago._id !== formaPagoPagoAnticipadoId ) {
                             facial.tratamientos.map(tratamiento => {
                               tratamiento.areasSeleccionadas.map(areaSeleccionada => {
                                 switch (facial.tipo_cita._id) {
@@ -962,7 +972,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                               <p className={classes.label_cells}>{`${facial.show_tratamientos}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
-                              <p className={classes.label_cells}>{`${facial.forma_pago.nombre}`}</p>
+                              <p className={classes.label_cells}>{`${facial.forma_pago_nombre}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells_total}> {`${toFormatterCurrency(facial.total)}`} </p>
@@ -1103,7 +1113,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                               <p className={classes.label_cells}>{`${dermapen.producto.nombre}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
-                              <p className={classes.label_cells}>{`${dermapen.forma_pago.nombre}`}</p>
+                              <p className={classes.label_cells}>{`${dermapen.forma_pago_nombre}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells_total}> {`${toFormatterCurrency(dermapen.total_aplicacion)}`} </p>
@@ -1213,6 +1223,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                       aparatologias ?
                         aparatologias.map(aparatologia => {
                           let comisionDermatologo = 0;
+                          if (aparatologia.forma_pago._id !== formaPagoPagoAnticipadoId ) {
                           aparatologia.tratamientos.forEach(tratamiento => {
 
                             tratamiento.areasSeleccionadas.map(area => {
@@ -1225,8 +1236,10 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                               comisionDermatologo += (Number(itemPrecio) * Number(aparatologia.frecuencia === frecuenciaPrimeraVezId ? dermatologo.esquema.porcentaje_laser : (aparatologia.dermatologo === dermatologoDirectoId ? 100 : 0)) / 100);
                             });
                           });
+                          }
                           let pagoDermatologo = comisionDermatologo - ((comisionDermatologo * (aparatologia.porcentaje_descuento_clinica ? aparatologia.porcentaje_descuento_clinica : 0)) / 100);
 
+                        
                           pagoDermatologo = aparatologia.has_descuento_dermatologo ? 0 : pagoDermatologo;
                           pagoTotal += Number(pagoDermatologo);
                           return <Grid container>
@@ -1246,7 +1259,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                               <p className={classes.label_cells}>{`${aparatologia.show_tratamientos}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
-                              <p className={classes.label_cells}>{`${aparatologia.forma_pago.nombre}`}</p>
+                              <p className={classes.label_cells}>{`${aparatologia.forma_pago_nombre}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells_total}> {`${toFormatterCurrency(aparatologia.total)}`} </p>
@@ -1323,6 +1336,127 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                                   ? pagoDermatologoDirecto
                                   : '0'
                               )}</p>
+                            </Grid>
+                          </Grid>
+                        })
+                        : ''
+                    }
+                  </Grid>
+                </Fragment>
+                : ''
+            }
+
+            {
+              sesionesAnticipadas.length > 0 ?
+                <Fragment>
+                  <Grid container className={classes.container}>
+                    <Grid item xs={12}>
+                      <p className={classes.label_title_descripcion}> {`${sesionesAnticipadas.length} PAGOS ANTICIPADOS`}</p>
+                    </Grid>
+                    <Grid item xs={true} className={classes.label}>
+                      <p className={classes.label_cells_totales}>TIPO DE CITA</p>
+                    </Grid>
+                    <Grid item xs={true} className={classes.label}>
+                      <p className={classes.label_cells_totales}>PACIENTE</p>
+                    </Grid>
+                    <Grid item xs={true} className={classes.label}>
+                      <p className={classes.label_cells_totales}>TIPO SERVICIO</p>
+                    </Grid>
+                    <Grid item xs={true} className={classes.label}>
+                      <p className={classes.label_cells_totales}>PRODUCTO</p>
+                    </Grid>
+                    <Grid item xs={true} className={classes.label}>
+                      <p className={classes.label_cells_totales}>FORMA DE PAGO</p>
+                    </Grid>
+                    <Grid item xs={true} className={classes.label}>
+                      <p className={classes.label_cells_totales}>SERVICIO</p>
+                    </Grid>
+                    <Grid item xs={true} className={classes.label}>
+                      <p className={classes.label_cells_totales}>DERMATOLÓGO</p>
+                    </Grid>
+                    <Grid item xs={12} className={classes.label}>
+                      <hr className={classes.label} />
+                    </Grid>
+                    {
+                      sesionesAnticipadas ?
+                        sesionesAnticipadas.map((sesionAnticipada, index) => {
+                          let comisionDermatologo = 0;
+                          let pagoDermatologo = 0;
+                          if (!sesionAnticipada.has_descuento_dermatologo) {
+                            if (sesionAnticipada.servicio._id === servicioAparatologiaId && index === 0) {
+                              sesionAnticipada.tratamientos.forEach(tratamiento => {
+
+                                tratamiento.areasSeleccionadas.map(area => {
+                                  const itemPrecio = precioAreaBySucursal(sucursal._id, area);
+
+                                  comisionDermatologo += (Number(itemPrecio) * Number(dermatologo.esquema.porcentaje_laser) / 100);
+                                });
+                              });
+                              pagoDermatologo = comisionDermatologo - ((comisionDermatologo * (sesionAnticipada.porcentaje_descuento_clinica ? sesionAnticipada.porcentaje_descuento_clinica : 0)) / 100);
+                            } else {
+                              sesionAnticipada.tratamientos.map(tratamiento => {
+                                tratamiento.areasSeleccionadas.map(areaSeleccionada => {
+                                  switch (sesionAnticipada.tipo_cita._id) {
+                                    case revisadoTipoCitaId:
+                                      comisionDermatologo += Number(
+                                        sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.comision_revisado_ma
+                                          : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.comision_revisado_rd
+                                            : areaSeleccionada.comision_revisado)
+                                      );
+                                      break;
+                                    case derivadoTipoCitaId:
+                                      comisionDermatologo += Number(
+                                        sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.comision_derivado_ma
+                                          : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.comision_derivado_rd
+                                            : areaSeleccionada.comision_derivado)
+                                      );
+                                      break;
+                                    case realizadoTipoCitaId:
+                                      comisionDermatologo += Number(
+                                        sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.comision_realizado_ma
+                                          : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.comision_realizado_rd
+                                            : areaSeleccionada.comision_realizado)
+                                      );
+                                      break;
+                                    case directoTipoCitaId: // TOMA EL 100%
+                                      comisionDermatologo += Number(
+                                        sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.precio_ma
+                                          : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.precio_rd
+                                            : areaSeleccionada.precio_fe)
+                                      );
+                                      break;
+                                    case noAplicaTipoCitaId:
+                                      comisionDermatologo += Number(0);
+                                      break;
+                                  }
+                                });
+                              });
+                              pagoDermatologo = comisionDermatologo - ((comisionDermatologo * (sesionAnticipada.porcentaje_descuento_clinica ? sesionAnticipada.porcentaje_descuento_clinica : 0)) / 100);
+                            }
+                            pagoTotal += Number(pagoDermatologo);
+                          }
+
+                          return <Grid container>
+                            <Grid item xs={true} className={classes.label}>
+                              <p className={classes.label_cells}>{sesionAnticipada.tipo_cita.nombre}</p>
+                            </Grid>
+                            <Grid item xs={true} >
+                              <p className={classes.label_cells}>{`${sesionAnticipada.paciente.nombres} ${sesionAnticipada.paciente.apellidos}`}</p>
+                            </Grid>
+                            <Grid item xs={true} >
+                              <p className={classes.label_cells}>{`${sesionAnticipada.servicio.nombre}`}</p>
+                            </Grid>
+                            <Grid item xs={true} className={classes.label}>
+                              <p className={classes.label_cells}>{`${sesionAnticipada.show_tratamientos}`}</p>
+                            </Grid>
+                            <Grid item xs={true} className={classes.label}>
+                              <p className={classes.label_cells}>{sesionAnticipada.forma_pago_nombre}</p>
+                            </Grid>
+                            <Grid item xs={true} className={classes.label}>
+                              <p className={classes.label_cells_total}> {`${toFormatterCurrency(sesionAnticipada.total)}`} </p>
+                            </Grid>
+                            <Grid item xs={true} >
+                              <p className={classes.label_cells_total}> {`${toFormatterCurrency(pagoDermatologo)}`} </p>
                             </Grid>
                           </Grid>
                         })

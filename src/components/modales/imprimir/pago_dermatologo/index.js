@@ -17,6 +17,9 @@ import { findCirugiasByPayOfDoctorHoraAplicacion, findCirugiasByPayOfDoctorHoraA
 import { findEsteticasByPayOfDoctorHoraAplicacion, findEsteticasByPayOfDoctorHoraAplicacionPA, updateEstetica } from '../../../../services/esteticas';
 import { findDermapensByPayOfDoctorHoraAplicacion, findDermapensByPayOfDoctorHoraAplicacionPA, updateDermapen } from '../../../../services/dermapens';
 import { createPagoDermatologo, showTodayPagoDermatologoBySucursalTurno } from '../../../../services/pago_dermatologos';
+import { findSesionesAnticipadasByPayOfDoctorFechaPago } from '../../../../services/sesiones_anticipadas';
+import { findPagosAnticipadssByPayOfDoctorFechaPago } from '../../../../services/pagos_anticipados';
+import { precioAreaBySucursal } from '../../../../utils/utils';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -40,6 +43,8 @@ const ModalImprimirPagoDermatologo = (props) => {
     colorBase,
   } = props;
 
+  const token = empleado.access_token;
+
   const [show, setShow] = useState(true);
   const [consultas, setConsultas] = useState([]);
   const [consultasPrivada, setConsultasPrivada] = useState([]);
@@ -57,6 +62,8 @@ const ModalImprimirPagoDermatologo = (props) => {
   const [aparatologiasPA, setAparatologiasPA] = useState([]);
   const [esteticas, setEsteticas] = useState([]);
   const [esteticasPA, setEsteticasPA] = useState([]);
+  // const [sesionesAnticipadas, setSesionesAnticipadas] = useState([]);
+  const [pagosAnticipados, setPagosAnticipados] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [turno, setTurno] = useState('m');
   const [pagoDermatologo, setPagoDermatologo] = useState();
@@ -72,45 +79,81 @@ const ModalImprimirPagoDermatologo = (props) => {
   const realizadoTipoCitaId = process.env.REACT_APP_TIPO_CITA_REALIZADO_ID;
   const noAplicaTipoCitaId = process.env.REACT_APP_TIPO_CITA_NO_APLICA_ID;
   const directoTipoCitaId = process.env.REACT_APP_TIPO_CITA_DIRECTO_ID;
-  const pagoDermatologoTipoSalidaId = process.env.REACT_APP_TIPO_EGRESO_PAGO_DERMATOLOGO_ID;
+  const pagoDermatologoTipoSalidaId = process.env.REACT_APP_TIPO_SALIDA_PAGO_DERMATOLOGO_ID;
   const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
   const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
   const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
   const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
   const sucursalFedeId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
   const dermatologoDirectoId = process.env.REACT_APP_DERMATOLOGO_DIRECTO_ID;
+  const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
 
   const loadConsultas = async (hora_apertura, hora_cierre) => {
-    const response = await findConsultsByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), empleado.access_token);
+    const response = await findConsultsByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setConsultas(response.data);
+      const consultas = response.data;
+      consultas.forEach((consulta) => {
+        consulta.forma_pago_nombre = consulta.pagos.map((pago) => {
+          return `${pago.forma_pago.nombre} `
+        });
+      });
+      
+      setConsultas(consultas);
     }
   }
   const loadConsultasPrivada = async (hora_apertura, hora_cierre) => {
-    const response = await findConsultsByPayOfDoctorHoraAplicacionFrecuencia(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), privadaFrecuenciaId, empleado.access_token);
+    const response = await findConsultsByPayOfDoctorHoraAplicacionFrecuencia(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), privadaFrecuenciaId, token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setConsultasPrivada(response.data);
+      const consultas = response.data;
+      consultas.forEach((consulta) => {
+        consulta.forma_pago_nombre = consulta.pagos.map((pago) => {
+          return `${pago.forma_pago.nombre} `
+        });
+      });
+      
+      setConsultasPrivada(consultas);
     }
   }
 
   const loadConsultasPrimeraVez = async (hora_apertura, hora_cierre) => {
-    const response = await findConsultsByPayOfDoctorHoraAplicacionFrecuencia(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), primeraVezFrecuenciaId, empleado.access_token);
+    const response = await findConsultsByPayOfDoctorHoraAplicacionFrecuencia(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), primeraVezFrecuenciaId, token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setConsultasPrimeraVez(response.data);
+      const consultas = response.data;
+      consultas.forEach((consulta) => {
+        consulta.forma_pago_nombre = consulta.pagos.map((pago) => {
+          return `${pago.forma_pago.nombre} `
+        });
+      });
+      
+      setConsultasPrimeraVez(consultas);
     }
   }
 
   const loadConsultasPrimeraVezPA = async (hora_apertura, hora_cierre) => {
-    const response = await findConsultsByPayOfDoctorHoraAplicacionFrecuenciaPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date(), primeraVezFrecuenciaId, empleado.access_token);
+    const response = await findConsultsByPayOfDoctorHoraAplicacionFrecuenciaPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date(), primeraVezFrecuenciaId, token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setConsultasPrimeraVezPA(response.data);
+      const consultas = response.data;
+      consultas.forEach((consulta) => {
+        consulta.forma_pago_nombre = consulta.pagos.map((pago) => {
+          return `${pago.forma_pago.nombre} `
+        });
+      });
+      
+      setConsultasPrimeraVezPA(consultas);
     }
   }
 
   const loadConsultasReconsulta = async (hora_apertura, hora_cierre) => {
-    const response = await findConsultsByPayOfDoctorHoraAplicacionFrecuencia(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), reconsultaFrecuenciaId, empleado.access_token);
+    const response = await findConsultsByPayOfDoctorHoraAplicacionFrecuencia(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), reconsultaFrecuenciaId, token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      const newReconsultas = response.data.filter(reconsulta => {
+      const consultas = response.data;
+      consultas.forEach((consulta) => {
+        consulta.forma_pago_nombre = consulta.pagos.map((pago) => {
+          return `${pago.forma_pago.nombre} `
+        });
+      });
+            
+      const newReconsultas = consultas.filter(reconsulta => {
         let total = 0;
         reconsulta.pagos.forEach(pago => {
           total += Number(pago.total);
@@ -122,9 +165,16 @@ const ModalImprimirPagoDermatologo = (props) => {
   }
 
   const loadConsultasReconsultaPA = async (hora_apertura, hora_cierre) => {
-    const response = await findConsultsByPayOfDoctorHoraAplicacionFrecuenciaPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date(), reconsultaFrecuenciaId, empleado.access_token);
+    const response = await findConsultsByPayOfDoctorHoraAplicacionFrecuenciaPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date(), reconsultaFrecuenciaId, token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      const newReconsultas = response.data.filter(reconsulta => {
+      const consultas = response.data;
+      consultas.forEach((consulta) => {
+        consulta.forma_pago_nombre = consulta.pagos.map((pago) => {
+          return `${pago.forma_pago.nombre} `
+        });
+      });
+
+      const newReconsultas = consultas.filter(reconsulta => {
         let total = 0;
         reconsulta.pagos.forEach(pago => {
           total += Number(pago.total);
@@ -136,23 +186,41 @@ const ModalImprimirPagoDermatologo = (props) => {
   }
 
   const loadCirugias = async (hora_apertura, hora_cierre) => {
-    const response = await findCirugiasByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), empleado.access_token);
+    const response = await findCirugiasByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setCirugias(response.data);
+      const cirugias = response.data;
+      cirugias.forEach((cirugia) => {
+        cirugia.forma_pago_nombre = cirugia.pagos.map((pago) => {
+          return `${pago.forma_pago.nombre} `
+        });
+      });
+      
+      setCirugias(cirugias);
     }
   }
 
   const loadCirugiasCPA = async (hora_apertura, hora_cierre) => {
-    const response = await findCirugiasByPayOfDoctorHoraAplicacionPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date(), empleado.access_token);
+    const response = await findCirugiasByPayOfDoctorHoraAplicacionPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date(), token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setCirugiasPA(response.data);
+      const cirugias = response.data;
+      cirugias.forEach((cirugia) => {
+        cirugia.forma_pago_nombre = cirugia.pagos.map((pago) => {
+          return `${pago.forma_pago.nombre} `
+        });
+      });
+      
+      setCirugiasPA(cirugias);
     }
   }
 
   const loadFaciales = async (hora_apertura, hora_cierre) => {
-    const response = await findFacialesByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), empleado.access_token);
+    const response = await findFacialesByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      response.data.forEach(item => {
+      const faciales = response.data;
+      faciales.forEach(item => {
+        item.forma_pago_nombre = item.pagos.map((pago) => {
+          return `${pago.forma_pago.nombre} `
+        });
         item.show_tratamientos = item.tratamientos.map(tratamiento => {
           const show_areas = tratamiento.areasSeleccionadas.map(area => {
             return `${area.nombre}`;
@@ -160,35 +228,45 @@ const ModalImprimirPagoDermatologo = (props) => {
           return `►${tratamiento.nombre}(${show_areas}) `;
         });
       });
-      setFaciales(response.data);
+      setFaciales(faciales);
     }
   }
 
   const loadFacialesCPA = async (hora_apertura, hora_cierre) => {
-    const response = await findFacialesByPayOfDoctorHoraAplicacionPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date(), empleado.access_token);
+    const response = await findFacialesByPayOfDoctorHoraAplicacionPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date(), token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setFacialesPA(response.data);
     }
   }
 
   const loadDermapens = async (hora_apertura, hora_cierre) => {
-    const response = await findDermapensByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), empleado.access_token);
+    const response = await findDermapensByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setDermapens(response.data);
+      const dermapens = response.data;
+      dermapens.forEach((dermapen) => {
+        dermapen.forma_pago_nombre = dermapen.pagos.map((pago) => {
+          return `${pago.forma_pago.nombre} `
+        });
+      });
+      
+      setDermapens(dermapens);
     }
   }
 
   const loadDermapensCPA = async (hora_apertura, hora_cierre) => {
-    const response = await findDermapensByPayOfDoctorHoraAplicacionPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date(), empleado.access_token);
+    const response = await findDermapensByPayOfDoctorHoraAplicacionPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date(), token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setDermapensPA(response.data);
     }
   }
 
   const loadAparatologias = async (hora_apertura, hora_cierre) => {
-    const response = await findAparatologiasByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), empleado.access_token);
+    const response = await findAparatologiasByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       response.data.forEach(item => {
+        item.forma_pago_nombre = item.pagos.map((pago) => {
+          return `${pago.forma_pago.nombre} `
+        });
         item.show_tratamientos = item.tratamientos.map(tratamiento => {
           const show_areas = tratamiento.areasSeleccionadas.map(area => {
             return `${area.nombre}`;
@@ -201,28 +279,72 @@ const ModalImprimirPagoDermatologo = (props) => {
   }
 
   const loadAparatologiasCPA = async (hora_apertura, hora_cierre) => {
-    const response = await findAparatologiasByPayOfDoctorHoraAplicacionPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date(), empleado.access_token);
+    const response = await findAparatologiasByPayOfDoctorHoraAplicacionPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date(), token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setAparatologiasPA(response.data);
     }
   }
 
   const loadEsteticas = async (hora_apertura, hora_cierre) => {
-    const response = await findEsteticasByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), empleado.access_token);
+    const response = await findEsteticasByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setEsteticas(response.data);
+      const esteticas = response.data;
+      esteticas.forEach((estetica) => {
+        estetica.forma_pago_nombre = estetica.pagos.map((pago) => {
+          return `${pago.forma_pago.nombre} `
+        });
+      });
+      
+      setEsteticas(esteticas);
     }
   }
 
   const loadEsteticasPA = async (hora_apertura, hora_cierre) => {
-    const response = await findEsteticasByPayOfDoctorHoraAplicacionPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date(), empleado.access_token);
+    const response = await findEsteticasByPayOfDoctorHoraAplicacionPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date(), token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setEsteticasPA(response.data);
     }
   }
 
+  const loadSesionesAnticipadas = async (hora_apertura, hora_cierre) => {
+    const response = await findSesionesAnticipadasByPayOfDoctorFechaPago(sucursal._id, dermatologo._id, hora_apertura, hora_cierre ? hora_cierre : new Date(), token);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      response.data.forEach(item => {
+        item.show_tratamientos = item.tratamientos.map(tratamiento => {
+          const show_areas = tratamiento.areasSeleccionadas.map(area => {
+            return `${area.nombre}`;
+          });
+          return `►${tratamiento.nombre}(${show_areas}) `;
+        });
+      });
+      // setSesionesAnticipadas(response.data);
+    }
+  }
+
+  const loadPagosAnticipados = async (hora_apertura, hora_cierre) => {
+    const response = await findPagosAnticipadssByPayOfDoctorFechaPago(sucursal._id, dermatologo._id, hora_apertura, hora_cierre ? hora_cierre : new Date(), token);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      response.data.map((pagoAnticipado) => {
+        pagoAnticipado.forma_pago_nombre = pagoAnticipado.pagos.map((pago) => {
+          return `${pago.forma_pago.nombre} `
+        });
+        pagoAnticipado.sesiones_anticipadas.forEach(item => {
+          item.forma_pago_nombre = pagoAnticipado.forma_pago_nombre;
+          item.show_tratamientos = item.tratamientos.map(tratamiento => {
+            const show_areas = tratamiento.areasSeleccionadas.map(area => {
+              return `${area.nombre}`;
+            });
+            return `►${tratamiento.nombre}(${show_areas}) `;
+          });
+        });
+      });
+
+      setPagosAnticipados(response.data);
+    }
+  }
+
   const findPagoToday = async (hora_apertura, hora_cierre) => {
-    const response = await showTodayPagoDermatologoBySucursalTurno(dermatologo._id, sucursal._id, turno, empleado.access_token);
+    const response = await showTodayPagoDermatologoBySucursalTurno(dermatologo._id, sucursal._id, turno, token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       const pagoDermatologo = response.data;
       setPagoDermatologo(pagoDermatologo);
@@ -232,20 +354,22 @@ const ModalImprimirPagoDermatologo = (props) => {
         await loadConsultas(hora_apertura, hora_cierre);
       }
       await loadCirugias(hora_apertura, hora_cierre);
-      await loadCirugiasCPA(hora_apertura, hora_cierre);
+      // await loadCirugiasCPA(hora_apertura, hora_cierre);
       await loadFaciales(hora_apertura, hora_cierre);
-      await loadFacialesCPA(hora_apertura, hora_cierre);
+      // await loadFacialesCPA(hora_apertura, hora_cierre);
       await loadDermapens(hora_apertura, hora_cierre);
-      await loadDermapensCPA(hora_apertura, hora_cierre);
+      // await loadDermapensCPA(hora_apertura, hora_cierre);
       await loadAparatologias(hora_apertura, hora_cierre);
-      await loadAparatologiasCPA(hora_apertura, hora_cierre);
+      // await loadAparatologiasCPA(hora_apertura, hora_cierre);
       await loadEsteticas(hora_apertura, hora_cierre);
-      await loadEsteticasPA(hora_apertura, hora_cierre);
+      // await loadEsteticasPA(hora_apertura, hora_cierre);
       await loadConsultasPrivada(hora_apertura, hora_cierre);
       await loadConsultasPrimeraVez(hora_apertura, hora_cierre);
-      await loadConsultasPrimeraVezPA(hora_apertura, hora_cierre);
+      // await loadConsultasPrimeraVezPA(hora_apertura, hora_cierre);
       await loadConsultasReconsulta(hora_apertura, hora_cierre);
-      await loadConsultasReconsultaPA(hora_apertura, hora_cierre);
+      // await loadConsultasReconsultaPA(hora_apertura, hora_cierre);
+      // await loadSesionesAnticipadas(hora_apertura, hora_cierre);
+      await loadPagosAnticipados(hora_apertura, hora_cierre);
       setIsLoading(false);
     }
   }
@@ -273,7 +397,7 @@ const ModalImprimirPagoDermatologo = (props) => {
 
       let pagoDermatologo = Number(totalPagos) * Number(consulta.frecuencia === reconsultaFrecuenciaId ? dermatologo.esquema.porcentaje_reconsulta : dermatologo.esquema.porcentaje_consulta) / 100;
       consulta.pago_dermatologo = pagoDermatologo;
-      updateConsult(consulta._id, consulta, empleado.access_token);
+      updateConsult(consulta._id, consulta, token);
       total += Number(pagoDermatologo);
     });
 
@@ -282,7 +406,7 @@ const ModalImprimirPagoDermatologo = (props) => {
     cirugias.forEach(async (cirugia) => {
       const pagoDermatologo = cirugia.has_descuento_dermatologo ? 0 : Number(cirugia.total_aplicacion) * Number(dermatologo.esquema.porcentaje_cirugias) / 100;
       cirugia.pago_dermatologo = pagoDermatologo;
-      updateCirugia(cirugia._id, cirugia, empleado.access_token)
+      updateCirugia(cirugia._id, cirugia, token)
       total += Number(pagoDermatologo);
     });
 
@@ -290,7 +414,7 @@ const ModalImprimirPagoDermatologo = (props) => {
     dermapens.forEach(async (dermapen) => {
       const pagoDermatologo = dermapen.has_descuento_dermatologo ? 0 : Number(dermapen.total_aplicacion) * Number(dermatologo.esquema.porcentaje_dermocosmetica) / 100;
       dermapen.pago_dermatologo = pagoDermatologo;
-      updateDermapen(dermapen._id, dermapen, empleado.access_token);
+      updateDermapen(dermapen._id, dermapen, token);
       total += Number(pagoDermatologo);
     });
 
@@ -343,7 +467,7 @@ const ModalImprimirPagoDermatologo = (props) => {
       }
       const pagoDermatologo = comisionDermatologo - ((comisionDermatologo * facial.porcentaje_descuento_clinica ? facial.porcentaje_descuento_clinica : 0) / 100);
       facial.pago_dermatologo = pagoDermatologo;
-      updateFacial(facial._id, facial, empleado.access_token);
+      updateFacial(facial._id, facial, token);
       total += Number(pagoDermatologo);
     });
 
@@ -375,7 +499,7 @@ const ModalImprimirPagoDermatologo = (props) => {
       }
       let pagoDermatologo = aparatologia.has_descuento_dermatologo ? 0 : comisionDermatologo;
       aparatologia.pago_dermatologo = pagoDermatologo;
-      updateAparatologia(aparatologia._id, aparatologia, empleado.access_token);
+      updateAparatologia(aparatologia._id, aparatologia, token);
       total += Number(pagoDermatologo);
     });
 
@@ -383,8 +507,74 @@ const ModalImprimirPagoDermatologo = (props) => {
     esteticas.map(async (estetica) => {
       const pagoDermatologo = estetica.has_descuento_dermatologo ? 0 : Number(estetica.total_aplicacion) * Number(dermatologo.esquema.porcentaje_dermocosmetica) / 100;
       estetica.pago_dermatologo = pagoDermatologo;
-      updateEstetica(estetica._id, estetica, empleado.access_token);
+      updateEstetica(estetica._id, estetica, token);
       total += Number(pagoDermatologo);
+    });
+
+    // TOTAL DE LOS PAGO ANTICIPADOS
+    const sesionesAnticipadas = [];
+    pagosAnticipados.forEach((pagoAnticipado) => {
+      pagoAnticipado.sesiones_anticipadas.forEach((sesionAnticipada) => {
+        sesionesAnticipadas.push(sesionAnticipada);
+      });
+    });
+
+    sesionesAnticipadas.map((sesionAnticipada, index) => {
+      let comisionDermatologo = 0;
+      let pagoDermatologo = 0;
+      if (!sesionAnticipada.has_descuento_dermatologo) {
+        if (sesionAnticipada.servicio._id === servicioAparatologiaId && index === 0) {
+          sesionAnticipada.tratamientos.forEach(tratamiento => {
+
+            tratamiento.areasSeleccionadas.map(area => {
+              const itemPrecio = precioAreaBySucursal(sucursal._id, area);
+
+              comisionDermatologo += (Number(itemPrecio) * Number(dermatologo.esquema.porcentaje_laser) / 100);
+            });
+          });
+          pagoDermatologo = comisionDermatologo - ((comisionDermatologo * (sesionAnticipada.porcentaje_descuento_clinica ? sesionAnticipada.porcentaje_descuento_clinica : 0)) / 100);
+        } else {
+          sesionAnticipada.tratamientos.map(tratamiento => {
+            tratamiento.areasSeleccionadas.map(areaSeleccionada => {
+              switch (sesionAnticipada.tipo_cita._id) {
+                case revisadoTipoCitaId:
+                  comisionDermatologo += Number(
+                    sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.comision_revisado_ma
+                      : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.comision_revisado_rd
+                        : areaSeleccionada.comision_revisado)
+                  );
+                  break;
+                case derivadoTipoCitaId:
+                  comisionDermatologo += Number(
+                    sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.comision_derivado_ma
+                      : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.comision_derivado_rd
+                        : areaSeleccionada.comision_derivado)
+                  );
+                  break;
+                case realizadoTipoCitaId:
+                  comisionDermatologo += Number(
+                    sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.comision_realizado_ma
+                      : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.comision_realizado_rd
+                        : areaSeleccionada.comision_realizado)
+                  );
+                  break;
+                case directoTipoCitaId: // TOMA EL 100%
+                  comisionDermatologo += Number(
+                    sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.precio_ma
+                      : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.precio_rd
+                        : areaSeleccionada.precio_fe)
+                  );
+                  break;
+                case noAplicaTipoCitaId:
+                  comisionDermatologo += Number(0);
+                  break;
+              }
+            });
+          });
+          pagoDermatologo = comisionDermatologo - ((comisionDermatologo * (sesionAnticipada.porcentaje_descuento_clinica ? sesionAnticipada.porcentaje_descuento_clinica : 0)) / 100);
+        }
+        total += Number(pagoDermatologo);
+      }
     });
 
     if (dermatologo._id !== dermatologoDirectoId) {
@@ -404,7 +594,7 @@ const ModalImprimirPagoDermatologo = (props) => {
         pagado: true,
       }
 
-      const response = await createPagoDermatologo(pagoDermatologo, empleado.access_token);
+      const response = await createPagoDermatologo(pagoDermatologo, token);
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
         || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
         const data = response.data;
@@ -432,7 +622,7 @@ const ModalImprimirPagoDermatologo = (props) => {
   };
 
   const handleObtenerInformacion = async (corte) => {
-    await findPagoToday(corte.hora_apertura, corte.hora_cierre, empleado.access_token);
+    await findPagoToday(corte.hora_apertura, corte.hora_cierre, token);
   };
 
   const handleCambioTurno = () => {
@@ -440,7 +630,7 @@ const ModalImprimirPagoDermatologo = (props) => {
   };
 
   const findCorte = async () => {
-    const response = await showCorteTodayBySucursalAndTurno(sucursal._id, turno, empleado.access_token);
+    const response = await showCorteTodayBySucursalAndTurno(sucursal._id, turno, token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setCorte(response.data);
       handleObtenerInformacion(response.data);
@@ -479,6 +669,7 @@ const ModalImprimirPagoDermatologo = (props) => {
             aparatologiasPA={aparatologiasPA}
             esteticas={esteticas}
             esteticasPA={esteticasPA}
+            pagosAnticipados={pagosAnticipados}
             turno={turno}
             pagoDermatologo={pagoDermatologo}
             onClickImprimir={handleClickImprimir}

@@ -42,15 +42,15 @@ const PagoMultiservicio = (props) => {
   const enConsultorioStatusId = process.env.REACT_APP_EN_CONSULTORIO_STATUS_ID;
 
   const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
-  const tipoEntradaConsultaId = process.env.REACT_APP_TIPO_INGRESO_CONSULTA_ID;
-  const tipoEntradaCirugiaId = process.env.REACT_APP_TIPO_INGRESO_CIRUGIA_ID;
-  const tipoEntradaFacialesId = process.env.REACT_APP_TIPO_INGRESO_FACIALES_ID;
-  const tipoEntradaEsteticaId = process.env.REACT_APP_TIPO_INGRESO_ESTETICA_ID;
-  const tipoEntradaAparatologiaId = process.env.REACT_APP_TIPO_INGRESO_APARATOLOGIA_ID;
-  const tipoEntradaLaserId = process.env.REACT_APP_TIPO_INGRESO_LASER_ID;
-  const tipoEntradaDermapenId = process.env.REACT_APP_TIPO_INGRESO_DERMAPEN_ID;
-  const tipoEntradaPagoAnticipadoId = process.env.REACT_APP_TIPO_INGRESO_PAGO_ANTICIPADO_ID;
-  const tipoEntradaOtrosId = process.env.REACT_APP_TIPO_INGRESO_OTROS_ID;
+  const tipoEntradaConsultaId = process.env.REACT_APP_TIPO_ENTRADA_CONSULTA_ID;
+  const tipoEntradaCirugiaId = process.env.REACT_APP_TIPO_ENTRADA_CIRUGIA_ID;
+  const tipoEntradaFacialesId = process.env.REACT_APP_TIPO_ENTRADA_FACIALES_ID;
+  const tipoEntradaEsteticaId = process.env.REACT_APP_TIPO_ENTRADA_ESTETICA_ID;
+  const tipoEntradaAparatologiaId = process.env.REACT_APP_TIPO_ENTRADA_APARATOLOGIA_ID;
+  const tipoEntradaLaserId = process.env.REACT_APP_TIPO_ENTRADA_LASER_ID;
+  const tipoEntradaDermapenId = process.env.REACT_APP_TIPO_ENTRADA_DERMAPEN_ID;
+  const tipoEntradaPagoAnticipadoId = process.env.REACT_APP_TIPO_ENTRADA_PAGO_ANTICIPADO_ID;
+  const tipoEntradaOtrosId = process.env.REACT_APP_TIPO_ENTRADA_OTROS_ID;
   const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
   const servicioDermapenlId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID;
   const servicioLaserId = process.env.REACT_APP_LASER_SERVICIO_ID;

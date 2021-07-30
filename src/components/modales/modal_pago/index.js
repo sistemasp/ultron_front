@@ -11,14 +11,14 @@ import {
 import {
   createEntrada, /*findEntradaByPago,*/ updateEntrada,
 } from '../../../services/entradas';
-import { generateFolio } from '../../../utils/utils';
+import { dateToString, generateFolio } from '../../../utils/utils';
 import ModalFormPago from './ModalFormPago';
 import { findEsquemaById } from '../../../services/esquemas';
 import { Backdrop, CircularProgress } from '@material-ui/core';
 import myStyles from '../../../css';
 import { Fragment } from 'react';
 import { findTurnoActualBySucursal } from '../../../services/corte';
-import { showAllSesionesAnticipadasByPaciente } from '../../../services/sesiones_anticipadas';
+import { showAllSesionesAnticipadasByPaciente, updateSesionAnticipada } from '../../../services/sesiones_anticipadas';
 
 const ModalPago = (props) => {
 
@@ -43,14 +43,14 @@ const ModalPago = (props) => {
   const enConsultorioStatusId = process.env.REACT_APP_EN_CONSULTORIO_STATUS_ID;
 
   const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
-  const tipoEntradaConsultaId = process.env.REACT_APP_TIPO_INGRESO_CONSULTA_ID;
-  const tipoEntradaCirugiaId = process.env.REACT_APP_TIPO_INGRESO_CIRUGIA_ID;
-  const tipoEntradaFacialesId = process.env.REACT_APP_TIPO_INGRESO_FACIALES_ID;
-  const tipoEntradaEsteticaId = process.env.REACT_APP_TIPO_INGRESO_ESTETICA_ID;
-  const tipoEntradaAparatologiaId = process.env.REACT_APP_TIPO_INGRESO_APARATOLOGIA_ID;
-  const tipoEntradaLaserId = process.env.REACT_APP_TIPO_INGRESO_LASER_ID;
-  const tipoEntradaDermapenId = process.env.REACT_APP_TIPO_INGRESO_DERMAPEN_ID;
-  const tipoEntradaOtrosId = process.env.REACT_APP_TIPO_INGRESO_OTROS_ID;
+  const tipoEntradaConsultaId = process.env.REACT_APP_TIPO_ENTRADA_CONSULTA_ID;
+  const tipoEntradaCirugiaId = process.env.REACT_APP_TIPO_ENTRADA_CIRUGIA_ID;
+  const tipoEntradaFacialesId = process.env.REACT_APP_TIPO_ENTRADA_FACIALES_ID;
+  const tipoEntradaEsteticaId = process.env.REACT_APP_TIPO_ENTRADA_ESTETICA_ID;
+  const tipoEntradaAparatologiaId = process.env.REACT_APP_TIPO_ENTRADA_APARATOLOGIA_ID;
+  const tipoEntradaLaserId = process.env.REACT_APP_TIPO_ENTRADA_LASER_ID;
+  const tipoEntradaDermapenId = process.env.REACT_APP_TIPO_ENTRADA_DERMAPEN_ID;
+  const tipoEntradaOtrosId = process.env.REACT_APP_TIPO_ENTRADA_OTROS_ID;
   const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
   const servicioDermapenlId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID;
   const servicioLaserId = process.env.REACT_APP_LASER_SERVICIO_ID;
@@ -64,7 +64,7 @@ const ModalPago = (props) => {
   const tipoCitaDerivadoId = process.env.REACT_APP_TIPO_CITA_DERIVADO_ID;
   const tipoCitaRealizadoId = process.env.REACT_APP_TIPO_CITA_REALIZADO_ID;
   const frecuenciaReconsultaId = process.env.REACT_APP_FRECUENCIA_RECONSULTA_ID;
-  const formaPagoPagoAnticipadoId = process.env.REACT_APP_FORMA_PAGO_PAGO_ANTICIPADO;
+  const formaPagoPagoAnticipadoId = process.env.REACT_APP_FORMA_PAGO_SESION_ANTICIPADA;
 
   const [isLoading, setIsLoading] = useState(true);
   const [bancos, setBancos] = useState([]);
@@ -191,13 +191,6 @@ const ModalPago = (props) => {
     setValues({ ...values, observaciones: event.target.value.toUpperCase() });
   }
 
-  /*const handleClickGuardar = async (event, rowData) => {
-    setIsLoading(true);
-    rowData.fecha_pago = new Date();
-    onGuardarPago(rowData);
-    setIsLoading(false);
-  }*/
-
   const handleChangeDigitos = (event) => {
     setValues({ ...values, digitos: event.target.value });
   }
@@ -253,7 +246,52 @@ const ModalPago = (props) => {
     let response;
 
     if (rowData.forma_pago === formaPagoPagoAnticipadoId && rowData.sesion_anicipada) {
-      console.log("KAOZ", rowData);
+      rowData.pago_anticipado = true;
+      rowData.has_descuento_dermatologo = false;
+
+      servicio.forma_pago._id = formaPagoPagoAnticipadoId;
+      servicio.total = 0;
+
+      const entrada = {
+        create_date: create_date,
+        hora_aplicacion: servicio.hora_aplicacion,
+        recepcionista: empleado._id,
+        concepto: `FOLIO: ${generateFolio(servicio)}`,
+        cantidad: 0,
+        tipo_entrada: tipoEntrada,
+        sucursal: sucursal,
+        forma_pago: rowData.forma_pago,
+        pago_anticipado: true,
+      }
+
+      const sesionAnticipada = sesionesAnticipadas.find((sesion) => {
+        return sesion._id === rowData.sesion_anicipada;
+      });
+      sesionAnticipada.fecha_asistencia = new Date();
+
+      await updateSesionAnticipada(sesionAnticipada._id, sesionAnticipada, empleado.access_token);
+
+      if (pago.entrada) {
+        response = await updateEntrada(pago.entrada, entrada);
+      } else {
+        response = await createEntrada(entrada);
+      }
+
+      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED
+        || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+        const resEntrada = response.data;
+        rowData.entrada = resEntrada._id;
+        const res = pago._id ? await updatePago(pago._id, rowData) : await createPago(rowData);
+        if (`${res.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
+          || `${res.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+          resEntrada.pago = res.data._id;
+          await updateEntrada(resEntrada._id, resEntrada);
+          setIsLoading(false);
+          onClose();
+          loadPagos();
+        }
+      }
+
     } else {
       const entrada = {
         create_date: create_date,
@@ -264,7 +302,7 @@ const ModalPago = (props) => {
         tipo_entrada: tipoEntrada,
         sucursal: sucursal,
         forma_pago: rowData.forma_pago,
-        pago_anticipado: rowData.pago_anticipado,
+        pago_anticipado: false,
       }
       //TODO: CUIDADO AQUI
       /*const resExistEntrada = await findEntradaByPago(pago._id);
@@ -313,6 +351,15 @@ const ModalPago = (props) => {
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       const sesionesAnticipadasResponse = response.data;
       const sesionesVigenes = findSesion(sesionesAnticipadasResponse);
+      sesionesVigenes.map((sesionAnticipada) => {
+        const producto = sesionAnticipada.tratamientos.map(tratamiento => {
+          const show_areas = tratamiento.areasSeleccionadas.map(area => {
+            return `${area.nombre}`;
+          });
+          return `►${tratamiento.nombre}(${show_areas}) `;
+        });
+        sesionAnticipada.descripcion = `(${dateToString(sesionAnticipada.fecha_pago)}) ${producto}`;
+      });
       setSesionesAnticipadas(sesionesVigenes);
     }
   }

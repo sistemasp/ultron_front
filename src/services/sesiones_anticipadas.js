@@ -49,6 +49,38 @@ export const showAllSesionesAnticipadasByPacienteToday = async (pacienteId, toke
     }
 }
 
+export const findSesionesAnticipadasByPayOfDoctorFechaPago = async (sucursalId, dermatologoId, hora_apertura, hora_cierre, token) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/sesionanticipada/sucursal/${sucursalId}/dermatologo/${dermatologoId}/apertura/${hora_apertura}/cierre/${hora_cierre}`,
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response;
+    } catch (error) {
+        console.log('findSesionesAnticipadasByPayOfDoctorFechaPago', error);
+        return error;
+    }
+}
+
+export const findSesionAnticipadaByRangeDateAndSucursal = async (diai, mesi, anioi, diaf, mesf, aniof, sucursalId, token) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/sesionanticipada/fecha_inicio/${diai}/${mesi}/${anioi}/fecha_fin/${diaf}/${mesf}/${aniof}/sucursal/${sucursalId}`,
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response;
+    } catch (error) {
+        console.log('findSesionAnticipadaByRangeDateAndSucursal', error);
+        return error;
+    }
+}
+
 export const createSesionAnticipada = async (sesionAnticipada, token) => {
     try {
         const response = await axios({

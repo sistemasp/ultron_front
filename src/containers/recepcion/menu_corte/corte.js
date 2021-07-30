@@ -70,7 +70,9 @@ export const CorteContainer = (props) => {
   let totalSalidas = 0;
   let totalEfectivo = 0;
 
-  dataEntradas.forEach(data => {
+  const newEntradas = [ ...dataEntradas, ...dataPagosAnticipados];
+
+  newEntradas.forEach(data => {
     if (data.forma_pago === 'EFECTIVO') {
       totalEfectivo = data.total;
     }
@@ -123,7 +125,7 @@ export const CorteContainer = (props) => {
             corte={corte}
             sucursal={sucursal}
             empleado={empleado}
-            dataEntradas={dataEntradas}
+            dataEntradas={newEntradas}
             dataPagosAnticipados={dataPagosAnticipados}
             dataSalidas={dataSalidas}
             setOpenAlert={setOpenAlert}
@@ -182,7 +184,7 @@ export const CorteContainer = (props) => {
           <TableComponent
             titulo={tituloEntrada}
             columns={columnsEntrada}
-            data={dataEntradas}
+            data={newEntradas}
             options={options}
             detailPanel={detailPanelEntrada} />
         </Grid>
@@ -206,7 +208,7 @@ export const CorteContainer = (props) => {
             <h1>{toFormatterCurrency(totalEntradas)}</h1>
           </Grid>
         </Grid>
-        {
+        {/* {
           dataPagosAnticipados.length > 0 ?
             <Grid item xs={12} sm={8}>
               <TableComponent
@@ -217,7 +219,7 @@ export const CorteContainer = (props) => {
                 detailPanel={detailPanelEntrada} />
             </Grid>
             : ''
-        }
+        } */}
         <Grid item xs={12} sm={8}>
           <TableComponent
             titulo={tituloSalida}
@@ -247,7 +249,7 @@ export const CorteContainer = (props) => {
           </Grid>
         </Grid>
         <Grid item sm={8}>
-          <h1 className={totalEfectivo < totalSalidas ? classes.label_positivo : classes.label_negativo} >TOTAL CORTE EFECTIVO: {toFormatterCurrency(Number(totalEfectivo) - Number(totalSalidas))}</h1>
+          <h1 className={totalEfectivo > totalSalidas ? classes.label_positivo : classes.label_negativo} >TOTAL CORTE EFECTIVO: {toFormatterCurrency(Number(totalEfectivo) - Number(totalSalidas))}</h1>
         </Grid>
 
       </Grid>

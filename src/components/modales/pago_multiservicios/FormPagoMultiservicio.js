@@ -245,15 +245,7 @@ const FormPagoMultiservicio = (props) => {
                   disabled={isLoading}
                   text='GUARDAR' />
               </Grid>
-              {/*
-                <Grid item xs={12}>
-                  <CheckCustom
-                    checked={values.pago_anticipado}
-                    onChange={onChangePagoAnticipado}
-                    name="checkedC"
-                    label="PAGO ANTICIPADO" />
-              </Grid>
-              */}
+             
             </Grid>
 
           </form>

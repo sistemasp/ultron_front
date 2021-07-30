@@ -8,6 +8,7 @@ import {
   createPago,
   updatePago,
   showAllTipoCitas,
+  showAllFrecuencias,
 } from '../../../services';
 import {
   createEntrada, /*findEntradaByPago,*/ updateEntrada,
@@ -57,14 +58,14 @@ const AgregarPagosAnticipados = (props) => {
   const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
   const dermatologoRolId = process.env.REACT_APP_DERMATOLOGO_ROL_ID;
   const directoTipoCitaId = process.env.REACT_APP_TIPO_CITA_DIRECTO_ID;
-  const tipoEntradaConsultaId = process.env.REACT_APP_TIPO_INGRESO_CONSULTA_ID;
-  const tipoEntradaCirugiaId = process.env.REACT_APP_TIPO_INGRESO_CIRUGIA_ID;
-  const tipoEntradaFacialesId = process.env.REACT_APP_TIPO_INGRESO_FACIALES_ID;
-  const tipoEntradaEsteticaId = process.env.REACT_APP_TIPO_INGRESO_ESTETICA_ID;
-  const tipoEntradaAparatologiaId = process.env.REACT_APP_TIPO_INGRESO_APARATOLOGIA_ID;
-  const tipoEntradaLaserId = process.env.REACT_APP_TIPO_INGRESO_LASER_ID;
-  const tipoEntradaDermapenId = process.env.REACT_APP_TIPO_INGRESO_DERMAPEN_ID;
-  const tipoEntradaOtrosId = process.env.REACT_APP_TIPO_INGRESO_OTROS_ID;
+  const tipoEntradaConsultaId = process.env.REACT_APP_TIPO_ENTRADA_CONSULTA_ID;
+  const tipoEntradaCirugiaId = process.env.REACT_APP_TIPO_ENTRADA_CIRUGIA_ID;
+  const tipoEntradaFacialesId = process.env.REACT_APP_TIPO_ENTRADA_FACIALES_ID;
+  const tipoEntradaEsteticaId = process.env.REACT_APP_TIPO_ENTRADA_ESTETICA_ID;
+  const tipoEntradaAparatologiaId = process.env.REACT_APP_TIPO_ENTRADA_APARATOLOGIA_ID;
+  const tipoEntradaLaserId = process.env.REACT_APP_TIPO_ENTRADA_LASER_ID;
+  const tipoEntradaDermapenId = process.env.REACT_APP_TIPO_ENTRADA_DERMAPEN_ID;
+  const tipoEntradaOtrosId = process.env.REACT_APP_TIPO_ENTRADA_OTROS_ID;
   const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
   const servicioDermapenlId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID;
   const servicioLaserId = process.env.REACT_APP_LASER_SERVICIO_ID;
@@ -78,6 +79,7 @@ const AgregarPagosAnticipados = (props) => {
   const tipoCitaDerivadoId = process.env.REACT_APP_TIPO_CITA_DERIVADO_ID;
   const tipoCitaRealizadoId = process.env.REACT_APP_TIPO_CITA_REALIZADO_ID;
   const servicioPagoAnticipado = process.env.REACT_APP_PAGO_ANTICIPADO_SERVICIO_ID;
+  const frecuenciaPrimeraVezId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
   const frecuenciaReconsultaId = process.env.REACT_APP_FRECUENCIA_RECONSULTA_ID;
 
   const [sesionesAnticipadas, setSesionesAnticipadas] = useState([]);
@@ -85,6 +87,7 @@ const AgregarPagosAnticipados = (props) => {
   const [precioPagar, setPrecioPagar] = useState([]);
   const [servicios, setServicios] = useState([]);
   const [tratamientos, setTratamientos] = useState([]);
+  const [frecuencias, setFrecuencias] = useState([]);
   const [dermatologos, setDermatologos] = useState([]);
   const [tipoCitas, setTipoCitas] = useState([]);
   const [selectedAreas, setSelectedAreas] = useState(false);
@@ -101,6 +104,7 @@ const AgregarPagosAnticipados = (props) => {
     porcentaje_descuento_clinica: 0,
     dermatologo: dermatologoDirectoId,
     tipo_cita: directoTipoCitaId,
+    frecuencia: frecuenciaPrimeraVezId,
   });
 
   const columns = [
@@ -244,6 +248,10 @@ const AgregarPagosAnticipados = (props) => {
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
       await loadSesionesAnticipadas();
     }
+    setValues({
+      ...values,
+      frecuencia: frecuenciaReconsultaId,
+    });
     setIsLoading(false);
   }
 
@@ -335,11 +343,43 @@ const AgregarPagosAnticipados = (props) => {
   const handleGuardarModalPagosMultiservicios = async (servicio) => {
     servicio.pagado = servicio.pagos.length > 0;
     servicio.fecha_pago = new Date();
+    let ind = 0;
     servicio.sesiones_anticipadas.map(async (sesionAnticipada, index) => {
       sesionAnticipada.numero_sesion = index + 1;
       sesionAnticipada.pagado = true;
+      let sesionTotal = Number(sesionAnticipada.total);
+      const pagos = [];
+      servicio.pagos[ind].total = Number(servicio.pagos[ind].total);
+      while (sesionTotal > 0) { 
+        let total = 0;
+        if (servicio.pagos[ind].total > sesionTotal) {
+          total = sesionTotal;
+          servicio.pagos[ind].total -= sesionTotal;
+          sesionTotal = 0;
+        } else if (servicio.pagos[ind].total < sesionTotal) {
+          total = servicio.pagos[ind].total;
+          sesionTotal -= servicio.pagos[ind].total;
+          servicio.pagos[ind].total = 0;
+        } else {
+          total = sesionTotal;
+          sesionTotal = 0;
+          servicio.pagos[ind].total = 0;
+        }
+
+        const newPago = {
+          ...servicio.pagos[ind],
+          total: total
+        }
+
+        pagos.push(newPago);
+        if (servicio.pagos[ind].total === 0) { ind++ }
+      }
+
+      sesionAnticipada.pagos = pagos;
+
       await updateSesionAnticipada(sesionAnticipada._id, sesionAnticipada, token);
     });
+
     await updatePagoAnticipado(servicio._id, servicio, token);
     await loadSesionesAnticipadas();
     setOpenModalPagosMultiservicios(false);
@@ -350,6 +390,13 @@ const AgregarPagosAnticipados = (props) => {
     const response = await showAllBanco();
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setBancos(response.data);
+    }
+  }
+
+  const loadFrecuencias = async () => {
+    const response = await showAllFrecuencias();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setFrecuencias(response.data);
     }
   }
 
@@ -399,6 +446,7 @@ const AgregarPagosAnticipados = (props) => {
   const loadAll = async () => {
     setIsLoading(true);
     await loadSesionesAnticipadas();
+    await loadFrecuencias();
     await loadDermatologos();
     await loadTipoCitas();
     await loadServicios();
@@ -424,6 +472,7 @@ const AgregarPagosAnticipados = (props) => {
             titulo="SESIONES ANTICIPADAS"
             columns={columns}
             sesionesAnticipadas={sesionesAnticipadas}
+            frecuencias={frecuencias}
             totalPagar={totalPagar}
             actions={actions}
             sucursal={sucursal}
