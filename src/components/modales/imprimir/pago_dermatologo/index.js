@@ -17,7 +17,7 @@ import { findCirugiasByPayOfDoctorHoraAplicacion, findCirugiasByPayOfDoctorHoraA
 import { findEsteticasByPayOfDoctorHoraAplicacion, findEsteticasByPayOfDoctorHoraAplicacionPA, updateEstetica } from '../../../../services/esteticas';
 import { findDermapensByPayOfDoctorHoraAplicacion, findDermapensByPayOfDoctorHoraAplicacionPA, updateDermapen } from '../../../../services/dermapens';
 import { createPagoDermatologo, showTodayPagoDermatologoBySucursalTurno } from '../../../../services/pago_dermatologos';
-import { findSesionesAnticipadasByPayOfDoctorFechaPago } from '../../../../services/sesiones_anticipadas';
+import { findSesionesAnticipadasByPayOfDoctorFechaPago, updateSesionAnticipada } from '../../../../services/sesiones_anticipadas';
 import { findPagosAnticipadssByPayOfDoctorFechaPago } from '../../../../services/pagos_anticipados';
 import { precioAreaBySucursal } from '../../../../utils/utils';
 
@@ -97,7 +97,7 @@ const ModalImprimirPagoDermatologo = (props) => {
           return `${pago.forma_pago.nombre} `
         });
       });
-      
+
       setConsultas(consultas);
     }
   }
@@ -110,7 +110,7 @@ const ModalImprimirPagoDermatologo = (props) => {
           return `${pago.forma_pago.nombre} `
         });
       });
-      
+
       setConsultasPrivada(consultas);
     }
   }
@@ -124,7 +124,7 @@ const ModalImprimirPagoDermatologo = (props) => {
           return `${pago.forma_pago.nombre} `
         });
       });
-      
+
       setConsultasPrimeraVez(consultas);
     }
   }
@@ -138,7 +138,7 @@ const ModalImprimirPagoDermatologo = (props) => {
           return `${pago.forma_pago.nombre} `
         });
       });
-      
+
       setConsultasPrimeraVezPA(consultas);
     }
   }
@@ -152,7 +152,7 @@ const ModalImprimirPagoDermatologo = (props) => {
           return `${pago.forma_pago.nombre} `
         });
       });
-            
+
       const newReconsultas = consultas.filter(reconsulta => {
         let total = 0;
         reconsulta.pagos.forEach(pago => {
@@ -194,7 +194,7 @@ const ModalImprimirPagoDermatologo = (props) => {
           return `${pago.forma_pago.nombre} `
         });
       });
-      
+
       setCirugias(cirugias);
     }
   }
@@ -208,7 +208,7 @@ const ModalImprimirPagoDermatologo = (props) => {
           return `${pago.forma_pago.nombre} `
         });
       });
-      
+
       setCirugiasPA(cirugias);
     }
   }
@@ -248,7 +248,7 @@ const ModalImprimirPagoDermatologo = (props) => {
           return `${pago.forma_pago.nombre} `
         });
       });
-      
+
       setDermapens(dermapens);
     }
   }
@@ -294,7 +294,7 @@ const ModalImprimirPagoDermatologo = (props) => {
           return `${pago.forma_pago.nombre} `
         });
       });
-      
+
       setEsteticas(esteticas);
     }
   }
@@ -524,18 +524,29 @@ const ModalImprimirPagoDermatologo = (props) => {
       let pagoDermatologo = 0;
       if (!sesionAnticipada.has_descuento_dermatologo) {
         if (sesionAnticipada.servicio._id === servicioAparatologiaId && index === 0) {
+          let importe1 = 0;
           sesionAnticipada.tratamientos.forEach(tratamiento => {
 
             tratamiento.areasSeleccionadas.map(area => {
               const itemPrecio = precioAreaBySucursal(sucursal._id, area);
 
               comisionDermatologo += (Number(itemPrecio) * Number(dermatologo.esquema.porcentaje_laser) / 100);
+              importe1 += Number(itemPrecio);
             });
+            tratamiento.importe1 = importe1;
           });
           pagoDermatologo = comisionDermatologo - ((comisionDermatologo * (sesionAnticipada.porcentaje_descuento_clinica ? sesionAnticipada.porcentaje_descuento_clinica : 0)) / 100);
         } else {
           sesionAnticipada.tratamientos.map(tratamiento => {
+            let importe1 = 0;
             tratamiento.areasSeleccionadas.map(areaSeleccionada => {
+              const itemPrecio = sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.precio_ma
+                : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.precio_rd
+                  : (sucursal._id === sucursalOcciId ? areaSeleccionada.precio_oc
+                    : (sucursal._id === sucursalFedeId ? areaSeleccionada.precio_fe : '0')));
+
+              importe1 += Number(itemPrecio);
+
               switch (sesionAnticipada.tipo_cita._id) {
                 case revisadoTipoCitaId:
                   comisionDermatologo += Number(
@@ -570,11 +581,13 @@ const ModalImprimirPagoDermatologo = (props) => {
                   break;
               }
             });
+            tratamiento.importe1 = importe1;
           });
           pagoDermatologo = comisionDermatologo - ((comisionDermatologo * (sesionAnticipada.porcentaje_descuento_clinica ? sesionAnticipada.porcentaje_descuento_clinica : 0)) / 100);
         }
         total += Number(pagoDermatologo);
       }
+      updateSesionAnticipada(sesionAnticipada._id, sesionAnticipada, token);
     });
 
     if (dermatologo._id !== dermatologoDirectoId) {

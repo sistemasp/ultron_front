@@ -100,6 +100,11 @@ const PagosMultiservicios = (props) => {
     }
   ];
 
+  const handleCloseBuscarRazonSocial = (val) => {
+    setOpenModalFactura(false);
+  }
+
+
   const handleClickNewPago = () => {
     setOpenModalPago(true);
   }
@@ -171,6 +176,7 @@ const PagosMultiservicios = (props) => {
             onGuardarModalPagos={onGuardarModalPagos}
             openModalFactura={openModalFactura}
             onChangeFactura={handleChangeFactura}
+            onCloseBuscarRazonSocial={handleCloseBuscarRazonSocial}
             restante={restante}
             tipoServicioId={tipoServicioId}
             colorBase={colorBase}

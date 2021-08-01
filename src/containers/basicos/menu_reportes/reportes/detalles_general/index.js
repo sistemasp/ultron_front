@@ -989,7 +989,23 @@ const ReportesDetallesGeneral = (props) => {
 	}
 
 	const procesarDatos = async () => {
-		const datosCompletos = [...consultas, ...faciales, ...dermapens, ...cirugias, ...esteticas, ...aparatologias];
+		const sesionesAnticipadas = [];
+		pagoAnticipados.map((pagoAnticipado) => {
+			pagoAnticipado.sesiones_anticipadas.map((sesionAnticipada) => {
+				sesionAnticipada.fecha_hora = sesionAnticipada.fecha_pago;
+				sesionAnticipada.fecha_hora = sesionAnticipada.fecha_pago;
+
+				sesionAnticipada.hora_llegada = "NO APLICA";
+				sesionAnticipada.hora_atencion = "NO APLICA";
+				sesionAnticipada.hora_salida = "NO APLICA";
+				sesionAnticipada.consecutivo = "SIN FOLIO";
+				sesionAnticipada.quien_agenda = pagoAnticipado.recepcionista;
+
+				sesionesAnticipadas.push(sesionAnticipada);
+			});
+		});
+
+		const datosCompletos = [...consultas, ...faciales, ...dermapens, ...cirugias, ...esteticas, ...aparatologias, ...sesionesAnticipadas];
 		const consultasProcesadas = [];
 		const facialesProcesadas = [];
 		const dermapensProcesadas = [];
@@ -998,6 +1014,7 @@ const ReportesDetallesGeneral = (props) => {
 		const aparatologiasProcesadas = [];
 
 		datosCompletos.forEach(async (item) => {
+			console.log("KAOZ", item);
 			const fecha = new Date(item.fecha_hora);
 
 			item.fecha_show = `${addZero(fecha.getDate())}/${addZero(fecha.getMonth() + 1)}/${fecha.getFullYear()}`;
@@ -1048,19 +1065,19 @@ const ReportesDetallesGeneral = (props) => {
 			const coincidencias = facialesProcesadas.filter(facialProcesada => {
 				return falcial._id === facialProcesada._id && falcial.producto === facialProcesada.producto;
 			});
-			falcial.cantidad_servicios = 1 / coincidencias.length;
+			falcial.cantidad_servicios = falcial.cantidad_servicios === 0 ? 0 : (1 / coincidencias.length);
 		});
 		aparatologiasProcesadas.forEach(aparatologia => {
 			const coincidencias = aparatologiasProcesadas.filter(aparatologiaProcesada => {
 				return aparatologia._id === aparatologiaProcesada._id && aparatologia.producto === aparatologiaProcesada.producto;
 			});
-			aparatologia.cantidad_servicios = 1 / coincidencias.length;
+			aparatologia.cantidad_servicios = aparatologia.cantidad_servicios === 0 ? 0 : (1 / coincidencias.length);
 		});
 		consultasProcesadas.forEach(consulta => {
 			const coincidencias = consultasProcesadas.filter(consultaProcesada => {
 				return consulta._id === consultaProcesada._id && consulta.producto === consultaProcesada.producto;
 			});
-			consulta.cantidad_servicios = 1 / coincidencias.length;
+			consulta.cantidad_servicios = consulta.cantidad_servicios === 0 ? 0 : (1 / coincidencias.length);
 		});
 		// dermapensProcesadas.forEach(dermapen => {
 		// 	const coincidencias = dermapensProcesadas.filter(dermapenProcesada => {
@@ -1148,13 +1165,10 @@ const ReportesDetallesGeneral = (props) => {
 		const response = await findPagoAnticipadoByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
 			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			console.log("KAOZ", response.data);
 			setPagosAnticipados(response.data);
 			await loadDermapens(startDate, endDate);
 		}
 	}
-
-	
 
 	const handleChangeStartDate = async (date) => {
 		setIsLoading(true);
