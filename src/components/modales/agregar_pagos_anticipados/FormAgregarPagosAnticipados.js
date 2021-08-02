@@ -60,7 +60,7 @@ const FormAgregarPagosAnticipados = (props) => {
     onChangeDigitos,
     onChangePagoAnticipado,
     onChangDescuentoDermatologo,
-frecuencias,
+    frecuencias,
     onClickAgregarSesion,
     open,
     colorBase,

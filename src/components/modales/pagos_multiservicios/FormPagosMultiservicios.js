@@ -103,7 +103,7 @@ const FormPagosMultiservicios = (props) => {
 
             <Grid item xs={true} sm={true} className={classes.grid_center}>
               <CheckCustom
-                checked={false}
+                checked={pagoAnticipado.factura}
                 onChange={onChangeFactura}
                 //disabled={servicio.factura}
                 name="checkedF"
