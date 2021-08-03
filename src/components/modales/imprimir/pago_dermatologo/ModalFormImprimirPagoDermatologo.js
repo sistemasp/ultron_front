@@ -382,7 +382,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                             <p className={classes.label_cells}>{`${consulta.producto.nombre}`}</p>
                           </Grid>
                           <Grid item xs={true} className={classes.label}>
-                            <p className={classes.label_cells}>{`${consulta.forma_pago_nombre}`}</p>
+                            <p className={classes.label_cells}>{`${consulta.factura ? '(FACTURA)' : ''}${consulta.forma_pago_nombre}`}</p>
                           </Grid>
                           <Grid item xs={true} className={classes.label}>
                             <p className={classes.label_cells_total}> {`${toFormatterCurrency(totalPagos)}`} </p>
@@ -455,7 +455,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                             <p className={classes.label_cells}>{`${consulta.producto.nombre}`}</p>
                           </Grid>
                           <Grid item xs={true} className={classes.label}>
-                            <p className={classes.label_cells}>{`${consulta.forma_pago_nombre}`}</p>
+                            <p className={classes.label_cells}>{`${consulta.factura ? '(FACTURA)' : ''}${consulta.forma_pago_nombre}`}</p>
                           </Grid>
                           <Grid item xs={true} className={classes.label}>
                             <p className={classes.label_cells_total}> {`${toFormatterCurrency(totalPagos)}`} </p>
@@ -577,7 +577,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                             <p className={classes.label_cells}>{`${consulta.producto.nombre}`}</p>
                           </Grid>
                           <Grid item xs={true} className={classes.label}>
-                            <p className={classes.label_cells}>{`${consulta.forma_pago_nombre}`}</p>
+                            <p className={classes.label_cells}>{`${consulta.factura ? '(FACTURA)' : ''}${consulta.forma_pago_nombre}`}</p>
                           </Grid>
                           <Grid item xs={true} className={classes.label}>
                             <p className={classes.label_cells_total}> {`${toFormatterCurrency(totalPagos)}`} </p>
@@ -693,7 +693,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                               <p className={classes.label_cells}>{`${cirugia.producto.nombre}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
-                              <p className={classes.label_cells}>{`${cirugia.forma_pago_nombre}`}</p>
+                              <p className={classes.label_cells}>{`${cirugia.factura ? '(FACTURA)' : ''}${cirugia.forma_pago_nombre}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells_total}> {`${toFormatterCurrency(cirugia.total_aplicacion)}`} </p>
@@ -809,7 +809,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                               <p className={classes.label_cells}>{`${estetica.producto.nombre}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
-                              <p className={classes.label_cells}>{`${estetica.forma_pago_nombre}`}</p>
+                              <p className={classes.label_cells}>{`${estetica.factura ? '(FACTURA)' : ''}${estetica.forma_pago_nombre}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells_total}> {`${toFormatterCurrency(estetica.total_aplicacion)}`} </p>
@@ -973,7 +973,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                               <p className={classes.label_cells}>{`${facial.show_tratamientos}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
-                              <p className={classes.label_cells}>{`${facial.forma_pago_nombre}`}</p>
+                              <p className={classes.label_cells}>{`${facial.factura ? '(FACTURA)' : ''}${facial.forma_pago_nombre}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells_total}> {`${toFormatterCurrency(facial.total)}`} </p>
@@ -1114,7 +1114,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                               <p className={classes.label_cells}>{`${dermapen.producto.nombre}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
-                              <p className={classes.label_cells}>{`${dermapen.forma_pago_nombre}`}</p>
+                              <p className={classes.label_cells}>{`${dermapen.factura ? '(FACTURA)' : ''}${dermapen.forma_pago_nombre}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells_total}> {`${toFormatterCurrency(dermapen.total_aplicacion)}`} </p>
@@ -1260,7 +1260,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                               <p className={classes.label_cells}>{`${aparatologia.show_tratamientos}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
-                              <p className={classes.label_cells}>{`${aparatologia.forma_pago_nombre}`}</p>
+                              <p className={classes.label_cells}>{`${aparatologia.factura ? '(FACTURA)' : ''}${aparatologia.forma_pago_nombre}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells_total}> {`${toFormatterCurrency(aparatologia.total)}`} </p>
@@ -1451,7 +1451,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                               <p className={classes.label_cells}>{`${sesionAnticipada.show_tratamientos}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
-                              <p className={classes.label_cells}>{sesionAnticipada.forma_pago_nombre}</p>
+                              <p className={classes.label_cells}>{`${sesionAnticipada.paciente.nombres} ${sesionAnticipada.paciente.apellidos}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells_total}> {`${toFormatterCurrency(sesionAnticipada.total)}`} </p>
