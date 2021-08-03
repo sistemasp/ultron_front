@@ -143,7 +143,7 @@ const ModalFormImprimirCorte = (props) => {
   let retirosParciales = 0;
   let otrosSalidas = 0;
 
-  let totalesEntradas = [0, 0, 0, 0, 0, 0, 0, 0];
+  let totalesEntradas = [0, 0, 0, 0, 0, 0, 0];
   let totalesPagosAnticipados = [0, 0, 0, 0, 0, 0, 0, 0];
 
   return (
@@ -157,7 +157,7 @@ const ModalFormImprimirCorte = (props) => {
 
             <Grid item xs={3}>
               <img 
-                src={sucursal._id === sucursalManuelAcunaId || sucursal._id === sucursalRubenDarioId ? bannerDermastetic : bannerMePiel} 
+                src={sucursal === sucursalManuelAcunaId || sucursal === sucursalRubenDarioId ? bannerDermastetic : bannerMePiel} 
                 alt='banner'
                 width='100%'
                 height='100%' />
