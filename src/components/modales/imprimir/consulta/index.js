@@ -17,6 +17,7 @@ const ModalImprimirConsulta = (props) => {
     open,
     onClose,
     datos,
+    sucursal,
     servicio,
     colorBase,
   } = props;
@@ -41,6 +42,7 @@ const ModalImprimirConsulta = (props) => {
         onClose={onClose}
         datos={datos}
         servicio={servicio}
+        sucursal={sucursal}
         onClickImprimir={handleClickImprimir}
         colorBase={colorBase}
         show={show} />

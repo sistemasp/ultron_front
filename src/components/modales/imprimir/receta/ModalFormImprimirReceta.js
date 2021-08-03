@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { Grid } from '@material-ui/core';
 import bannerMePiel from './../../../../bannerMePiel.PNG';
+import bannerDermastetic from './../../../../bannerDermastetic.jpeg';
 import { addZero, dateToString } from '../../../../utils/utils';
 import { ButtonCustom } from '../../../basic/ButtonCustom';
 
@@ -71,6 +72,7 @@ const ModalFormImprimirReceta = (props) => {
 
   const {
     onClose,
+    sucursal,
     consultorio,
     receta,
     today,
@@ -79,6 +81,11 @@ const ModalFormImprimirReceta = (props) => {
     open,
     show,
   } = props;
+
+  const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
+  const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
+  const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
+  const sucursalFedeId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
 
   return (
     <div>

@@ -168,6 +168,7 @@ export const AgendarFacialContainer = (props) => {
 					<ModalImprimirTratamiento
 						open={openModalImprimirCita}
 						onClose={onCloseImprimirConsulta}
+						sucursal={sucursal}
 						colorBase={colorBase}
 						datos={datosImpresion} />
 					: ''

@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { Grid } from '@material-ui/core';
 import bannerMePiel from './../../../../bannerMePiel.PNG';
+import bannerDermastetic from './../../../../bannerDermastetic.jpeg';
 import { dateToString, toFormatterCurrency } from '../../../../utils/utils';
 
 function getModalStyle() {
@@ -116,6 +117,7 @@ const ModalFormImprimirCorte = (props) => {
 
   const {
     corte,
+    sucursal,
     onClose,
     onClickImprimir,
     open,
@@ -128,6 +130,11 @@ const ModalFormImprimirCorte = (props) => {
     dataSalidas,
     empleado,
   } = props;
+
+  const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
+  const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
+  const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
+  const sucursalFedeId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
 
   let totalEntradas = 0;
   let totalPagosAnticipados = 0;
@@ -149,7 +156,11 @@ const ModalFormImprimirCorte = (props) => {
           <Grid container>
 
             <Grid item xs={3}>
-              <img src={bannerMePiel} alt='banner' width='100%' height='100%' />
+              <img 
+                src={sucursal._id === sucursalManuelAcunaId || sucursal._id === sucursalRubenDarioId ? bannerDermastetic : bannerMePiel} 
+                alt='banner'
+                width='100%'
+                height='100%' />
             </Grid>
             <Grid container xs={9}>
               <Grid item xs={12} className={classes.label}>

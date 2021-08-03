@@ -187,6 +187,7 @@ export const AgendarCirugiaContainer = (props) => {
 						open={openModalTraspaso}
 						onClose={onCloseTraspasos}
 						servicio={cirugia}
+						sucursal={sucursal}
 						empleado={empleado}
 						sucursal={sucursal._id}
 						setMessage={setMessage}

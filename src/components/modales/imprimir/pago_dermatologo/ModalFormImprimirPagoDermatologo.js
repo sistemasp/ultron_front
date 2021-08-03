@@ -4,6 +4,7 @@ import Modal from '@material-ui/core/Modal';
 import { Button, Grid } from '@material-ui/core';
 import { ButtonCustom } from '../../../basic/ButtonCustom';
 import bannerMePiel from './../../../../bannerMePiel.PNG';
+import bannerDermastetic from './../../../../bannerDermastetic.jpeg';
 import { addZero, dateToString, precioAreaBySucursal, toFormatterCurrency } from '../../../../utils/utils';
 import myStyles from '../../../../css';
 
@@ -224,7 +225,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
           <Grid container>
             <Grid item xs={3}>
               <img
-                src={bannerMePiel}
+                src={sucursal._id === sucursalManuelAcunaId || sucursal._id === sucursalRubenDarioId ? bannerDermastetic : bannerMePiel}
                 alt='banner'
                 width='100%'
                 height='100%' />
@@ -914,7 +915,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                         faciales.map(facial => {
                           let comisionDermatologo = 0;
                           let pagoDermatologo = 0;
-                          if (!facial.has_descuento_dermatologo && facial.forma_pago._id !== formaPagoPagoAnticipadoId ) {
+                          if (!facial.has_descuento_dermatologo && facial.forma_pago._id !== formaPagoPagoAnticipadoId) {
                             facial.tratamientos.map(tratamiento => {
                               tratamiento.areasSeleccionadas.map(areaSeleccionada => {
                                 switch (facial.tipo_cita._id) {
@@ -1223,23 +1224,23 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                       aparatologias ?
                         aparatologias.map(aparatologia => {
                           let comisionDermatologo = 0;
-                          if (aparatologia.forma_pago._id !== formaPagoPagoAnticipadoId ) {
-                          aparatologia.tratamientos.forEach(tratamiento => {
+                          if (aparatologia.forma_pago._id !== formaPagoPagoAnticipadoId) {
+                            aparatologia.tratamientos.forEach(tratamiento => {
 
-                            tratamiento.areasSeleccionadas.map(area => {
-                              const itemPrecio =
-                                sucursal._id === sucursalManuelAcunaId ? area.precio_ma // PRECIO MANUEL ACUÑA
-                                  : (sucursal._id === sucursalOcciId ? area.precio_oc // PRECIO OCCIDENTAL
-                                    : (sucursal._id === sucursalFedeId ? area.precio_fe // PRECIO FEDERALISMO
-                                      : (sucursal._id === sucursalRubenDarioId ? area.precio_rd // PRECIO RUBEN DARIO
-                                        : 0))); // ERROR
-                              comisionDermatologo += (Number(itemPrecio) * Number(aparatologia.frecuencia === frecuenciaPrimeraVezId ? dermatologo.esquema.porcentaje_laser : (aparatologia.dermatologo === dermatologoDirectoId ? 100 : 0)) / 100);
+                              tratamiento.areasSeleccionadas.map(area => {
+                                const itemPrecio =
+                                  sucursal._id === sucursalManuelAcunaId ? area.precio_ma // PRECIO MANUEL ACUÑA
+                                    : (sucursal._id === sucursalOcciId ? area.precio_oc // PRECIO OCCIDENTAL
+                                      : (sucursal._id === sucursalFedeId ? area.precio_fe // PRECIO FEDERALISMO
+                                        : (sucursal._id === sucursalRubenDarioId ? area.precio_rd // PRECIO RUBEN DARIO
+                                          : 0))); // ERROR
+                                comisionDermatologo += (Number(itemPrecio) * Number(aparatologia.frecuencia === frecuenciaPrimeraVezId ? dermatologo.esquema.porcentaje_laser : (aparatologia.dermatologo === dermatologoDirectoId ? 100 : 0)) / 100);
+                              });
                             });
-                          });
                           }
                           let pagoDermatologo = comisionDermatologo - ((comisionDermatologo * (aparatologia.porcentaje_descuento_clinica ? aparatologia.porcentaje_descuento_clinica : 0)) / 100);
 
-                        
+
                           pagoDermatologo = aparatologia.has_descuento_dermatologo ? 0 : pagoDermatologo;
                           pagoTotal += Number(pagoDermatologo);
                           return <Grid container>

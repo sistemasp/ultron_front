@@ -172,6 +172,7 @@ export const AgendarDermapenContainer = (props) => {
 					<ModalImprimirDermapen
 						open={openModalImprimirCita}
 						onClose={onCloseImprimirConsulta}
+						sucursal={sucursal}
 						colorBase={colorBase}
 						datos={datosImpresion} />
 					: ''

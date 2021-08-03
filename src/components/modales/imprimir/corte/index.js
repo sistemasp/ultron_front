@@ -26,6 +26,7 @@ const ModalImprimirCorte = (props) => {
     dataSalidas,
     corte,
     empleado,
+    sucursal,
   } = props;
 
   const [show, setShow] = useState(true);
@@ -78,6 +79,7 @@ const ModalImprimirCorte = (props) => {
         onClose={onClose}
         corte={corte}
         empleado={empleado}
+        sucursal={sucursal}
         onClickImprimir={handleClickImprimir}
         show={show}
         tipoEntradas={tipoEntradas}

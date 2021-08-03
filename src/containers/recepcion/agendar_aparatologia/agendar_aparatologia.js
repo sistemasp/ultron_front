@@ -173,6 +173,7 @@ export const AgendarAparatologiaContainer = (props) => {
 						open={openModalImprimirCita}
 						onClose={onCloseImprimirConsulta}
 						colorBase={colorBase}
+						sucursal={sucursal}
 						datos={datosImpresion} />
 					: ''
 			}

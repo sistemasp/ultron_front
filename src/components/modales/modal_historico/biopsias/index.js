@@ -45,12 +45,7 @@ const TabBiopsias = (props) => {
   ];
 
   const options = {
-    rowStyle: rowData => {
-      return {
-        color: rowData.status.color,
-        backgroundColor: rowData.pagado ? process.env.REACT_APP_PAGADO_COLOR : ''
-      };
-    },
+
     headerStyle: {
       backgroundColor: colorBase,
       color: '#FFF',

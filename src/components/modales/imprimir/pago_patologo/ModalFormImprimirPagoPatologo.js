@@ -4,6 +4,7 @@ import Modal from '@material-ui/core/Modal';
 import { Grid } from '@material-ui/core';
 import { ButtonCustom } from '../../../basic/ButtonCustom';
 import bannerMePiel from './../../../../bannerMePiel.PNG';
+import bannerDermastetic from './../../../../bannerDermastetic.jpeg';
 import { dateToString, toFormatterCurrency } from '../../../../utils/utils';
 
 function getModalStyle() {
@@ -192,7 +193,7 @@ const ModalFormImprimirPagoPatologo = (props) => {
           <Grid container>
             <Grid item xs={3}>
               <img
-                src={bannerMePiel}
+                src={sucursal._id === sucursalManuelAcunaId || sucursal._id === sucursalRubenDarioId ? bannerDermastetic : bannerMePiel}
                 alt='banner'
                 width='100%'
                 height='100%' />

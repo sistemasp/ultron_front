@@ -58,6 +58,7 @@ const ModalImprimirReceta = (props) => {
             edad={edad}
             open={open}
             onClose={onClose}
+            sucursal={sucursal}
             onClickImprimir={handleClickImprimir}
             show={show} /> :
           <Backdrop className={classes.backdrop} open={isLoading} >

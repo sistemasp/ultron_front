@@ -186,6 +186,7 @@ export const AgendarConsultaContainer = (props) => {
             open={openModalImprimirConsultas}
             onClose={onCloseImprimirConsulta}
             servicio="CONSULTA"
+            sucursal={sucursal}
             colorBase={colorBase}
             datos={datosImpresion} />
           : ''
