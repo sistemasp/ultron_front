@@ -332,9 +332,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                     <p className={classes.label_title_descripcion}> {`${consultasPrivada.length} CONSULTAS PRIVADAS`}</p>
                   </Grid>
                   <Grid item xs={true} className={classes.label}>
-                    <p className={classes.label_cells_totales}>HORA</p>
-                  </Grid>
-                  <Grid item xs={true} className={classes.label}>
                     <p className={classes.label_cells_totales}>PACIENTE</p>
                   </Grid>
                   <Grid item xs={true} className={classes.label}>
@@ -370,9 +367,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
 
                         return <Grid container>
                           <Grid item xs={true} className={classes.label}>
-                            <p className={classes.label_cells}>{consulta.hora_llegada}</p>
-                          </Grid>
-                          <Grid item xs={true} className={classes.label}>
                             <p className={classes.label_cells}>{`${consulta.paciente.nombres} ${consulta.paciente.apellidos}`}</p>
                           </Grid>
                           <Grid item xs={true} className={classes.label}>
@@ -403,9 +397,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                 <Grid container className={classes.container}>
                   <Grid item xs={12}>
                     <p className={classes.label_title_descripcion}> {`${consultasPrimeraVez.length} CONSULTAS DE PRIMERA VEZ`}</p>
-                  </Grid>
-                  <Grid item xs={true} className={classes.label}>
-                    <p className={classes.label_cells_totales}>HORA</p>
                   </Grid>
                   <Grid item xs={true} className={classes.label}>
                     <p className={classes.label_cells_totales}>PACIENTE</p>
@@ -443,9 +434,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
 
                         return <Grid container>
                           <Grid item xs={true} className={classes.label}>
-                            <p className={classes.label_cells}>{consulta.hora_llegada}</p>
-                          </Grid>
-                          <Grid item xs={true} className={classes.label}>
                             <p className={classes.label_cells}>{`${consulta.paciente.nombres} ${consulta.paciente.apellidos}`}</p>
                           </Grid>
                           <Grid item xs={true} className={classes.label}>
@@ -478,9 +466,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                     <p className={classes.label_title_descripcion}> {`${consultasPrimeraVezPA.length} CONSULTAS DE PRIMERA VEZ PAGO ANTICIPADO`}</p>
                   </Grid>
                   <Grid item xs={true} className={classes.label}>
-                    <p className={classes.label_cells_totales}>HORA</p>
-                  </Grid>
-                  <Grid item xs={true} className={classes.label}>
                     <p className={classes.label_cells_totales}>PACIENTE</p>
                   </Grid>
                   <Grid item xs={true} className={classes.label}>
@@ -497,9 +482,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                     consultasPrimeraVezPA ?
                       consultasPrimeraVezPA.map(consulta => {
                         return <Grid container>
-                          <Grid item xs={true} className={classes.label}>
-                            <p className={classes.label_cells}>{consulta.hora_llegada}</p>
-                          </Grid>
                           <Grid item xs={true} className={classes.label}>
                             <p className={classes.label_cells}>{`${consulta.paciente.nombres} ${consulta.paciente.apellidos}`}</p>
                           </Grid>
@@ -526,9 +508,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                 <Grid container className={classes.container}>
                   <Grid item xs={12}>
                     <p className={classes.label_title_descripcion}> {`${consultasReconsultas.length} RECONSULTAS`}</p>
-                  </Grid>
-                  <Grid item xs={true} className={classes.label}>
-                    <p className={classes.label_cells_totales}>HORA</p>
                   </Grid>
                   <Grid item xs={true} className={classes.label}>
                     <p className={classes.label_cells_totales}>PACIENTE</p>
@@ -565,9 +544,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                         pagoTotal += Number(pagoDermatologo);
                         return <Grid container>
                           <Grid item xs={true} className={classes.label}>
-                            <p className={classes.label_cells}>{consulta.hora_llegada}</p>
-                          </Grid>
-                          <Grid item xs={true} className={classes.label}>
                             <p className={classes.label_cells}>{`${consulta.paciente.nombres} ${consulta.paciente.apellidos}`}</p>
                           </Grid>
                           <Grid item xs={true} className={classes.label}>
@@ -600,9 +576,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                     <p className={classes.label_title_descripcion}> {`${consultasReconsultasPA.length} RECONSULTAS PAGO ANTICIPADO`}</p>
                   </Grid>
                   <Grid item xs={true} className={classes.label}>
-                    <p className={classes.label_cells_totales}>HORA</p>
-                  </Grid>
-                  <Grid item xs={true} className={classes.label}>
                     <p className={classes.label_cells_totales}>PACIENTE</p>
                   </Grid>
                   <Grid item xs={true} className={classes.label}>
@@ -618,9 +591,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                     consultasReconsultasPA ?
                       consultasReconsultasPA.map(consulta => {
                         return <Grid container>
-                          <Grid item xs={true} className={classes.label}>
-                            <p className={classes.label_cells}>{consulta.hora_llegada}</p>
-                          </Grid>
                           <Grid item xs={true} className={classes.label}>
                             <p className={classes.label_cells}>{`${consulta.paciente.nombres} ${consulta.paciente.apellidos}`}</p>
                           </Grid>
@@ -650,9 +620,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                       <p className={classes.label_title_descripcion}> {`${cirugias.length} CIRUGíAS`}</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>HORA</p>
-                    </Grid>
-                    <Grid item xs={true} className={classes.label}>
                       <p className={classes.label_cells_totales}>PACIENTE</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
@@ -680,9 +647,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                           pagoTotal += Number(pagoDermatologo);
                           const date = new Date(cirugia.hora_aplicacion);
                           return <Grid container>
-                            <Grid item xs={true} className={classes.label}>
-                              <p className={classes.label_cells}>{`${addZero(date.getHours())}:${addZero(date.getMinutes())}`}</p>
-                            </Grid>
                             <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells}>{`${cirugia.paciente.nombres} ${cirugia.paciente.apellidos}`}</p>
                             </Grid>
@@ -718,9 +682,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                       <p className={classes.label_title_descripcion}> {`${cirugiasPA.length} CIRUGíAS PAGO ANTICIPADO`}</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>HORA</p>
-                    </Grid>
-                    <Grid item xs={true} className={classes.label}>
                       <p className={classes.label_cells_totales}>PACIENTE</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
@@ -737,9 +698,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                         cirugiasPA.map(cirugia => {
                           const date = new Date(cirugia.hora_aplicacion);
                           return <Grid container>
-                            <Grid item xs={true} className={classes.label}>
-                              <p className={classes.label_cells}>{`${addZero(date.getHours())}:${addZero(date.getMinutes())}`}</p>
-                            </Grid>
                             <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells}>{`${cirugia.paciente.nombres} ${cirugia.paciente.apellidos}`}</p>
                             </Grid>
@@ -764,9 +722,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                   <Grid container className={classes.container}>
                     <Grid item xs={12}>
                       <p className={classes.label_title_descripcion}> {`${esteticas.length} TOXINAS Y RELLENOS`}</p>
-                    </Grid>
-                    <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>HORA</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
                       <p className={classes.label_cells_totales}>PACIENTE</p>
@@ -796,9 +751,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                           pagoTotal += Number(pagoDermatologo);
                           const date = new Date(estetica.hora_aplicacion);
                           return <Grid container>
-                            <Grid item xs={true} className={classes.label}>
-                              <p className={classes.label_cells}>{`${addZero(date.getHours())}:${addZero(date.getMinutes())}`}</p>
-                            </Grid>
                             <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells}>{`${estetica.paciente.nombres} ${estetica.paciente.apellidos}`}</p>
                             </Grid>
@@ -834,9 +786,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                       <p className={classes.label_title_descripcion}> {`${esteticasPA.length} TOXINAS Y RELLENOS PAGO ANTICIPADO`}</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>HORA</p>
-                    </Grid>
-                    <Grid item xs={true} className={classes.label}>
                       <p className={classes.label_cells_totales}>PACIENTE</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
@@ -855,9 +804,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                           pagoTotal += Number(pagoDermatologo);
                           const date = new Date(estetica.hora_aplicacion);
                           return <Grid container>
-                            <Grid item xs={true} className={classes.label}>
-                              <p className={classes.label_cells}>{`${addZero(date.getHours())}:${addZero(date.getMinutes())}`}</p>
-                            </Grid>
                             <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells}>{`${estetica.paciente.nombres} ${estetica.paciente.apellidos}`}</p>
                             </Grid>
@@ -882,9 +828,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                   <Grid container className={classes.container}>
                     <Grid item xs={12}>
                       <p className={classes.label_title_descripcion}> {`${faciales.length} FACIALES`}</p>
-                    </Grid>
-                    <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>HORA</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
                       <p className={classes.label_cells_totales}>TIPO DE CITA</p>
@@ -958,9 +901,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                           }
                           return <Grid container>
                             <Grid item xs={true} className={classes.label}>
-                              <p className={classes.label_cells}>{facial.hora_llegada}</p>
-                            </Grid>
-                            <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells}>{facial.tipo_cita.nombre}</p>
                             </Grid>
                             <Grid item xs={true} >
@@ -998,9 +938,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                       <p className={classes.label_title_descripcion}> {`${facialesPA.length} FACIALES PAGO ANTICIPADO`}</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>HORA</p>
-                    </Grid>
-                    <Grid item xs={true} className={classes.label}>
                       <p className={classes.label_cells_totales}>TIPO DE CITA</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
@@ -1030,9 +967,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                             });
                           });
                           return <Grid container>
-                            <Grid item xs={true} className={classes.label}>
-                              <p className={classes.label_cells}>{facial.hora_llegada}</p>
-                            </Grid>
                             <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells}>{facial.tipo_cita.nombre}</p>
                             </Grid>
@@ -1066,9 +1000,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                       <p className={classes.label_title_descripcion}> {`${dermapens.length} DERMAPENS`}</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>HORA</p>
-                    </Grid>
-                    <Grid item xs={true} className={classes.label}>
                       <p className={classes.label_cells_totales}>TIPO DE CITA</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
@@ -1098,9 +1029,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                           const pagoDermatologo = dermapen.has_descuento_dermatologo ? 0 : Number(dermapen.total_aplicacion) * Number(dermatologo.esquema.porcentaje_dermocosmetica) / 100;
                           pagoTotal += Number(pagoDermatologo);
                           return <Grid container>
-                            <Grid item xs={true} className={classes.label}>
-                              <p className={classes.label_cells}>{dermapen.hora_llegada}</p>
-                            </Grid>
                             <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells}>{dermapen.tipo_cita.nombre}</p>
                             </Grid>
@@ -1139,9 +1067,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                       <p className={classes.label_title_descripcion}> {`${dermapensPA.length} DERMAPENS PAGO ANTICIPADO`}</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>HORA</p>
-                    </Grid>
-                    <Grid item xs={true} className={classes.label}>
                       <p className={classes.label_cells_totales}>TIPO DE CITA</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
@@ -1162,9 +1087,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                           const pagoDermatologo = dermapen.has_descuento_dermatologo ? 0 : Number(dermapen.total_aplicacion) * Number(dermatologo.esquema.porcentaje_dermocosmetica) / 100;
                           pagoTotal += Number(pagoDermatologo);
                           return <Grid container>
-                            <Grid item xs={true} className={classes.label}>
-                              <p className={classes.label_cells}>{dermapen.hora_llegada}</p>
-                            </Grid>
                             <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells}>{dermapen.tipo_cita.nombre}</p>
                             </Grid>
@@ -1192,9 +1114,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                   <Grid container className={classes.container}>
                     <Grid item xs={12} >
                       <p className={classes.label_title_descripcion}> {`${aparatologias.length} APARATOLOGIA`}</p>
-                    </Grid>
-                    <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>HORA</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
                       <p className={classes.label_cells_totales}>TIPO DE CITA</p>
@@ -1245,9 +1164,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                           pagoTotal += Number(pagoDermatologo);
                           return <Grid container>
                             <Grid item xs={true} className={classes.label}>
-                              <p className={classes.label_cells}>{aparatologia.hora_llegada}</p>
-                            </Grid>
-                            <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells}>{aparatologia.tipo_cita.nombre}</p>
                             </Grid>
                             <Grid item xs={true} >
@@ -1285,9 +1201,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                       <p className={classes.label_title_descripcion}> {`${aparatologiasPA.length} APARATOLOGIA PAGO ANTICIPADO`}</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>HORA</p>
-                    </Grid>
-                    <Grid item xs={true} className={classes.label}>
                       <p className={classes.label_cells_totales}>TIPO DE CITA</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
@@ -1319,9 +1232,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                             });
                           });
                           return <Grid container>
-                            <Grid item xs={true} className={classes.label}>
-                              <p className={classes.label_cells}>{aparatologia.hora_llegada}</p>
-                            </Grid>
                             <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells}>{aparatologia.tipo_cita.nombre}</p>
                             </Grid>

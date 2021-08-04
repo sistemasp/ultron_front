@@ -285,9 +285,6 @@ const ModalFormImprimirPagoPatologo = (props) => {
                     <p className={classes.label_title_descripcion}> {`${cirugias.length} BIOPSIAS`}</p>
                   </Grid>
                   <Grid item xs={true} className={classes.label}>
-                    <p className={classes.label_cells_totales}>HORA</p>
-                  </Grid>
-                  <Grid item xs={true} className={classes.label}>
                     <p className={classes.label_cells_totales}>PACIENTE</p>
                   </Grid>
                   <Grid item xs={true} className={classes.label}>
@@ -307,9 +304,6 @@ const ModalFormImprimirPagoPatologo = (props) => {
                         pagoTotal += Number(pagoPatologo);
 
                         return <Grid container>
-                          <Grid item xs={true} className={classes.label}>
-                            <p className={classes.label_cells}>{cirugia.hora_llegada}</p>
-                          </Grid>
                           <Grid item xs={true} className={classes.label}>
                             <p className={classes.label_cells}>{`${cirugia.paciente.nombres} ${cirugia.paciente.apellidos}`}</p>
                           </Grid>
