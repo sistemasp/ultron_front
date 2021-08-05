@@ -49,6 +49,8 @@ const AgregarPagosAnticipados = (props) => {
 
   const classes = myStyles(colorBase)();
 
+  const date = new Date();
+
   const porcetanjeComision = process.env.REACT_APP_COMISION_PAGO_TARJETA;
   const enConsultorioStatusId = process.env.REACT_APP_EN_CONSULTORIO_STATUS_ID;
 
@@ -99,12 +101,14 @@ const AgregarPagosAnticipados = (props) => {
   const [turno, setTurno] = useState({});
   const [openModalPagosMultiservicios, setOpenModalPagosMultiservicios] = useState(false);
   const [pagoAnticipado, setPagoAnticipado] = useState({});
+  const [isHoliDay, setIsHoliDay] = useState(false);
 
   const [values, setValues] = useState({
     porcentaje_descuento_clinica: 0,
     dermatologo: dermatologoDirectoId,
     tipo_cita: directoTipoCitaId,
     frecuencia: frecuenciaPrimeraVezId,
+    servicio: {},
   });
 
   const columns = [
@@ -190,7 +194,7 @@ const AgregarPagosAnticipados = (props) => {
     let total = precio - descuento_clinica;
 
     setValues({
-      ...values,
+      ...datos,
       precio: precio,
       descuento_clinica: descuento_clinica,
       porcentaje_descuento_clinica: datos.porcentaje_descuento_clinica,
@@ -208,10 +212,10 @@ const AgregarPagosAnticipados = (props) => {
       if (tratam.areasSeleccionadas) {
         tratam.areasSeleccionadas.map((item) => {
           const itemPrecio =
-            sucursal === sucursalManuelAcunaId ? item.precio_ma // PRECIO MANUEL ACUÑA
-              : (sucursal === sucursalOcciId ? item.precio_oc // PRECIO OCCIDENTAL
-                : (sucursal === sucursalFedeId ? item.precio_fe // PRECIO FEDERALISMO
-                  : (sucursal === sucursalRubenDarioId ? item.precio_rd // PRECIO RUBEN DARIO
+            sucursal._id === sucursalManuelAcunaId ? item.precio_ma // PRECIO MANUEL ACUÑA
+              : (sucursal._id === sucursalOcciId ? item.precio_oc // PRECIO OCCIDENTAL
+                : (sucursal._id === sucursalFedeId ? item.precio_fe // PRECIO FEDERALISMO
+                  : (sucursal._id === sucursalRubenDarioId ? item.precio_rd // PRECIO RUBEN DARIO
                     : 0))); // ERROR
           precio = Number(precio) + Number(itemPrecio);
           item.precio_real = itemPrecio;
@@ -239,7 +243,7 @@ const AgregarPagosAnticipados = (props) => {
   const handleClickAgregarSesion = async (event, value) => {
     setIsLoading(true);
     value.fecha_pago = new Date();
-    value.sucursal = sucursal;
+    value.sucursal = sucursal._id;
     value.paciente = paciente._id;
     value.tratamientos.map((tratamiento) => {
       tratamiento.areas = [];
@@ -274,20 +278,43 @@ const AgregarPagosAnticipados = (props) => {
 
   }
 
+  const handleChangeHoliDay = (e) => {
+    const datos = {
+      ...values,
+      precio: !isHoliDay ? sucursal.precio_festivo : // DIA FESTIVO
+        date.getDay() === 6 ? (date.getHours() >= 13 ? sucursal.precio_sabado_vespertino : sucursal.precio_sabado_matutino) // SABADO
+          : (date.getHours() >= 14 ? sucursal.precio_vespertino : sucursal.precio_matutino), // L-V
+    }
+    calcularTotal(datos);
+    setIsHoliDay(!isHoliDay);
+  }
+
   const handleChangeServicio = async (event) => {
     const servicio = event.target.value;
-    await loadTratamientos(servicio._id);
     setValues({
       ...values,
       servicio: servicio,
       tratamientos: [],
     });
+    if (servicio._id === servicioConsultaId) {
+      const datos = {
+        ...values,
+        servicio: servicio,
+        precio: isHoliDay ? sucursal.precio_festivo : // Dia Festivo
+          date.getDay() === 6 ? (date.getHours() >= 13 ? sucursal.precio_sabado_vespertino : sucursal.precio_sabado_matutino) // SABADO
+            : (date.getHours() >= 14 ? sucursal.precio_vespertino : sucursal.precio_matutino), // L-V
+      }
+      calcularTotal(datos);
+    } else {
+      await loadTratamientos(servicio._id);
+
+    }
   }
 
   const handleClickPagosMultiservicios = async (event, rowData) => {
     const pagoAnticipado = {
       fecha_pago: "",
-      sucursal: sucursal,
+      sucursal: sucursal._id,
       paciente: paciente,
       dermatologo: sesionesAnticipadas[0].dermatologo,
       tipo_cita: sesionesAnticipadas[0].tipo_cita,
@@ -412,7 +439,7 @@ const AgregarPagosAnticipados = (props) => {
           concepto: `SA: ${sesionAnticipada.numero_sesion}`,
           cantidad: total,
           tipo_entrada: tipoEntrada,
-          sucursal: sucursal,
+          sucursal: sucursal._id,
           forma_pago: newPago.forma_pago,
           pago_anticipado: true,
         }
@@ -446,7 +473,7 @@ const AgregarPagosAnticipados = (props) => {
           concepto: `SA 100%: ${sesionAnticipada.numero_sesion}`,
           cantidad: 0,
           tipo_entrada: tipoEntrada,
-          sucursal: sucursal,
+          sucursal: sucursal._id,
           forma_pago: newPago.forma_pago,
           pago_anticipado: true,
         }
@@ -507,7 +534,7 @@ const AgregarPagosAnticipados = (props) => {
   }
 
   const getTurno = async () => {
-    const response = await findTurnoActualBySucursal(sucursal);
+    const response = await findTurnoActualBySucursal(sucursal._id);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       const corte = response.data;
       setTurno(corte.turno);
@@ -567,7 +594,7 @@ const AgregarPagosAnticipados = (props) => {
             frecuencias={frecuencias}
             totalPagar={totalPagar}
             actions={actions}
-            sucursal={sucursal}
+            sucursal={sucursal._id}
             options={options}
             components={components}
             empleado={empleado}
@@ -584,6 +611,8 @@ const AgregarPagosAnticipados = (props) => {
             onClickCancel={onClose}
             pagoAnticipado={pagoAnticipado}
             openModalPagosMultiservicios={openModalPagosMultiservicios}
+            isHoliDay={isHoliDay}
+            onChangeHoliDay={(e) => handleChangeHoliDay(e)}
             onChangeServicio={(e) => handleChangeServicio(e)}
             onChangeTratamientos={(e) => handleChangeTratamientos(e)}
             onChangeAreas={handleChangeAreas}

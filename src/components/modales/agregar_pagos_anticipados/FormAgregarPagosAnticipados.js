@@ -29,6 +29,8 @@ const FormAgregarPagosAnticipados = (props) => {
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
 
+  const consultaServicioId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
+
   const {
     values,
     pagoAnticipado,
@@ -60,6 +62,8 @@ const FormAgregarPagosAnticipados = (props) => {
     onChangeDigitos,
     onChangePagoAnticipado,
     onChangDescuentoDermatologo,
+    isHoliDay,
+    onChangeHoliDay,
     frecuencias,
     onClickAgregarSesion,
     open,
@@ -174,36 +178,50 @@ const FormAgregarPagosAnticipados = (props) => {
                   </Select>
                 </FormControl>
               </Grid>
-
               {
-                tratamientos.length > 0 ?
-                  <Grid item xs={3}>
-                    <Multiselect
-                      options={tratamientos} // Options to display in the dropdown
-                      displayValue="nombre" // Property name to display in the dropdown options
-                      onSelect={(e) => onChangeTratamientos(e)} // Function will trigger on select event
-                      onRemove={(e) => onChangeTratamientos(e)} // Function will trigger on remove event
-                      placeholder={`TRATAMIENTOS`}
-                      selectedValues={values.tratamientos} // Preselected value to persist in dropdown
-                    />
-                  </Grid> : ''
-              }
-              {
-                values.tratamientos ?
-                  values.tratamientos.map(tratamientoValue => {
-                    return <Grid item xs={3} sm={3}>
-                      <Multiselect
-                        options={tratamientoValue.areas} // Options to display in the dropdown
-                        displayValue="nombre" // Property name to display in the dropdown options
-                        onSelect={(e) => onChangeAreas(e, tratamientoValue)} // Function will trigger on select event
-                        onRemove={(e) => onChangeAreas(e, tratamientoValue)} // Function will trigger on remove event
-                        placeholder={`ÁREAS ${tratamientoValue.nombre}`}
-                        selectedValues={tratamientoValue.areasSeleccionadas} // Preselected value to persist in dropdown
+                values.servicio._id === consultaServicioId ?
+                  <Fragment>
+                    <Grid item xs={12} sm={2} className={classes.grid_center}>
+                      <CheckCustom
+                        checked={isHoliDay}
+                        onChange={onChangeHoliDay}
+                        name="checkedF"
+                        label="ES FESTIVO"
                       />
                     </Grid>
-                  }) : ''
+                  </Fragment>
+                  :
+                  <Fragment>
+                    {
+                      tratamientos.length > 0 ?
+                        <Grid item xs={3}>
+                          <Multiselect
+                            options={tratamientos} // Options to display in the dropdown
+                            displayValue="nombre" // Property name to display in the dropdown options
+                            onSelect={(e) => onChangeTratamientos(e)} // Function will trigger on select event
+                            onRemove={(e) => onChangeTratamientos(e)} // Function will trigger on remove event
+                            placeholder={`TRATAMIENTOS`}
+                            selectedValues={values.tratamientos} // Preselected value to persist in dropdown
+                          />
+                        </Grid> : ''
+                    }
+                    {
+                      values.tratamientos ?
+                        values.tratamientos.map(tratamientoValue => {
+                          return <Grid item xs={3} sm={3}>
+                            <Multiselect
+                              options={tratamientoValue.areas} // Options to display in the dropdown
+                              displayValue="nombre" // Property name to display in the dropdown options
+                              onSelect={(e) => onChangeAreas(e, tratamientoValue)} // Function will trigger on select event
+                              onRemove={(e) => onChangeAreas(e, tratamientoValue)} // Function will trigger on remove event
+                              placeholder={`ÁREAS ${tratamientoValue.nombre}`}
+                              selectedValues={tratamientoValue.areasSeleccionadas} // Preselected value to persist in dropdown
+                            />
+                          </Grid>
+                        }) : ''
+                    }
+                  </Fragment>
               }
-
 
               <Grid item xs={12} />
               <Grid item xs={12} sm={3} className={classes.grid_center}>

@@ -263,34 +263,7 @@ export const AgendarConsultaContainer = (props) => {
               </Select>
             </FormControl>
           </Grid>
-{/*
-          <Grid item xs={12} sm={2}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <SelectSearch
-              className="select-search select-search--multiple"
-                //labelId="simple-select-outlined-dermatologo"
-                id="simple-select-outlined-dermatologo"
-                //value={values.dermatologo}
-                options={optionSelect2(dermatologos)}
-                search
-                //onChange={onChangeDermatologos}
-                placeholder="DERMATÓLOGO (A)" />
-            </FormControl>
-          </Grid>
-
-          <Grid item xs={12} sm={2}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <Select
-                labelId="simple-select-outlined-dermatologo"
-                //id="simple-select-outlined-dermatologo"
-                //value={values.dermatologo}
-                //onChange={onChangeDermatologos}
-                options={optionSelect(dermatologos)}
-                placeholder="DERMATÓLOGO (A)" />
-            </FormControl>
-          </Grid> */
-
-}
+          
           <Grid item xs={12} sm={2}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="simple-select-outlined-tipo-cita">MEDIO</InputLabel>
@@ -348,8 +321,8 @@ export const AgendarConsultaContainer = (props) => {
               onChange={onChangeObservaciones}
               variant="outlined" />
           </Grid>
-          { sucursal._id === process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID || 
-          sucursal._id === process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID ?
+          {sucursal._id === process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID ||
+            sucursal._id === process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID ?
             <Fragment>
               <Grid item xs={12} sm={2}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
