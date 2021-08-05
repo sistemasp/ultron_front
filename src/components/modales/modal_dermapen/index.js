@@ -340,6 +340,7 @@ const ModalDermapen = (props) => {
     setValues({
       ...values,
       precio: precio,
+      total: precio,
       total_aplicacion: total_aplicacion,
     })
 
