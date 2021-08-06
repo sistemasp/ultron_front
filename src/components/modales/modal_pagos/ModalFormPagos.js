@@ -83,6 +83,7 @@ const ModalFormPagos = (props) => {
             onClose={onCloseBuscarRazonSocial}
             pago={pago}
             colorBase={colorBase}
+            sucursal={sucursal}
             servicio={servicio}
           /> : ''
       }

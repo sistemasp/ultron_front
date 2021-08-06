@@ -4,6 +4,7 @@ import { showAllRazonSocials } from '../../../services/razones_sociales';
 import { Backdrop, CircularProgress, makeStyles } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/Check';
 import MuiAlert from '@material-ui/lab/Alert';
+import PrintIcon from '@material-ui/icons/Print';
 
 const Alert = (props) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -39,14 +40,19 @@ const ModalBuscarRazonSocial = (props) => {
   const [factura, setFactura] = useState();
   const [openModalUsoCfdi, setOpenModalUsoCfdi] = useState(false);
   const [openNuevaRazonSocial, setOpenNuevaRazonSocial] = useState(false);
+  const [datosImpresion, setDatosImpresion] = useState();
+  const [openModalImprimirCita, setOpenModalImprimirCita] = useState(false);
 
   const {
     open,
     onClose,
     pago,
     servicio,
+    sucursal,
     colorBase,
   } = props;
+
+  console.log("KAOZ", sucursal);
 
   const columns = [
     { title: 'NOMBRE COMPLETO', field: 'nombre_completo' },
@@ -82,20 +88,34 @@ const ModalBuscarRazonSocial = (props) => {
     setOpenModalUsoCfdi(true);
   }
 
+  const handleCloseImprimirConsulta = (event, rowData) => {
+    setOpenModalImprimirCita(false);
+  }
+
+  const handlePrint = async (event, rowData) => {
+    setDatosImpresion(rowData);
+    setOpenModalImprimirCita(true);
+  }
+
   const actions = [
     {
       icon: CheckIcon,
       tooltip: 'SELECCIONAR',
       onClick: hanldeSelectRazonSocial
-    }
+    },
+    {
+      icon: PrintIcon,
+      tooltip: 'IMPRIMIR',
+      onClick: handlePrint
+    }, ,
   ];
 
   const loadRazonSocial = async () => {
     const response = await showAllRazonSocials();
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       await response.data.forEach(item => {
-				item.domicilio_completo = `${item.domicilio} #${item.numero_exterior} ${item.numero_interior ? '- ' + item.numero_interior : '' }`;
-			});
+        item.domicilio_completo = `${item.domicilio} #${item.numero_exterior} ${item.numero_interior ? '- ' + item.numero_interior : ''}`;
+      });
       setRazonSociales(response.data);
     }
     setIsLoading(false);
@@ -137,10 +157,14 @@ const ModalBuscarRazonSocial = (props) => {
             options={options}
             factura={factura}
             servicio={servicio}
+            sucursal={sucursal}
             openModalUsoCfdi={openModalUsoCfdi}
+            datosImpresion={datosImpresion}
+            openModalImprimirCita={openModalImprimirCita}
             onCloseUsoCfdi={handleCloseUsoCfdi}
             handleOpenNuevaRazonSocial={handleOpenNuevaRazonSocial}
             handleCloseNuevaRazonSocial={handleCloseNuevaRazonSocial}
+            handleCloseImprimirConsulta={handleCloseImprimirConsulta}
             openNuevaRazonSocial={openNuevaRazonSocial}
             pago={pago}
             colorBase={colorBase}
