@@ -30,6 +30,7 @@ import { createSesionAnticipada, deleteSesionAnticipada, showAllSesionesAnticipa
 import { findEmployeesByRolIdAvailable } from '../../../services/empleados';
 import SesionesAnticipadas from '../pagos_anticipados/sesiones_anticipadas/SesionesAnticipadas';
 import { createPagoAnticipado, deletePagoAnticipado, updatePagoAnticipado } from '../../../services/pagos_anticipados';
+import { createFactura } from '../../../services/facturas';
 
 const AgregarPagosAnticipados = (props) => {
 
@@ -313,7 +314,7 @@ const AgregarPagosAnticipados = (props) => {
 
   const handleClickPagosMultiservicios = async (event, rowData) => {
     const pagoAnticipado = {
-      fecha_pago: "",
+      fecha_pago: new Date(),
       sucursal: sucursal._id,
       paciente: paciente,
       dermatologo: sesionesAnticipadas[0].dermatologo,
@@ -371,136 +372,277 @@ const AgregarPagosAnticipados = (props) => {
     servicio.pagado = servicio.pagos.length > 0;
     servicio.fecha_pago = new Date();
     let ind = 0;
-    servicio.sesiones_anticipadas.map(async (sesionAnticipada, index) => {
-      sesionAnticipada.numero_sesion = index + 1;
-      sesionAnticipada.pagado = true;
-      let sesionTotal = Number(sesionAnticipada.total);
-      const pagos = [];
+    console.log("KAOZ", servicio);
 
-      let tipoEntrada;
-      switch (sesionAnticipada.servicio) {
-        case servicioFacialId:
-          tipoEntrada = tipoEntradaFacialesId;
-          break;
-        case servicioDermapenlId:
-          tipoEntrada = tipoEntradaDermapenId;
-          break;
-        case servicioLaserId:
-          tipoEntrada = tipoEntradaLaserId;
-          break;
-        case servicioAparatologiaId:
-          tipoEntrada = tipoEntradaAparatologiaId;
-          break;
-        case servicioConsultaId:
-          tipoEntrada = tipoEntradaConsultaId;
-          break;
-        case servicioCirugiaId:
-          tipoEntrada = tipoEntradaCirugiaId;
-          break;
-        case servicioBiopsiaId:
-          tipoEntrada = tipoEntradaOtrosId;
-          break;
-        case servicioEsteticaId:
-          tipoEntrada = tipoEntradaEsteticaId;
-          break
-        default:
-          tipoEntrada = tipoEntradaOtrosId;
-          break;
-      }
+    if (servicio.factura) {
 
-      servicio.pagos[ind].total = Number(servicio.pagos[ind].total);
-      while (sesionTotal > 0) {
-        let total = 0;
-        if (servicio.pagos[ind].total > sesionTotal) {
-          total = sesionTotal;
-          servicio.pagos[ind].total -= sesionTotal;
-          sesionTotal = 0;
-        } else if (servicio.pagos[ind].total < sesionTotal) {
-          total = servicio.pagos[ind].total;
-          sesionTotal -= servicio.pagos[ind].total;
-          servicio.pagos[ind].total = 0;
-        } else {
-          total = sesionTotal;
-          sesionTotal = 0;
-          servicio.pagos[ind].total = 0;
-        }
+    console.log("KAOZ", "paso 1");
+      const response = await createFactura(servicio.factura);
+    console.log("KAOZ", "paso2", response);
 
-        const newPago = {
-          ...servicio.pagos[ind],
-          total: total
-        }
+      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+        servicio.factura = response.data;
+        console.log("KAOZ", servicio);
 
-        delete newPago._id;
+        servicio.sesiones_anticipadas.map(async (sesionAnticipada, index) => {
+          sesionAnticipada.numero_sesion = index + 1;
+          sesionAnticipada.pagado = true;
+          sesionAnticipada.factura = servicio.factura;
+          let sesionTotal = Number(sesionAnticipada.total);
+          const pagos = [];
 
-        const entrada = {
-          create_date: new Date(),
-          hora_aplicacion: new Date(),
-          recepcionista: empleado._id,
-          concepto: `SA: ${sesionAnticipada.numero_sesion}`,
-          cantidad: total,
-          tipo_entrada: tipoEntrada,
-          sucursal: sucursal._id,
-          forma_pago: newPago.forma_pago,
-          pago_anticipado: true,
-        }
-
-        const responsEntrada = await createEntrada(entrada);
-
-        if (`${responsEntrada.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-          const resEntrada = responsEntrada.data;
-          newPago.entrada = resEntrada._id;
-          const response = await createPago(newPago, token);
-          if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-            pagos.push(response.data);
+          let tipoEntrada;
+          switch (sesionAnticipada.servicio) {
+            case servicioFacialId:
+              tipoEntrada = tipoEntradaFacialesId;
+              break;
+            case servicioDermapenlId:
+              tipoEntrada = tipoEntradaDermapenId;
+              break;
+            case servicioLaserId:
+              tipoEntrada = tipoEntradaLaserId;
+              break;
+            case servicioAparatologiaId:
+              tipoEntrada = tipoEntradaAparatologiaId;
+              break;
+            case servicioConsultaId:
+              tipoEntrada = tipoEntradaConsultaId;
+              break;
+            case servicioCirugiaId:
+              tipoEntrada = tipoEntradaCirugiaId;
+              break;
+            case servicioBiopsiaId:
+              tipoEntrada = tipoEntradaOtrosId;
+              break;
+            case servicioEsteticaId:
+              tipoEntrada = tipoEntradaEsteticaId;
+              break
+            default:
+              tipoEntrada = tipoEntradaOtrosId;
+              break;
           }
-        }
 
-        if (servicio.pagos[ind] && servicio.pagos[ind].total === 0) { ind++ }
-      }
+          servicio.pagos[ind].total = Number(servicio.pagos[ind].total);
+          while (sesionTotal > 0) {
+            let total = 0;
+            if (servicio.pagos[ind].total > sesionTotal) {
+              total = sesionTotal;
+              servicio.pagos[ind].total -= sesionTotal;
+              sesionTotal = 0;
+            } else if (servicio.pagos[ind].total < sesionTotal) {
+              total = servicio.pagos[ind].total;
+              sesionTotal -= servicio.pagos[ind].total;
+              servicio.pagos[ind].total = 0;
+            } else {
+              total = sesionTotal;
+              sesionTotal = 0;
+              servicio.pagos[ind].total = 0;
+            }
 
-      if (sesionAnticipada.porcentaje_descuento_clinica === '100') {
-        const newPago = {
-          ...servicio.pagos[ind],
-          total: 0
-        }
+            const newPago = {
+              ...servicio.pagos[ind],
+              total: total
+            }
 
-        delete newPago._id;
+            delete newPago._id;
 
-        const entrada = {
-          create_date: new Date(),
-          hora_aplicacion: new Date(),
-          recepcionista: empleado._id,
-          concepto: `SA 100%: ${sesionAnticipada.numero_sesion}`,
-          cantidad: 0,
-          tipo_entrada: tipoEntrada,
-          sucursal: sucursal._id,
-          forma_pago: newPago.forma_pago,
-          pago_anticipado: true,
-        }
+            const entrada = {
+              create_date: new Date(),
+              hora_aplicacion: new Date(),
+              recepcionista: empleado._id,
+              concepto: `SA: ${sesionAnticipada.numero_sesion}`,
+              cantidad: total,
+              tipo_entrada: tipoEntrada,
+              sucursal: sucursal._id,
+              forma_pago: newPago.forma_pago,
+              pago_anticipado: true,
+            }
 
-        const responsEntrada = await createEntrada(entrada);
+            const responsEntrada = await createEntrada(entrada);
 
-        if (`${responsEntrada.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-          const resEntrada = responsEntrada.data;
-          newPago.entrada = resEntrada._id;
-          const response = await createPago(newPago, token);
-          if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-            pagos.push(response.data);
+            if (`${responsEntrada.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+              const resEntrada = responsEntrada.data;
+              newPago.entrada = resEntrada._id;
+              const response = await createPago(newPago, token);
+              if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+                pagos.push(response.data);
+              }
+            }
+
+            if (servicio.pagos[ind] && servicio.pagos[ind].total === 0) { ind++ }
           }
-        }
 
+          if (sesionAnticipada.porcentaje_descuento_clinica === '100') {
+            const newPago = {
+              ...servicio.pagos[ind],
+              total: 0
+            }
+
+            delete newPago._id;
+
+            const entrada = {
+              create_date: new Date(),
+              hora_aplicacion: new Date(),
+              recepcionista: empleado._id,
+              concepto: `SA 100%: ${sesionAnticipada.numero_sesion}`,
+              cantidad: 0,
+              tipo_entrada: tipoEntrada,
+              sucursal: sucursal._id,
+              forma_pago: newPago.forma_pago,
+              pago_anticipado: true,
+            }
+
+            const responsEntrada = await createEntrada(entrada);
+
+            if (`${responsEntrada.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+              const resEntrada = responsEntrada.data;
+              newPago.entrada = resEntrada._id;
+              const response = await createPago(newPago, token);
+              if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+                pagos.push(response.data);
+              }
+            }
+
+          }
+
+          sesionAnticipada.pagos = pagos;
+
+          await updateSesionAnticipada(sesionAnticipada._id, sesionAnticipada, token);
+        });
+        await updatePagoAnticipado(servicio._id, servicio, token);
+        await loadSesionesAnticipadas();
 
       }
+    } else {
+      servicio.sesiones_anticipadas.map(async (sesionAnticipada, index) => {
+        sesionAnticipada.numero_sesion = index + 1;
+        sesionAnticipada.pagado = true;
+        let sesionTotal = Number(sesionAnticipada.total);
+        const pagos = [];
 
-      sesionAnticipada.pagos = pagos;
+        let tipoEntrada;
+        switch (sesionAnticipada.servicio) {
+          case servicioFacialId:
+            tipoEntrada = tipoEntradaFacialesId;
+            break;
+          case servicioDermapenlId:
+            tipoEntrada = tipoEntradaDermapenId;
+            break;
+          case servicioLaserId:
+            tipoEntrada = tipoEntradaLaserId;
+            break;
+          case servicioAparatologiaId:
+            tipoEntrada = tipoEntradaAparatologiaId;
+            break;
+          case servicioConsultaId:
+            tipoEntrada = tipoEntradaConsultaId;
+            break;
+          case servicioCirugiaId:
+            tipoEntrada = tipoEntradaCirugiaId;
+            break;
+          case servicioBiopsiaId:
+            tipoEntrada = tipoEntradaOtrosId;
+            break;
+          case servicioEsteticaId:
+            tipoEntrada = tipoEntradaEsteticaId;
+            break
+          default:
+            tipoEntrada = tipoEntradaOtrosId;
+            break;
+        }
 
+        servicio.pagos[ind].total = Number(servicio.pagos[ind].total);
+        while (sesionTotal > 0) {
+          let total = 0;
+          if (servicio.pagos[ind].total > sesionTotal) {
+            total = sesionTotal;
+            servicio.pagos[ind].total -= sesionTotal;
+            sesionTotal = 0;
+          } else if (servicio.pagos[ind].total < sesionTotal) {
+            total = servicio.pagos[ind].total;
+            sesionTotal -= servicio.pagos[ind].total;
+            servicio.pagos[ind].total = 0;
+          } else {
+            total = sesionTotal;
+            sesionTotal = 0;
+            servicio.pagos[ind].total = 0;
+          }
 
+          const newPago = {
+            ...servicio.pagos[ind],
+            total: total
+          }
 
-      await updateSesionAnticipada(sesionAnticipada._id, sesionAnticipada, token);
-    });
+          delete newPago._id;
 
-    await updatePagoAnticipado(servicio._id, servicio, token);
-    await loadSesionesAnticipadas();
+          const entrada = {
+            create_date: new Date(),
+            hora_aplicacion: new Date(),
+            recepcionista: empleado._id,
+            concepto: `SA: ${sesionAnticipada.numero_sesion}`,
+            cantidad: total,
+            tipo_entrada: tipoEntrada,
+            sucursal: sucursal._id,
+            forma_pago: newPago.forma_pago,
+            pago_anticipado: true,
+          }
+
+          const responsEntrada = await createEntrada(entrada);
+
+          if (`${responsEntrada.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+            const resEntrada = responsEntrada.data;
+            newPago.entrada = resEntrada._id;
+            const response = await createPago(newPago, token);
+            if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+              pagos.push(response.data);
+            }
+          }
+
+          if (servicio.pagos[ind] && servicio.pagos[ind].total === 0) { ind++ }
+        }
+
+        if (sesionAnticipada.porcentaje_descuento_clinica === '100') {
+          const newPago = {
+            ...servicio.pagos[ind],
+            total: 0
+          }
+
+          delete newPago._id;
+
+          const entrada = {
+            create_date: new Date(),
+            hora_aplicacion: new Date(),
+            recepcionista: empleado._id,
+            concepto: `SA 100%: ${sesionAnticipada.numero_sesion}`,
+            cantidad: 0,
+            tipo_entrada: tipoEntrada,
+            sucursal: sucursal._id,
+            forma_pago: newPago.forma_pago,
+            pago_anticipado: true,
+          }
+
+          const responsEntrada = await createEntrada(entrada);
+
+          if (`${responsEntrada.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+            const resEntrada = responsEntrada.data;
+            newPago.entrada = resEntrada._id;
+            const response = await createPago(newPago, token);
+            if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+              pagos.push(response.data);
+            }
+          }
+
+        }
+
+        sesionAnticipada.pagos = pagos;
+
+        await updateSesionAnticipada(sesionAnticipada._id, sesionAnticipada, token);
+      });
+      await updatePagoAnticipado(servicio._id, servicio, token);
+      await loadSesionesAnticipadas();
+    }
+
+    console.log("KAOZ", servicio);
     setOpenModalPagosMultiservicios(false);
     onClickGuardar();
   }

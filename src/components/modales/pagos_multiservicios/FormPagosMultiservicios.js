@@ -10,6 +10,7 @@ import ModalBuscarRazonSocial from '../modal_buscar_razon_social';
 import { toFormatterCurrency } from '../../../utils/utils';
 import myStyles from '../../../css';
 import PagoMultiservicio from '../pago_multiservicios';
+import ImprimirDatosFacturacion from '../imprimir/datos_facturacion';
 
 function getModalStyle() {
   const top = 50;
@@ -38,10 +39,14 @@ const FormPagosMultiservicios = (props) => {
     open,
     columns,
     options,
-    openModalPago,  
+    openModalPago,
     onClickNewPago,
     onClickCancelPago,
     loadPagos,
+    datosImpresion,
+    handlePrint,
+    openModalImprimirDatosFacturacion,
+    handleCloseImprimirDatosFacturacion,
     pagoAnticipado,
     empleado,
     sucursal,
@@ -57,7 +62,7 @@ const FormPagosMultiservicios = (props) => {
   } = props;
 
   const classes = myStyles(colorBase)();
-  
+
   return (
     <div>
       {
@@ -85,6 +90,15 @@ const FormPagosMultiservicios = (props) => {
             servicio={pagoAnticipado}
           /> : ''
       }
+      {
+        openModalImprimirDatosFacturacion ?
+          <ImprimirDatosFacturacion
+            open={openModalImprimirDatosFacturacion}
+            onClose={handleCloseImprimirDatosFacturacion}
+            datos={datosImpresion}
+            colorBase={colorBase}
+            sucursal={sucursal} /> : ''
+      }
       <Modal
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
@@ -103,13 +117,25 @@ const FormPagosMultiservicios = (props) => {
 
             <Grid item xs={true} sm={true} className={classes.grid_center}>
               <CheckCustom
-                checked={pagoAnticipado.factura}
+                checked={pagoAnticipado.isFactura}
                 onChange={onChangeFactura}
-                //disabled={servicio.factura}
+                disabled={pagoAnticipado.factura}
                 name="checkedF"
                 label="REQUIERE FACTURA"
               />
             </Grid>
+            {
+              pagoAnticipado.factura || values.isFactura ?
+                <Grid item xs={true} sm={true}>
+                  <ButtonCustom
+                    className={classes.button}
+                    color="primary"
+                    variant="contained"
+                    onClick={(event) => handlePrint(event, pagoAnticipado)}
+                    text='IMPRIMIR DATOS' />
+                </Grid>
+                : ''
+            }
           </Grid>
           <TableComponent
             titulo={titulo}

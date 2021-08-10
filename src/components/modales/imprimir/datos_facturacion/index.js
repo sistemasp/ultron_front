@@ -16,9 +16,9 @@ const ImprimirDatosFacturacion = (props) => {
 
   datos.domicilio_completo = `${datos.factura.razon_social.domicilio} #${datos.factura.razon_social.numero_exterior} ${datos.factura.razon_social.numero_interior ? '- ' + datos.factura.razon_social.numero_interior : ''}`;
   datos.uso_cfdi = `${datos.factura.uso_cfdi.clave}: ${datos.factura.uso_cfdi.descripcion}`;
+  datos.paciente_nombre = datos.paciente_nombre ? datos.paciente_nombre : `${datos.paciente.nombres} ${datos.paciente.apellidos}`;
 
   const classes = myStyles(colorBase)();
-
 
   const [show, setShow] = useState(true);
 

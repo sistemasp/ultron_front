@@ -48,7 +48,7 @@ const ModalFormUsoCfdi = (props) => {
                 value={values.uso_cfdi}
                 onChange={onChangeUsoCfdi}
                 label="USO CFDI" >
-                {usoCfdis.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.clave} - {item.descripcion}</MenuItem>)}
+                {usoCfdis.sort().map((item, index) => <MenuItem key={index} value={item}>{item.clave} - {item.descripcion}</MenuItem>)}
               </Select>
             </FormControl>
           </Grid>

@@ -50,11 +50,14 @@ const PagosMultiservicios = (props) => {
   const [openModalPago, setOpenModalPago] = useState(false);
   const [openModalFactura, setOpenModalFactura] = useState(false);
   const [restante, setRestante] = useState(0);
+  const [datosImpresion, setDatosImpresion] = useState();
+  const [openModalImprimirDatosFacturacion, setOpenModalImprimirDatosFacturacion] = useState(false);
   const [values, setValues] = useState({
     cantidad: 0,
     porcentaje_descuento_clinica: 0,
     descuento_clinica: 0,
     total: pagoAnticipado.total,
+    isFactura: false,
   });
 
   const handleOnClickEditarPago = (event, rowData) => {
@@ -63,8 +66,14 @@ const PagosMultiservicios = (props) => {
   }
 
   const handleChangeFactura = () => {
-    pagoAnticipado.factura = !pagoAnticipado.factura;
-    setOpenModalFactura(pagoAnticipado.factura);
+    const isFactura = !values.isFactura;
+
+    pagoAnticipado.isFactura = isFactura;    
+    setValues({
+      ...values,
+      isFactura: isFactura,
+    });
+    setOpenModalFactura(isFactura);
   }
 
   const columns = [
@@ -100,7 +109,14 @@ const PagosMultiservicios = (props) => {
     }
   ];
 
-  const handleCloseBuscarRazonSocial = (val) => {
+  const handleCloseBuscarRazonSocial = (val, datosFactura) => {
+    pagoAnticipado.isFactura = val;
+    pagoAnticipado.factura = datosFactura;
+    setValues({
+      ...values,
+      isFactura: val,
+    });
+    // TODO: CREATE FACTURA
     setOpenModalFactura(false);
   }
 
@@ -136,7 +152,15 @@ const PagosMultiservicios = (props) => {
     }
     setIsLoading(false);
   }
+
+  const handleCloseImprimirDatosFacturacion = (event, rowData) => {
+    setOpenModalImprimirDatosFacturacion(false);
+  }
   
+  const handlePrint = async (event, rowData) => {
+    setDatosImpresion(rowData);
+    setOpenModalImprimirDatosFacturacion(true);
+  }
 
   const loadAll = async () => {
     setIsLoading(true);
@@ -180,6 +204,10 @@ const PagosMultiservicios = (props) => {
             restante={restante}
             tipoServicioId={tipoServicioId}
             colorBase={colorBase}
+            datosImpresion={datosImpresion}
+            openModalImprimirDatosFacturacion={openModalImprimirDatosFacturacion}
+            handleCloseImprimirDatosFacturacion={handleCloseImprimirDatosFacturacion}
+            handlePrint={handlePrint}
             values={values} />
 
           : <Backdrop className={classes.backdrop} open={isLoading} >

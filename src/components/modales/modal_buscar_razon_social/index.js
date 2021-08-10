@@ -76,11 +76,11 @@ const ModalBuscarRazonSocial = (props) => {
 
   const hanldeSelectRazonSocial = (event, rowData) => {
     const factura = {
-      paciente: servicio.paciente._id,
-      razon_social: rowData._id,
+      paciente: servicio.paciente,
+      razon_social: rowData,
       sucursal: servicio.sucursal,
-      tipo_servicio: servicio.servicio._id,
-      servicio: servicio._id,
+      tipo_servicio: servicio.servicio,
+      servicio: servicio,
     }
     setFactura(factura);
     setOpenModalUsoCfdi(true);
@@ -101,11 +101,6 @@ const ModalBuscarRazonSocial = (props) => {
       tooltip: 'SELECCIONAR',
       onClick: hanldeSelectRazonSocial
     },
-    {
-      icon: PrintIcon,
-      tooltip: 'IMPRIMIR',
-      onClick: handlePrint
-    }, ,
   ];
 
   const loadRazonSocial = async () => {

@@ -78,12 +78,12 @@ const ReportesDetallesGeneral = (props) => {
 	const columns = [
 		{ title: 'FECHA', field: 'fecha_show' },
 		{ title: 'SUCURSAL', field: 'sucursal.nombre' },
-		{ title: 'TURNO', field: 'turno' },
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
 		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
 		{ title: 'HORA SALIDA', field: 'hora_salida' },
 		{ title: 'RECEPCIONISTA', field: 'quien_agenda.nombre' },
+		{ title: 'TURNO', field: 'turno' },
 		{ title: 'FOLIO', field: 'consecutivo' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
