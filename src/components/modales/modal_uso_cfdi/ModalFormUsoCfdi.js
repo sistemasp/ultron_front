@@ -55,7 +55,7 @@ const ModalFormUsoCfdi = (props) => {
           <Grid container>
             <Grid item xs={6}>
               <ButtonCustom
-                className={classes.button}
+                className={classes.buttonCancel}
                 color="secondary"
                 variant="contained"
                 onClick={onClose}

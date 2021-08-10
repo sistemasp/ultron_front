@@ -7,33 +7,45 @@ import { Paper, Button } from '@material-ui/core';
 import TableComponent from '../../../../../components/table/TableComponent';
 import { ButtonCustom } from '../../../../../components/basic/ButtonCustom';
 import myStyles from '../../../../../css';
+import ImprimirDatosFacturacion from '../../../../../components/modales/imprimir/datos_facturacion';
 
 export const ReportesFacturasContainer = (props) => {
 
-    const {
-        onChangeStartDate,
+	const {
+		onChangeStartDate,
 		onChangeEndDate,
 		startDate,
 		endDate,
 		onClickReportes,
 		colorBase,
-        // TABLE DATES PROPERTIES
-        titulo,
-        columns,
-        facturas,
-        actions,
-        options,
-    } = props;
+		// TABLE DATES PROPERTIES
+		titulo,
+		columns,
+		facturas,
+		actions,
+		options,
+		datosImpresion,
+		openModalImprimirDatosFacturacion,
+		handleCloseImprimirDatosFacturacion,
+	} = props;
 
 	const classes = myStyles(colorBase)();
-	
-    return (
-        <Fragment>
-            <Paper>
+
+	return (
+		<Fragment>
+			{
+				openModalImprimirDatosFacturacion ?
+					<ImprimirDatosFacturacion
+						open={openModalImprimirDatosFacturacion}
+						onClose={handleCloseImprimirDatosFacturacion}
+						datos={datosImpresion}
+						colorBase={colorBase} /> : ''
+			}
+			<Paper>
 				<Grid container spacing={3} justify="center">
-                    <Grid item xs={12} sm={2}>
+					<Grid item xs={12} sm={2}>
 						<MuiPickersUtilsProvider utils={DateFnsUtils}>
-							<Grid 
+							<Grid
 								container
 								justify="center"
 								alignItems="center" >
@@ -56,7 +68,7 @@ export const ReportesFacturasContainer = (props) => {
 					</Grid>
 					<Grid item xs={12} sm={2}>
 						<MuiPickersUtilsProvider utils={DateFnsUtils}>
-							<Grid 
+							<Grid
 								container
 								justify="center"
 								alignItems="center" >
@@ -78,23 +90,23 @@ export const ReportesFacturasContainer = (props) => {
 						</MuiPickersUtilsProvider>
 					</Grid>
 					<Grid item xs={12} sm={2}>
-                        <ButtonCustom
-						className={classes.button}
-                            variant="contained"
-                            color="primary"
-                            onClick={() => onClickReportes()} 
+						<ButtonCustom
+							className={classes.button}
+							variant="contained"
+							color="primary"
+							onClick={() => onClickReportes()}
 							text="OBTENER DATOS" />
-                    </Grid>
+					</Grid>
 				</Grid>
-            </Paper>
+			</Paper>
 
-            <TableComponent
-                titulo={titulo}
-                columns={columns}
-                data={facturas}
-                actions={actions}
-                options={options} />
+			<TableComponent
+				titulo={titulo}
+				columns={columns}
+				data={facturas}
+				actions={actions}
+				options={options} />
 
-        </Fragment>
-    );
+		</Fragment>
+	);
 }

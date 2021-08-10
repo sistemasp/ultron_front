@@ -31,6 +31,7 @@ import FaceIcon from '@material-ui/icons/Face';
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import { findProductoByServicio } from "../../../services/productos";
 import { findEmployeesByRolIdAvailable } from "../../../services/empleados";
+import { createFactura } from "../../../services/facturas";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -484,8 +485,24 @@ const AgendarConsulta = (props) => {
 
 	const handleGuardarModalPagos = async (servicio) => {
 		servicio.pagado = servicio.pagos.length > 0;
-		await updateConsult(servicio._id, servicio, empleado.access_token);
-		await loadConsultas(new Date(servicio.fecha_hora));
+
+		if (servicio.factura) {
+			if (servicio.factura._id) {
+				await updateConsult(servicio._id, servicio, empleado.access_token);
+				await loadConsultas(new Date(servicio.fecha_hora));
+			} else {
+				const response = await createFactura(servicio.factura);
+				if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+					servicio.factura = response.data;
+					await updateConsult(servicio._id, servicio, empleado.access_token);
+					await loadConsultas(new Date(servicio.fecha_hora));
+				}
+			}
+		} else {
+			await updateConsult(servicio._id, servicio, empleado.access_token);
+			await loadConsultas(new Date(servicio.fecha_hora));
+		}
+
 		setOpenModalPagos(false);
 	}
 

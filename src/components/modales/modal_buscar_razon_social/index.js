@@ -52,8 +52,6 @@ const ModalBuscarRazonSocial = (props) => {
     colorBase,
   } = props;
 
-  console.log("KAOZ", sucursal);
-
   const columns = [
     { title: 'NOMBRE COMPLETO', field: 'nombre_completo' },
     { title: 'RFC', field: 'rfc' },

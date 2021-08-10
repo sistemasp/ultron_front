@@ -9,62 +9,15 @@ import { ButtonCustom } from '../../../basic/ButtonCustom';
 import myStyles from '../../../../css';
 
 function getModalStyle() {
-  const top = 50;
+  const top = 20;
   const left = 50;
 
   return {
     top: `${top}%`,
     left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
+    transform: `translate(-${50}%, -${50}%)`,
   };
 }
-
-const useStyles = makeStyles(theme => ({
-  paper: {
-    position: 'absolute',
-    width: 400,
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    paddingLeft: 15
-  },
-  textField: {
-    width: '100%',
-  },
-  formControl: {
-    minWidth: 120,
-    width: '100%',
-  },
-  button: {
-    width: '100%',
-    color: '#FFFFFF',
-  },
-  label: {
-    marginTop: '0px',
-    marginBottom: '0px',
-    textAlign: 'center',
-  },
-  label_left: {
-    marginTop: '0px',
-    marginBottom: '0px',
-    marginLeft: '10px',
-    textAlign: 'left',
-  },
-  label_right: {
-    marginTop: '0px',
-    marginBottom: '0px',
-    marginRight: '10px',
-    textAlign: 'right',
-  },
-  label_foot: {
-    fontSize: '11px',
-    marginTop: '0px',
-    marginRight: '10px',
-    marginBottom: '10px',
-    textAlign: 'right',
-    fontWeight: 'bold',
-  }
-}));
 
 const FormImprimirDatosFacturacion = (props) => {
 
@@ -82,51 +35,53 @@ const FormImprimirDatosFacturacion = (props) => {
     colorBase,
   } = props;
 
-  const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
-  const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
-  const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
-  const sucursalFedeId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
-
   const classes = myStyles(colorBase)();
 
   const fecha = new Date();
-
-  console.log("KAOZ", datos);
-
+  
   return (
     <div>
       <Modal
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
         open={open} >
-        <div style={modalStyle} className={classes.paper_95}>
+        <div style={modalStyle} className={classes.paper_factura}>
           <Grid container>
-            <Grid item xs={12} className={classes.label}>
-              <h2 className={classes.label}>{`RAZON SOCIAL: ${datos.nombre_completo}`}</h2>
+            <Grid item xs={true} className={classes.label_left}>
+              <h4 className={classes.label_left}>{`PACIENTE: ${datos.paciente_nombre}`}</h4>
             </Grid>
-            <Grid item xs={12} className={classes.label}>
-              <h2 className={classes.label}>{`DOMICILIO: ${datos.domicilio_completo}`}</h2>
+            <Grid item xs={true} className={classes.label_right}>
+              <h4 className={classes.label_right}>{`RFC: ${datos.factura.razon_social.rfc}`}</h4>
             </Grid>
-            <Grid item xs={12} className={classes.label}>
-              <h2 className={classes.label}>{`COLONIA: ${datos.colonia}`}</h2>
+            <Grid item xs={12} className={classes.label_left}>
+              <h4 className={classes.label_left}>{`RAZON SOCIAL: ${datos.factura.razon_social.nombre_completo}`}</h4>
             </Grid>
-            <Grid item xs={12} className={classes.label}>
-              <h2 className={classes.label}>{`MUNUCIPIO: ${datos.municipio}`}</h2>
+            <Grid item xs={true} className={classes.label_left}>
+              <h4 className={classes.label_left}>{`ESTADO: ${datos.factura.razon_social.estado}`}</h4>
             </Grid>
-            <Grid item xs={12} className={classes.label}>
-              <h2 className={classes.label}>{`ESTADO: ${datos.estado}`}</h2>
+            <Grid item xs={true} className={classes.label}>
+              <h4 className={classes.label}>{`MUNUCIPIO: ${datos.factura.razon_social.municipio}`}</h4>
+            </Grid>            
+            <Grid item xs={true} className={classes.label_right}>
+              <h4 className={classes.label_right}>{`CP: ${datos.factura.razon_social.codigo_postal}`}</h4>
             </Grid>
-            <Grid item xs={12} className={classes.label}>
-              <h2 className={classes.label}>{`CP: ${datos.codigo_postal}`}</h2>
+            <Grid item xs={12} className={classes.label_left}>
+              <h4 className={classes.label_left}>{`COLONIA: ${datos.factura.razon_social.colonia}`}</h4>
             </Grid>
-            <Grid item xs={12} className={classes.label}>
-              <h2 className={classes.label}>{`TELEFONO: ${datos.telefono}`}</h2>
+            <Grid item xs={12} className={classes.label_left}>
+              <h4 className={classes.label_left}>{`DOMICILIO: ${datos.domicilio_completo}`}</h4>
             </Grid>
-            <Grid item xs={12} className={classes.label}>
-              <h2 className={classes.label}>{`RFC: ${datos.rfc}`}</h2>
+            <Grid item xs={true} className={classes.label_left}>
+              <h4 className={classes.label_left}>{`TELEFONO: ${datos.factura.razon_social.telefono}`}</h4>
             </Grid>
-            <Grid item xs={12} className={classes.label}>
-              <h2 className={classes.label}>{`CORREO: ${datos.email}`}</h2>
+            <Grid item xs={true} className={classes.label_right}>
+              <h4 className={classes.label_right}>{`CORREO: ${datos.factura.razon_social.email}`}</h4>
+            </Grid>
+            <Grid item xs={12} className={classes.label_left}>
+              <h4 className={classes.label_left}>{`USO CFDI: ${datos.uso_cfdi}`}</h4>
+            </Grid>
+            <Grid item xs={12} className={classes.label_left}>
+              <h4 className={classes.label_left}>{`SERVICIO: ${datos.servicio.nombre}`}</h4>
             </Grid>
 
             {

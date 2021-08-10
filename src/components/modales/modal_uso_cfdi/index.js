@@ -51,6 +51,7 @@ const ModalUsoCfdi = (props) => {
     //pago,
     servicio,
     closeRazonSocial,
+    colorBase,
   } = props;
 
   const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
@@ -61,6 +62,7 @@ const ModalUsoCfdi = (props) => {
   const servicioEsteticaId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
 
   const [values, setValues] = useState({
+    fecha_hora: new Date(),
     paciente: factura.paciente,
     razon_social: factura.razon_social,
     servicio: factura.servicio,
@@ -70,7 +72,7 @@ const ModalUsoCfdi = (props) => {
   });
 
   const handleGenerarFactura = async (event, rowData) => {
-    rowData.fecha_hora = new Date();
+    /*rowData.fecha_hora = new Date();
     const response = await createFactura(rowData);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
       servicio.factura = response.data;
@@ -94,9 +96,9 @@ const ModalUsoCfdi = (props) => {
           await updateEstetica(servicio._id, servicio);
           break
       }
-    }
+    }*/
     onClose();
-    closeRazonSocial(true);
+    closeRazonSocial(true, values);
   }
 
   useEffect(() => {
@@ -128,6 +130,7 @@ const ModalUsoCfdi = (props) => {
             onClose={onClose}
             usoCfdis={usoCfdis}
             values={values}
+            colorBase={colorBase}
             onChangeUsoCfdi={(event) => handleChangeUsoCfdi(event)}
             onGenerarFactura={handleGenerarFactura} />
           :

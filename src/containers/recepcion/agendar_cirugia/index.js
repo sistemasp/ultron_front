@@ -25,6 +25,7 @@ import { AgendarCirugiaContainer } from "./agendar_cirugia";
 import { findProductoByServicio } from "../../../services/productos";
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import { findEmployeesByRolIdAvailable } from "../../../services/empleados";
+import { createFactura } from "../../../services/facturas";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -480,8 +481,23 @@ const AgendarCirugia = (props) => {
 
 	const handleGuardarModalPagos = async (servicio) => {
 		servicio.pagado = servicio.pagos.length > 0;
-		await updateCirugia(servicio._id, servicio, empleado.access_token);
-		await loadCirugias(new Date(servicio.fecha_hora));
+		if (servicio.factura) {
+			if (servicio.factura._id) {
+				await updateCirugia(servicio._id, servicio, empleado.access_token);
+				await loadCirugias(new Date(servicio.fecha_hora));
+			} else {
+				const response = await createFactura(servicio.factura);
+				if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+					servicio.factura = response.data;
+					await updateCirugia(servicio._id, servicio, empleado.access_token);
+					await loadCirugias(new Date(servicio.fecha_hora));
+				}
+			}
+		} else {
+			await updateCirugia(servicio._id, servicio, empleado.access_token);
+			await loadCirugias(new Date(servicio.fecha_hora));
+		}
+
 		setOpenModalPagos(false);
 	}
 

@@ -26,6 +26,7 @@ import { AgendarEsteticaContainer } from "./agendar_estetica";
 import { findProductoByServicio } from "../../../services/productos";
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import { findEmployeesByRolIdAvailable } from "../../../services/empleados";
+import { createFactura } from "../../../services/facturas";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -513,8 +514,23 @@ const AgendarEstetica = (props) => {
 
 	const handleGuardarModalPagos = async (servicio) => {
 		servicio.pagado = servicio.pagos.length > 0;
-		await updateEstetica(servicio._id, servicio, empleado.access_token);
-		await loadEsteticas(new Date(servicio.fecha_hora));
+		if (servicio.factura) {
+			if (servicio.factura._id) {
+				await updateEstetica(servicio._id, servicio, empleado.access_token);
+				await loadEsteticas(new Date(servicio.fecha_hora));
+			} else {
+				const response = await createFactura(servicio.factura);
+				if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+					servicio.factura = response.data;
+					await updateEstetica(servicio._id, servicio, empleado.access_token);
+					await loadEsteticas(new Date(servicio.fecha_hora));
+				}
+			}
+		} else {
+			await updateEstetica(servicio._id, servicio, empleado.access_token);
+			await loadEsteticas(new Date(servicio.fecha_hora));
+		}
+
 		setOpenModalPagos(false);
 	}
 

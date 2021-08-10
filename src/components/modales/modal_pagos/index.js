@@ -49,6 +49,8 @@ const ModalPagos = (props) => {
   const [esquema, setEsquema] = useState({});
   const [openModalPago, setOpenModalPago] = useState(false);
   const [openModalFactura, setOpenModalFactura] = useState(false);
+  const [datosImpresion, setDatosImpresion] = useState();
+  const [openModalImprimirDatosFacturacion, setOpenModalImprimirDatosFacturacion] = useState(false);
   const [restante, setRestante] = useState(0);
   const [values, setValues] = useState({
     cantidad: servicio.precio,
@@ -57,7 +59,10 @@ const ModalPagos = (props) => {
     descuento_dermatologo: 0,
     has_descuento_dermatologo: servicio.has_descuento_dermatologo,
     total: servicio.total,
+    isFactura: !!servicio.factura,
   });
+
+  servicio.isFactura = !!servicio.factura;
 
   const handleOnClickEditarPago = (event, rowData) => {
     setPago(rowData);
@@ -65,8 +70,13 @@ const ModalPagos = (props) => {
   }
 
   const handleChangeFactura = () => {
-    servicio.factura = !servicio.factura;
-    setOpenModalFactura(servicio.factura);
+    const isFactura = !values.isFactura;
+    servicio.isFactura = isFactura;
+    setValues({
+      ...values,
+      isFactura: isFactura,
+    });
+    setOpenModalFactura(isFactura);
   }
 
   const columns = [
@@ -141,8 +151,23 @@ const ModalPagos = (props) => {
     setOpenModalPago(false);
   }
 
-  const handleCloseBuscarRazonSocial = (val) => {
-    //servicio.factura = val;
+  const handleCloseImprimirDatosFacturacion = (event, rowData) => {
+    setOpenModalImprimirDatosFacturacion(false);
+  }
+
+  const handlePrint = async (event, rowData) => {
+    setDatosImpresion(rowData);
+    setOpenModalImprimirDatosFacturacion(true);
+  }
+
+  const handleCloseBuscarRazonSocial = (val, datosFactura) => {
+    servicio.isFactura = val;
+    servicio.factura = datosFactura;
+    setValues({
+      ...values,
+      isFactura: val,
+    });
+    // TODO: CREATE FACTURA
     setOpenModalFactura(false);
   }
 
@@ -234,6 +259,7 @@ const ModalPagos = (props) => {
     servicio.total = total;
 
     setValues({
+      ...datos,
       cantidad: cantidad,
       descuento_clinica: descuento_clinica,
       descuento_dermatologo: descuento_dermatologo_final,
@@ -299,6 +325,10 @@ const ModalPagos = (props) => {
             localization={localization}
             servicio={servicio}
             empleado={empleado}
+            datosImpresion={datosImpresion}
+            openModalImprimirDatosFacturacion={openModalImprimirDatosFacturacion}
+            handleCloseImprimirDatosFacturacion={handleCloseImprimirDatosFacturacion}
+            handlePrint={handlePrint}
             sucursal={sucursal}
             onGuardarModalPagos={onGuardarModalPagos}
             titulo={`PAGOS: ${servicio.paciente.nombres} ${servicio.paciente.apellidos}`}

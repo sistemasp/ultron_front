@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import { Backdrop, CircularProgress } from "@material-ui/core";
-import { toFormatterCurrency, addZero } from "../../../../../utils/utils";
+import { toFormatterCurrency, addZero, dateToString } from "../../../../../utils/utils";
 import { ReportesFacturasContainer } from "./reportes_facturas";
 import { findAparatologiaById } from "../../../../../services/aparatolgia";
 import { findFacialById } from "../../../../../services/faciales";
@@ -12,6 +12,7 @@ import { findEsteticaById } from "../../../../../services/esteticas";
 import { findDermapenById } from "../../../../../services/dermapens";
 import { findFacturasByRangeDateAndSucursal } from "../../../../../services/facturas";
 import myStyles from "../../../../../css";
+import PrintIcon from '@material-ui/icons/Print';
 
 const useStyles = makeStyles(theme => ({
 	backdrop: {
@@ -42,6 +43,8 @@ const ReportesFacturas = (props) => {
 
 	const [isLoading, setIsLoading] = useState(true);
 	const [facturas, setFacturas] = useState([]);
+	const [datosImpresion, setDatosImpresion] = useState();
+	const [openModalImprimirDatosFacturacion, setOpenModalImprimirDatosFacturacion] = useState(false);
 
 	const date = new Date();
 	const dia = addZero(date.getDate());
@@ -59,16 +62,18 @@ const ReportesFacturas = (props) => {
 	});
 
 	const columns = [
-		{ title: 'SUCURSAL', field: 'sucursal.nombre' },
-		{ title: 'FECHA', field: 'fecha_show' },
-		{ title: 'HORA', field: 'hora' },
-		{ title: 'PACIENTE', field: 'paciente_nombre' },
+		{ title: 'FECHA', field: 'fecha' },
+		{ title: 'PACIENTE', field: 'paciente.nombre_completo' },
 		{ title: 'RAZÓN SOCIAL', field: 'razon_social.nombre_completo' },
 		{ title: 'RFC', field: 'razon_social.rfc' },
-		{ title: 'SERVICIO', field: 'servicio' },
-		{ title: 'PRODUCTO', field: 'producto' },
-		{ title: 'CANTIDAD', field: 'cantidad_moneda' },
 		{ title: 'USO CFDI', field: 'uso_cfdi.nombre' },
+		{ title: 'DOMICILIO', field: 'domicilio_completo' },
+		{ title: 'ESTADO', field: 'razon_social.estado' },
+		{ title: 'MUNICIPIO', field: 'razon_social.municipio' },
+		{ title: 'CODIGÓ POSTAL', field: 'razon_social.codigo_postal' },
+		{ title: 'COLONIA', field: 'razon_social.colonia' },
+		{ title: 'TELEFÓNO', field: 'razon_social.telefono' },
+		{ title: 'CORREO', field: 'razon_social.email' },
 	];
 
 	const options = {
@@ -83,117 +88,142 @@ const ReportesFacturas = (props) => {
 		exportDelimiter: ';'
 	}
 
+	const handleCloseImprimirDatosFacturacion = (event, rowData) => {
+		setOpenModalImprimirDatosFacturacion(false);
+	}
+
+	const handlePrint = async (event, rowData) => {
+		console.log("KAOZ", rowData);
+		setDatosImpresion(rowData);
+		setOpenModalImprimirDatosFacturacion(true);
+	}
+
+	const actions = [
+		/*{
+			icon: PrintIcon,
+			tooltip: 'IMPRIMIR',
+			onClick: handlePrint
+		},*/
+	];
+
 	const loadFacturas = async (startDate, endDate) => {
 		const response = await findFacturasByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
 			endDate.getDate(), (endDate.getMonth() + 1), endDate.getFullYear(), sucursal);
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				const resData = response.data;
-				// resData.forEach(async (item) => {
-				// 	let servicioResponse = { data: '' };
-				// 	switch (item.tipo_servicio._id) {
-				// 		case servicioAparatologiaId:
-				// 			servicioResponse = await findAparatologiaById(item.servicio, token);
-				// 			break;
-				// 		case servicioFacialId:
-				// 			servicioResponse = await findFacialById(item.servicio, token);
-				// 			break;
-				// 		case servicioConsultaId:
-				// 			servicioResponse = await findConsultById(item.servicio, token);
-				// 			break;
-				// 		case servicioCirugiaId:
-				// 			servicioResponse = await findCirugiaById(item.servicio, token);
-				// 			break;
-				// 		case servicioBiopsiaId:
-				// 			servicioResponse = await findBiopsiaById(item.servicio, token);
-				// 			break;
-				// 		case servicioEsteticaId:
-				// 			servicioResponse = await findEsteticaById(item.servicio, token);
-				// 			break;
-				// 		case servicioDermapenId:
-				// 			servicioResponse = await findDermapenById(item.servicio, token);
-				// 			break;
-				// 	}
-	
-				// 	if (`${servicioResponse.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-
-				// 		item.servicio = servicioResponse.data;
-	
-				// 		let cantidad = 0;
-				// 		item.servicio.pagos.forEach(pago => {
-				// 			cantidad += Number(pago.total);
-				// 		});
-				// 		const fecha = new Date(item.fecha_hora);
-				// 		item.hora = `${addZero(fecha.getHours())}:${addZero(fecha.getMinutes())}`;
-				// 		item.fecha_show = `${addZero(fecha.getDate())}/${addZero(fecha.getMonth() + 1)}/${fecha.getFullYear()}`;
-	
-				// 		item.cantidad_moneda = toFormatterCurrency(cantidad);
-				// 		item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
-	
-				// 		item.uso_cfdi.nombre = `${item.uso_cfdi.clave}: ${item.uso_cfdi.descripcion}`;
-
-				// 	}
-				// });
-				setFacturas(resData);
-			}
-	}
-/*
-	const loadFacturas = async () => {
-		const response = await findFacturasByRangeDateAndSucursal(date.getDate(), date.getMonth(), date.getFullYear(),
-			date.getDate(), date.getMonth(), date.getFullYear(), sucursal);
-
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			const facturasResponse = [];
-			response.data.forEach(async (item) => {
-				let servicioResponse = { data: '' };
-				switch (item.tipo_servicio._id) {
-					case servicioAparatologiaId:
-						servicioResponse = await findAparatologiaById(item.servicio, token);
-						break;
-					case servicioFacialId:
-						servicioResponse = await findFacialById(item.servicio, token);
-						break;
-					case servicioConsultaId:
-						servicioResponse = await findConsultById(item.servicio, token);
-						break;
-					case servicioCirugiaId:
-						servicioResponse = await findCirugiaById(item.servicio, token);
-						break;
-					case servicioBiopsiaId:
-						servicioResponse = await findBiopsiaById(item.servicio, token);
-						break;
-					case servicioEsteticaId:
-						servicioResponse = await findEsteticaById(item.servicio, token);
-						break;
-					case servicioDermapenId:
-						servicioResponse = await findDermapenById(item.servicio, token);
-						break;
-				}
-
-				if (`${servicioResponse.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-					item.servicio = servicioResponse.data;
-
-					let cantidad = 0;
-					item.servicio.pagos.forEach(pago => {
-						cantidad += Number(pago.total);
-					});
-					const fecha = new Date(item.fecha_hora);
-					item.hora = `${addZero(fecha.getHours())}:${addZero(fecha.getMinutes())}`;
-					item.fecha_show = `${addZero(fecha.getDate())}/${addZero(fecha.getMonth() + 1)}/${fecha.getFullYear()}`;
-
-					item.cantidad_moneda = toFormatterCurrency(cantidad);
-					item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
-
-					item.uso_cfdi.nombre = `${item.uso_cfdi.clave}: ${item.uso_cfdi.descripcion}`;
-				}
-				
-				facturasResponse.push(item);
+			const resData = response.data;
+			resData.forEach((factura) => {
+				console.log("KAOZ", factura);
+				factura.fecha = dateToString(factura.fecha_hora);
+				factura.paciente.nombre_completo = `${factura.paciente.nombres} ${factura.paciente.apellidos}`;
+				factura.domicilio_completo = `${factura.razon_social.domicilio} #${factura.razon_social.numero_exterior} ${factura.razon_social.numero_interior ? '- ' + factura.razon_social.numero_interior : ''}`;
+				factura.uso_cfdi.nombre = `${factura.uso_cfdi.clave}: ${factura.uso_cfdi.descripcion}`;
 			});
+			// resData.forEach(async (item) => {
+			// 	let servicioResponse = { data: '' };
+			// 	switch (item.tipo_servicio._id) {
+			// 		case servicioAparatologiaId:
+			// 			servicioResponse = await findAparatologiaById(item.servicio, token);
+			// 			break;
+			// 		case servicioFacialId:
+			// 			servicioResponse = await findFacialById(item.servicio, token);
+			// 			break;
+			// 		case servicioConsultaId:
+			// 			servicioResponse = await findConsultById(item.servicio, token);
+			// 			break;
+			// 		case servicioCirugiaId:
+			// 			servicioResponse = await findCirugiaById(item.servicio, token);
+			// 			break;
+			// 		case servicioBiopsiaId:
+			// 			servicioResponse = await findBiopsiaById(item.servicio, token);
+			// 			break;
+			// 		case servicioEsteticaId:
+			// 			servicioResponse = await findEsteticaById(item.servicio, token);
+			// 			break;
+			// 		case servicioDermapenId:
+			// 			servicioResponse = await findDermapenById(item.servicio, token);
+			// 			break;
+			// 	}
 
-			setFacturas(facturasResponse);
+			// 	if (`${servicioResponse.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+
+			// 		item.servicio = servicioResponse.data;
+
+			// 		let cantidad = 0;
+			// 		item.servicio.pagos.forEach(pago => {
+			// 			cantidad += Number(pago.total);
+			// 		});
+			// 		const fecha = new Date(item.fecha_hora);
+			// 		item.hora = `${addZero(fecha.getHours())}:${addZero(fecha.getMinutes())}`;
+			// 		item.fecha_show = `${addZero(fecha.getDate())}/${addZero(fecha.getMonth() + 1)}/${fecha.getFullYear()}`;
+
+			// 		item.cantidad_moneda = toFormatterCurrency(cantidad);
+			// 		item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
+
+			// 		item.uso_cfdi.nombre = `${item.uso_cfdi.clave}: ${item.uso_cfdi.descripcion}`;
+
+			// 	}
+			// });
+			setFacturas(resData);
 		}
-	}*/
+	}
+	/*
+		const loadFacturas = async () => {
+			const response = await findFacturasByRangeDateAndSucursal(date.getDate(), date.getMonth(), date.getFullYear(),
+				date.getDate(), date.getMonth(), date.getFullYear(), sucursal);
+	
+			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+				const facturasResponse = [];
+				response.data.forEach(async (item) => {
+					let servicioResponse = { data: '' };
+					switch (item.tipo_servicio._id) {
+						case servicioAparatologiaId:
+							servicioResponse = await findAparatologiaById(item.servicio, token);
+							break;
+						case servicioFacialId:
+							servicioResponse = await findFacialById(item.servicio, token);
+							break;
+						case servicioConsultaId:
+							servicioResponse = await findConsultById(item.servicio, token);
+							break;
+						case servicioCirugiaId:
+							servicioResponse = await findCirugiaById(item.servicio, token);
+							break;
+						case servicioBiopsiaId:
+							servicioResponse = await findBiopsiaById(item.servicio, token);
+							break;
+						case servicioEsteticaId:
+							servicioResponse = await findEsteticaById(item.servicio, token);
+							break;
+						case servicioDermapenId:
+							servicioResponse = await findDermapenById(item.servicio, token);
+							break;
+					}
+	
+					if (`${servicioResponse.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+						item.servicio = servicioResponse.data;
+	
+						let cantidad = 0;
+						item.servicio.pagos.forEach(pago => {
+							cantidad += Number(pago.total);
+						});
+						const fecha = new Date(item.fecha_hora);
+						item.hora = `${addZero(fecha.getHours())}:${addZero(fecha.getMinutes())}`;
+						item.fecha_show = `${addZero(fecha.getDate())}/${addZero(fecha.getMonth() + 1)}/${fecha.getFullYear()}`;
+	
+						item.cantidad_moneda = toFormatterCurrency(cantidad);
+						item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
+	
+						item.uso_cfdi.nombre = `${item.uso_cfdi.clave}: ${item.uso_cfdi.descripcion}`;
+					}
+					
+					facturasResponse.push(item);
+				});
+	
+				setFacturas(facturasResponse);
+			}
+		}*/
 
-	const loadAll = async() => {
+	const loadAll = async () => {
 		setIsLoading(true);
 		await loadFacturas(startDate.fecha_show, endDate.fecha_show);
 		setIsLoading(false);
@@ -232,9 +262,6 @@ const ReportesFacturas = (props) => {
 		await loadFacturas(startDate.fecha_show, endDate.fecha_show);
 	}
 
-	const actions = [
-	];
-
 	return (
 		<Fragment>
 			{
@@ -251,6 +278,9 @@ const ReportesFacturas = (props) => {
 						actions={actions}
 						colorBase={colorBase}
 						onClickReportes={handleReportes}
+						datosImpresion={datosImpresion}
+						openModalImprimirDatosFacturacion={openModalImprimirDatosFacturacion}
+						handleCloseImprimirDatosFacturacion={handleCloseImprimirDatosFacturacion}
 						{...props} />
 					: <Backdrop className={classes.backdrop} open={isLoading} >
 						<CircularProgress color="inherit" />

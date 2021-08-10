@@ -63,6 +63,7 @@ const ModalFormBuscarRazonSocial = (props) => {
                 factura={factura}
                 pago={pago}
                 servicio={servicio}
+                colorBase={colorBase}
                 closeRazonSocial={onClose}
               /> : ''
           }
@@ -72,6 +73,7 @@ const ModalFormBuscarRazonSocial = (props) => {
                 open={openNuevaRazonSocial}
                 onClose={handleCloseNuevaRazonSocial}
                 razonSocial={{}}
+                colorBase={colorBase}
                 loadRazonSocial={loadRazonSocial} /> : ''
           }
           {

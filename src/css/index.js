@@ -32,6 +32,13 @@ const myStyles = (colorBase) => makeStyles( (theme) => {
             margin: 25,
             boxShadow: theme.shadows[5],
         },
+        paper_factura: {
+            position: 'relative',
+            width: "100%",
+            height: "40%",
+            backgroundColor: theme.palette.background.paper,
+            padding: theme.spacing(2, 4, 3),
+        },
         textField: {
             width: '100%',
         },
