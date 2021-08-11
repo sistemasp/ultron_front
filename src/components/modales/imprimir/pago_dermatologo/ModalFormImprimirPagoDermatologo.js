@@ -202,7 +202,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
   const sucursalFedeId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
   const dermatologoDirectoId = process.env.REACT_APP_DERMATOLOGO_DIRECTO_ID;
   const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
-  const formaPagoPagoAnticipadoId = process.env.REACT_APP_FORMA_PAGO_SESION_ANTICIPADA;
+  const formaPagoSesionAnticipadaId = process.env.REACT_APP_FORMA_PAGO_SESION_ANTICIPADA;
 
   const listaFaciales = [...faciales, ...facialesPA];
   const listaAparatologias = [...aparatologias, ...aparatologiasPA];
@@ -858,7 +858,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                         faciales.map(facial => {
                           let comisionDermatologo = 0;
                           let pagoDermatologo = 0;
-                          if (!facial.has_descuento_dermatologo && facial.forma_pago._id !== formaPagoPagoAnticipadoId) {
+                          if (!facial.has_descuento_dermatologo && facial.forma_pago._id !== formaPagoSesionAnticipadaId) {
                             facial.tratamientos.map(tratamiento => {
                               tratamiento.areasSeleccionadas.map(areaSeleccionada => {
                                 switch (facial.tipo_cita._id) {
@@ -1143,7 +1143,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                       aparatologias ?
                         aparatologias.map(aparatologia => {
                           let comisionDermatologo = 0;
-                          if (aparatologia.forma_pago._id !== formaPagoPagoAnticipadoId) {
+                          if (aparatologia.forma_pago._id !== formaPagoSesionAnticipadaId) {
                             aparatologia.tratamientos.forEach(tratamiento => {
 
                               tratamiento.areasSeleccionadas.map(area => {
