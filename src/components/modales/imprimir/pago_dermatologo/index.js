@@ -626,9 +626,8 @@ const ModalImprimirPagoDermatologo = (props) => {
         }
         total += Number(pagoDermatologo);
       }
-      console.log("KAOZ PA", pagoDermatologo);
 
-      //updateSesionAnticipada(sesionAnticipada._id, sesionAnticipada, token);
+      updateSesionAnticipada(sesionAnticipada._id, sesionAnticipada, token);
     });
 
     if (dermatologo._id !== dermatologoDirectoId) {
@@ -648,32 +647,29 @@ const ModalImprimirPagoDermatologo = (props) => {
         pagado: true,
       }
 
+      const response = await createPagoDermatologo(pagoDermatologo, token);
+      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
+        || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+        const data = response.data;
 
-      console.log("KAOZ PAGODERMA", pagoDermatologo);
-      /*
-            const response = await createPagoDermatologo(pagoDermatologo, token);
-            if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
-              || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-              const data = response.data;
-      
-              const salida = {
-                create_date: new Date(),
-                hora_aplicacion: corte.create_date,
-                tipo_salida: pagoDermatologoTipoSalidaId,
-                recepcionista: empleado,
-                turno: corte.turno === 'm' ? 'MATUTINO' : 'VESPERTINO',
-                concepto: dermatologo.nombre,
-                cantidad: dermatologo.pago_completo ? data.total : data.retencion,
-                retencion: data.retencion,
-                sucursal: sucursal._id,
-                forma_pago: efectivoMetodoPagoId,
-              }
-      
-              const resp = await createSalida(salida);
-              if (`${resp.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-                setIsLoading(false);
-              }
-            }*/
+        const salida = {
+          create_date: new Date(),
+          hora_aplicacion: corte.create_date,
+          tipo_salida: pagoDermatologoTipoSalidaId,
+          recepcionista: empleado,
+          turno: corte.turno === 'm' ? 'MATUTINO' : 'VESPERTINO',
+          concepto: dermatologo.nombre,
+          cantidad: dermatologo.pago_completo ? data.total : data.retencion,
+          retencion: data.retencion,
+          sucursal: sucursal._id,
+          forma_pago: efectivoMetodoPagoId,
+        }
+
+        const resp = await createSalida(salida);
+        if (`${resp.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+          setIsLoading(false);
+        }
+      }
     }
 
     findCorte();
