@@ -372,17 +372,23 @@ const AgregarPagosAnticipados = (props) => {
     servicio.pagado = servicio.pagos.length > 0;
     servicio.fecha_pago = new Date();
     let ind = 0;
-    console.log("KAOZ", servicio);
 
     if (servicio.factura) {
 
-    console.log("KAOZ", "paso 1");
-      const response = await createFactura(servicio.factura);
-    console.log("KAOZ", "paso2", response);
+      const factura = {
+        fecha_hora: new Date(),
+        paciente: servicio.factura.paciente._id,
+        razon_social: servicio.factura.razon_social._id,
+        servicio: servicio.factura.servicio._id,
+        tipo_servicio: servicio.factura.tipo_servicio._id,
+        sucursal: servicio.factura.sucursal._id,
+        uso_cfdi: servicio.factura.uso_cfdi._id,
+      };
+      
+      const response = await createFactura(factura, token);
 
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
         servicio.factura = response.data;
-        console.log("KAOZ", servicio);
 
         servicio.sesiones_anticipadas.map(async (sesionAnticipada, index) => {
           sesionAnticipada.numero_sesion = index + 1;

@@ -57,6 +57,8 @@ const AgendarCirugia = (props) => {
 		colorBase,
 	} = props;
 
+	const token = empleado.access_token;
+
 	const asistioStatusId = process.env.REACT_APP_ASISTIO_STATUS_ID;
 
 	const paciente = consultaAgendada.paciente ? consultaAgendada.paciente : {};
@@ -235,7 +237,7 @@ const AgendarCirugia = (props) => {
 	};
 
 	const loadCirugias = async (filterDate) => {
-		const response = await findCirugiaByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal, empleado.access_token);
+		const response = await findCirugiaByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			response.data.forEach(item => {
 				item.folio = generateFolio(item);
@@ -264,7 +266,7 @@ const AgendarCirugia = (props) => {
 		data.hora_llegada = '--:--';
 		data.hora_atencion = '--:--';
 		data.hora_salida = '--:--';
-		const response = await createCirugia(data, empleado.access_token);
+		const response = await createCirugia(data, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			const consecutivo = {
 				consecutivo: response.data.consecutivo,
@@ -483,18 +485,27 @@ const AgendarCirugia = (props) => {
 		servicio.pagado = servicio.pagos.length > 0;
 		if (servicio.factura) {
 			if (servicio.factura._id) {
-				await updateCirugia(servicio._id, servicio, empleado.access_token);
+				await updateCirugia(servicio._id, servicio, token);
 				await loadCirugias(new Date(servicio.fecha_hora));
 			} else {
-				const response = await createFactura(servicio.factura);
+				const factura = {
+					fecha_hora: new Date(),
+					paciente: servicio.factura.paciente._id,
+					razon_social: servicio.factura.razon_social._id,
+					servicio: servicio.factura.servicio._id,
+					tipo_servicio: servicio.factura.tipo_servicio._id,
+					sucursal: servicio.factura.sucursal._id,
+					uso_cfdi: servicio.factura.uso_cfdi._id,
+				};
+				const response = await createFactura(factura, token);
 				if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 					servicio.factura = response.data;
-					await updateCirugia(servicio._id, servicio, empleado.access_token);
+					await updateCirugia(servicio._id, servicio, token);
 					await loadCirugias(new Date(servicio.fecha_hora));
 				}
 			}
 		} else {
-			await updateCirugia(servicio._id, servicio, empleado.access_token);
+			await updateCirugia(servicio._id, servicio, token);
 			await loadCirugias(new Date(servicio.fecha_hora));
 		}
 
@@ -573,7 +584,7 @@ const AgendarCirugia = (props) => {
 	}
 
 	const loadDermatologos = async () => {
-		const response = await findEmployeesByRolIdAvailable(dermatologoRolId, empleado.access_token);
+		const response = await findEmployeesByRolIdAvailable(dermatologoRolId, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setDermatologos(response.data);
 		}

@@ -108,11 +108,10 @@ const ReportesFacturas = (props) => {
 
 	const loadFacturas = async (startDate, endDate) => {
 		const response = await findFacturasByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
-			endDate.getDate(), (endDate.getMonth() + 1), endDate.getFullYear(), sucursal);
+			endDate.getDate(), (endDate.getMonth() + 1), endDate.getFullYear(), sucursal, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			const resData = response.data;
 			resData.forEach((factura) => {
-				console.log("KAOZ", factura);
 				factura.fecha = dateToString(factura.fecha_hora);
 				factura.paciente.nombre_completo = `${factura.paciente.nombres} ${factura.paciente.apellidos}`;
 				factura.domicilio_completo = `${factura.razon_social.domicilio} #${factura.razon_social.numero_exterior} ${factura.razon_social.numero_interior ? '- ' + factura.razon_social.numero_interior : ''}`;
@@ -166,62 +165,6 @@ const ReportesFacturas = (props) => {
 			setFacturas(resData);
 		}
 	}
-	/*
-		const loadFacturas = async () => {
-			const response = await findFacturasByRangeDateAndSucursal(date.getDate(), date.getMonth(), date.getFullYear(),
-				date.getDate(), date.getMonth(), date.getFullYear(), sucursal);
-	
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				const facturasResponse = [];
-				response.data.forEach(async (item) => {
-					let servicioResponse = { data: '' };
-					switch (item.tipo_servicio._id) {
-						case servicioAparatologiaId:
-							servicioResponse = await findAparatologiaById(item.servicio, token);
-							break;
-						case servicioFacialId:
-							servicioResponse = await findFacialById(item.servicio, token);
-							break;
-						case servicioConsultaId:
-							servicioResponse = await findConsultById(item.servicio, token);
-							break;
-						case servicioCirugiaId:
-							servicioResponse = await findCirugiaById(item.servicio, token);
-							break;
-						case servicioBiopsiaId:
-							servicioResponse = await findBiopsiaById(item.servicio, token);
-							break;
-						case servicioEsteticaId:
-							servicioResponse = await findEsteticaById(item.servicio, token);
-							break;
-						case servicioDermapenId:
-							servicioResponse = await findDermapenById(item.servicio, token);
-							break;
-					}
-	
-					if (`${servicioResponse.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-						item.servicio = servicioResponse.data;
-	
-						let cantidad = 0;
-						item.servicio.pagos.forEach(pago => {
-							cantidad += Number(pago.total);
-						});
-						const fecha = new Date(item.fecha_hora);
-						item.hora = `${addZero(fecha.getHours())}:${addZero(fecha.getMinutes())}`;
-						item.fecha_show = `${addZero(fecha.getDate())}/${addZero(fecha.getMonth() + 1)}/${fecha.getFullYear()}`;
-	
-						item.cantidad_moneda = toFormatterCurrency(cantidad);
-						item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
-	
-						item.uso_cfdi.nombre = `${item.uso_cfdi.clave}: ${item.uso_cfdi.descripcion}`;
-					}
-					
-					facturasResponse.push(item);
-				});
-	
-				setFacturas(facturasResponse);
-			}
-		}*/
 
 	const loadAll = async () => {
 		setIsLoading(true);

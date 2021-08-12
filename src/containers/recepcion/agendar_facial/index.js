@@ -65,6 +65,8 @@ const AgendarFacial = (props) => {
 		colorBase,
 	} = props;
 
+	const token = empleado.access_token;
+
 	const paciente = info.paciente ? info.paciente : info;
 
 	const dermatologoRolId = process.env.REACT_APP_DERMATOLOGO_ROL_ID;
@@ -314,7 +316,7 @@ const AgendarFacial = (props) => {
 	};
 
 	const loadFaciales = async (filterDate) => {
-		const response = await findFacialByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal, empleado.access_token);
+		const response = await findFacialByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			response.data.forEach(item => {
 				item.folio = generateFolio(item);
@@ -366,7 +368,7 @@ const AgendarFacial = (props) => {
 		data.tipo_cita = data.dermatologo._id === dermatologoDirectoId ? directoTipoCitaId : data.tipo_cita;
 		// data.tiempo = getTimeToTratamiento(data.tratamientos);
 
-		const response = await createFacial(data, empleado.access_token);
+		const response = await createFacial(data, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			const consecutivo = {
 				consecutivo: response.data.consecutivo,
@@ -616,18 +618,27 @@ const AgendarFacial = (props) => {
 		servicio.pagado = servicio.pagos.length > 0;
 		if (servicio.factura) {
 			if (servicio.factura._id) {
-				await updateFacial(servicio._id, servicio, empleado.access_token);
+				await updateFacial(servicio._id, servicio, token);
 				await loadFaciales(new Date(servicio.fecha_hora));
 			} else {
-				const response = await createFactura(servicio.factura);
+				const factura = {
+					fecha_hora: new Date(),
+					paciente: servicio.factura.paciente._id,
+					razon_social: servicio.factura.razon_social._id,
+					servicio: servicio.factura.servicio._id,
+					tipo_servicio: servicio.factura.tipo_servicio._id,
+					sucursal: servicio.factura.sucursal._id,
+					uso_cfdi: servicio.factura.uso_cfdi._id,
+				};
+				const response = await createFactura(factura, token);
 				if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 					servicio.factura = response.data;
-					await updateFacial(servicio._id, servicio, empleado.access_token);
+					await updateFacial(servicio._id, servicio, token);
 					await loadFaciales(new Date(servicio.fecha_hora));
 				}
 			}
 		} else {
-			await updateFacial(servicio._id, servicio, empleado.access_token);
+			await updateFacial(servicio._id, servicio, token);
 			await loadFaciales(new Date(servicio.fecha_hora));
 		}
 
@@ -656,21 +667,21 @@ const AgendarFacial = (props) => {
 	}
 
 	const loadPromovendedores = async () => {
-		const response = await findEmployeesByRolIdAvailable(promovendedorRolId, empleado.access_token);
+		const response = await findEmployeesByRolIdAvailable(promovendedorRolId, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setPromovendedores(response.data);
 		}
 	}
 
 	const loadCosmetologas = async () => {
-		const response = await findEmployeesByRolIdAvailable(cosmetologaRolId, empleado.access_token);
+		const response = await findEmployeesByRolIdAvailable(cosmetologaRolId, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setCosmetologas(response.data);
 		}
 	}
 
 	const loadDermatologos = async () => {
-		const response = await findEmployeesByRolIdAvailable(dermatologoRolId, empleado.access_token);
+		const response = await findEmployeesByRolIdAvailable(dermatologoRolId, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setDermatologos(response.data);
 		}

@@ -65,6 +65,7 @@ const AgendarAparatologia = (props) => {
 		colorBase,
 	} = props;
 
+	const token = empleado.access_token;
 	const paciente = info.paciente ? info.paciente : info;
 
 	const dermatologoRolId = process.env.REACT_APP_DERMATOLOGO_ROL_ID;
@@ -350,7 +351,7 @@ const AgendarAparatologia = (props) => {
 	};
 
 	const loadAparatologias = async (filterDate) => {
-		const response = await findAparatologiaByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal, empleado.access_token);
+		const response = await findAparatologiaByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			response.data.forEach(item => {
 				item.folio = generateFolio(item);
@@ -383,7 +384,7 @@ const AgendarAparatologia = (props) => {
 		data.status = pendienteStatusId;
 		data.hora_llegada = '--:--';
 		data.tipo_cita = data.dermatologo._id === dermatologoDirectoId ? directoTipoCitaId : data.tipo_cita;
-		const response = await createAparatologia(data, empleado.access_token);
+		const response = await createAparatologia(data, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			const consecutivo = {
 				consecutivo: response.data.consecutivo,
@@ -633,18 +634,27 @@ const AgendarAparatologia = (props) => {
 
 		if (servicio.factura) {
 			if (servicio.factura._id) {
-				await updateAparatologia(servicio._id, servicio, empleado.access_token);
+				await updateAparatologia(servicio._id, servicio, token);
 				await loadAparatologias(new Date(servicio.fecha_hora));
 			} else {
-				const response = await createFactura(servicio.factura);
+				const factura = {
+					fecha_hora: new Date(),
+					paciente: servicio.factura.paciente._id,
+					razon_social: servicio.factura.razon_social._id,
+					servicio: servicio.factura.servicio._id,
+					tipo_servicio: servicio.factura.tipo_servicio._id,
+					sucursal: servicio.factura.sucursal._id,
+					uso_cfdi: servicio.factura.uso_cfdi._id,
+				};
+				const response = await createFactura(factura, token);
 				if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 					servicio.factura = response.data;
-					await updateAparatologia(servicio._id, servicio, empleado.access_token);
+					await updateAparatologia(servicio._id, servicio, token);
 					await loadAparatologias(new Date(servicio.fecha_hora));
 				}
 			}
 		} else {
-			await updateAparatologia(servicio._id, servicio, empleado.access_token);
+			await updateAparatologia(servicio._id, servicio, token);
 			await loadAparatologias(new Date(servicio.fecha_hora));
 		}
 
@@ -674,21 +684,21 @@ const AgendarAparatologia = (props) => {
 	}
 
 	const loadPromovendedores = async () => {
-		const response = await findEmployeesByRolIdAvailable(promovendedorRolId, empleado.access_token);
+		const response = await findEmployeesByRolIdAvailable(promovendedorRolId, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setPromovendedores(response.data);
 		}
 	}
 
 	const loadCosmetologas = async () => {
-		const response = await findEmployeesByRolIdAvailable(cosmetologaRolId, empleado.access_token);
+		const response = await findEmployeesByRolIdAvailable(cosmetologaRolId, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setCosmetologas(response.data);
 		}
 	}
 
 	const loadDermatologos = async () => {
-		const response = await findEmployeesByRolIdAvailable(dermatologoRolId, empleado.access_token);
+		const response = await findEmployeesByRolIdAvailable(dermatologoRolId, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setDermatologos(response.data);
 		}

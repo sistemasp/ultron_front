@@ -10,7 +10,6 @@ import { updateAparatologia } from '../../../services/aparatolgia';
 import { updateConsult } from '../../../services/consultas';
 import { updateCirugia } from '../../../services/cirugias';
 import { updateEstetica } from '../../../services/esteticas';
-import { createFactura } from '../../../services/facturas';
 
 const Alert = (props) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -60,7 +59,7 @@ const ModalUsoCfdi = (props) => {
   const servicioConsultaId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
   const servicioCirugiaId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID;
   const servicioEsteticaId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
-
+  
   const [values, setValues] = useState({
     fecha_hora: new Date(),
     paciente: factura.paciente,
@@ -68,35 +67,10 @@ const ModalUsoCfdi = (props) => {
     servicio: factura.servicio,
     tipo_servicio: factura.tipo_servicio,
     sucursal: factura.sucursal,
-    uso_cfdi: process.env.REACT_APP_POR_DEFINIR_USO_CFDI_ID
+    uso_cfdi: { _id: process.env.REACT_APP_POR_DEFINIR_USO_CFDI_ID }
   });
 
   const handleGenerarFactura = async (event, rowData) => {
-    /*rowData.fecha_hora = new Date();
-    const response = await createFactura(rowData);
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-      servicio.factura = response.data;
-      switch (servicio.servicio._id) {
-        case servicioFacialId:
-          await updateFacial(servicio._id, servicio);
-          break;
-        case servicioDermapenlId:
-          await updateDermapen(servicio._id, servicio);
-          break;
-        case servicioAparatologiaId:
-          await updateAparatologia(servicio._id, servicio);
-          break;
-        case servicioConsultaId:
-          await updateConsult(servicio._id, servicio);
-          break;
-        case servicioCirugiaId:
-          await updateCirugia(servicio._id, servicio);
-          break;
-        case servicioEsteticaId:
-          await updateEstetica(servicio._id, servicio);
-          break
-      }
-    }*/
     onClose();
     closeRazonSocial(true, values);
   }
