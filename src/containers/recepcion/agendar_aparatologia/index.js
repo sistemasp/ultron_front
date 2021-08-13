@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
 	findScheduleByDateAndSucursalAndService,
 	showAllTipoCitas,
-	createConsecutivo,
 	showAllMedios,
 	showAllFrecuencias,
 	showAllMetodoPago,
@@ -31,6 +30,10 @@ import {
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import { findEmployeesByRolIdAvailable } from "../../../services/empleados";
 import { createFactura } from "../../../services/facturas";
+import { 
+	findConsecutivoBySucursal,
+	createConsecutivo,
+} from "../../../services/consecutivos";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -386,35 +389,24 @@ const AgendarAparatologia = (props) => {
 		data.tipo_cita = data.dermatologo._id === dermatologoDirectoId ? directoTipoCitaId : data.tipo_cita;
 		const response = await createAparatologia(data, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-			const consecutivo = {
-				consecutivo: response.data.consecutivo,
-				tipo_servicio: response.data.servicio,
-				servicio: response.data._id,
-				sucursal: sucursal,
-				fecha_hora: new Date(),
-				status: response.data.status,
-			}
-			const responseConsecutivo = await createConsecutivo(consecutivo);
-			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-				setOpenAlert(true);
-				setSeverity('success');
-				setMessage('APARATOLOGIA AGREGADA CORRECTAMENTE');
-				setValues({
-					servicio: '',
-					tratamientos: [],
-					dermatologo: '',
-					promovendedor: '',
-					cosmetologa: '',
-					paciente: `${paciente._id}`,
-					precio: 0,
-					total: 0,
-					tipo_cita: {},
-					tiempo: '30',
-				});
-				setDisableDate(true);
-				setPacienteAgendado({});
-				loadAparatologias(new Date());
-			}
+			setOpenAlert(true);
+			setSeverity('success');
+			setMessage('APARATOLOGIA AGREGADA CORRECTAMENTE');
+			setValues({
+				servicio: '',
+				tratamientos: [],
+				dermatologo: '',
+				promovendedor: '',
+				cosmetologa: '',
+				paciente: `${paciente._id}`,
+				precio: 0,
+				total: 0,
+				tipo_cita: {},
+				tiempo: '30',
+			});
+			setDisableDate(true);
+			setPacienteAgendado({});
+			loadAparatologias(new Date());
 		}
 
 		setIsLoading(false);
@@ -631,6 +623,24 @@ const AgendarAparatologia = (props) => {
 
 	const handleGuardarModalPagos = async (servicio) => {
 		servicio.pagado = servicio.pagos.length > 0;
+
+		if (!servicio.consecutivo) {
+			const response = await findConsecutivoBySucursal(sucursal, token);
+			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+				const resConsecutivo = response.data;
+				servicio.consecutivo = resConsecutivo.length;
+
+				const consecutivo = {
+					consecutivo: servicio.consecutivo,
+					tipo_servicio: servicio.servicio,
+					servicio: servicio._id,
+					sucursal: sucursal,
+					fecha_hora: new Date(),
+					status: servicio.status,
+				}
+				await createConsecutivo(consecutivo, token);
+			}
+		}
 
 		if (servicio.factura) {
 			if (servicio.factura._id) {

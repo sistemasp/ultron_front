@@ -121,9 +121,7 @@ const ModalFormPago = (props) => {
                   </Grid>
                   : <Fragment>
                     {
-                      values.forma_pago !== process.env.REACT_APP_FORMA_PAGO_EFECTIVO &&
-                        values.forma_pago !== process.env.REACT_APP_FORMA_PAGO_NO_PAGA &&
-                        values.forma_pago !== '' ?
+                      values.forma_pago === process.env.REACT_APP_FORMA_PAGO_TARJETA ?
                         <Fragment>
 
                           <Grid item xs={12}>
@@ -223,9 +221,7 @@ const ModalFormPago = (props) => {
                     </Grid>
 
                     {
-                      values.forma_pago !== process.env.REACT_APP_FORMA_PAGO_EFECTIVO &&
-                        values.forma_pago !== process.env.REACT_APP_FORMA_PAGO_NO_PAGA &&
-                        values.forma_pago !== '' ?
+                      values.forma_pago === process.env.REACT_APP_FORMA_PAGO_TARJETA ?
                         <Grid item xs={6}>
                           <CheckCustom
                             checked={values.confirmado}

@@ -680,21 +680,6 @@ export const showAllMaterials = async () => {
     }
 }
 
-// CONSECUTIVOS 
-
-export const createConsecutivo = async (consecutivo) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/consecutivo`,
-            method: 'POST',
-            data: consecutivo
-        });
-        return response;
-    } catch (error) {
-        console.log('createConsecutivo', error);
-    }
-}
-
 // TIPO ESTÉTICA
 
 export const showAllTipoEsteticas = async () => {

@@ -291,6 +291,9 @@ const ModalImprimirPagoDermatologo = (props) => {
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       const esteticas = response.data;
       esteticas.forEach((estetica) => {
+        estetica.producto_nombre = estetica.producto.map((prod) => {
+          return `${prod.nombre}`;
+        });
         estetica.forma_pago_nombre = estetica.pagos.map((pago) => {
           return `${pago.forma_pago.nombre} `
         });

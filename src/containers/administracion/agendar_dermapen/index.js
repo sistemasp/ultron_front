@@ -285,34 +285,23 @@ const AgendarDermapen = (props) => {
 
 		const response = await createDermapen(data, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-			const consecutivo = {
-				consecutivo: response.data.consecutivo,
-				tipo_servicio: response.data.servicio,
-				servicio: response.data._id,
-				sucursal: sucursal,
-				fecha_hora: new Date(),
-				status: response.data.status,
-			}
-			const responseConsecutivo = await createConsecutivo(consecutivo);
-			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-				setOpenAlert(true);
-				setMessage('EL DERMAPEN SE AGREGO CORRECTAMENTE');
-				setValues({
-					materiales: [],
-					dermatologo: '',
-					promovendedor: '',
-					cosmetologa: '',
-					paciente: `${paciente._id}`,
-					precio: 0,
-					total: 0,
-					tipo_cita: {},
-				});
-				loadDermapens(data.fecha_hora);
-				setFilterDate({
-					fecha_show: data.fecha_hora,
-					fecha: dateToString(data.fecha_hora),
-				});
-			}
+			setOpenAlert(true);
+			setMessage('EL DERMAPEN SE AGREGO CORRECTAMENTE');
+			setValues({
+				materiales: [],
+				dermatologo: '',
+				promovendedor: '',
+				cosmetologa: '',
+				paciente: `${paciente._id}`,
+				precio: 0,
+				total: 0,
+				tipo_cita: {},
+			});
+			loadDermapens(data.fecha_hora);
+			setFilterDate({
+				fecha_show: data.fecha_hora,
+				fecha: dateToString(data.fecha_hora),
+			});
 		}
 
 		setIsLoading(false);

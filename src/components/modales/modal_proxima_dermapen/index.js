@@ -165,8 +165,8 @@ const ModalProximaDermapen = (props) => {
   const handleOnClickProximarCita = async (data) => {
     setIsLoading(true);
     data.hora_llegada = '--:--';
-		data.hora_atencion = '--:--';
-		data.hora_salida = '--:--';
+    data.hora_atencion = '--:--';
+    data.hora_salida = '--:--';
     let response;
     switch (cita.servicio._id) {
       case servicioAparatologiaId:
@@ -189,26 +189,15 @@ const ModalProximaDermapen = (props) => {
         break;
     }
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-      const consecutivo = {
-        consecutivo: response.data.consecutivo,
-        tipo_servicio: cita.servicio._id,
-        servicio: response.data._id,
-        sucursal: sucursal._id,
-        fecha_hora: new Date(),
-        status: response.data.status,
-      }
-      const responseConsecutivo = await createConsecutivo(consecutivo);
-      if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-        setOpenAlert(true);
-        setMessage('CITA AGREGADA CORRECTAMENTE');
-        const dia = addZero(data.fecha_show.getDate());
-        const mes = addZero(data.fecha_show.getMonth() + 1);
-        const anio = data.fecha_show.getFullYear();
-        setFilterDate({
-          fecha_show: data.fecha_hora,
-          fecha: `${dia}/${mes}/${anio}`
-        });
-      }
+      setOpenAlert(true);
+      setMessage('CITA AGREGADA CORRECTAMENTE');
+      const dia = addZero(data.fecha_show.getDate());
+      const mes = addZero(data.fecha_show.getMonth() + 1);
+      const anio = data.fecha_show.getFullYear();
+      setFilterDate({
+        fecha_show: data.fecha_hora,
+        fecha: `${dia}/${mes}/${anio}`
+      });
     }
 
     switch (cita.servicio._id) {

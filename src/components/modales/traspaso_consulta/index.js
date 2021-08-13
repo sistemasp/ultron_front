@@ -75,51 +75,39 @@ const ModalTraspasoConsulta = (props) => {
       const response = await createConsult(servicio, empleado.access_token);
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
         const servicioRes = response.data;
-        const consecutivo = {
-          consecutivo: response.data.consecutivo,
-          tipo_servicio: consultaServicioId,
-          servicio: response.data._id,
-          sucursal: servicioRes.sucursal,
-          fecha_hora: dateNow,
-          status: response.data.status,
-        }
+        pagos.forEach(async (pago) => {
+          pago.fecha_pago = dateNow;
+          pago.observaciones = "TRASPASO";
+          pago.sucursal = servicioRes.sucursal;
+          pago.servicio = servicioRes._id;
+          pago.hora_aplicacion = servicioRes.hora_aplicacion;
 
-        const responseConsecutivo = await createConsecutivo(consecutivo);
-        if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-          pagos.forEach(async (pago) => {
-            pago.fecha_pago = dateNow;
-            pago.observaciones = "TRASPASO";
-            pago.sucursal = servicioRes.sucursal;
-            pago.servicio = servicioRes._id;
-            pago.hora_aplicacion = servicioRes.hora_aplicacion;
+          const entrada = {
+            create_date: dateNow,
+            hora_aplicacion: servicioRes.hora_aplicacion,
+            recepcionista: empleado,
+            concepto: `TRASPASO FOLIO: ${generateFolio(servicioRes)}`,
+            cantidad: pago.total,
+            tipo_entrada: tipoEntradaConsultaId,
+            sucursal: servicioRes.sucursal,
+            forma_pago: pago.forma_pago,
+            pago_anticipado: pago.pago_anticipado,
+          }
 
-            const entrada = {
-              create_date: dateNow,
-              hora_aplicacion: servicioRes.hora_aplicacion,
-              recepcionista: empleado,
-              concepto: `TRASPASO FOLIO: ${generateFolio(servicioRes)}`,
-              cantidad: pago.total,
-              tipo_entrada: tipoEntradaConsultaId,
-              sucursal: servicioRes.sucursal,
-              forma_pago: pago.forma_pago,
-              pago_anticipado: pago.pago_anticipado,
+          const response = await createEntrada(entrada);
+
+          if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+            const resEntrada = response.data;
+            pago.entrada = resEntrada._id;
+
+            const res = await createPago(pago);
+            if (`${res.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+              resEntrada.pago = res.data._id;
+              await updateEntrada(resEntrada._id, resEntrada);
+              confirmacion();
             }
-
-            const response = await createEntrada(entrada);
-
-            if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-              const resEntrada = response.data;
-              pago.entrada = resEntrada._id;
-
-              const res = await createPago(pago);
-              if (`${res.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-                resEntrada.pago = res.data._id;
-                await updateEntrada(resEntrada._id, resEntrada);
-                confirmacion();
-              }
-            }
-          });
-        }
+          }
+        });
       }
     }
     loadConsultas(dateNow);

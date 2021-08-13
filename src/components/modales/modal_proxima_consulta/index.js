@@ -151,27 +151,16 @@ const ModalProximaConsulta = (props) => {
     data.hora_salida = '--:--';
     const response = await createConsult(data, empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-      const consecutivo = {
-        consecutivo: response.data.consecutivo,
-        tipo_servicio: consultaServicioId,
-        servicio: response.data._id,
-        sucursal: sucursal._id,
-        fecha_hora: new Date(),
-        status: response.data.status,
-      }
-      const responseConsecutivo = await createConsecutivo(consecutivo);
-      if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-        setOpenAlert(true);
-        setMessage('CONSULTA AGREGADA CORRECTAMENTE');
-        const dia = addZero(data.fecha_show.getDate());
-        const mes = addZero(data.fecha_show.getMonth() + 1);
-        const anio = data.fecha_show.getFullYear();
-        setFilterDate({
-          fecha_show: data.fecha_hora,
-          fecha: `${dia}/${mes}/${anio}`
-        });
-        loadConsultas(data.fecha_hora);
-      }
+      setOpenAlert(true);
+      setMessage('CONSULTA AGREGADA CORRECTAMENTE');
+      const dia = addZero(data.fecha_show.getDate());
+      const mes = addZero(data.fecha_show.getMonth() + 1);
+      const anio = data.fecha_show.getFullYear();
+      setFilterDate({
+        fecha_show: data.fecha_hora,
+        fecha: `${dia}/${mes}/${anio}`
+      });
+      loadConsultas(data.fecha_hora);
     }
     onClose();
     setIsLoading(false);

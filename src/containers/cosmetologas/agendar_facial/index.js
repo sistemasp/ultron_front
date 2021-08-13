@@ -367,37 +367,26 @@ const AgendarFacial = (props) => {
 
 		const response = await createFacial(data, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-			const consecutivo = {
-				consecutivo: response.data.consecutivo,
-				tipo_servicio: response.data.servicio,
-				servicio: response.data._id,
-				sucursal: sucursal,
-				fecha_hora: new Date(),
-				status: response.data.status,
-			}
-			const responseConsecutivo = await createConsecutivo(consecutivo);
-			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-				setOpenAlert(true);
-				setSeverity('success');
-				setMessage('EL FACIAL SE AGREGO CORRECTAMENTE');
-				setValues({
-					servicio: '',
-					tratamientos: [],
-					dermatologo: '',
-					promovendedor: '',
-					cosmetologa: '',
-					paciente: `${paciente._id}`,
-					precio: '',
-					tipo_cita: {},
-				});
-				setDisableDate(true);
-				setPacienteAgendado({});
-				loadFaciales(data.fecha_hora);
-				setFilterDate({
-					fecha_show: data.fecha_hora,
-					fecha: dateToString(data.fecha_hora),
-				});
-			}
+			setOpenAlert(true);
+			setSeverity('success');
+			setMessage('EL FACIAL SE AGREGO CORRECTAMENTE');
+			setValues({
+				servicio: '',
+				tratamientos: [],
+				dermatologo: '',
+				promovendedor: '',
+				cosmetologa: '',
+				paciente: `${paciente._id}`,
+				precio: '',
+				tipo_cita: {},
+			});
+			setDisableDate(true);
+			setPacienteAgendado({});
+			loadFaciales(data.fecha_hora);
+			setFilterDate({
+				fecha_show: data.fecha_hora,
+				fecha: dateToString(data.fecha_hora),
+			});
 		}
 
 		setIsLoading(false);

@@ -747,6 +747,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                     {
                       esteticas ?
                         esteticas.map(estetica => {
+                          console.log("KAOZ", estetica);
                           const pagoDermatologo = estetica.has_descuento_dermatologo ? 0 : Number(estetica.total_aplicacion) * Number(dermatologo.esquema.porcentaje_dermocosmetica) / 100;
                           pagoTotal += Number(pagoDermatologo);
                           const date = new Date(estetica.hora_aplicacion);
@@ -758,7 +759,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                               <p className={classes.label_cells}>{`${estetica.consecutivo}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
-                              <p className={classes.label_cells}>{`${estetica.producto.nombre}`}</p>
+                              <p className={classes.label_cells}>{`${estetica.producto_nombre}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells}>{`${estetica.factura ? '(FACTURA)' : ''}${estetica.forma_pago_nombre}`}</p>

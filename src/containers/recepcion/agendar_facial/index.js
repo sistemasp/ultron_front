@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
 	findScheduleByDateAndSucursalAndService,
 	showAllTipoCitas,
-	createConsecutivo,
 	showAllMedios,
 	showAllFrecuencias,
 	showAllMetodoPago,
@@ -31,6 +30,10 @@ import { AgendarFacialContainer } from "./agendar_facial";
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import { findEmployeesByRolIdAvailable } from "../../../services/empleados";
 import { createFactura } from "../../../services/facturas";
+import { 
+	findConsecutivoBySucursal,
+	createConsecutivo,
+} from "../../../services/consecutivos";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -370,37 +373,26 @@ const AgendarFacial = (props) => {
 
 		const response = await createFacial(data, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-			const consecutivo = {
-				consecutivo: response.data.consecutivo,
-				tipo_servicio: response.data.servicio,
-				servicio: response.data._id,
-				sucursal: sucursal,
-				fecha_hora: new Date(),
-				status: response.data.status,
-			}
-			const responseConsecutivo = await createConsecutivo(consecutivo);
-			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-				setOpenAlert(true);
-				setSeverity('success');
-				setMessage('EL FACIAL SE AGREGO CORRECTAMENTE');
-				setValues({
-					servicio: '',
-					tratamientos: [],
-					dermatologo: '',
-					promovendedor: '',
-					cosmetologa: '',
-					paciente: `${paciente._id}`,
-					precio: '',
-					tipo_cita: {},
-				});
-				setDisableDate(true);
-				setPacienteAgendado({});
-				loadFaciales(data.fecha_hora);
-				setFilterDate({
-					fecha_show: data.fecha_hora,
-					fecha: dateToString(data.fecha_hora),
-				});
-			}
+			setOpenAlert(true);
+			setSeverity('success');
+			setMessage('EL FACIAL SE AGREGO CORRECTAMENTE');
+			setValues({
+				servicio: '',
+				tratamientos: [],
+				dermatologo: '',
+				promovendedor: '',
+				cosmetologa: '',
+				paciente: `${paciente._id}`,
+				precio: '',
+				tipo_cita: {},
+			});
+			setDisableDate(true);
+			setPacienteAgendado({});
+			loadFaciales(data.fecha_hora);
+			setFilterDate({
+				fecha_show: data.fecha_hora,
+				fecha: dateToString(data.fecha_hora),
+			});
 		}
 
 		setIsLoading(false);
@@ -616,6 +608,25 @@ const AgendarFacial = (props) => {
 
 	const handleGuardarModalPagos = async (servicio) => {
 		servicio.pagado = servicio.pagos.length > 0;
+
+		if (!servicio.consecutivo) {
+			const response = await findConsecutivoBySucursal(sucursal, token);
+			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+				const resConsecutivo = response.data;
+				servicio.consecutivo = resConsecutivo.length;
+
+				const consecutivo = {
+					consecutivo: servicio.consecutivo,
+					tipo_servicio: servicio.servicio,
+					servicio: servicio._id,
+					sucursal: sucursal,
+					fecha_hora: new Date(),
+					status: servicio.status,
+				}
+				await createConsecutivo(consecutivo, token);
+			}
+		}
+
 		if (servicio.factura) {
 			if (servicio.factura._id) {
 				await updateFacial(servicio._id, servicio, token);

@@ -224,19 +224,8 @@ const ModalDermapen = (props) => {
       const response = await createDermapen(rowData, empleado.access_token);
 
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-        /*const consecutivo = {
-          consecutivo: response.data.consecutivo,
-          tipo_servicio: dermapen.servicio._id,
-          servicio: response.data._id,
-          sucursal: sucursal._id,
-          fecha_hora: new Date(),
-          status: response.data.status,
-        }
-        const responseConsecutivo = await createConsecutivo(consecutivo);
-        if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
-          setOpenAlert(true);
-          setMessage('DERMAPEN REAGENDADO CORRECTAMENTE');
-        //}
+        setOpenAlert(true);
+        setMessage('DERMAPEN REAGENDADO CORRECTAMENTE');
       }
       const dia = addZero(rowData.fecha_hora.getDate());
       const mes = addZero(rowData.fecha_hora.getMonth());

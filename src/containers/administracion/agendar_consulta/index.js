@@ -316,35 +316,24 @@ const AgendarConsulta = (props) => {
 
 		const response = await createConsult(data, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-			const consecutivo = {
-				consecutivo: response.data.consecutivo,
-				tipo_servicio: consultaServicioId,
-				servicio: response.data._id,
-				sucursal: sucursal._id,
-				fecha_hora: new Date(),
-				status: response.data.status,
-			}
-			const responseConsecutivo = await createConsecutivo(consecutivo);
-			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-				setOpenAlert(true);
-				setSeverity('success');
-				setMessage('LA CONSULTA SE AGENDO CORRECTAMENTE');
-				setValues({
-					servicio: '',
-					tratamiento: '',
-					fecha_show: '',
-					fecha: '',
-					hora: '',
-					paciente: {},
-					precio: '',
-					tipo_cita: '',
-					citado: '',
-					pagado: false,
-				});
-				setDisableDate(true);
-				setPacienteAgendado({});
-				loadConsultas(new Date());
-			}
+			setOpenAlert(true);
+			setSeverity('success');
+			setMessage('LA CONSULTA SE AGENDO CORRECTAMENTE');
+			setValues({
+				servicio: '',
+				tratamiento: '',
+				fecha_show: '',
+				fecha: '',
+				hora: '',
+				paciente: {},
+				precio: '',
+				tipo_cita: '',
+				citado: '',
+				pagado: false,
+			});
+			setDisableDate(true);
+			setPacienteAgendado({});
+			loadConsultas(new Date());
 		}
 		setIsLoading(false);
 	};

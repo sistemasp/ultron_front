@@ -13,7 +13,6 @@ const ModalPagos = (props) => {
     open,
     onClose,
     sucursal,
-    handleClickGuardarPago,
     servicio,
     empleado,
     onGuardarModalPagos,
@@ -315,7 +314,6 @@ const ModalPagos = (props) => {
             onClickCancelPago={handleClickCancelPago}
             openModalPago={openModalPago}
             onClickCancel={onClose}
-            onClickGuardar={handleClickGuardarPago}
             isLoading={isLoading}
             pagos={pagos}
             pago={pago}

@@ -116,11 +116,11 @@ const ModalConsulta = (props) => {
   const productoConsultaId = process.env.REACT_APP_PRODUCTO_CONSULTA_ID;
 
   const loadFormasPago = async () => {
-		const response = await showAllMetodoPago();
-		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			setFormasPago(response.data);
-		}
-	}
+    const response = await showAllMetodoPago();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setFormasPago(response.data);
+    }
+  }
 
   const loadMedios = async () => {
     const response = await showAllMedios();
@@ -200,7 +200,7 @@ const ModalConsulta = (props) => {
   }
 
   const handleChangeMedio = (e) => {
-		setValues({ ...values, medio: e.target.value });
+    setValues({ ...values, medio: e.target.value });
   }
 
   const handleChangeFecha = async (date) => {
@@ -320,19 +320,8 @@ const ModalConsulta = (props) => {
       rowData.fecha_hora = rowData.nueva_fecha_hora;
       const response = await createConsult(rowData, empleado.access_token);
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-        /*const consecutivo = {
-          consecutivo: response.data.consecutivo,
-          tipo_servicio: consultaServicioId,
-          servicio: response.data._id,
-          sucursal: sucursal._id,
-          fecha_hora: new Date(),
-          status: response.data.status,
-        }
-        const responseConsecutivo = await createConsecutivo(consecutivo);
-        if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {*/
-          setOpenAlert(true);
-          setMessage('CONSULTA REAGENDADA CORRECTAMENTE');
-        //}
+        setOpenAlert(true);
+        setMessage('CONSULTA REAGENDADA CORRECTAMENTE');
       }
 
       const dia = addZero(rowData.fecha_hora.getDate());
@@ -384,11 +373,11 @@ const ModalConsulta = (props) => {
   }
 
   const handleChangePaymentMethod = (event) => {
-		setValues({
-			...values,
-			forma_pago: event.target.value,
-		});
-	}
+    setValues({
+      ...values,
+      forma_pago: event.target.value,
+    });
+  }
 
   const handleGuardarModalPagos = (pagos) => {
     setValues({
@@ -399,25 +388,25 @@ const ModalConsulta = (props) => {
   }
 
   const handleChangeFrecuencia = (e) => {
-		const frecuencia = e.target.value;
-		/*const dermatologo = dermatologos.find(item => {
-			return item._id === dermatologoDirectoId;
-		});*/
-		const promovendedor = promovendedores.find(item => {
-			return item._id === promovendedorSinPromovendedorId;
-		});
-		setValues({
-			...values,
-			frecuencia: frecuencia,
-			//dermatologo: frecuencia === frecuenciaPrimeraVezId ? dermatologo._id : dermatologoDirectoId,
-			promovendedor: frecuencia === frecuenciaReconsultaId ? promovendedor._id : promovendedorSinPromovendedorId,
-			producto: frecuencia === frecuenciaPrimeraVezId ? productoConsultaId : values.producto,
-		});
-	}
+    const frecuencia = e.target.value;
+    /*const dermatologo = dermatologos.find(item => {
+      return item._id === dermatologoDirectoId;
+    });*/
+    const promovendedor = promovendedores.find(item => {
+      return item._id === promovendedorSinPromovendedorId;
+    });
+    setValues({
+      ...values,
+      frecuencia: frecuencia,
+      //dermatologo: frecuencia === frecuenciaPrimeraVezId ? dermatologo._id : dermatologoDirectoId,
+      promovendedor: frecuencia === frecuenciaReconsultaId ? promovendedor._id : promovendedorSinPromovendedorId,
+      producto: frecuencia === frecuenciaPrimeraVezId ? productoConsultaId : values.producto,
+    });
+  }
 
   const handleChangeProductos = (e) => {
-		setValues({ ...values, producto: e.target.value });
-	}
+    setValues({ ...values, producto: e.target.value });
+  }
 
   useEffect(() => {
     loadAll();

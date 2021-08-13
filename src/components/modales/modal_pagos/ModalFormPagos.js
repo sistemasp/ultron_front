@@ -33,7 +33,6 @@ const ModalFormPagos = (props) => {
     titulo,
     isValid,
     onClickCancel,
-    onClickGuardar,
     isLoading,
     open,
     columns,

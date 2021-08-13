@@ -160,25 +160,25 @@ const ModalCita = (props) => {
   });
 
   const loadMedios = async () => {
-		const response = await showAllMedios();
-		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			setMedios(response.data);
-		}
-	}
+    const response = await showAllMedios();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setMedios(response.data);
+    }
+  }
 
   const loadFrecuencias = async () => {
-		const response = await showAllFrecuencias();
-		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			setFrecuencias(response.data);
-		}
-	}
+    const response = await showAllFrecuencias();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setFrecuencias(response.data);
+    }
+  }
 
   const loadFormasPago = async () => {
-		const response = await showAllMetodoPago();
-		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			setFormasPago(response.data);
-		}
-	}
+    const response = await showAllMetodoPago();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setFormasPago(response.data);
+    }
+  }
 
   const loadHorarios = async (date) => {
     const dia = date ? date.getDate() : values.fecha_hora.getDate();
@@ -217,15 +217,15 @@ const ModalCita = (props) => {
   };
 
   const handleChangeMedio = (e) => {
-		setValues({ ...values, medio: e.target.value });
-	}
+    setValues({ ...values, medio: e.target.value });
+  }
 
   const handleChangePaymentMethod = (event) => {
-		setValues({
-			...values,
-			forma_pago: event.target.value,
-		});
-	}
+    setValues({
+      ...values,
+      forma_pago: event.target.value,
+    });
+  }
 
   const handleChangeFecha = async (date) => {
     setIsLoading(true);
@@ -367,19 +367,8 @@ const ModalCita = (props) => {
           break;
       }
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-        const consecutivo = {
-          consecutivo: response.data.consecutivo,
-          tipo_servicio: cita.servicio._id,
-          servicio: response.data._id,
-          sucursal: sucursal,
-          fecha_hora: new Date(),
-          status: response.data.status,
-        }
-        const responseConsecutivo = await createConsecutivo(consecutivo);
-        if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-          setOpenAlert(true);
-          setMessage('TRATAMIENTO REAGENDADO CORRECTAMENTE');
-        }
+        setOpenAlert(true);
+        setMessage('TRATAMIENTO REAGENDADO CORRECTAMENTE');
       }
       const dia = addZero(rowData.fecha_hora.getDate());
       const mes = addZero(rowData.fecha_hora.getMonth());
@@ -464,11 +453,11 @@ const ModalCita = (props) => {
   }
 
   const handleChangeFrecuencia = (e) => {
-		setValues({
-			...values,
-			frecuencia: e.target.value,
-		});
-	}
+    setValues({
+      ...values,
+      frecuencia: e.target.value,
+    });
+  }
 
   const handleGuardarModalPagos = (pagos) => {
     setValues({
@@ -491,7 +480,7 @@ const ModalCita = (props) => {
               : (sucursal === sucursalOcciId ? item.precio_oc // PRECIO OCCIDENTAL
                 : (sucursal === sucursalFedeId ? item.precio_fe // PRECIO FEDERALISMO
                   : (sucursal === sucursalRubenDarioId ? item.precio_rd // PRECIO RUBEN DARIO
-                  : 0))); // ERROR
+                    : 0))); // ERROR
           precio = Number(precio) + Number(itemPrecio);
         });
       }
@@ -591,7 +580,7 @@ const ModalCita = (props) => {
                 onChangeDermatologo={(e) => handleChangeDermatologo(e)}
                 onChangeTiempo={(e) => handleChangeTiempo(e)}
                 frecuencias={frecuencias}
-								onChangeFrecuencia={(e) => handleChangeFrecuencia(e)}
+                onChangeFrecuencia={(e) => handleChangeFrecuencia(e)}
                 tratamientos={tratamientos}
                 areas={areas}
                 medios={medios}

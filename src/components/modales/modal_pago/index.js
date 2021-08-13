@@ -245,6 +245,7 @@ const ModalPago = (props) => {
 
     let response;
 
+    servicio.forma_pago._id = rowData.forma_pago;
     if (rowData.forma_pago === formaPagoPagoAnticipadoId && rowData.sesion_anicipada) {
       rowData.pago_anticipado = true;
       rowData.has_descuento_dermatologo = false;

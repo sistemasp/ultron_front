@@ -103,9 +103,7 @@ const FormPagoMultiservicio = (props) => {
                 </FormControl>
               </Grid>
               {
-                values.forma_pago !== process.env.REACT_APP_FORMA_PAGO_EFECTIVO &&
-                  values.forma_pago !== process.env.REACT_APP_FORMA_PAGO_NO_PAGA &&
-                  values.forma_pago !== '' ?
+                values.forma_pago === process.env.REACT_APP_FORMA_PAGO_TARJETA ?
                   <Fragment>
 
                     <Grid item xs={12}>
@@ -166,7 +164,7 @@ const FormPagoMultiservicio = (props) => {
                   }}
                   variant="outlined" />
               </Grid>
-{/*
+              {/*
               <Grid item xs={12}>
                 <TextField
                   className={classes.textField}
@@ -205,9 +203,7 @@ const FormPagoMultiservicio = (props) => {
               </Grid>
 
               {
-                values.forma_pago !== process.env.REACT_APP_FORMA_PAGO_EFECTIVO &&
-                  values.forma_pago !== process.env.REACT_APP_FORMA_PAGO_NO_PAGA &&
-                  values.forma_pago !== '' ?
+                values.forma_pago === process.env.REACT_APP_FORMA_PAGO_TARJETA ?
                   <Grid item xs={6}>
                     <CheckCustom
                       checked={values.confirmado}
@@ -245,7 +241,7 @@ const FormPagoMultiservicio = (props) => {
                   disabled={isLoading}
                   text='GUARDAR' />
               </Grid>
-             
+
             </Grid>
 
           </form>

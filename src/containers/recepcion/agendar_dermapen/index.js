@@ -2,7 +2,6 @@ import React, { useState, useEffect, Fragment } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import {
 	findScheduleByDateAndSucursalAndService,
-	createConsecutivo,
 	showAllMedios,
 	showAllMaterials,
 	showAllFrecuencias,
@@ -28,6 +27,10 @@ import { AgendarDermapenContainer } from "./agendar_dermapen";
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import { findEmployeesByRolIdAvailable } from "../../../services/empleados";
 import { createFactura } from "../../../services/facturas";
+import { 
+	findConsecutivoBySucursal,
+	createConsecutivo,
+} from "../../../services/consecutivos";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -288,34 +291,23 @@ const AgendarDermapen = (props) => {
 
 		const response = await createDermapen(data, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-			const consecutivo = {
-				consecutivo: response.data.consecutivo,
-				tipo_servicio: response.data.servicio,
-				servicio: response.data._id,
-				sucursal: sucursal,
-				fecha_hora: new Date(),
-				status: response.data.status,
-			}
-			const responseConsecutivo = await createConsecutivo(consecutivo);
-			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-				setOpenAlert(true);
-				setMessage('EL DERMAPEN SE AGREGO CORRECTAMENTE');
-				setValues({
-					materiales: [],
-					dermatologo: '',
-					promovendedor: '',
-					cosmetologa: '',
-					paciente: `${paciente._id}`,
-					precio: 0,
-					total: 0,
-					tipo_cita: {},
-				});
-				loadDermapens(data.fecha_hora);
-				setFilterDate({
-					fecha_show: data.fecha_hora,
-					fecha: dateToString(data.fecha_hora),
-				});
-			}
+			setOpenAlert(true);
+			setMessage('EL DERMAPEN SE AGREGO CORRECTAMENTE');
+			setValues({
+				materiales: [],
+				dermatologo: '',
+				promovendedor: '',
+				cosmetologa: '',
+				paciente: `${paciente._id}`,
+				precio: 0,
+				total: 0,
+				tipo_cita: {},
+			});
+			loadDermapens(data.fecha_hora);
+			setFilterDate({
+				fecha_show: data.fecha_hora,
+				fecha: dateToString(data.fecha_hora),
+			});
 		}
 
 		setIsLoading(false);
@@ -516,6 +508,24 @@ const AgendarDermapen = (props) => {
 
 	const handleGuardarModalPagos = async (servicio) => {
 		servicio.pagado = servicio.pagos.length > 0;
+
+		if (!servicio.consecutivo) {
+			const response = await findConsecutivoBySucursal(sucursal, token);
+			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+				const resConsecutivo = response.data;
+				servicio.consecutivo = resConsecutivo.length;
+
+				const consecutivo = {
+					consecutivo: servicio.consecutivo,
+					tipo_servicio: servicio.servicio,
+					servicio: servicio._id,
+					sucursal: sucursal,
+					fecha_hora: new Date(),
+					status: servicio.status,
+				}
+				await createConsecutivo(consecutivo, token);
+			}
+		}
 
 		if (servicio.factura) {
 			if (servicio.factura._id) {
