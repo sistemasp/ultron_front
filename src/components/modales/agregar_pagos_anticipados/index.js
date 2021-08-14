@@ -245,10 +245,13 @@ const AgregarPagosAnticipados = (props) => {
     setIsLoading(true);
     value.fecha_pago = new Date();
     value.sucursal = sucursal._id;
+    value.recepcionista = empleado._id;
     value.paciente = paciente._id;
-    value.tratamientos.map((tratamiento) => {
-      tratamiento.areas = [];
-    });
+    if (value.tratamientos) {
+      value.tratamientos.map((tratamiento) => {
+        tratamiento.areas = [];
+      });
+    }
     const response = await createSesionAnticipada(value, token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
       await loadSesionesAnticipadas();
@@ -384,7 +387,7 @@ const AgregarPagosAnticipados = (props) => {
         sucursal: servicio.factura.sucursal._id,
         uso_cfdi: servicio.factura.uso_cfdi._id,
       };
-      
+
       const response = await createFactura(factura, token);
 
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {

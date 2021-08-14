@@ -993,13 +993,12 @@ const ReportesDetallesGeneral = (props) => {
 		pagoAnticipados.map((pagoAnticipado) => {
 			pagoAnticipado.sesiones_anticipadas.map((sesionAnticipada) => {
 				sesionAnticipada.fecha_hora = sesionAnticipada.fecha_pago;
-				sesionAnticipada.fecha_hora = sesionAnticipada.fecha_pago;
 
 				sesionAnticipada.hora_llegada = "NO APLICA";
 				sesionAnticipada.hora_atencion = "NO APLICA";
 				sesionAnticipada.hora_salida = "NO APLICA";
 				sesionAnticipada.consecutivo = "SIN FOLIO";
-				sesionAnticipada.quien_agenda = pagoAnticipado.recepcionista;
+				sesionAnticipada.quien_agenda = sesionAnticipada.recepcionista;
 
 				sesionesAnticipadas.push(sesionAnticipada);
 			});
@@ -1014,7 +1013,6 @@ const ReportesDetallesGeneral = (props) => {
 		const aparatologiasProcesadas = [];
 
 		datosCompletos.forEach(async (item) => {
-			console.log("KAOZ", item);
 			const fecha = new Date(item.fecha_hora);
 
 			item.fecha_show = `${addZero(fecha.getDate())}/${addZero(fecha.getMonth() + 1)}/${fecha.getFullYear()}`;

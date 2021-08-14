@@ -29,6 +29,7 @@ import {
 	findConsecutivoBySucursal,
 	createConsecutivo,
 } from "../../../services/consecutivos";
+import { updateSesionAnticipada } from "../../../services/sesiones_anticipadas";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -85,7 +86,8 @@ const AgendarCirugia = (props) => {
 	const frecuenciaPrimeraVezId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
 	const frecuenciaReconsultaId = process.env.REACT_APP_FRECUENCIA_RECONSULTA_ID;
 	const productoCirugiaId = process.env.REACT_APP_PRODUCTO_CIRUGIA_ID;
-	const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
+	const efectivoFormaPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
+	const sesionAnticipadaFormaPagoId = process.env.REACT_APP_FORMA_PAGO_SESION_ANTICIPADA;
 	const fisicoMedioId = process.env.REACT_APP_MEDIO_FISICO_ID;
 
 	const [openAlert, setOpenAlert] = useState(false);
@@ -114,7 +116,7 @@ const AgendarCirugia = (props) => {
 		descuento_dermatologo: 0,
 		frecuencia: frecuenciaPrimeraVezId,
 		dermatologo: dermatologoDirectoId,
-		forma_pago: efectivoMetodoPagoId,
+		forma_pago: efectivoFormaPagoId,
 		medio: fisicoMedioId,
 		hora: 0,
 		minutos: 0,
@@ -482,6 +484,11 @@ const AgendarCirugia = (props) => {
 				const resConsecutivo = response.data;
 				servicio.consecutivo = resConsecutivo.length;
 
+				if (servicio.forma_pago._id === sesionAnticipadaFormaPagoId) {
+					servicio.sesion_anticipada.consecutivo = servicio.consecutivo;
+					await updateSesionAnticipada(servicio.sesion_anticipada._id, servicio.sesion_anticipada, token);
+				}
+
 				const consecutivo = {
 					consecutivo: servicio.consecutivo,
 					tipo_servicio: servicio.servicio,
@@ -491,6 +498,11 @@ const AgendarCirugia = (props) => {
 					status: servicio.status,
 				}
 				await createConsecutivo(consecutivo, token);
+			}
+		} else {
+			if (servicio.forma_pago._id === sesionAnticipadaFormaPagoId) {
+				servicio.sesion_anticipada.consecutivo = servicio.consecutivo;
+				await updateSesionAnticipada(servicio.sesion_anticipada._id, servicio.sesion_anticipada, token);
 			}
 		}
 

@@ -30,6 +30,7 @@ import {
 	findConsecutivoBySucursal,
 	createConsecutivo,
 } from "../../../services/consecutivos";
+import { updateSesionAnticipada } from "../../../services/sesiones_anticipadas";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -85,7 +86,8 @@ const AgendarEstetica = (props) => {
 	const promovendedorSinPromovendedorId = process.env.REACT_APP_PROMOVENDEDOR_SIN_PROMOVENDEDOR_ID;
 	const cosmetologaSinAsignarId = process.env.REACT_APP_COSMETOLOGA_SIN_ASIGNAR_ID;
 	const productoAplicacionToxinaBotulinicaDituroxalId = process.env.REACT_APP_PRO_APL_TOX_BOT_DIT_ID;
-	const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
+	const efectivoFormaPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
+	const sesionAnticipadaFormaPagoId = process.env.REACT_APP_FORMA_PAGO_SESION_ANTICIPADA;
 	const fisicoMedioId = process.env.REACT_APP_MEDIO_FISICO_ID;
 
 	const [openAlert, setOpenAlert] = useState(false);
@@ -119,7 +121,7 @@ const AgendarEstetica = (props) => {
 		cosmetologa: cosmetologaSinAsignarId,
 		promovendedor: promovendedorSinPromovendedorId,
 		frecuencia: frecuenciaPrimeraVezId,
-		forma_pago: efectivoMetodoPagoId,
+		forma_pago: efectivoFormaPagoId,
 		medio: fisicoMedioId,
 		hora: 0,
 		minutos: 0,
@@ -515,6 +517,11 @@ const AgendarEstetica = (props) => {
 				const resConsecutivo = response.data;
 				servicio.consecutivo = resConsecutivo.length;
 
+				if (servicio.forma_pago._id === sesionAnticipadaFormaPagoId) {
+					servicio.sesion_anticipada.consecutivo = servicio.consecutivo;
+					await updateSesionAnticipada(servicio.sesion_anticipada._id, servicio.sesion_anticipada, token);
+				}
+
 				const consecutivo = {
 					consecutivo: servicio.consecutivo,
 					tipo_servicio: servicio.servicio,
@@ -524,6 +531,11 @@ const AgendarEstetica = (props) => {
 					status: servicio.status,
 				}
 				await createConsecutivo(consecutivo, token);
+			}
+		} else {
+			if (servicio.forma_pago._id === sesionAnticipadaFormaPagoId) {
+				servicio.sesion_anticipada.consecutivo = servicio.consecutivo;
+				await updateSesionAnticipada(servicio.sesion_anticipada._id, servicio.sesion_anticipada, token);
 			}
 		}
 

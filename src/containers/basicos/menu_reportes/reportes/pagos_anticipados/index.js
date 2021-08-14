@@ -2,17 +2,11 @@ import React, { useState, useEffect, Fragment } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import { Backdrop, CircularProgress } from "@material-ui/core";
 import { toFormatterCurrency, addZero, dateToString } from "../../../../../utils/utils";
-import { ReportesFacturasContainer } from "./reportes_facturas";
-import { findAparatologiaById } from "../../../../../services/aparatolgia";
-import { findFacialById } from "../../../../../services/faciales";
-import { findConsultById } from "../../../../../services/consultas";
-import { findCirugiaById } from "../../../../../services/cirugias";
-import { findBiopsiaById } from "../../../../../services/biopsias";
-import { findEsteticaById } from "../../../../../services/esteticas";
-import { findDermapenById } from "../../../../../services/dermapens";
+import { ReportesPagosAnticipadosContainer } from "./pagos_anticipados";
 import { findFacturasByRangeDateAndSucursal } from "../../../../../services/facturas";
 import myStyles from "../../../../../css";
 import PrintIcon from '@material-ui/icons/Print';
+import { findPagoAnticipadoByRangeDateAndSucursal } from "../../../../../services/pagos_anticipados";
 
 const useStyles = makeStyles(theme => ({
 	backdrop: {
@@ -21,7 +15,7 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-const ReportesFacturas = (props) => {
+const ReportesPagosAnticipados = (props) => {
 
 	const {
 		empleado,
@@ -42,7 +36,7 @@ const ReportesFacturas = (props) => {
 	const servicioDermapenId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID
 
 	const [isLoading, setIsLoading] = useState(true);
-	const [facturas, setFacturas] = useState([]);
+	const [sesionesAnticipadas, setSesionesAnticipadas] = useState([]);
 	const [datosImpresion, setDatosImpresion] = useState();
 	const [openModalImprimirDatosFacturacion, setOpenModalImprimirDatosFacturacion] = useState(false);
 
@@ -62,18 +56,17 @@ const ReportesFacturas = (props) => {
 	});
 
 	const columns = [
-		{ title: 'FECHA', field: 'fecha' },
+		{ title: 'FECHA PAGO', field: 'fecha_pago_show' },
 		{ title: 'PACIENTE', field: 'paciente.nombre_completo' },
-		{ title: 'RAZÓN SOCIAL', field: 'razon_social.nombre_completo' },
-		{ title: 'RFC', field: 'razon_social.rfc' },
-		{ title: 'USO CFDI', field: 'uso_cfdi.nombre' },
-		{ title: 'DOMICILIO', field: 'domicilio_completo' },
-		{ title: 'ESTADO', field: 'razon_social.estado' },
-		{ title: 'MUNICIPIO', field: 'razon_social.municipio' },
-		{ title: 'CODIGÓ POSTAL', field: 'razon_social.codigo_postal' },
-		{ title: 'COLONIA', field: 'razon_social.colonia' },
-		{ title: 'TELEFÓNO', field: 'razon_social.telefono' },
-		{ title: 'CORREO', field: 'razon_social.email' },
+		{ title: 'TELÉFONO', field: 'paciente.telefono' },
+		{ title: 'FOLIO', field: 'consecutivo' },
+		{ title: 'DERMATÓLOGO', field: 'dermatologo.nombre' },
+		{ title: 'SERVICIO', field: 'servicio.nombre' },
+		{ title: 'PRODUCTO', field: 'show_tratamientos' },
+		{ title: 'NUMERO SESIÓN', field: 'numero_sesion' },
+		{ title: 'STATUS', field: 'status' },
+		{ title: 'FECHA REALIZACIÓN', field: 'fecha_realizacion' },
+		{ title: 'OBSERVACIONES', field: 'observaciones' },
 	];
 
 	const options = {
@@ -93,7 +86,6 @@ const ReportesFacturas = (props) => {
 	}
 
 	const handlePrint = async (event, rowData) => {
-		console.log("KAOZ", rowData);
 		setDatosImpresion(rowData);
 		setOpenModalImprimirDatosFacturacion(true);
 	}
@@ -106,69 +98,39 @@ const ReportesFacturas = (props) => {
 		},*/
 	];
 
-	const loadFacturas = async (startDate, endDate) => {
-		const response = await findFacturasByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
+	const loadPagosAnticipados = async (startDate, endDate) => {
+		const response = await findPagoAnticipadoByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
 			endDate.getDate(), (endDate.getMonth() + 1), endDate.getFullYear(), sucursal, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			const resData = response.data;
-			resData.forEach((factura) => {
-				factura.fecha = dateToString(factura.fecha_hora);
-				factura.paciente.nombre_completo = `${factura.paciente.nombres} ${factura.paciente.apellidos}`;
-				factura.domicilio_completo = `${factura.razon_social.domicilio} #${factura.razon_social.numero_exterior} ${factura.razon_social.numero_interior ? '- ' + factura.razon_social.numero_interior : ''}`;
-				factura.uso_cfdi.nombre = `${factura.uso_cfdi.clave}: ${factura.uso_cfdi.descripcion}`;
+			const sesionesAnticipadasData = [];
+			resData.forEach((pagoAnticipado) => {
+				pagoAnticipado.sesiones_anticipadas.forEach((sesionAnticipada) => {
+					sesionAnticipada.fecha_pago_show = dateToString(sesionAnticipada.fecha_pago);
+					sesionAnticipada.paciente.nombre_completo = `${sesionAnticipada.paciente.nombres} ${sesionAnticipada.paciente.apellidos}`;
+					sesionAnticipada.status = sesionAnticipada.fecha_asistencia ? 'REALIZADO' : 'PENDIENTE';
+					sesionAnticipada.fecha_realizacion = sesionAnticipada.fecha_asistencia ? dateToString(sesionAnticipada.fecha_asistencia) : '-';
+					sesionAnticipada.consecutivo = sesionAnticipada.consecutivo ? sesionAnticipada.consecutivo : '-';
+					sesionAnticipada.show_tratamientos = sesionAnticipada.tratamientos.map(tratamiento => {
+						const show_areas = tratamiento.areasSeleccionadas.map(area => {
+							return `${area.nombre}`;
+						});
+						return `►${tratamiento.nombre}(${show_areas}) `;
+					});
+					console.log("KAOZ", sesionAnticipada);
+					sesionesAnticipadasData.push(sesionAnticipada);
+
+				});
+
+				pagoAnticipado.fecha_pago_show = dateToString(pagoAnticipado.fecha_pago);
 			});
-			// resData.forEach(async (item) => {
-			// 	let servicioResponse = { data: '' };
-			// 	switch (item.tipo_servicio._id) {
-			// 		case servicioAparatologiaId:
-			// 			servicioResponse = await findAparatologiaById(item.servicio, token);
-			// 			break;
-			// 		case servicioFacialId:
-			// 			servicioResponse = await findFacialById(item.servicio, token);
-			// 			break;
-			// 		case servicioConsultaId:
-			// 			servicioResponse = await findConsultById(item.servicio, token);
-			// 			break;
-			// 		case servicioCirugiaId:
-			// 			servicioResponse = await findCirugiaById(item.servicio, token);
-			// 			break;
-			// 		case servicioBiopsiaId:
-			// 			servicioResponse = await findBiopsiaById(item.servicio, token);
-			// 			break;
-			// 		case servicioEsteticaId:
-			// 			servicioResponse = await findEsteticaById(item.servicio, token);
-			// 			break;
-			// 		case servicioDermapenId:
-			// 			servicioResponse = await findDermapenById(item.servicio, token);
-			// 			break;
-			// 	}
-
-			// 	if (`${servicioResponse.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-
-			// 		item.servicio = servicioResponse.data;
-
-			// 		let cantidad = 0;
-			// 		item.servicio.pagos.forEach(pago => {
-			// 			cantidad += Number(pago.total);
-			// 		});
-			// 		const fecha = new Date(item.fecha_hora);
-			// 		item.hora = `${addZero(fecha.getHours())}:${addZero(fecha.getMinutes())}`;
-			// 		item.fecha_show = `${addZero(fecha.getDate())}/${addZero(fecha.getMonth() + 1)}/${fecha.getFullYear()}`;
-
-			// 		item.cantidad_moneda = toFormatterCurrency(cantidad);
-			// 		item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
-
-			// 		item.uso_cfdi.nombre = `${item.uso_cfdi.clave}: ${item.uso_cfdi.descripcion}`;
-
-			// 	}
-			// });
-			setFacturas(resData);
+			setSesionesAnticipadas(sesionesAnticipadasData);
 		}
 	}
 
 	const loadAll = async () => {
 		setIsLoading(true);
-		await loadFacturas(startDate.fecha_show, endDate.fecha_show);
+		await loadPagosAnticipados(startDate.fecha_show, endDate.fecha_show);
 		setIsLoading(false);
 	}
 
@@ -202,22 +164,22 @@ const ReportesFacturas = (props) => {
 	};
 
 	const handleReportes = async () => {
-		await loadFacturas(startDate.fecha_show, endDate.fecha_show);
+		await loadPagosAnticipados(startDate.fecha_show, endDate.fecha_show);
 	}
 
 	return (
 		<Fragment>
 			{
 				!isLoading ?
-					<ReportesFacturasContainer
+					<ReportesPagosAnticipadosContainer
 						onChangeStartDate={(e) => handleChangeStartDate(e)}
 						onChangeEndDate={(e) => handleChangeEndDate(e)}
 						startDate={startDate.fecha_show}
 						endDate={endDate.fecha_show}
-						titulo={`REPORTES FACTURAS(${startDate.fecha} - ${endDate.fecha})`}
+						titulo={`REPORTES PAGOS ANTICIPADOS(${startDate.fecha} - ${endDate.fecha})`}
 						columns={columns}
 						options={options}
-						facturas={facturas}
+						facturas={sesionesAnticipadas}
 						actions={actions}
 						colorBase={colorBase}
 						onClickReportes={handleReportes}
@@ -233,4 +195,4 @@ const ReportesFacturas = (props) => {
 	);
 }
 
-export default ReportesFacturas;
+export default ReportesPagosAnticipados;

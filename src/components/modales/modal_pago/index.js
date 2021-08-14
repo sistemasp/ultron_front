@@ -271,7 +271,7 @@ const ModalPago = (props) => {
       sesionAnticipada.fecha_asistencia = new Date();
 
       await updateSesionAnticipada(sesionAnticipada._id, sesionAnticipada, empleado.access_token);
-
+      servicio.sesion_anticipada = sesionAnticipada;
       if (pago.entrada) {
         response = await updateEntrada(pago.entrada, entrada);
       } else {

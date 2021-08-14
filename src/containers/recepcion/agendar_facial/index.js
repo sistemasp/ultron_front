@@ -34,6 +34,7 @@ import {
 	findConsecutivoBySucursal,
 	createConsecutivo,
 } from "../../../services/consecutivos";
+import { updateSesionAnticipada } from "../../../services/sesiones_anticipadas";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -95,6 +96,7 @@ const AgendarFacial = (props) => {
 	const promovendedorSinPromovendedorId = process.env.REACT_APP_PROMOVENDEDOR_SIN_PROMOVENDEDOR_ID;
 	const frecuenciaPrimeraVezId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
 	const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
+	const sesionAnticipadaFormaPagoId = process.env.REACT_APP_FORMA_PAGO_SESION_ANTICIPADA;
 	const fisicoMedioId = process.env.REACT_APP_MEDIO_FISICO_ID;
 
 	const [openAlert, setOpenAlert] = useState(false);
@@ -615,6 +617,11 @@ const AgendarFacial = (props) => {
 				const resConsecutivo = response.data;
 				servicio.consecutivo = resConsecutivo.length;
 
+				if (servicio.forma_pago._id === sesionAnticipadaFormaPagoId) {
+					servicio.sesion_anticipada.consecutivo = servicio.consecutivo;
+					await updateSesionAnticipada(servicio.sesion_anticipada._id, servicio.sesion_anticipada, token);
+				}
+
 				const consecutivo = {
 					consecutivo: servicio.consecutivo,
 					tipo_servicio: servicio.servicio,
@@ -624,6 +631,11 @@ const AgendarFacial = (props) => {
 					status: servicio.status,
 				}
 				await createConsecutivo(consecutivo, token);
+			}
+		} else {
+			if (servicio.forma_pago._id === sesionAnticipadaFormaPagoId) {
+				servicio.sesion_anticipada.consecutivo = servicio.consecutivo;
+				await updateSesionAnticipada(servicio.sesion_anticipada._id, servicio.sesion_anticipada, token);
 			}
 		}
 
