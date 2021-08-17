@@ -117,7 +117,6 @@ const ReportesPagosAnticipados = (props) => {
 						});
 						return `►${tratamiento.nombre}(${show_areas}) `;
 					});
-					console.log("KAOZ", sesionAnticipada);
 					sesionesAnticipadasData.push(sesionAnticipada);
 
 				});

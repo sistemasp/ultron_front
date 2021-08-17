@@ -651,7 +651,6 @@ const AgregarPagosAnticipados = (props) => {
       await loadSesionesAnticipadas();
     }
 
-    console.log("KAOZ", servicio);
     setOpenModalPagosMultiservicios(false);
     onClickGuardar();
   }

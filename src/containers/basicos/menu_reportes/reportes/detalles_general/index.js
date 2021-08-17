@@ -170,7 +170,7 @@ const ReportesDetallesGeneral = (props) => {
 			const impuesto = importe2 * (impuestoPorcentaje / 100);
 			const descuentoPorcentaje = 100 - (pago.total * 100 / consulta.precio);
 			const descuentoCantidad = (consulta.precio * descuentoPorcentaje / 100);
-			const pagoDermatologo = pago.total * consulta.pago_dermatologo / consulta.total;
+			const pagoDermatologo = pago.total * consulta.pago_dermatologo / (consulta.total === "0" ? 1 : consulta.total);
 			const pagoClinica = pago.total - pagoDermatologo;
 			const descuentoClinicaPorcentaje = consulta.porcentaje_descuento_clinica ? consulta.porcentaje_descuento_clinica : 0;
 			const descuentoDermatologoPorcentaje = consulta.descuento_dermatologo ? consulta.descuento_dermatologo : 0;
@@ -261,7 +261,7 @@ const ReportesDetallesGeneral = (props) => {
 						}
 						datos.push(dato);
 					}
-					while (pago.cantidad !== 0 && areaSeleccionada.precio_real !== 0) {
+					do {
 
 						totalPagos++;
 						let total = 0;
@@ -319,7 +319,7 @@ const ReportesDetallesGeneral = (props) => {
 							turno: pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO') : "SIN TURNO",
 						}
 						datos.push(dato);
-					}
+					} while (pago.cantidad !== 0 && areaSeleccionada.precio_real !== 0);
 				});
 			});
 		});
@@ -388,7 +388,7 @@ const ReportesDetallesGeneral = (props) => {
 						}
 						datos.push(dato);
 					}
-					while (pago.total !== 0 && precioReal !== 0) {
+					do {
 
 						totalPagos++;
 						let total = 0;
@@ -449,7 +449,7 @@ const ReportesDetallesGeneral = (props) => {
 							turno: pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO') : "SIN TURNO",
 						}
 						datos.push(dato);
-					}
+					} while (pago.total !== 0 && precioReal !== 0);
 				});
 			});
 		});
@@ -479,7 +479,7 @@ const ReportesDetallesGeneral = (props) => {
 				pago.digitos = 'NO APLICA';
 			}
 
-			while (totalPago !== 0 && totalAplicacion !== 0) {
+			do {
 
 				let total = 0;
 				if (totalPago > totalAplicacion) {
@@ -534,11 +534,11 @@ const ReportesDetallesGeneral = (props) => {
 					turno: pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO') : "SIN TURNO",
 				}
 				datos.push(dato);
-			}
+			} while (totalPago !== 0 && totalAplicacion !== 0);
 
 			cirugia.materiales.forEach(material => {
 				let precioMaterial = Number(material.precio);
-				while (totalPago !== 0 && precioMaterial !== 0) {
+				do {
 
 					let total = 0;
 					if (totalPago > precioMaterial) {
@@ -589,13 +589,13 @@ const ReportesDetallesGeneral = (props) => {
 						turno: pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO') : "SIN TURNO",
 					}
 					datos.push(dato);
-				}
+				} while (totalPago !== 0 && precioMaterial !== 0);
 			});
 
 			cirugia.biopsias.forEach(async (biopsia) => {
 
 				let precioBiopsias = Number(cirugia.costo_biopsias);
-				while (totalPago !== 0 && precioBiopsias !== 0) {
+				do {
 
 					let total = 0;
 					if (totalPago > precioBiopsias) {
@@ -648,7 +648,7 @@ const ReportesDetallesGeneral = (props) => {
 						turno: pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO') : "SIN TURNO",
 					}
 					datos.push(dato);
-				}
+				} while (totalPago !== 0 && precioBiopsias !== 0);
 			});
 		});
 	}
@@ -676,7 +676,7 @@ const ReportesDetallesGeneral = (props) => {
 				pago.digitos = 'NO APLICA';
 			}
 
-			while (totalPago !== 0 && totalAplicacion !== 0) {
+			do {
 
 				let total = 0;
 				if (totalPago > totalAplicacion) {
@@ -732,11 +732,11 @@ const ReportesDetallesGeneral = (props) => {
 					turno: pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO') : "SIN TURNO",
 				}
 				datos.push(dato);
-			}
+			} while (totalPago !== 0 && totalAplicacion !== 0)
 
 			dermapen.materiales.forEach(material => {
 				let precioMaterial = Number(material.precio);
-				while (totalPago !== 0 && precioMaterial !== 0) {
+				do {
 
 					let total = 0;
 					if (totalPago > precioMaterial) {
@@ -787,7 +787,7 @@ const ReportesDetallesGeneral = (props) => {
 						turno: pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO') : "SIN TURNO",
 					}
 					datos.push(dato);
-				}
+				} while (totalPago !== 0 && precioMaterial !== 0)
 			});
 		});
 	}
@@ -815,7 +815,7 @@ const ReportesDetallesGeneral = (props) => {
 				pago.digitos = 'NO APLICA';
 			}
 
-			while (totalPago !== 0 && totalAplicacion !== 0) {
+			do {
 
 				let total = 0;
 				if (totalPago > totalAplicacion) {
@@ -872,11 +872,11 @@ const ReportesDetallesGeneral = (props) => {
 					turno: pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO') : "SIN TURNO",
 				}
 				datos.push(dato);
-			}
+			} while (totalPago !== 0 && totalAplicacion !== 0);
 
 			estetica.materiales.forEach(material => {
 				let precioMaterial = Number(material.precio);
-				while (totalPago !== 0 && precioMaterial !== 0) {
+				do {
 
 					let total = 0;
 					if (totalPago > precioMaterial) {
@@ -927,12 +927,12 @@ const ReportesDetallesGeneral = (props) => {
 						turno: pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO') : "SIN TURNO",
 					}
 					datos.push(dato);
-				}
+				} while (totalPago !== 0 && precioMaterial !== 0);
 			});
 
 			estetica.toxinas_rellenos.forEach(toxina_relleno => {
 				let totalToxinaRelleno = Number(toxina_relleno.precio) * Number(toxina_relleno.unidades);
-				while (totalPago !== 0 && totalToxinaRelleno !== 0) {
+				do {
 
 					let total = 0;
 					if (totalPago > totalToxinaRelleno) {
@@ -983,7 +983,7 @@ const ReportesDetallesGeneral = (props) => {
 						turno: pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO') : "SIN TURNO",
 					}
 					datos.push(dato);
-				}
+				} while (totalPago !== 0 && totalToxinaRelleno !== 0);
 			});
 		});
 	}
