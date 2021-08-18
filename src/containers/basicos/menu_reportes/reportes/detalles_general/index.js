@@ -351,7 +351,7 @@ const ReportesDetallesGeneral = (props) => {
 				producto.areasSeleccionadas.forEach(areaSeleccionada => {
 					pago.total = Number(pago.total);
 					const importe1 = Number(precioAreaBySucursal(sucursal, areaSeleccionada));
-					let precioReal = Number(areaSeleccionada.precio_real);
+					let precioReal = ((100 - aparatologia.porcentaje_descuento_clinica) * importe1) / 100;
 					if (aparatologia.forma_pago === formaPagoSesionAnticipadaId) {
 						let total = 0;
 						const impuestoPorcentaje = 0; //areaSeleccionada.iva ? iva : 0;
@@ -832,7 +832,7 @@ const ReportesDetallesGeneral = (props) => {
 					totalPago = 0;
 				}
 
-				const impuestoPorcentaje = estetica.iva ? iva : 0;
+				const impuestoPorcentaje = iva;
 				const importe2 = total / (1 + (impuestoPorcentaje / 100));
 				const impuesto = importe2 * (impuestoPorcentaje / 100);
 				const descuentoPorcentaje = 100 - (total * 100 / estetica.total);
