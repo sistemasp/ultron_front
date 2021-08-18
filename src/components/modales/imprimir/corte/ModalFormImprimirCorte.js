@@ -156,8 +156,8 @@ const ModalFormImprimirCorte = (props) => {
           <Grid container>
 
             <Grid item xs={3}>
-              <img 
-                src={sucursal === sucursalManuelAcunaId || sucursal === sucursalRubenDarioId ? bannerDermastetic : bannerMePiel} 
+              <img
+                src={sucursal === sucursalManuelAcunaId || sucursal === sucursalRubenDarioId ? bannerDermastetic : bannerMePiel}
                 alt='banner'
                 width='100%'
                 height='100%' />
@@ -367,31 +367,31 @@ const ModalFormImprimirCorte = (props) => {
                 }
                 return (
                   <Grid container xs={4} className={classes.grid_left}>
-              <Grid item xs={12} className={classes.label}>
-                <h2 className={classes.label_title_descripcion} > {dataSalida.tipo_salida}</h2>
-              </Grid>
-              <Grid item xs={9} className={classes.label}>
-                <p className={classes.label_title_entradas}>CONCEPTO</p>
-              </Grid>
-              <Grid item xs={3} className={classes.label}>
-                <p className={classes.label_title_entradas}>CANTIDAD</p>
-              </Grid>
-              {
-                dataSalida.salidas_por_tipo.map((salida) => {
-                  return (
-                    <Fragment>
-                      <Grid item xs={9} className={classes.label}>
-                        <h3 className={classes.label_cells_concepto}>{salida.concepto}</h3>
-                      </Grid>
-                      <Grid item xs={3} className={classes.label}>
-                        <p className={classes.label_cells_total}>{salida.cantidad_moneda}</p>
-                      </Grid>
-                    </Fragment>
+                    <Grid item xs={12} className={classes.label}>
+                      <h2 className={classes.label_title_descripcion} > {dataSalida.tipo_salida}</h2>
+                    </Grid>
+                    <Grid item xs={9} className={classes.label}>
+                      <p className={classes.label_title_entradas}>CONCEPTO</p>
+                    </Grid>
+                    <Grid item xs={3} className={classes.label}>
+                      <p className={classes.label_title_entradas}>CANTIDAD</p>
+                    </Grid>
+                    {
+                      dataSalida.salidas_por_tipo.map((salida) => {
+                        return (
+                          <Fragment>
+                            <Grid item xs={9} className={classes.label}>
+                              <h3 className={classes.label_cells_concepto}>{salida.concepto}</h3>
+                            </Grid>
+                            <Grid item xs={3} className={classes.label}>
+                              <p className={classes.label_cells_total}>{salida.cantidad_moneda}</p>
+                            </Grid>
+                          </Fragment>
 
-                  )
-                })
-              }
-            </Grid>
+                        )
+                      })
+                    }
+                  </Grid>
                 );
               })
             }
@@ -439,6 +439,11 @@ const ModalFormImprimirCorte = (props) => {
               <Grid item xs={12} className={classes.label}>
                 <h1 className={classes.label_utilidad_perdida}>{`TOTAL CORTE EFECTIVO: ${toFormatterCurrency(totalEfectivo - pagoDermatologos - retirosParciales - otrosSalidas)}`}<br /><br /></h1>
               </Grid>
+
+              <Grid item xs={12} className={classes.label}>
+                <h2 className={classes.label_utilidad_perdida}><br /></h2>
+              </Grid>
+
               <Grid container>
                 <Grid item xs={true}>
                   <h3 className={classes.label_title_descripcion}>_____________________________</h3>
