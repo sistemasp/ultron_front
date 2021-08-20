@@ -7,6 +7,7 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/picker
 import { Multiselect } from 'multiselect-react-dropdown';
 import { ButtonCustom } from '../../basic/ButtonCustom';
 import { toFormatterCurrency } from '../../../utils/utils';
+import myStyles from '../../../css';
 
 function getModalStyle() {
   const top = 50;
@@ -21,35 +22,8 @@ function getModalStyle() {
   };
 }
 
-const useStyles = makeStyles(theme => ({
-  paper: {
-    position: 'absolute',
-    width: 600,
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-  },
-  textField: {
-    width: '100%',
-  },
-  formControl: {
-    minWidth: 120,
-    width: '100%',
-  },
-  button: {
-    width: '100%',
-    color: '#FFFFFF',
-  },
-  label: {
-    marginTop: '0px',
-    marginBottom: '0px',
-  }
-}));
 
 const ModalFormProximaCita = (props) => {
-  const classes = useStyles();
-
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
 
@@ -77,7 +51,10 @@ const ModalFormProximaCita = (props) => {
     dermatologos,
     onChangePaymentMethod,
     formasPago,
+    colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   return (
     <div>
@@ -233,7 +210,7 @@ const ModalFormProximaCita = (props) => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
-                  className={classes.button}
+                  className={classes.buttonCancel}
                   color="secondary"
                   variant="contained"
                   onClick={onClose}

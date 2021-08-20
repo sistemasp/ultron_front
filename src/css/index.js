@@ -16,7 +16,7 @@ const myStyles = (colorBase) => makeStyles( (theme) => {
             backgroundColor: theme.palette.background.paper,
             border: '2px solid #000',
             boxShadow: theme.shadows[5],
-            paddingLeft: 15
+            padding: 15
         },
         paper_95: {
             position: 'absolute',

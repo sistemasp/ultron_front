@@ -35,6 +35,7 @@ const ModalProximaEstetica = (props) => {
     setMessage,
     setFilterDate,
     loadEsteticas,
+    colorBase,
   } = props;
 
   const [isLoading, setIsLoading] = useState(true);
@@ -339,6 +340,7 @@ const ModalProximaEstetica = (props) => {
             promovendedores={promovendedores}
             cosmetologas={cosmetologas}
             formasPago={formasPago}
+            colorBase={colorBase}
             onChangeProductos={(e) => handleChangeProductos(e)} /> :
           <Backdrop className={classes.backdrop} open={isLoading} >
             <CircularProgress color="inherit" />

@@ -39,6 +39,7 @@ const ModalProximaCirugia = (props) => {
     setMessage,
     setFilterDate,
     loadCirugias,
+    colorBase,
   } = props;
 
   const [isLoading, setIsLoading] = useState(true);
@@ -290,6 +291,7 @@ const ModalProximaCirugia = (props) => {
             cita={cirugia}
             empleado={empleado}
             sucursales={sucursales}
+            colorBase={colorBase}
             onChangeSucursal={(e) => handleChangeSucursal(e)}
             onClickProximarCita={handleOnClickProximarCita}
             onChangeFecha={(e) => handleChangeFecha(e)}

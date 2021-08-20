@@ -7,6 +7,7 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/picker
 import { Multiselect } from 'multiselect-react-dropdown';
 import { ButtonCustom } from '../../basic/ButtonCustom';
 import { toFormatterCurrency } from '../../../utils/utils';
+import myStyles from '../../../css';
 
 function getModalStyle() {
   const top = 50;
@@ -48,8 +49,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ModalFormProximaDermapen = (props) => {
-  const classes = useStyles();
-
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
 
@@ -77,7 +76,10 @@ const ModalFormProximaDermapen = (props) => {
     dermatologos,
     onChangePaymentMethod,
     formasPago,
+    colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   return (
     <div>
@@ -233,7 +235,7 @@ const ModalFormProximaDermapen = (props) => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
-                  className={classes.button}
+                  className={classes.buttonCancel}
                   color="secondary"
                   variant="contained"
                   onClick={onClose}

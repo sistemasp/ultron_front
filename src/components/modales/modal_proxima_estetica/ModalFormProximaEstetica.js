@@ -6,6 +6,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import { Multiselect } from 'multiselect-react-dropdown';
 import { ButtonCustom } from '../../basic/ButtonCustom';
+import myStyles from '../../../css';
 
 function getModalStyle() {
   const top = 50;
@@ -47,8 +48,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ModalFormProximaEstetica = (props) => {
-  const classes = useStyles();
-
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
 
@@ -81,7 +80,10 @@ const ModalFormProximaEstetica = (props) => {
     dermatologos,
     onChangeSucursal,
     sucursales,
+    colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   return (
     <div>
@@ -237,7 +239,7 @@ const ModalFormProximaEstetica = (props) => {
               
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
-                  className={classes.button}
+                  className={classes.buttonCancel}
                   color="secondary"
                   variant="contained"
                   onClick={onClose}

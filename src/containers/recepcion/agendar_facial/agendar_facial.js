@@ -144,6 +144,7 @@ export const AgendarFacialContainer = (props) => {
 						empleado={empleado}
 						loadFaciales={loadFaciales}
 						sucursal={sucursal}
+						colorBase={colorBase}
 						setOpenAlert={setOpenAlert}
 						setMessage={setMessage}
 						setFilterDate={setFilterDate} /> : ''

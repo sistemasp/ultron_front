@@ -351,7 +351,8 @@ const ReportesDetallesGeneral = (props) => {
 				producto.areasSeleccionadas.forEach(areaSeleccionada => {
 					pago.total = Number(pago.total);
 					const importe1 = Number(precioAreaBySucursal(sucursal, areaSeleccionada));
-					let precioReal = ((100 - aparatologia.porcentaje_descuento_clinica) * importe1) / 100;
+					let precioReal = ((100 - (aparatologia.porcentaje_descuento_clinica ? aparatologia.porcentaje_descuento_clinica : 0)) * importe1) / 100;
+					console.log("KAOZ", aparatologia, importe1, precioReal);
 					if (aparatologia.forma_pago === formaPagoSesionAnticipadaId) {
 						let total = 0;
 						const impuestoPorcentaje = 0; //areaSeleccionada.iva ? iva : 0;

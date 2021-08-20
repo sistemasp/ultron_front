@@ -45,6 +45,7 @@ const ModalProximaDermapen = (props) => {
     loadFaciales,
     loadLaser,
     loadDermapens,
+    colorBase,
   } = props;
 
   const [isLoading, setIsLoading] = useState(true);
@@ -354,6 +355,7 @@ const ModalProximaDermapen = (props) => {
             cita={cita}
             empleado={empleado}
             sucursales={sucursales}
+            colorBase={colorBase}
             onChangeSucursal={(e) => handleChangeSucursal(e)}
             onChangeTratamientos={(e) => handleChangeTratamientos(e)}
             onClickProximarCita={handleOnClickProximarCita}
