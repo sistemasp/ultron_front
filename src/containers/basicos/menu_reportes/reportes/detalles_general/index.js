@@ -999,6 +999,7 @@ const ReportesDetallesGeneral = (props) => {
 				sesionAnticipada.hora_salida = "NO APLICA";
 				sesionAnticipada.consecutivo = "SIN FOLIO";
 				sesionAnticipada.quien_agenda = sesionAnticipada.recepcionista;
+				sesionAnticipada.factura = pagoAnticipado.factura;
 
 				sesionesAnticipadas.push(sesionAnticipada);
 			});
@@ -1024,6 +1025,7 @@ const ReportesDetallesGeneral = (props) => {
 			item.observaciones = item.observaciones ? item.observaciones : "*";
 
 			if (item.factura) {
+				console.log("KAOZ", item);
 				const fechaFactura = new Date(item.factura.fecha_hora);
 				item.requiere_factura = "SI";
 				item.fecha_facturacion = `${addZero(fechaFactura.getDate())}/${addZero(fechaFactura.getMonth() + 1)}/${fechaFactura.getFullYear()}`;
