@@ -4,6 +4,18 @@ export const baseUrl = process.env.REACT_APP_BASE_URL;
 
 // SALIDA
 
+export const findSalidaByPagoDermatologoId = async (pagoDermatologoId) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/salida/pagodermatologo/${pagoDermatologoId}`,
+            method: 'GET'
+        });
+        return response;
+    } catch (error) {
+        console.log('findSalidaByPagoDermatologoId', error);
+    }
+}
+
 export const createSalida = async (salida) => {
     try {
         const response = await axios({
@@ -50,5 +62,22 @@ export const findSalidasByRangeDateAndSucursal = async (diai, mesi, anioi, diaf,
         return response;
     } catch (error) {
         console.log('findSalidasByRangeDateAndSucursal', error);
+    }
+}
+
+export const updateSalida = async (salidaId, salida, token) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/salida/${salidaId}`,
+            method: 'PUT',
+            data: salida,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response;
+    } catch (error) {
+        console.log('updateSalida', error);
+        return error;
     }
 }

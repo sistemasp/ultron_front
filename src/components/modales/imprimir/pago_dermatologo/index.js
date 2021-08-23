@@ -8,7 +8,7 @@ import {
   updateConsult,
 } from '../../../../services/consultas';
 import {
-  createSalida,
+  createSalida, findSalidaByPagoDermatologoId, updateSalida,
 } from '../../../../services/salidas';
 import { showCorteTodayBySucursalAndTurno } from '../../../../services/corte';
 import { findFacialesByPayOfDoctorHoraAplicacion, findFacialesByPayOfDoctorHoraAplicacionPA, updateFacial } from '../../../../services/faciales';
@@ -16,7 +16,7 @@ import { findAparatologiasByPayOfDoctorHoraAplicacion, findAparatologiasByPayOfD
 import { findCirugiasByPayOfDoctorHoraAplicacion, findCirugiasByPayOfDoctorHoraAplicacionPA, updateCirugia } from '../../../../services/cirugias';
 import { findEsteticasByPayOfDoctorHoraAplicacion, findEsteticasByPayOfDoctorHoraAplicacionPA, updateEstetica } from '../../../../services/esteticas';
 import { findDermapensByPayOfDoctorHoraAplicacion, findDermapensByPayOfDoctorHoraAplicacionPA, updateDermapen } from '../../../../services/dermapens';
-import { createPagoDermatologo, showTodayPagoDermatologoBySucursalTurno } from '../../../../services/pago_dermatologos';
+import { createPagoDermatologo, showTodayPagoDermatologoBySucursalTurno, updatePagoDermatologo } from '../../../../services/pago_dermatologos';
 import { findSesionesAnticipadasByPayOfDoctorFechaPago, updateSesionAnticipada } from '../../../../services/sesiones_anticipadas';
 import { findPagosAnticipadssByPayOfDoctorFechaPago } from '../../../../services/pagos_anticipados';
 import { precioAreaBySucursal } from '../../../../utils/utils';
@@ -66,7 +66,7 @@ const ModalImprimirPagoDermatologo = (props) => {
   const [pagosAnticipados, setPagosAnticipados] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [turno, setTurno] = useState('m');
-  const [pagoDermatologo, setPagoDermatologo] = useState();
+  const [pagoDermatologoObj, setPagoDermatologoObj] = useState();
   const [corte, setCorte] = useState();
 
   const atendidoId = process.env.REACT_APP_ATENDIDO_STATUS_ID;
@@ -351,12 +351,8 @@ const ModalImprimirPagoDermatologo = (props) => {
     const response = await showTodayPagoDermatologoBySucursalTurno(dermatologo._id, sucursal._id, turno, token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       const pagoDermatologo = response.data;
-      setPagoDermatologo(pagoDermatologo);
-      if (pagoDermatologo) {
-        setConsultas(pagoDermatologo.consultas);
-      } else {
-        await loadConsultas(hora_apertura, hora_cierre);
-      }
+      setPagoDermatologoObj(pagoDermatologo);
+      await loadConsultas(hora_apertura, hora_cierre);
       await loadCirugias(hora_apertura, hora_cierre);
       // await loadCirugiasCPA(hora_apertura, hora_cierre);
       await loadFaciales(hora_apertura, hora_cierre);
@@ -407,8 +403,11 @@ const ModalImprimirPagoDermatologo = (props) => {
           })
         }
 
-        let pagoDermatologo = Number(totalPagos) * Number(consulta.frecuencia === reconsultaFrecuenciaId ? dermatologo.esquema.porcentaje_reconsulta : dermatologo.esquema.porcentaje_consulta) / 100;
+        let pagoDermatologo = Number(totalPagos) * Number(
+          consulta.frecuencia === reconsultaFrecuenciaId ? dermatologo.esquema.porcentaje_reconsulta
+            : (consulta.frecuencia === privadaFrecuenciaId ? dermatologo.esquema.porcentaje_consulta_privada : dermatologo.esquema.porcentaje_consulta)) / 100;
         consulta.pago_dermatologo = pagoDermatologo;
+
         updateConsult(consulta._id, consulta, token);
         total += Number(pagoDermatologo);
       }
@@ -635,6 +634,7 @@ const ModalImprimirPagoDermatologo = (props) => {
 
     if (dermatologo._id !== dermatologoDirectoId) {
       const pagoDermatologo = {
+        ...pagoDermatologoObj,
         fecha_pago: new Date(),
         dermatologo: dermatologo,
         consultas: consultas,
@@ -650,27 +650,36 @@ const ModalImprimirPagoDermatologo = (props) => {
         pagado: true,
       }
 
-      const response = await createPagoDermatologo(pagoDermatologo, token);
+      const response = await (pagoDermatologo._id ? updatePagoDermatologo(pagoDermatologo._id, pagoDermatologo, token) : createPagoDermatologo(pagoDermatologo, token));
+
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
         || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-        const data = response.data;
+        const data = pagoDermatologo._id ? pagoDermatologo : response.data;
 
-        const salida = {
-          create_date: new Date(),
-          hora_aplicacion: corte.create_date,
-          tipo_salida: pagoDermatologoTipoSalidaId,
-          recepcionista: empleado,
-          turno: corte.turno === 'm' ? 'MATUTINO' : 'VESPERTINO',
-          concepto: dermatologo.nombre,
-          cantidad: dermatologo.pago_completo ? data.total : data.retencion,
-          retencion: data.retencion,
-          sucursal: sucursal._id,
-          forma_pago: efectivoMetodoPagoId,
-        }
+        const responseSalida = await findSalidaByPagoDermatologoId(data._id);
+        if (`${responseSalida.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
+          || `${responseSalida.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+          const resSalida = responseSalida.data;
 
-        const resp = await createSalida(salida);
-        if (`${resp.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-          setIsLoading(false);
+          const salida = {
+            ...resSalida,
+            create_date: new Date(),
+            hora_aplicacion: corte.create_date,
+            tipo_salida: pagoDermatologoTipoSalidaId,
+            recepcionista: empleado,
+            turno: corte.turno === 'm' ? 'MATUTINO' : 'VESPERTINO',
+            concepto: dermatologo.nombre,
+            cantidad: dermatologo.pago_completo ? data.total : data.retencion,
+            retencion: data.retencion,
+            sucursal: sucursal._id,
+            forma_pago: efectivoMetodoPagoId,
+            pago_dermatologo: data._id,
+          }
+
+          const resp = await (salida._id ? updateSalida(salida._id, salida, token) : createSalida(salida, token));
+          if (`${resp.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+            setIsLoading(false);
+          }
         }
       }
     }
@@ -728,7 +737,6 @@ const ModalImprimirPagoDermatologo = (props) => {
             esteticasPA={esteticasPA}
             pagosAnticipados={pagosAnticipados}
             turno={turno}
-            pagoDermatologo={pagoDermatologo}
             onClickImprimir={handleClickImprimir}
             onCambioTurno={() => handleCambioTurno()}
             onObtenerInformacion={() => handleObtenerInformacion()}

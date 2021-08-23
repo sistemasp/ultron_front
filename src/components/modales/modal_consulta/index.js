@@ -79,7 +79,7 @@ const ModalConsulta = (props) => {
     paciente_nombre: `${consulta.paciente.nombres} ${consulta.paciente.apellidos}`,
     telefono: consulta.paciente.telefono,
     quien_agenda: consulta.quien_agenda,
-    tipo_cita: consulta.tipo_cita,
+    tipo_cita: consulta.tipo_cita._id,
     quien_confirma_llamada: consulta.quien_confirma_llamada,
     quien_confirma_asistencia: consulta.quien_confirma_asistencia,
     promovendedor: consulta.promovendedor ? consulta.promovendedor._id : '',
@@ -168,7 +168,7 @@ const ModalConsulta = (props) => {
     const response = await showAllStatusVisibles();
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       // SI EL DIA DE LA CITA ES A FUTURO, ELIMINA EL STATUS ASISTIO
-      const resStatus = response.data.filter(item => {
+      const resStatus = empleado.super_admin ? response.data : response.data.filter(item => {
         return item._id !== asistioStatusId ? true : (new Date(consulta.fecha_hora).getDate() === new Date().getDate() && consulta.status._id === confirmadoStatusId);
       });
       setStatements(resStatus);

@@ -4,12 +4,15 @@ export const baseUrl = process.env.REACT_APP_BASE_URL;
 
 // PAGO DERMATÓLOGO
 
-export const createPagoDermatologo = async (pagoDermatologo) => {
+export const createPagoDermatologo = async (pagoDermatologo, token) => {
     try {
         const response = await axios({
             url: `${baseUrl}/pagoDermatologo`,
             method: 'POST',
-            data: pagoDermatologo
+            data: pagoDermatologo,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         });
         return response;
     } catch (error) {
@@ -17,14 +20,34 @@ export const createPagoDermatologo = async (pagoDermatologo) => {
     }
 }
 
-export const showTodayPagoDermatologoBySucursalTurno = async (dermatologoId, sucursalId, turno) => {
+export const showTodayPagoDermatologoBySucursalTurno = async (dermatologoId, sucursalId, turno, token) => {
     try {
         const response = await axios({
             url: `${baseUrl}/pagoDermatologo/${dermatologoId}/sucursal/${sucursalId}/turno/${turno}`,
-            method: 'GET'
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         });
         return response;
     } catch (error) {
         console.log('showTodayPagoDermatologoBySucursalTurno', error);
+    }
+}
+
+export const updatePagoDermatologo = async (pagoDermatologoId, pagoDermatologo, token) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/pagoDermatologo/${pagoDermatologoId}`,
+            method: 'PUT',
+            data: pagoDermatologo,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response;
+    } catch (error) {
+        console.log('updatePagoDermatologo', error);
+        return error;
     }
 }

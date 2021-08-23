@@ -526,7 +526,7 @@ const ModalCita = (props) => {
     const response = await showAllStatusVisibles();
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       // SI EL DIA DE LA CITA ES A FUTURO, ELIMINA EL STATUS ASISTIO
-      const resStatus = response.data.filter(item => {
+      const resStatus = empleado.super_admin ? response.data : response.data.filter(item => {
         return item._id !== asistioStatusId ? true : (new Date(cita.fecha_hora).getDate() === new Date().getDate() && cita.status._id === confirmadoStatusId);
       });
       setStatements(resStatus);

@@ -52,7 +52,6 @@ const ModalFormImprimirPagoDermatologo = (props) => {
     findCorte,
     show,
     turno,
-    pagoDermatologo,
     empleado,
     colorBase,
   } = props;
@@ -253,41 +252,22 @@ const ModalFormImprimirPagoDermatologo = (props) => {
             {
               show ?
                 <Fragment>
-                  {
-                    pagoDermatologo.pagado ?
-                      <Grid item xs={12}>
-                        <ButtonCustom
-                          className={classes.button}
-                          color="primary"
-                          variant="contained"
-                          onClick={onClickImprimir}
-                          text='IMPRIMIR' />
-                      </Grid>
-                      :
-                      consultasPrimeraVez.length > 0 || consultasPrivada.length > 0 || consultasReconsultas.length > 0 || cirugias.length > 0 || esteticas.length > 0 ||
-                        listaFaciales.length > 0 || dermapens.length > 0 || listaAparatologias.length > 0 || pagosAnticipados.length > 0 ?
-                        <Grid item xs={12}>
-                          <ButtonCustom
-                            className={classes.button}
-                            color="primary"
-                            variant="contained"
-                            onClick={onClickPagar}
-                            text='PAGAR' />
-                        </Grid>
-                        : ''
-                  }
-                  {
-                    dermatologo._id === dermatologoDirectoId ?
-                      <Grid item xs={12}>
-                        <ButtonCustom
-                          className={classes.button}
-                          color="primary"
-                          variant="contained"
-                          onClick={onClickImprimir}
-                          text='IMPRIMIR' />
-                      </Grid>
-                      : ''
-                  }
+                  <Grid item xs={12}>
+                    <ButtonCustom
+                      className={classes.button}
+                      color="primary"
+                      variant="contained"
+                      onClick={onClickImprimir}
+                      text='IMPRIMIR' />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <ButtonCustom
+                      className={classes.button}
+                      color="primary"
+                      variant="contained"
+                      onClick={onClickPagar}
+                      text='PAGAR' />
+                  </Grid>
                   {
                     corte.hora_cierre || corte.turno === 'v' ?
                       <Fragment>
@@ -1361,7 +1341,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                               <p className={classes.label_cells}>{`${sesionAnticipada.show_tratamientos}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
-                            <p className={classes.label_cells}>{`${sesionAnticipada.factura ? '(FACTURA)' : ''}${sesionAnticipada.forma_pago_nombre}`}</p>
+                              <p className={classes.label_cells}>{`${sesionAnticipada.factura ? '(FACTURA)' : ''}${sesionAnticipada.forma_pago_nombre}`}</p>
                             </Grid>
                             <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells_total}> {`${toFormatterCurrency(sesionAnticipada.total)}`} </p>

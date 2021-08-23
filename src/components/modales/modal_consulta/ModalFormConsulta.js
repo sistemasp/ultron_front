@@ -213,7 +213,17 @@ const ModalFormConsulta = (props) => {
                 </FormControl>
               </Grid>
               <Grid item xs={12}>
-                <h2 className={classes.label}>{`TIPO: ${values.tipo_cita.nombre}`}</h2>
+                <FormControl variant="outlined" className={classes.formControl}>
+                      <InputLabel id="simple-select-outlined-hora">TIPO</InputLabel>
+                      <Select
+                        labelId="simple-select-outlined-tioo"
+                        id="simple-select-outlined-tipo"
+                        value={values.tipo_cita}
+                        onChange={onChangeTipoCita}
+                        label="TIPO" >
+                        {tipoCitas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                      </Select>
+                    </FormControl>
               </Grid>
               {
                 values.frecuencia === frecuenciaReconsultaId
