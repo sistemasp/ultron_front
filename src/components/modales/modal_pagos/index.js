@@ -1,11 +1,13 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { findPagosByTipoServicioAndServicio } from '../../../services';
+import { deletePago, findPagosByTipoServicioAndServicio } from '../../../services';
 import { addZero, toFormatterCurrency } from '../../../utils/utils';
 import ModalFormPagos from './ModalFormPagos';
 import EditIcon from '@material-ui/icons/Edit';
 import { findEsquemaById } from '../../../services/esquemas';
 import { Backdrop, CircularProgress } from '@material-ui/core';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import myStyles from '../../../css';
+import { deleteEntrada } from '../../../services/entradas';
 
 const ModalPagos = (props) => {
 
@@ -19,6 +21,8 @@ const ModalPagos = (props) => {
     tipoServicioId,
     colorBase,
   } = props;
+
+  const token = empleado.access_token;
 
   const classes = myStyles(colorBase)();
 
@@ -63,9 +67,14 @@ const ModalPagos = (props) => {
 
   servicio.isFactura = !!servicio.factura;
 
-  const handleOnClickEditarPago = (event, rowData) => {
-    setPago(rowData);
-    setOpenModalPago(true);
+  const handleEliminarPago = async (event, rowData) => {
+    setIsLoading(true);
+    await deleteEntrada(rowData.entrada);
+    const response = await deletePago(rowData._id);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      await loadPagos();
+    }
+    setIsLoading(false);
   }
 
   const handleChangeFactura = () => {
@@ -105,10 +114,10 @@ const ModalPagos = (props) => {
 
   const actions = [
     {
-      icon: EditIcon,
-      tooltip: 'EDITAR PAGO',
-      onClick: handleOnClickEditarPago
-    }
+      icon: DeleteForeverIcon,
+      tooltip: 'ELIMINAR PAGO',
+      onClick: handleEliminarPago
+    },
   ];
 
   const loadPagos = async () => {
