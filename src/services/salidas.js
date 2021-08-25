@@ -4,6 +4,21 @@ export const baseUrl = process.env.REACT_APP_BASE_URL;
 
 // SALIDA
 
+export const findSalidaById = async (salidaId, token) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/salida/${salidaId}`,
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response;
+    } catch (error) {
+        console.log('findSalidaById', error);
+    }
+}
+
 export const findSalidaByPagoDermatologoId = async (pagoDermatologoId) => {
     try {
         const response = await axios({

@@ -60,7 +60,7 @@ const FormImprimirDatosFacturacion = (props) => {
               <h4 className={classes.label_left}>{`ESTADO: ${datos.factura.razon_social.estado}`}</h4>
             </Grid>
             <Grid item xs={true} className={classes.label}>
-              <h4 className={classes.label}>{`MUNUCIPIO: ${datos.factura.razon_social.municipio}`}</h4>
+              <h4 className={classes.label}>{`MUNICIPIO: ${datos.factura.razon_social.municipio}`}</h4>
             </Grid>            
             <Grid item xs={true} className={classes.label_right}>
               <h4 className={classes.label_right}>{`CP: ${datos.factura.razon_social.codigo_postal}`}</h4>

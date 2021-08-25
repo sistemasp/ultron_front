@@ -18,6 +18,8 @@ import { createBiopsia } from '../../../services/biopsias';
 import { findProductoByServicio } from '../../../services/productos';
 import { showAllStatusVisibles } from '../../../services/status';
 import { findEmployeesByRolIdAvailable } from '../../../services/empleados';
+import { createSalida, findSalidaById, updateSalida } from '../../../services/salidas';
+import { findTurnoActualBySucursal } from '../../../services/corte';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -43,6 +45,9 @@ const ModalCirugia = (props) => {
     colorBase,
   } = props;
 
+  const token = empleado.access_token;
+
+  const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
   const promovendedorRolId = process.env.REACT_APP_PROMOVENDEDOR_ROL_ID;
   const dermatologoRolId = process.env.REACT_APP_DERMATOLOGO_ROL_ID;
   const pendienteStatusId = process.env.REACT_APP_PENDIENTE_STATUS_ID;
@@ -55,6 +60,7 @@ const ModalCirugia = (props) => {
   const frecuenciaPrimeraVezId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
   const frecuenciaReconsultaId = process.env.REACT_APP_FRECUENCIA_RECONSULTA_ID;
   const productoCirugiaId = process.env.REACT_APP_PRODUCTO_CIRUGIA_ID;
+  const tipoSalidaCuracionesId = process.env.REACT_APP_TIPO_SALIDA_CURACIONES_ID;
 
   const [isLoading, setIsLoading] = useState(true);
   const [materiales, setMateriales] = useState([]);
@@ -69,6 +75,7 @@ const ModalCirugia = (props) => {
   const [productos, setProductos] = useState([]);
   const [statements, setStatements] = useState([]);
   const [medios, setMedios] = useState([]);
+  const [turno, setTurno] = useState({});
   const [openModalConfirmacion, setOpenModalConfirmacion] = useState(false);
 
   const fecha_cita = new Date(cirugia.fecha_hora);
@@ -149,7 +156,7 @@ const ModalCirugia = (props) => {
       }
       data.biopsias = data.hasBiopsia ? idBiopsias : [];
     }
-    
+
     if (data.status._id !== pendienteStatusId) {
       data.quien_confirma_asistencia = empleado._id;
 
@@ -191,8 +198,42 @@ const ModalCirugia = (props) => {
         fecha_show: fecha_hora,
         fecha: `${dia}/${mes}/${anio}`
       });
-      await updateCirugia(data._id, data, empleado.access_token)
-      await loadCirugias(fecha_hora);
+      if (data.materiales.length > 0) {
+        data.materiales.forEach(async (material) => {
+          const responseSalida = await (material.salidaId ? findSalidaById(material.salidaId) : '0');
+
+          if (responseSalida === '0' || `${responseSalida.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
+            || `${responseSalida.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+            const resSalida = responseSalida.data;
+            console.log("KAOZ", sucursal, turno);
+
+            const salida = {
+              ...resSalida,
+              create_date: new Date(),
+              hora_aplicacion: data.hora_aplicacion ? data.hora_aplicacion : new Date(),
+              tipo_salida: tipoSalidaCuracionesId,
+              recepcionista: empleado,
+              turno: turno === 'm' ? 'MATUTINO' : 'VESPERTINO',
+              concepto: material.nombre,
+              cantidad: material.precio,
+              retencion: 0,
+              sucursal: sucursal,
+              forma_pago: efectivoMetodoPagoId,
+            }
+
+            const response = await (salida._id ? updateSalida(salida._id, salida, token) : createSalida(salida, token));
+            if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
+              || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+              material.salidaId = material.salidaId ? material.salidaId : response.data._id;
+              await updateCirugia(data._id, data, empleado.access_token)
+              await loadCirugias(fecha_hora);
+            }
+          }
+        });
+      } else {
+        await updateCirugia(data._id, data, empleado.access_token)
+        await loadCirugias(fecha_hora);
+      }
     }
     setIsLoading(false);
     onClose();
@@ -461,6 +502,14 @@ const ModalCirugia = (props) => {
     }
   }
 
+  const getTurno = async () => {
+    const response = await findTurnoActualBySucursal(sucursal);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      const corte = response.data;
+      setTurno(corte.turno);
+    }
+  }
+
   const loadAll = async () => {
     setIsLoading(true);
     await loadMateriales();
@@ -472,6 +521,7 @@ const ModalCirugia = (props) => {
     await loadProductos();
     await loadDermatologos();
     await loadStaus();
+    await getTurno();
     setIsLoading(false);
   }
 

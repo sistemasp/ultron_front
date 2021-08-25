@@ -1,11 +1,13 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { findPagosByTipoServicioAndServicio } from '../../../services';
+import { deletePago, findPagosByTipoServicioAndServicio } from '../../../services';
 import { addZero, toFormatterCurrency } from '../../../utils/utils';
 import FormPagosMultiservicios from './FormPagosMultiservicios';
 import EditIcon from '@material-ui/icons/Edit';
 import { findEsquemaById } from '../../../services/esquemas';
 import { Backdrop, CircularProgress } from '@material-ui/core';
 import myStyles from '../../../css';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import { deleteEntrada } from '../../../services/entradas';
 
 const PagosMultiservicios = (props) => {
 
@@ -60,9 +62,14 @@ const PagosMultiservicios = (props) => {
     isFactura: false,
   });
 
-  const handleOnClickEditarPago = (event, rowData) => {
-    setPago(rowData);
-    setOpenModalPago(true);
+  const handleEliminarPago = async (event, rowData) => {
+    setIsLoading(true);
+    await deleteEntrada(rowData.entrada);
+    const response = await deletePago(rowData._id);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      await loadPagos();
+    }
+    setIsLoading(false);
   }
 
   const handleChangeFactura = () => {
@@ -103,10 +110,10 @@ const PagosMultiservicios = (props) => {
 
   const actions = [
     {
-      icon: EditIcon,
-      tooltip: 'EDITAR PAGO',
-      onClick: handleOnClickEditarPago
-    }
+      icon: DeleteForeverIcon,
+      tooltip: 'ELIMINAR PAGO',
+      onClick: handleEliminarPago
+    },
   ];
 
   const handleCloseBuscarRazonSocial = (val, datosFactura) => {
