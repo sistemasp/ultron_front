@@ -206,7 +206,6 @@ const ReportesDetallesGeneral = (props) => {
 	}
 
 	const procesarFacial = (facial, datos) => {
-
 		facial.tratamientos.forEach(tratamiento => {
 			const producto = tratamiento;
 			producto.areasSeleccionadas.forEach(areaSeleccionada => {
@@ -281,15 +280,14 @@ const ReportesDetallesGeneral = (props) => {
 								areaSeleccionada.precio_real = 0;
 								pago.cantidad = 0;
 							}
+							console.log("KAOZ", total, areaSeleccionada.comision_real, producto.importe1);
 
 							const impuestoPorcentaje = areaSeleccionada.iva ? iva : 0;
 							const importe2 = total / (1 + (impuestoPorcentaje / 100));
 							const impuesto = importe2 * (impuestoPorcentaje / 100);
 							const descuentoPorcentaje = 100 - (total * 100 / producto.importe1);
 							const descuentoCantidad = (producto.importe1 * descuentoPorcentaje / 100);
-							const pagoDermatologo = facial.dermatologo._id !== dermatologoDirectoId
-								? (total * areaSeleccionada.comision_real / producto.importe1)
-								: 0;
+							const pagoDermatologo = facial.dermatologo._id !== dermatologoDirectoId ? areaSeleccionada.comision_real : 0;
 							const pagoClinica = total - pagoDermatologo;
 							const descuentoClinicaPorcentaje = facial.porcentaje_descuento_clinica ? facial.porcentaje_descuento_clinica : 0;
 							const descuentoDermatologoPorcentaje = facial.descuento_dermatologo ? facial.descuento_dermatologo : 0;
