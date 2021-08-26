@@ -205,7 +205,6 @@ const ModalCirugia = (props) => {
           if (responseSalida === '0' || `${responseSalida.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
             || `${responseSalida.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
             const resSalida = responseSalida.data;
-            console.log("KAOZ", sucursal, turno);
 
             const salida = {
               ...resSalida,
