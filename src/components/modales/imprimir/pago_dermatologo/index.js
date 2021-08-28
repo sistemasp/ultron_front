@@ -624,6 +624,9 @@ const ModalImprimirPagoDermatologo = (props) => {
                   comisionDermatologo += Number(0);
                   break;
               }
+              const precioReal = (itemPrecio - (itemPrecio * (sesionAnticipada.porcentaje_descuento_clinica ? sesionAnticipada.porcentaje_descuento_clinica : 0) / 100));
+              areaSeleccionada.comision_real = !sesionAnticipada.has_descuento_dermatologo ? comisionDermatologo : 0;
+              areaSeleccionada.precio_real = precioReal;
             });
             tratamiento.importe1 = importe1;
           });

@@ -226,6 +226,7 @@ const AgendarConsulta = (props) => {
 			fecha_hora: date,
 		});
 		await loadHorarios(date);
+		await handleChangeFilterDate(date);
 		setIsLoading(false);
 	};
 

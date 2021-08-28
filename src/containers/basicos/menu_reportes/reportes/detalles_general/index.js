@@ -85,7 +85,9 @@ const ReportesDetallesGeneral = (props) => {
 		{ title: 'HORA SALIDA', field: 'hora_salida' },
 		{ title: 'RECEPCIONISTA', field: 'quien_agenda.nombre' },
 		{ title: 'FOLIO', field: 'consecutivo' },
+		{ title: 'ID PACIENTE', field: 'paciente._id' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
+		{ title: 'TELEFÓNO', field: 'paciente.telefono' },
 		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
 		{ title: 'TIPO', field: 'tipo_cita.nombre' },
 		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
@@ -232,8 +234,10 @@ const ReportesDetallesGeneral = (props) => {
 					pago.digitos = 'NO APLICA';
 				}
 				producto.areasSeleccionadas.forEach(areaSeleccionada => {
+					console.log("KAOZ", areaSeleccionada);
 					if (!areaSeleccionada.pagada) {
 						pago.cantidad = Number(pago.cantidad);
+						const importe1 = Number(precioAreaBySucursal(sucursal, areaSeleccionada));
 						areaSeleccionada.precio_real = Number(areaSeleccionada.precio_real);
 						if (facial.forma_pago === formaPagoSesionAnticipadaId) {
 							const dato = {
@@ -280,26 +284,25 @@ const ReportesDetallesGeneral = (props) => {
 								areaSeleccionada.precio_real = 0;
 								pago.cantidad = 0;
 							}
-							console.log("KAOZ", total, areaSeleccionada.comision_real, producto.importe1);
 
 							const impuestoPorcentaje = areaSeleccionada.iva ? iva : 0;
 							const importe2 = total / (1 + (impuestoPorcentaje / 100));
 							const impuesto = importe2 * (impuestoPorcentaje / 100);
-							const descuentoPorcentaje = 100 - (total * 100 / producto.importe1);
-							const descuentoCantidad = (producto.importe1 * descuentoPorcentaje / 100);
+							const descuentoPorcentaje = 100 - (total * 100 / importe1);
+							const descuentoCantidad = (importe1 * descuentoPorcentaje / 100);
 							const pagoDermatologo = facial.dermatologo._id !== dermatologoDirectoId ? areaSeleccionada.comision_real : 0;
 							const pagoClinica = total - pagoDermatologo;
 							const descuentoClinicaPorcentaje = facial.porcentaje_descuento_clinica ? facial.porcentaje_descuento_clinica : 0;
 							const descuentoDermatologoPorcentaje = facial.descuento_dermatologo ? facial.descuento_dermatologo : 0;
-							const descuentoClinica = descuentoClinicaPorcentaje * producto.importe1 / 100;
-							const descuentoDermatologo = descuentoDermatologoPorcentaje * (producto.importe1 - descuentoClinica) / 100;
+							const descuentoClinica = descuentoClinicaPorcentaje * importe1 / 100;
+							const descuentoDermatologo = descuentoDermatologoPorcentaje * (importe1 - descuentoClinica) / 100;
 							const dato = {
 								...facial,
 								metodo_pago_nombre: metodoPago.nombre,
 								producto: producto,
 								impuesto_porcentaje: `${impuestoPorcentaje}%`,
 								impuesto_cantidad: toFormatterCurrency(impuesto),
-								importe_1: toFormatterCurrency(producto.importe1),
+								importe_1: toFormatterCurrency(importe1),
 								importe_2: toFormatterCurrency(importe2),
 								descuento_porcentaje: `${redondearDecimales(descuentoPorcentaje)}%`,
 								descuento_cantidad: toFormatterCurrency(descuentoCantidad),

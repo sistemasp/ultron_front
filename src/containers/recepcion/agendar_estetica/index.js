@@ -26,7 +26,7 @@ import { findProductoByServicio } from "../../../services/productos";
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import { findEmployeesByRolIdAvailable } from "../../../services/empleados";
 import { createFactura } from "../../../services/facturas";
-import { 
+import {
 	findConsecutivoBySucursal,
 	createConsecutivo,
 } from "../../../services/consecutivos";
@@ -198,13 +198,14 @@ const AgendarEstetica = (props) => {
 		}
 	}
 
-	const handleChangeFecha = (date) => {
+	const handleChangeFecha = async (date) => {
 		setIsLoading(true);
 		setValues({
 			...values,
 			fecha_hora: date,
 		});
-		loadHorariosByServicio(date, esteticaServicioId);
+		await loadHorariosByServicio(date, esteticaServicioId);
+		await handleChangeFilterDate(date);
 		setIsLoading(false);
 	};
 

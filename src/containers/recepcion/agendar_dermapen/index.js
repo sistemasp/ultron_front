@@ -27,7 +27,7 @@ import { AgendarDermapenContainer } from "./agendar_dermapen";
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import { findEmployeesByRolIdAvailable } from "../../../services/empleados";
 import { createFactura } from "../../../services/facturas";
-import { 
+import {
 	findConsecutivoBySucursal,
 	createConsecutivo,
 } from "../../../services/consecutivos";
@@ -205,13 +205,14 @@ const AgendarDermapen = (props) => {
 		}
 	}
 
-	const handleChangeFecha = (date) => {
+	const handleChangeFecha = async (date) => {
 		setIsLoading(true);
 		setValues({
 			...values,
 			fecha_hora: date,
 		});
-		loadHorariosByServicio(date, dermapenServicioId);
+		await loadHorariosByServicio(date, dermapenServicioId);
+		await handleChangeFilterDate(date);
 		setIsLoading(false);
 	};
 

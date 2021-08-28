@@ -30,7 +30,7 @@ import {
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import { findEmployeesByRolIdAvailable } from "../../../services/empleados";
 import { createFactura } from "../../../services/facturas";
-import { 
+import {
 	findConsecutivoBySucursal,
 	createConsecutivo,
 } from "../../../services/consecutivos";
@@ -317,13 +317,14 @@ const AgendarAparatologia = (props) => {
 		setIsLoading(false);
 	}
 
-	const handleChangeFecha = (date) => {
+	const handleChangeFecha = async (date) => {
 		setIsLoading(true);
 		setValues({
 			...values,
 			fecha_hora: date,
 			hora: '',
 		});
+		await handleChangeFilterDate(date);
 		loadHorarios(date);
 		setIsLoading(false);
 	};

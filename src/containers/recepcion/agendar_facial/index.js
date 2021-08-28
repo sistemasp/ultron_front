@@ -30,7 +30,7 @@ import { AgendarFacialContainer } from "./agendar_facial";
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import { findEmployeesByRolIdAvailable } from "../../../services/empleados";
 import { createFactura } from "../../../services/facturas";
-import { 
+import {
 	findConsecutivoBySucursal,
 	createConsecutivo,
 } from "../../../services/consecutivos";
@@ -282,14 +282,15 @@ const AgendarFacial = (props) => {
 		setIsLoading(false);
 	}
 
-	const handleChangeFecha = (date) => {
+	const handleChangeFecha = async (date) => {
 		setIsLoading(true);
 		delete values.hora;
 		setValues({
 			...values,
 			fecha_hora: date,
 		});
-		loadHorarios(date);
+		await loadHorarios(date);
+		await handleChangeFilterDate(date);
 		setIsLoading(false);
 	};
 
