@@ -119,7 +119,6 @@ const DashboardForm = (props) => {
       }
       sucursal.total_entradas = totalEntradas;
     });
-    console.log("KAOZ", resSucursales);
     setSucursales(resSucursales);
 
   }
