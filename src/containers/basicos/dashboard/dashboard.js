@@ -15,8 +15,6 @@ import { toFormatterCurrency } from "../../../utils/utils";
 
 export const DashboardContainer = (props) => {
 
-
-
   const {
     sucursales,
     startDate,
@@ -39,7 +37,7 @@ export const DashboardContainer = (props) => {
 
   return (
     <Fragment>
-      {/* <Paper>
+      <Paper>
         <Grid container spacing={3} justify="center">
           <Grid item xs={12} sm={2}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -98,7 +96,7 @@ export const DashboardContainer = (props) => {
 
         </Grid>
 
-      </Paper> */}
+      </Paper>
 
       <Grid container spacing={3}>
         <Grid item xs={4} sm={4}>
@@ -121,6 +119,8 @@ export const DashboardContainer = (props) => {
                     <Grid container spacing={2}>
                       {
                         sucursal.entradas.map(entrada => {
+                          console.log("KAOZ", entrada);
+
                           return <Fragment>
                             <Grid item xs={7} sm={7} className={classes.label_left}>
                               <h3 className={classes.label_left}>{`${entrada.nombre}: `}</h3>

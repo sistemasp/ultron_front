@@ -50,6 +50,8 @@ const DashboardForm = (props) => {
     colorBase,
   } = props;
 
+  const classes = props;
+
   const token = empleado.access_token;
 
   const [sucursales, setSucursales] = useState([]);
@@ -94,6 +96,7 @@ const DashboardForm = (props) => {
   const procesarSucursales = async (resSucursales, tipoEntradas) => {
     const sd = startDate.fecha_show;
     const ed = endDate.fecha_show;
+    console.log("KAOZ", sd, ed);
     await resSucursales.map(async (sucursal) => {
       sucursal.entradas = [];
       let totalEntradas = 0;
@@ -122,7 +125,7 @@ const DashboardForm = (props) => {
     setSucursales(resSucursales);
     setTimeout(async () => {
       setIsLoading(false);
-    }, 100);
+    }, 1000);
   }
 
   const loadSucursales = async (tipoEntradas) => {
@@ -138,17 +141,6 @@ const DashboardForm = (props) => {
       await loadSucursales(response.data);
     }
   }
-
-  const loadAll = async () => {
-    setIsLoading(true);
-    await loadTipoEntradas();
-  }
-
-  useEffect(() => {
-    loadAll();
-  }, []);
-
-  const classes = props;
 
   const handleChangeStartDate = async (date) => {
     setIsLoading(true);
@@ -175,6 +167,22 @@ const DashboardForm = (props) => {
     setIsLoading(false);
   };
 
+  const handleReportes = async () => {
+    setIsLoading(true);
+    await loadTipoEntradas();
+  }
+
+  const loadAll = async () => {
+    setIsLoading(true);
+    await loadTipoEntradas();
+  }
+
+  useEffect(() => {
+    loadAll();
+  }, []);
+
+
+
   return (
     <Fragment>
       {
@@ -186,6 +194,7 @@ const DashboardForm = (props) => {
             endDate={endDate.fecha_show}
             sucursales={sucursales}
             colorBase={colorBase}
+            onClickReportes={handleReportes}
             {...props} />
           : <Backdrop className={classes.backdrop} open={isLoading} >
             <CircularProgress color="inherit" />
