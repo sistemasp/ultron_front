@@ -91,10 +91,10 @@ const DashboardForm = (props) => {
     fecha: `${dia}/${mes}/${anio}`,
   });
 
-  const procesarSucursales = (resSucursales, tipoEntradas) => {
+  const procesarSucursales = async (resSucursales, tipoEntradas) => {
     const sd = startDate.fecha_show;
     const ed = endDate.fecha_show;
-    resSucursales.map(async (sucursal) => {
+    await resSucursales.map(async (sucursal) => {
       sucursal.entradas = [];
       let totalEntradas = 0;
       const response = await findEntradasByRangeDateAndSucursal(sd.getDate(), sd.getMonth(), sd.getFullYear(),
@@ -120,13 +120,15 @@ const DashboardForm = (props) => {
       sucursal.total_entradas = totalEntradas;
     });
     setSucursales(resSucursales);
-
+    setTimeout(async () => {
+      setIsLoading(false);
+    }, 100);
   }
 
   const loadSucursales = async (tipoEntradas) => {
     const response = await showAllOffices();
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      procesarSucursales(response.data, tipoEntradas);
+      await procesarSucursales(response.data, tipoEntradas);
     }
   }
 
@@ -140,7 +142,6 @@ const DashboardForm = (props) => {
   const loadAll = async () => {
     setIsLoading(true);
     await loadTipoEntradas();
-    setIsLoading(false);
   }
 
   useEffect(() => {
