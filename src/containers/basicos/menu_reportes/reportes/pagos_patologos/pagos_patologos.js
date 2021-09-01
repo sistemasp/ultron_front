@@ -10,7 +10,7 @@ import myStyles from '../../../../../css';
 import ModalImprimirPagoDermatologo from '../../../../../components/modales/imprimir/pago_dermatologo';
 import ReporteImprimirPagoDermatologo from '../../../../../components/modales/imprimir/reporte_pago_dermatologo';
 
-export const ReportesPagosDermatologosContainer = (props) => {
+export const ReportesPagosPatologosContainer = (props) => {
 
 	const {
 		onChangeStartDate,

@@ -141,7 +141,7 @@ const ModalFormImprimirCorte = (props) => {
   let totalEfectivo = 0;
   let pagoDermatologos = 0;
   let retirosParciales = 0;
-  let otrosSalidas = 0;
+  let otrasSalidas = 0;
 
   let totalesEntradas = [0, 0, 0, 0, 0, 0, 0];
   let totalesPagosAnticipados = [0, 0, 0, 0, 0, 0, 0, 0];
@@ -361,7 +361,7 @@ const ModalFormImprimirCorte = (props) => {
                       retirosParciales += dataSalida.total;
                       break;
                     default:
-                      otrosSalidas += dataSalida.total;
+                      otrasSalidas += dataSalida.total;
                       break
                   }
                 }
@@ -431,13 +431,13 @@ const ModalFormImprimirCorte = (props) => {
                 <h3 className={classes.label_cells_concepto}>TOTAL OTRAS SALIDAS</h3>
               </Grid>
               <Grid item xs={4} className={classes.label}>
-                <h3 className={classes.label_cells}>{`-${toFormatterCurrency(otrosSalidas)}`}</h3>
+                <h3 className={classes.label_cells}>{`-${toFormatterCurrency(otrasSalidas)}`}</h3>
               </Grid>
             </Grid>
 
             <Grid container xs={6} className={classes.grid_right}>
               <Grid item xs={12} className={classes.label}>
-                <h1 className={classes.label_utilidad_perdida}>{`TOTAL CORTE EFECTIVO: ${toFormatterCurrency(totalEfectivo - pagoDermatologos - retirosParciales - otrosSalidas)}`}<br /><br /></h1>
+                <h1 className={classes.label_utilidad_perdida}>{`TOTAL CORTE EFECTIVO: ${toFormatterCurrency(totalEfectivo - pagoDermatologos - retirosParciales - otrasSalidas)}`}<br /><br /></h1>
               </Grid>
 
               <Grid item xs={12} className={classes.label}>

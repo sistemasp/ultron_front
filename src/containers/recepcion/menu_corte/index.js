@@ -6,7 +6,6 @@ import TableComponent from '../../../components/table/TableComponent';
 import {
   showAllMetodoPago,
   showAllTipoSalidas,
-  showAllTipoEntradas,
 } from '../../../services';
 import {
   showEntradasTodayBySucursalAndHoraAplicacion, showEntradasTodayBySucursalAndHoraAplicacionPA,
@@ -22,6 +21,7 @@ import {
   showCorteTodayBySucursalAndTurno,
   updateCorte,
 } from "../../../services/corte";
+import { showAllTipoEntradas } from "../../../services/tipo_entradas";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;

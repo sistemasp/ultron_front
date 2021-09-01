@@ -31,6 +31,7 @@ const TabAparatologia = (props) => {
   const columns = [
     { title: 'FECHA', field: 'fecha_show' },
     { title: 'HORA', field: 'hora' },
+    { title: 'COSMETÓLOGA', field: 'cosmetologa.nombre' },
     { title: 'PRODUCTO (ÁREAS)', field: 'show_tratamientos' },
     { title: 'TIPO CITA', field: 'tipo_cita.nombre' },
     { title: 'ESTADO', field: 'status.nombre' },

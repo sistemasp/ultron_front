@@ -694,33 +694,7 @@ export const showAllTipoEsteticas = async () => {
     }
 }
 
-// TIPO INGRESO
-
-export const showAllTipoEntradas = async () => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/tipoentrada`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('showAllTipoEntradas', error);
-    }
-}
-
-export const findTipoEntradaById = async (tipoEntradaId) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/tipoentrada/${tipoEntradaId}`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('findTipoEntradaById', error);
-    }
-}
-
-// TIPO EGRESO
+// TIPO SALIDAS
 
 export const showAllTipoSalidas = async () => {
     try {

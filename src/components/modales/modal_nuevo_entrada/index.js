@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import ModalFormNuevoEntrada from './ModalFormNuevoEntrada';
 import {
-  showAllTipoEntradas,
   showAllMetodoPago,
 } from "../../../services";
 import {
   createEntrada,
 } from "../../../services/entradas";
+import { showAllTipoEntradas } from '../../../services/tipo_entradas';
 
 const ModalNuevoEntrada = (props) => {
   const {

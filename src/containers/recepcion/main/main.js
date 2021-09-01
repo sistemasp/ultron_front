@@ -40,7 +40,9 @@ import {
 } from '../../../services/corte';
 import myStyles from '../../../css';
 import MenuSuperAdmin from '../../basicos/menu_super_admin';
+import DashboardForm from '../../basicos/dashboard';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
+import PieChartIcon from '@material-ui/icons/PieChart';
 
 const TabPanel = (props) => {
 	const { children, value, index, ...other } = props;
@@ -70,6 +72,9 @@ export const MainContainer = props => {
 	const rolRecepcionistaId = process.env.REACT_APP_RECEPCIONISTA_ROL_ID;
 	const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
 	const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
+	const rolDiosSupremoId = process.env.REACT_APP_DIOS_SUPREMO_ROL_ID;
+	const rolMasterId = process.env.REACT_APP_MASTER_ROL_ID;
+	const rolSupervisorId = process.env.REACT_APP_SUPERVISOR_ROL_ID;
 
 	const {
 		pacienteAgendado,
@@ -196,30 +201,38 @@ export const MainContainer = props => {
 				</div>
 				<Divider />
 				<List>
-					<ListItem button key={'PACIENTES'} onClick={(e) => onChangeTab(e, 0, handleDrawerClose)}>
+					{
+						empleado.rol._id === rolDiosSupremoId || empleado.rol._id === rolMasterId || empleado.rol._id === rolSupervisorId ?
+							<ListItem button key={'DASHBOARD'} onClick={(e) => onChangeTab(e, 0, handleDrawerClose)}>
+								<ListItemIcon> <PieChartIcon /> </ListItemIcon>
+								<ListItemText primary={'DASHBOARD'} />
+							</ListItem>
+							: ''
+					}
+					<ListItem button key={'PACIENTES'} onClick={(e) => onChangeTab(e, 1, handleDrawerClose)}>
 						<ListItemIcon> <AccessibilityNewIcon /> </ListItemIcon>
 						<ListItemText primary={'PACIENTES'} />
 					</ListItem>
 					{
 						sucursal._id === sucursalManuelAcunaId || sucursal._id === sucursalRubenDarioId ?
 							<Fragment>
-								<ListItem button key={'DERMATOLÓGOS'} onClick={(e) => onChangeTab(e, 1, handleDrawerClose)}>
+								<ListItem button key={'DERMATOLÓGOS'} onClick={(e) => onChangeTab(e, 2, handleDrawerClose)}>
 									<ListItemIcon> <People /> </ListItemIcon>
 									<ListItemText primary={'DERMATOLÓGOS'} />
 								</ListItem>
-								<ListItem button key={'CONSULTORIOS / CABINAS'} onClick={(e) => onChangeTab(e, 2, handleDrawerClose)}>
+								<ListItem button key={'CONSULTORIOS / CABINAS'} onClick={(e) => onChangeTab(e, 3, handleDrawerClose)}>
 									<ListItemIcon> <AirlineSeatReclineNormalIcon /> </ListItemIcon>
 									<ListItemText primary={'CONSULTORIOS / CABINAS'} />
 								</ListItem>
-								<ListItem button key={'CORTE'} onClick={(e) => onChangeTab(e, 3, handleDrawerClose)}>
+								<ListItem button key={'CORTE'} onClick={(e) => onChangeTab(e, 4, handleDrawerClose)}>
 									<ListItemIcon> <AttachMoneyIcon /> </ListItemIcon>
 									<ListItemText primary={'CORTE'} />
 								</ListItem>
-								<ListItem button key={'LISTA DE ESPERA'} onClick={(e) => onChangeTab(e, 4, handleDrawerClose)}>
+								<ListItem button key={'LISTA DE ESPERA'} onClick={(e) => onChangeTab(e, 5, handleDrawerClose)}>
 									<ListItemIcon> <ListAltIcon /> </ListItemIcon>
 									<ListItemText primary={'LISTA DE ESPERA'} />
 								</ListItem>
-								<ListItem button key={'RAZÓN SOCIAL'} onClick={(e) => onChangeTab(e, 5, handleDrawerClose)}>
+								<ListItem button key={'RAZÓN SOCIAL'} onClick={(e) => onChangeTab(e, 6, handleDrawerClose)}>
 									<ListItemIcon> <Description /> </ListItemIcon>
 									<ListItemText primary={'RAZÓN SOCIAL'} />
 								</ListItem>
@@ -229,7 +242,7 @@ export const MainContainer = props => {
 
 					{
 						empleado.rol._id !== rolRecepcionistaId ?
-							<ListItem button key={'REPORTES'} onClick={(e) => onChangeTab(e, 6, handleDrawerClose)}>
+							<ListItem button key={'REPORTES'} onClick={(e) => onChangeTab(e, 7, handleDrawerClose)}>
 								<ListItemIcon> <AssignmentIcon /> </ListItemIcon>
 								<ListItemText primary={'REPORTES'} />
 							</ListItem>
@@ -237,7 +250,7 @@ export const MainContainer = props => {
 					}
 					{
 						empleado.super_admin
-							? <ListItem button key={'SUPER ADMINISTRADOR'} onClick={(e) => onChangeTab(e, 7, handleDrawerClose)}>
+							? <ListItem button key={'SUPER ADMINISTRADOR'} onClick={(e) => onChangeTab(e, 8, handleDrawerClose)}>
 								<ListItemIcon> <AndroidIcon /> </ListItemIcon>
 								<ListItemText primary={'SUPER ADMINISTRADOR'} />
 							</ListItem>
@@ -253,19 +266,26 @@ export const MainContainer = props => {
 				<div className={classes.drawerHeader} />
 				<Fragment className={classes.fragment}>
 					<TabPanel value={value} index={0}>
-						<MenuPatient
+						<DashboardForm
 							empleado={empleado}
 							sucursal={sucursal}
 							colorBase={colorBase}
 							history={history} />
 					</TabPanel>
 					<TabPanel value={value} index={1}>
+						<MenuPatient
+							empleado={empleado}
+							sucursal={sucursal}
+							colorBase={colorBase}
+							history={history} />
+					</TabPanel>
+					<TabPanel value={value} index={2}>
 						<Dermatologos
 							empleado={empleado}
 							colorBase={colorBase}
 							sucursal={sucursal} />
 					</TabPanel>
-					<TabPanel value={value} index={2}>
+					<TabPanel value={value} index={3}>
 						<Consultorios
 							paciente={pacienteAgendado}
 							setPacienteAgendado={setPacienteAgendado}
@@ -273,7 +293,7 @@ export const MainContainer = props => {
 							colorBase={colorBase}
 							sucursal={sucursal._id} />
 					</TabPanel>
-					<TabPanel value={value} index={3}>
+					<TabPanel value={value} index={4}>
 						<Corte
 							paciente={pacienteAgendado}
 							setPacienteAgendado={setPacienteAgendado}
@@ -281,7 +301,7 @@ export const MainContainer = props => {
 							colorBase={colorBase}
 							sucursal={sucursal._id} />
 					</TabPanel>
-					<TabPanel value={value} index={4}>
+					<TabPanel value={value} index={5}>
 						<ListaEspera
 							paciente={pacienteAgendado}
 							setPacienteAgendado={setPacienteAgendado}
@@ -289,7 +309,7 @@ export const MainContainer = props => {
 							colorBase={colorBase}
 							sucursal={sucursal._id} />
 					</TabPanel>
-					<TabPanel value={value} index={5}>
+					<TabPanel value={value} index={6}>
 						<MenuRazonSocial
 							paciente={pacienteAgendado}
 							setPacienteAgendado={setPacienteAgendado}
@@ -297,7 +317,7 @@ export const MainContainer = props => {
 							colorBase={colorBase}
 							sucursal={sucursal._id} />
 					</TabPanel>
-					<TabPanel value={value} index={6}>
+					<TabPanel value={value} index={7}>
 						<MenuReports
 							paciente={pacienteAgendado}
 							setPacienteAgendado={setPacienteAgendado}
@@ -305,7 +325,7 @@ export const MainContainer = props => {
 							colorBase={colorBase}
 							sucursal={sucursal._id} />
 					</TabPanel>
-					<TabPanel value={value} index={7}>
+					<TabPanel value={value} index={8}>
 						<MenuSuperAdmin
 							empleado={empleado}
 							sucursal={sucursal}

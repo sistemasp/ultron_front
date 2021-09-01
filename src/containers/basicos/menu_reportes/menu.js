@@ -22,6 +22,7 @@ import ReporteGeneralCitas from './reportes/general_citas';
 import ReportePagosDermatologos from './reportes/pagos_dermatologos';
 import myStyles from '../../../css';
 import ReportesPagosAnticipados from './reportes/pagos_anticipados';
+import ReportePagosPatologos from './reportes/pagos_patologos';
 
 function TabPanel(props) {
 	const { children, value, index, ...other } = props;
@@ -98,6 +99,7 @@ export const MenuContainer = props => {
 					<Tab label="PAGOS DERMATOLÓGOS" {...a11yProps(2)} />
 					<Tab label="FACTURAS" {...a11yProps(3)} />
 					<Tab label="PAGOS ANTICIPADOS" {...a11yProps(4)} />
+					<Tab label="PAGOS PATOLÓGOS" {...a11yProps(5)} />
 				</Tabs>
 			</AppBar>
 
@@ -127,6 +129,12 @@ export const MenuContainer = props => {
 			</TabPanel>
 			<TabPanel value={value} index={4}>
 				<ReportesPagosAnticipados
+					empleado={empleado}
+					colorBase={colorBase}
+					sucursal={sucursal} />
+			</TabPanel>
+			<TabPanel value={value} index={5}>
+				<ReportePagosPatologos
 					empleado={empleado}
 					colorBase={colorBase}
 					sucursal={sucursal} />

@@ -53,6 +53,22 @@ export const showEntradasTodayBySucursalAndHoraAplicacionPA = async (sucursalId,
     }
 }
 
+export const findEntradasByRangeDateAndSucursal = async (diai, mesi, anioi, diaf, mesf, aniof, sucursalId, token) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/entrada/fecha_inicio/${diai}/${mesi}/${anioi}/fecha_fin/${diaf}/${mesf}/${aniof}/sucursal/${sucursalId}`,
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response;
+    } catch (error) {
+        console.log('findEntradasByRangeDateAndSucursal', error);
+        return error;
+    }
+}
+
 export const findEntradaById = async (entradaId) => {
     try {
         const response = await axios({

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import { ReportesPagosDermatologosContainer } from "./pagos_dermatologos";
+import { ReportesPagosPatologosContainer } from "./pagos_patologos";
 import { Backdrop, CircularProgress } from "@material-ui/core";
 import { toFormatterCurrency, addZero, getPagoDermatologoByServicio, dateToString } from "../../../../../utils/utils";
 import { findPagoDermatologosByRangeDateAndSucursal } from "../../../../../services/pago_dermatologos";
@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-const ReportePagosDermatologos = (props) => {
+const ReportePagosPatologos = (props) => {
 
 	const classes = useStyles();
 
@@ -170,12 +170,12 @@ const ReportePagosDermatologos = (props) => {
 		<Fragment>
 			{
 				!isLoading ?
-					<ReportesPagosDermatologosContainer
+					<ReportesPagosPatologosContainer
 						onChangeStartDate={(e) => handleChangeStartDate(e)}
 						onChangeEndDate={(e) => handleChangeEndDate(e)}
 						startDate={startDate.fecha_show}
 						endDate={endDate.fecha_show}
-						titulo={`REPORTES PAGOS DERMATOLÓGOS (${startDate.fecha} - ${endDate.fecha})`}
+						titulo={`REPORTES PAGOS PATOLÓGOS (${startDate.fecha} - ${endDate.fecha})`}
 						columns={columnsGeneral}
 						options={options}
 						datos={datos}
@@ -194,4 +194,4 @@ const ReportePagosDermatologos = (props) => {
 	);
 }
 
-export default ReportePagosDermatologos;
+export default ReportePagosPatologos;

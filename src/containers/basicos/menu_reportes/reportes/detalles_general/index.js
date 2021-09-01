@@ -215,6 +215,7 @@ const ReportesDetallesGeneral = (props) => {
 			});
 			let totalPagos = 0;
 			facial.pagos.forEach(pago => {
+
 				const metodoPago = metodosPago.find(metodoPago => {
 					return metodoPago._id === pago.forma_pago;
 				});
@@ -234,20 +235,22 @@ const ReportesDetallesGeneral = (props) => {
 					pago.digitos = 'NO APLICA';
 				}
 				producto.areasSeleccionadas.forEach(areaSeleccionada => {
-					console.log("KAOZ", areaSeleccionada);
 					if (!areaSeleccionada.pagada) {
 						pago.cantidad = Number(pago.cantidad);
 						const importe1 = Number(precioAreaBySucursal(sucursal, areaSeleccionada));
 						areaSeleccionada.precio_real = Number(areaSeleccionada.precio_real);
 						if (facial.forma_pago === formaPagoSesionAnticipadaId) {
+							const impuestoPorcentaje = areaSeleccionada.iva ? iva : 0;
+							const importe2 = importe1 / (1 + (impuestoPorcentaje / 100));
+							const impuesto = importe2 * (impuestoPorcentaje / 100);
 							const dato = {
 								...facial,
 								metodo_pago_nombre: metodoPago.nombre,
 								producto: producto,
-								impuesto_porcentaje: `${0}%`,
-								impuesto_cantidad: toFormatterCurrency(0),
-								importe_1: toFormatterCurrency(0),
-								importe_2: toFormatterCurrency(0),
+								impuesto_porcentaje: `${impuestoPorcentaje}%`,
+								impuesto_cantidad: toFormatterCurrency(impuesto),
+								importe_1: toFormatterCurrency(importe1),
+								importe_2: toFormatterCurrency(importe2),
 								descuento_porcentaje: `${redondearDecimales(0)}%`,
 								descuento_cantidad: toFormatterCurrency(0),
 								descuento_porcentaje_clinica: `${redondearDecimales(0)}%`,
@@ -267,63 +270,64 @@ const ReportesDetallesGeneral = (props) => {
 								turno: pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO') : "SIN TURNO",
 							}
 							datos.push(dato);
-						}
-						do {
-							totalPagos++;
-							let total = 0;
-							if (pago.cantidad > areaSeleccionada.precio_real) {
-								total = areaSeleccionada.precio_real;
-								pago.cantidad -= areaSeleccionada.precio_real;
-								areaSeleccionada.precio_real = 0;
-							} else if (pago.cantidad < areaSeleccionada.precio_real) {
-								total = pago.cantidad;
-								areaSeleccionada.precio_real -= pago.cantidad;
-								pago.cantidad = 0;
-							} else {
-								total = areaSeleccionada.precio_real;
-								areaSeleccionada.precio_real = 0;
-								pago.cantidad = 0;
-							}
+						} else {
+							do {
+								totalPagos++;
+								let total = 0;
+								if (pago.cantidad > areaSeleccionada.precio_real) {
+									total = areaSeleccionada.precio_real;
+									pago.cantidad -= areaSeleccionada.precio_real;
+									areaSeleccionada.precio_real = 0;
+								} else if (pago.cantidad < areaSeleccionada.precio_real) {
+									total = pago.cantidad;
+									areaSeleccionada.precio_real -= pago.cantidad;
+									pago.cantidad = 0;
+								} else {
+									total = areaSeleccionada.precio_real;
+									areaSeleccionada.precio_real = 0;
+									pago.cantidad = 0;
+								}
 
-							const impuestoPorcentaje = areaSeleccionada.iva ? iva : 0;
-							const importe2 = total / (1 + (impuestoPorcentaje / 100));
-							const impuesto = importe2 * (impuestoPorcentaje / 100);
-							const descuentoPorcentaje = 100 - (total * 100 / importe1);
-							const descuentoCantidad = (importe1 * descuentoPorcentaje / 100);
-							const pagoDermatologo = facial.dermatologo._id !== dermatologoDirectoId ? areaSeleccionada.comision_real : 0;
-							const pagoClinica = total - pagoDermatologo;
-							const descuentoClinicaPorcentaje = facial.porcentaje_descuento_clinica ? facial.porcentaje_descuento_clinica : 0;
-							const descuentoDermatologoPorcentaje = facial.descuento_dermatologo ? facial.descuento_dermatologo : 0;
-							const descuentoClinica = descuentoClinicaPorcentaje * importe1 / 100;
-							const descuentoDermatologo = descuentoDermatologoPorcentaje * (importe1 - descuentoClinica) / 100;
-							const dato = {
-								...facial,
-								metodo_pago_nombre: metodoPago.nombre,
-								producto: producto,
-								impuesto_porcentaje: `${impuestoPorcentaje}%`,
-								impuesto_cantidad: toFormatterCurrency(impuesto),
-								importe_1: toFormatterCurrency(importe1),
-								importe_2: toFormatterCurrency(importe2),
-								descuento_porcentaje: `${redondearDecimales(descuentoPorcentaje)}%`,
-								descuento_cantidad: toFormatterCurrency(descuentoCantidad),
-								descuento_porcentaje_clinica: `${redondearDecimales(descuentoClinicaPorcentaje)}%`,
-								descuento_porcentaje_dermatologo: `${redondearDecimales(descuentoDermatologoPorcentaje)}%`,
-								descuento_cantidad_dermatologo: toFormatterCurrency(descuentoDermatologo),
-								descuento_cantidad_clinica: toFormatterCurrency(descuentoClinica),
-								area: areaSeleccionada.nombre,
-								tipo_tarjeta: pago.tipo_tarjeta_nombre,
-								banco_nombre: pago.banco_nombre,
-								digitos: pago.digitos,
-								total_pagos: totalPagos,
-								total_moneda: toFormatterCurrency(total),
-								total_doctor: toFormatterCurrency(pagoDermatologo),
-								doctor_efectivo: toFormatterCurrency(facial.dermatologo.pago_completo ? pagoDermatologo : (pagoDermatologo / 2)),
-								doctor_retencion: toFormatterCurrency(facial.dermatologo.pago_completo ? 0 : (pagoDermatologo / 2)),
-								total_clinica: toFormatterCurrency(pagoClinica),
-								turno: pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO') : "SIN TURNO",
-							}
-							datos.push(dato);
-						} while (pago.cantidad !== 0 && areaSeleccionada.precio_real !== 0);
+								const impuestoPorcentaje = areaSeleccionada.iva ? iva : 0;
+								const importe2 = total / (1 + (impuestoPorcentaje / 100));
+								const impuesto = importe2 * (impuestoPorcentaje / 100);
+								const descuentoPorcentaje = 100 - (total * 100 / importe1);
+								const descuentoCantidad = (importe1 * descuentoPorcentaje / 100);
+								const pagoDermatologo = facial.dermatologo._id !== dermatologoDirectoId ? areaSeleccionada.comision_real : 0;
+								const pagoClinica = total - pagoDermatologo;
+								const descuentoClinicaPorcentaje = facial.porcentaje_descuento_clinica ? facial.porcentaje_descuento_clinica : 0;
+								const descuentoDermatologoPorcentaje = facial.descuento_dermatologo ? facial.descuento_dermatologo : 0;
+								const descuentoClinica = descuentoClinicaPorcentaje * importe1 / 100;
+								const descuentoDermatologo = descuentoDermatologoPorcentaje * (importe1 - descuentoClinica) / 100;
+								const dato = {
+									...facial,
+									metodo_pago_nombre: metodoPago.nombre,
+									producto: producto,
+									impuesto_porcentaje: `${impuestoPorcentaje}%`,
+									impuesto_cantidad: toFormatterCurrency(impuesto),
+									importe_1: toFormatterCurrency(importe1),
+									importe_2: toFormatterCurrency(importe2),
+									descuento_porcentaje: `${redondearDecimales(descuentoPorcentaje)}%`,
+									descuento_cantidad: toFormatterCurrency(descuentoCantidad),
+									descuento_porcentaje_clinica: `${redondearDecimales(descuentoClinicaPorcentaje)}%`,
+									descuento_porcentaje_dermatologo: `${redondearDecimales(descuentoDermatologoPorcentaje)}%`,
+									descuento_cantidad_dermatologo: toFormatterCurrency(descuentoDermatologo),
+									descuento_cantidad_clinica: toFormatterCurrency(descuentoClinica),
+									area: areaSeleccionada.nombre,
+									tipo_tarjeta: pago.tipo_tarjeta_nombre,
+									banco_nombre: pago.banco_nombre,
+									digitos: pago.digitos,
+									total_pagos: totalPagos,
+									total_moneda: toFormatterCurrency(total),
+									total_doctor: toFormatterCurrency(pagoDermatologo),
+									doctor_efectivo: toFormatterCurrency(facial.dermatologo.pago_completo ? pagoDermatologo : (pagoDermatologo / 2)),
+									doctor_retencion: toFormatterCurrency(facial.dermatologo.pago_completo ? 0 : (pagoDermatologo / 2)),
+									total_clinica: toFormatterCurrency(pagoClinica),
+									turno: pago.turno ? (pago.turno === 'm' ? 'MATUTINO' : 'VESPERTINO') : "SIN TURNO",
+								}
+								datos.push(dato);
+							} while (pago.cantidad !== 0 && areaSeleccionada.precio_real !== 0);
+						}
 					}
 				});
 			});

@@ -2,10 +2,10 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { makeStyles } from '@material-ui/core';
 import ModalFormImprimirCorte from './ModalFormImprimirCorte';
 import {
-  showAllTipoEntradas,
   showAllTipoSalidas,
   showAllMetodoPago,
 } from '../../../../services';
+import { showAllTipoEntradas } from '../../../../services/tipo_entradas';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
