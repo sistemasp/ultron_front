@@ -11,6 +11,7 @@ import { ButtonCustom } from "../../../components/basic/ButtonCustom";
 import { Fragment } from "react";
 import myStyles from "../../../css";
 import { toFormatterCurrency } from "../../../utils/utils";
+import { CheckCustom } from "../../../components/basic/CheckCustom";
 
 
 export const DashboardContainer = (props) => {
@@ -23,6 +24,8 @@ export const DashboardContainer = (props) => {
     onChangeEndDate,
     onClickReportes,
     colorBase,
+    isDirecto,
+    onChangeDirecto,
     //setFieldTouched
   } = props;
   // console.table(props);
@@ -39,7 +42,7 @@ export const DashboardContainer = (props) => {
     <Fragment>
       <Paper>
         <Grid container spacing={3} justify="center">
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12} sm={3}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <Grid
                 container
@@ -62,7 +65,7 @@ export const DashboardContainer = (props) => {
               </Grid>
             </MuiPickersUtilsProvider>
           </Grid>
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12} sm={3}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <Grid
                 container
@@ -85,7 +88,15 @@ export const DashboardContainer = (props) => {
               </Grid>
             </MuiPickersUtilsProvider>
           </Grid>
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12} sm={3} className={classes.grid_center}>
+            <CheckCustom
+              checked={isDirecto}
+              onChange={onChangeDirecto}
+              name="checkedF"
+              label="DIRECTOS"
+            />
+          </Grid>
+          <Grid item xs={12} sm={3} className={classes.grid_center}>
             <ButtonCustom
               className={classes.button}
               variant="contained"
@@ -93,21 +104,20 @@ export const DashboardContainer = (props) => {
               onClick={() => onClickReportes()}
               text="OBTENER DATOS" />
           </Grid>
-
         </Grid>
 
       </Paper>
 
       <Grid container spacing={3}>
-        <Grid item xs={4} sm={4}>
+        {/* <Grid item xs={4} sm={4}>
           <Paper>
             <h1>
               GRAFICA
             </h1>
           </Paper>
-        </Grid>
+        </Grid> */}
 
-        <Grid item xs={8} sm={8}>
+        <Grid item xs={12} sm={12}>
           <Grid container spacing={2}>
             {
               sucursales.map(sucursal => {
@@ -116,17 +126,15 @@ export const DashboardContainer = (props) => {
                     <h1>
                       {`${sucursal.nombre}`}
                     </h1>
-                    <Grid container spacing={2}>
+                    <Grid container>
                       {
-                        sucursal.entradas.map(entrada => {
-                          console.log("KAOZ", entrada);
-
+                        sucursal.pagos.map(pago => {
                           return <Fragment>
                             <Grid item xs={7} sm={7} className={classes.label_left}>
-                              <h3 className={classes.label_left}>{`${entrada.nombre}: `}</h3>
+                              <h3 className={classes.label_left}>{`${pago.nombre}: `}</h3>
                             </Grid>
                             <Grid item xs={4} sm={4} className={classes.label_right}>
-                              <h3 className={classes.label_right}>{`${toFormatterCurrency(entrada.total_entrada)}`}</h3>
+                              <h3 className={classes.label_right}>{`${toFormatterCurrency(pago.total_pago)}`}</h3>
                             </Grid>
                           </Fragment>
                         })
@@ -134,7 +142,7 @@ export const DashboardContainer = (props) => {
                     </Grid>
                     <Grid container spacing={2}>
                       <Grid item xs={12} sm={12} className={classes.label_right}>
-                        <h2 className={classes.label_right}>{`${toFormatterCurrency(sucursal.total_entradas)}`}</h2>
+                        <h2 className={classes.label_right}>{`${toFormatterCurrency(sucursal.total_pagos)}`}</h2>
                       </Grid>
                     </Grid>
                   </Paper>

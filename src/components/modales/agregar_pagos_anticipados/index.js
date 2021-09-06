@@ -5,8 +5,6 @@ import {
   showAllBanco,
   showAllMetodoPago,
   showAllTipoTarjeta,
-  createPago,
-  updatePago,
   showAllTipoCitas,
   showAllFrecuencias,
 } from '../../../services';
@@ -31,6 +29,7 @@ import { findEmployeesByRolIdAvailable } from '../../../services/empleados';
 import SesionesAnticipadas from '../pagos_anticipados/sesiones_anticipadas/SesionesAnticipadas';
 import { createPagoAnticipado, deletePagoAnticipado, updatePagoAnticipado } from '../../../services/pagos_anticipados';
 import { createFactura } from '../../../services/facturas';
+import { createPago } from '../../../services/pagos';
 
 const AgregarPagosAnticipados = (props) => {
 

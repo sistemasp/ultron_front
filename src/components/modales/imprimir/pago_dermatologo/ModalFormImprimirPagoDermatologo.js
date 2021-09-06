@@ -5,7 +5,7 @@ import { Button, Grid } from '@material-ui/core';
 import { ButtonCustom } from '../../../basic/ButtonCustom';
 import bannerMePiel from './../../../../bannerMePiel.PNG';
 import bannerDermastetic from './../../../../bannerDermastetic.jpeg';
-import { addZero, dateToString, precioAreaBySucursal, toFormatterCurrency } from '../../../../utils/utils';
+import { addZero, comisionAreaBySucursalAndTipo, dateToString, precioAreaBySucursal, toFormatterCurrency } from '../../../../utils/utils';
 import myStyles from '../../../../css';
 
 function getModalStyle() {
@@ -21,6 +21,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
   const [modalStyle] = React.useState(getModalStyle);
 
   const frecuenciaPrimeraVezId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
+  const tratamientoLuzpulzadaId = process.env.REACT_APP_LUZ_PULZADA_TRATAMIENTO_ID;
 
   const {
     sucursal,
@@ -877,7 +878,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                               });
                             });
                             pagoDermatologo = comisionDermatologo - ((comisionDermatologo * (facial.porcentaje_descuento_clinica ? facial.porcentaje_descuento_clinica : 0)) / 100);
-                            
+
                             pagoTotal += Number(pagoDermatologo);
                           }
                           return <Grid container>
@@ -1128,13 +1129,12 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                             aparatologia.tratamientos.forEach(tratamiento => {
 
                               tratamiento.areasSeleccionadas.map(area => {
-                                const itemPrecio =
-                                  sucursal._id === sucursalManuelAcunaId ? area.precio_ma // PRECIO MANUEL ACUÑA
-                                    : (sucursal._id === sucursalOcciId ? area.precio_oc // PRECIO OCCIDENTAL
-                                      : (sucursal._id === sucursalFedeId ? area.precio_fe // PRECIO FEDERALISMO
-                                        : (sucursal._id === sucursalRubenDarioId ? area.precio_rd // PRECIO RUBEN DARIO
-                                          : 0))); // ERROR
-                                comisionDermatologo += (Number(itemPrecio) * Number(aparatologia.frecuencia === frecuenciaPrimeraVezId ? dermatologo.esquema.porcentaje_laser : (aparatologia.dermatologo === dermatologoDirectoId ? 100 : 0)) / 100);
+                                const itemPrecio = precioAreaBySucursal(sucursal._id, area);
+                                if (tratamiento._id === tratamientoLuzpulzadaId) {
+                                  comisionDermatologo = comisionAreaBySucursalAndTipo(sucursal._id, aparatologia.tipo_cita._id, area);
+                                } else {
+                                  comisionDermatologo += (Number(itemPrecio) * Number(aparatologia.frecuencia === frecuenciaPrimeraVezId ? dermatologo.esquema.porcentaje_laser : (aparatologia.dermatologo === dermatologoDirectoId ? 100 : 0)) / 100);
+                                }
                               });
                             });
                           }

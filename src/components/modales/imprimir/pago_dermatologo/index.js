@@ -19,7 +19,7 @@ import { findDermapensByPayOfDoctorHoraAplicacion, findDermapensByPayOfDoctorHor
 import { createPagoDermatologo, showTodayPagoDermatologoBySucursalTurno, updatePagoDermatologo } from '../../../../services/pago_dermatologos';
 import { findSesionesAnticipadasByPayOfDoctorFechaPago, updateSesionAnticipada } from '../../../../services/sesiones_anticipadas';
 import { findPagosAnticipadssByPayOfDoctorFechaPago } from '../../../../services/pagos_anticipados';
-import { precioAreaBySucursal } from '../../../../utils/utils';
+import { comisionAreaBySucursalAndTipo, precioAreaBySucursal } from '../../../../utils/utils';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -88,6 +88,8 @@ const ModalImprimirPagoDermatologo = (props) => {
   const dermatologoDirectoId = process.env.REACT_APP_DERMATOLOGO_DIRECTO_ID;
   const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
   const formaPagoSesionAnticipadaId = process.env.REACT_APP_FORMA_PAGO_SESION_ANTICIPADA;
+  const tratamientoLuzpulzadaId = process.env.REACT_APP_LUZ_PULZADA_TRATAMIENTO_ID;
+
 
   const loadConsultas = async (hora_apertura, hora_cierre) => {
     const response = await findConsultsByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), token);
@@ -514,19 +516,18 @@ const ModalImprimirPagoDermatologo = (props) => {
           aparatologia.tratamientos.forEach(tratamiento => {
             let importe1 = 0;
             tratamiento.areasSeleccionadas.map(area => {
-              const itemPrecio =
-                sucursal._id === sucursalManuelAcunaId ? area.precio_ma // PRECIO MANUEL ACUÑA
-                  : (sucursal._id === sucursalOcciId ? area.precio_oc // PRECIO OCCIDENTAL
-                    : (sucursal._id === sucursalFedeId ? area.precio_fe // PRECIO FEDERALISMO
-                      : (sucursal._id === sucursalRubenDarioId ? area.precio_rd // PRECIO RUBEN DARIO
-                        : 0))); // ERROR
+              const itemPrecio = precioAreaBySucursal(sucursal._id, area);
               importe1 += Number(itemPrecio);
 
               const precioReal = itemPrecio - ((itemPrecio * (aparatologia.porcentaje_descuento_clinica ? aparatologia.porcentaje_descuento_clinica : 0)) / 100);
               //const precioReal = (itemPrecio - (itemPrecio * (aparatologia.porcentaje_descuento_clinica ? aparatologia.porcentaje_descuento_clinica : 0 / 100))) *
               //(aparatologia.has_descuento_dermatologo ? (1 - ((aparatologia.frecuencia === primeraVezFrecuenciaId ? dermatologo.esquema.porcentaje_laser : 0) / 100)) : 1);
               const comisionReal = Number(precioReal) * Number(aparatologia.frecuencia === primeraVezFrecuenciaId ? dermatologo.esquema.porcentaje_laser : 0) / 100;
-              comisionDermatologo += comisionReal;
+              if (tratamiento._id === tratamientoLuzpulzadaId) {
+                comisionDermatologo = comisionAreaBySucursalAndTipo(sucursal._id, aparatologia.tipo_cita._id, area);
+              } else {
+                comisionDermatologo += comisionReal;
+              }
               area.comision_real = aparatologia.has_descuento_dermatologo ? 0 : comisionReal;
               area.precio_real = precioReal;
             });

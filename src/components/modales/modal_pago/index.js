@@ -5,8 +5,6 @@ import {
   showAllBanco,
   showAllMetodoPago,
   showAllTipoTarjeta,
-  createPago,
-  updatePago,
 } from '../../../services';
 import {
   createEntrada, /*findEntradaByPago,*/ updateEntrada,
@@ -19,6 +17,7 @@ import myStyles from '../../../css';
 import { Fragment } from 'react';
 import { findTurnoActualBySucursal } from '../../../services/corte';
 import { showAllSesionesAnticipadasByPaciente, updateSesionAnticipada } from '../../../services/sesiones_anticipadas';
+import { createPago, updatePago } from '../../../services/pagos';
 
 const ModalPago = (props) => {
 

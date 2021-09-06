@@ -3,8 +3,6 @@ import {
   getAllSchedules,
   findScheduleByDateAndSucursalAndService,
   showAllTipoCitas,
-  updatePago,
-  deletePago,
   createConsecutivo,
   showAllFrecuencias,
   showAllMedios,
@@ -27,6 +25,7 @@ import { createAparatologia, updateAparatologia } from '../../../services/aparat
 import { createFacial, updateFacial } from '../../../services/faciales';
 import { showAllStatusVisibles } from '../../../services/status';
 import { findEmployeesByRolIdAvailable } from '../../../services/empleados';
+import { deletePago, updatePago } from '../../../services/pagos';
 
 const validationSchema = Yup.object({
   fecha: Yup.string("Ingresa los nombres")

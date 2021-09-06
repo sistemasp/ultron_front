@@ -12,8 +12,10 @@ import MuiAlert from '@material-ui/lab/Alert';
 import bannerMePiel from './../../../bannerMePiel.PNG';
 import { login } from "../../../services/empleados";
 import { addZero } from "../../../utils/utils";
-import { findEntradasByRangeDateAndSucursal } from "../../../services/entradas";
+import { findEntradasByRangeDateAndSucursal } from "../../../services/pagos";
 import { showActivesTipoEntradas } from "../../../services/tipo_entradas";
+import { findPaysByRangeDateAndSucursal } from "../../../services/pagos";
+import { getAllServices } from "../../../services/servicios";
 
 const styles = theme => ({
   paper: {
@@ -56,6 +58,7 @@ const DashboardForm = (props) => {
 
   const [sucursales, setSucursales] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDirecto, setIsDirecto] = useState(false);
 
   const [openAlert, setOpenAlert] = useState(false);
   const [message, setMessage] = useState('');
@@ -76,7 +79,7 @@ const DashboardForm = (props) => {
   const rolSistemasId = process.env.REACT_APP_SISTEMAS_ROL_ID;
   const rolSupervisorId = process.env.REACT_APP_SUPERVISOR_ROL_ID;
   const rolAuxiliarAdministrativoId = process.env.REACT_APP_AUXILIAR_ADMINISTRATIVO_ROL_ID;
-  const rolCallCenterId = process.env.REACT_APP_CALL_CENTER_ROL_ID;
+  const dermatologoDirectoId = process.env.REACT_APP_DERMATOLOGO_DIRECTO_ID;
 
   const date = new Date();
   const dia = addZero(date.getDate());
@@ -93,53 +96,62 @@ const DashboardForm = (props) => {
     fecha: `${dia}/${mes}/${anio}`,
   });
 
-  const procesarSucursales = async (resSucursales, tipoEntradas) => {
+  const procesarSucursales = async (resSucursales, tipoServicios) => {
     const sd = startDate.fecha_show;
     const ed = endDate.fecha_show;
-    console.log("KAOZ", sd, ed);
+
     await resSucursales.map(async (sucursal) => {
-      sucursal.entradas = [];
+      sucursal.pagos = [];
       let totalEntradas = 0;
-      const response = await findEntradasByRangeDateAndSucursal(sd.getDate(), sd.getMonth(), sd.getFullYear(),
+      const response = await findPaysByRangeDateAndSucursal(sd.getDate(), sd.getMonth(), sd.getFullYear(),
         ed.getDate(), ed.getMonth(), ed.getFullYear(), sucursal._id, token);
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-        const entradas = response.data;
-        tipoEntradas.forEach((tipoEntrada, index) => {
+        const pagos = response.data;
+        tipoServicios.forEach((tipoServicio, index) => {
+
           let totalEntrada = 0;
-          const fiterEntradas = entradas.filter(entrada => {
-            return entrada.tipo_entrada._id === tipoEntrada._id;
+          const fiterEntradas = pagos.filter(pago => {
+    console.log("KAOZ", pago);
+
+            return (isDirecto ? pago.dermatologo._id === dermatologoDirectoId : true) && pago.tipo_servicio === tipoServicio._id;
           });
-          fiterEntradas.forEach(entrada => {
-            totalEntrada += Number(entrada.cantidad);
+          fiterEntradas.forEach(pago => {
+            totalEntrada += Number(pago.cantidad);
           });
           totalEntradas += Number(totalEntrada);
-          const entrada = {
-            nombre: tipoEntrada.nombre,
-            total_entrada: totalEntrada,
+          const pago = {
+            nombre: tipoServicio.nombre,
+            total_pago: totalEntrada,
           };
-          sucursal.entradas.push(entrada);
+          sucursal.pagos.push(pago);
         });
       }
-      sucursal.total_entradas = totalEntradas;
+      sucursal.total_pagos = totalEntradas;
     });
+
+    console.log("KAOZ", resSucursales);
     setSucursales(resSucursales);
     setTimeout(async () => {
       setIsLoading(false);
     }, 1000);
   }
 
-  const loadSucursales = async (tipoEntradas) => {
+  const loadSucursales = async (tipoServicios) => {
     const response = await showAllOffices();
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      await procesarSucursales(response.data, tipoEntradas);
+      await procesarSucursales(response.data, tipoServicios);
     }
   }
 
-  const loadTipoEntradas = async () => {
-    const response = await showActivesTipoEntradas();
+  const loadTipoServicios = async () => {
+    const response = await getAllServices();
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       await loadSucursales(response.data);
     }
+  }
+
+  const handleChangeDirecto = () => {
+    setIsDirecto(!isDirecto);
   }
 
   const handleChangeStartDate = async (date) => {
@@ -169,19 +181,17 @@ const DashboardForm = (props) => {
 
   const handleReportes = async () => {
     setIsLoading(true);
-    await loadTipoEntradas();
+    await loadTipoServicios();
   }
 
   const loadAll = async () => {
     setIsLoading(true);
-    await loadTipoEntradas();
+    await loadTipoServicios();
   }
 
   useEffect(() => {
     loadAll();
   }, []);
-
-
 
   return (
     <Fragment>
@@ -195,6 +205,8 @@ const DashboardForm = (props) => {
             sucursales={sucursales}
             colorBase={colorBase}
             onClickReportes={handleReportes}
+            isDirecto={isDirecto}
+            onChangeDirecto={handleChangeDirecto}
             {...props} />
           : <Backdrop className={classes.backdrop} open={isLoading} >
             <CircularProgress color="inherit" />

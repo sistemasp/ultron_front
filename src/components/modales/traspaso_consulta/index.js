@@ -1,10 +1,11 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { createConsecutivo, createPago, deletePago, showAllOffices } from '../../../services';
+import { createConsecutivo, showAllOffices } from '../../../services';
 import { addZero, generateFolio } from '../../../utils/utils';
 import ModalFormTraspasoConsulta from './ModalFormTraspasoConsulta';
 import { createConsult, updateConsult } from '../../../services/consultas';
 import { showAllStatusVisibles } from '../../../services/status';
 import { createEntrada, deleteEntrada, updateEntrada } from '../../../services/entradas';
+import { createPago, deletePago } from '../../../services/pagos';
 
 const ModalTraspasoConsulta = (props) => {
   const {

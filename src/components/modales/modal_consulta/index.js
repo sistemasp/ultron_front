@@ -2,8 +2,6 @@ import React, { useState, useEffect, Fragment } from 'react';
 import {
   findScheduleInConsultByDateAndSucursal,
   showAllTipoCitas,
-  updatePago,
-  deletePago,
   createConsecutivo,
   showAllFrecuencias,
   showAllMedios,
@@ -24,6 +22,7 @@ import ModalFormConsulta from './ModalFormConsulta';
 import { showAllStatusVisibles } from '../../../services/status';
 import { findProductoByServicio } from '../../../services/productos';
 import { findEmployeesByRolIdAvailable } from '../../../services/empleados';
+import { deletePago, updatePago } from '../../../services/pagos';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {

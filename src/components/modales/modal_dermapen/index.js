@@ -3,8 +3,6 @@ import {
   getAllSchedules,
   findScheduleByDateAndSucursalAndService,
   showAllTipoCitas,
-  updatePago,
-  deletePago,
   createConsecutivo,
   showAllMaterials,
   showAllFrecuencias,
@@ -23,6 +21,7 @@ import { createDermapen, updateDermapen } from '../../../services/dermapens';
 import { showAllStatusVisibles } from '../../../services/status';
 import { findAreasByTreatmentServicio } from '../../../services/areas';
 import { findEmployeesByRolIdAvailable } from '../../../services/empleados';
+import { deletePago, updatePago } from '../../../services/pagos';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {

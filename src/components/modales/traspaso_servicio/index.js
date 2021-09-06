@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { createConsecutivo, createPago, deletePago, showAllOffices } from '../../../services';
+import { createConsecutivo, showAllOffices } from '../../../services';
 import { addZero, generateFolio } from '../../../utils/utils';
 import ModalFormTraspasoServicio from './ModalFormTraspasoServicio';
 import { showAllStatusVisibles } from '../../../services/status';
@@ -9,6 +9,7 @@ import { createAparatologia, updateAparatologia } from '../../../services/aparat
 import { createCirugia, updateCirugia } from '../../../services/cirugias';
 import { createEstetica, updateEstetica } from '../../../services/esteticas';
 import { createDermapen, updateDermapen } from '../../../services/dermapens';
+import { createPago, deletePago } from '../../../services/pagos';
 
 const ModalTraspasoServicio = (props) => {
   const {

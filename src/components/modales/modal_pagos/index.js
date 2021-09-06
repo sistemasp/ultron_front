@@ -1,5 +1,4 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { deletePago, findPagosByTipoServicioAndServicio } from '../../../services';
 import { addZero, toFormatterCurrency } from '../../../utils/utils';
 import ModalFormPagos from './ModalFormPagos';
 import EditIcon from '@material-ui/icons/Edit';
@@ -8,6 +7,7 @@ import { Backdrop, CircularProgress } from '@material-ui/core';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import myStyles from '../../../css';
 import { deleteEntrada } from '../../../services/entradas';
+import { deletePago, findPagosByTipoServicioAndServicio } from '../../../services/pagos';
 
 const ModalPagos = (props) => {
 
