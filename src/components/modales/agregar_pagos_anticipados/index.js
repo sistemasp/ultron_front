@@ -431,7 +431,7 @@ const AgregarPagosAnticipados = (props) => {
           }
 
           servicio.pagos[ind].total = Number(servicio.pagos[ind].total);
-          while (sesionTotal > 0) {
+          while (sesionTotal > 0 && servicio.pagos[ind].total !== 0) {
             let total = 0;
             if (servicio.pagos[ind].total > sesionTotal) {
               total = sesionTotal;
@@ -466,6 +466,8 @@ const AgregarPagosAnticipados = (props) => {
               pago_anticipado: true,
             }
 
+            if (servicio.pagos[ind] && servicio.pagos[ind].total === 0 && index < (servicio.sesiones_anticipadas.length - 1)) { ind++ }
+
             const responsEntrada = await createEntrada(entrada);
 
             if (`${responsEntrada.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
@@ -477,7 +479,6 @@ const AgregarPagosAnticipados = (props) => {
               }
             }
 
-            if (servicio.pagos[ind] && servicio.pagos[ind].total === 0) { ind++ }
           }
 
           if (sesionAnticipada.porcentaje_descuento_clinica === '100') {
@@ -560,7 +561,7 @@ const AgregarPagosAnticipados = (props) => {
         }
 
         servicio.pagos[ind].total = Number(servicio.pagos[ind].total);
-        while (sesionTotal > 0) {
+        while (sesionTotal > 0 && servicio.pagos[ind].total !== 0) {
           let total = 0;
           if (servicio.pagos[ind].total > sesionTotal) {
             total = sesionTotal;
@@ -595,6 +596,8 @@ const AgregarPagosAnticipados = (props) => {
             pago_anticipado: true,
           }
 
+          if (servicio.pagos[ind] && servicio.pagos[ind].total === 0 && index < (servicio.sesiones_anticipadas.length - 1)) { ind++ }
+
           const responsEntrada = await createEntrada(entrada);
 
           if (`${responsEntrada.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
@@ -605,8 +608,6 @@ const AgregarPagosAnticipados = (props) => {
               pagos.push(response.data);
             }
           }
-
-          if (servicio.pagos[ind] && servicio.pagos[ind].total === 0) { ind++ }
         }
 
         if (sesionAnticipada.porcentaje_descuento_clinica === '100') {

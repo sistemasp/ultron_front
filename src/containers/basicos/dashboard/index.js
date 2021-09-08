@@ -111,8 +111,6 @@ const DashboardForm = (props) => {
 
           let totalEntrada = 0;
           const fiterEntradas = pagos.filter(pago => {
-    console.log("KAOZ", pago);
-
             return (isDirecto ? pago.dermatologo._id === dermatologoDirectoId : true) && pago.tipo_servicio === tipoServicio._id;
           });
           fiterEntradas.forEach(pago => {
