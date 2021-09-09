@@ -85,6 +85,7 @@ const ReporteGeneralCitas = (props) => {
 		{ title: 'PRECIO', field: 'precio_moneda' },
 		{ title: 'TIEMPO', field: 'tiempo' },
 		{ title: 'OBSERVACIONES', field: 'observaciones' },
+		{ title: 'DISPAROS', field: 'disparos' },
 	];
 
 	const options = {

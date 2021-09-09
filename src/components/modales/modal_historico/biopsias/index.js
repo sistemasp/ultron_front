@@ -52,9 +52,9 @@ const TabBiopsias = (props) => {
       fontWeight: 'bolder',
       fontSize: '18px'
     },
-		exportAllData: true,
-		exportButton: true,
-		exportDelimiter: ';'
+    exportAllData: true,
+    exportButton: true,
+    exportDelimiter: ';'
   }
 
   useEffect(() => {
@@ -66,7 +66,7 @@ const TabBiopsias = (props) => {
             item.precio_moneda = toFormatterCurrency(item.precio);
             const date = new Date(item.fecha_realizacion);
             const dia = addZero(date.getDate());
-            const mes = addZero(date.getMonth());
+            const mes = addZero(date.getMonth() + 1);
             const anio = date.getFullYear();
             const hora = Number(date.getHours());
             const minutos = date.getMinutes();

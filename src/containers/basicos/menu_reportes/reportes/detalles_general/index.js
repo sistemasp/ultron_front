@@ -671,7 +671,7 @@ const ReportesDetallesGeneral = (props) => {
 	}
 
 	const procesarDermapen = (dermapen, datos) => {
-		let totalAplicacion = Number(dermapen.total);
+		let totalAplicacion = Number(dermapen.total_aplicacion);
 		dermapen.pagos.forEach(pago => {
 			let totalPago = Number(pago.total);
 			const metodoPago = metodosPago.find(metodoPago => {
@@ -713,9 +713,9 @@ const ReportesDetallesGeneral = (props) => {
 				const impuestoPorcentaje = dermapen.iva ? iva : 0;
 				const importe2 = total / (1 + (impuestoPorcentaje / 100));
 				const impuesto = importe2 * (impuestoPorcentaje / 100);
-				const descuentoPorcentaje = 100 - (total * 100 / dermapen.total);
-				const descuentoCantidad = (dermapen.total * descuentoPorcentaje / 100);
-				const pagoDermatologo = total / dermapen.total * dermapen.pago_dermatologo;
+				const descuentoPorcentaje = 100 - (total * 100 / dermapen.total_aplicacion);
+				const descuentoCantidad = (dermapen.total_aplicacion * descuentoPorcentaje / 100);
+				const pagoDermatologo = total / dermapen.total_aplicacion * dermapen.pago_dermatologo;
 				const pagoClinica = total - pagoDermatologo;
 				const descuentoClinicaPorcentaje = dermapen.porcentaje_descuento_clinica ? dermapen.porcentaje_descuento_clinica : 0;
 				const descuentoDermatologoPorcentaje = dermapen.descuento_dermatologo ? dermapen.descuento_dermatologo : 0;
@@ -729,7 +729,7 @@ const ReportesDetallesGeneral = (props) => {
 					tipo_tarjeta: pago.tipo_tarjeta_nombre,
 					banco_nombre: pago.banco_nombre,
 					digitos: pago.digitos,
-					importe_1: toFormatterCurrency(dermapen.total),
+					importe_1: toFormatterCurrency(dermapen.total_aplicacion),
 					area: "NO APLICA",
 					descuento_porcentaje_clinica: `${redondearDecimales(descuentoClinicaPorcentaje)}%`,
 					descuento_cantidad_clinica: toFormatterCurrency(descuentoClinica),
@@ -771,8 +771,8 @@ const ReportesDetallesGeneral = (props) => {
 					}
 
 					const impuestoPorcentaje = iva;
-					const descuentoPorcentaje = 100 - (total * 100 / dermapen.total);
-					const descuentoCantidad = (dermapen.total * descuentoPorcentaje / 100);
+					const descuentoPorcentaje = 100 - (total * 100 / material.precio);
+					const descuentoCantidad = (material.precio * descuentoPorcentaje / 100);
 					const importe2 = total / (1 + (impuestoPorcentaje / 100));
 					const impuesto = importe2 * (impuestoPorcentaje / 100);
 
@@ -784,12 +784,12 @@ const ReportesDetallesGeneral = (props) => {
 						tipo_tarjeta: pago.tipo_tarjeta_nombre,
 						banco_nombre: pago.banco_nombre,
 						digitos: pago.digitos,
-						importe_1: toFormatterCurrency(dermapen.total),
+						importe_1: toFormatterCurrency(material.precio),
 						area: "NO APLICA",
-						descuento_porcentaje_clinica: "NO APLICA",
-						descuento_cantidad_clinica: "NO APLICA",
-						descuento_porcentaje_dermatologo: "NO APLICA",
-						descuento_cantidad_dermatologo: "NO APLICA",
+						descuento_porcentaje_clinica: "0%",
+						descuento_cantidad_clinica: "$0.00",
+						descuento_porcentaje_dermatologo: "0%",
+						descuento_cantidad_dermatologo: "$0.00",
 						descuento_porcentaje: `${redondearDecimales(descuentoPorcentaje)}%`,
 						descuento_cantidad: toFormatterCurrency(descuentoCantidad),
 						impuesto_porcentaje: `${impuestoPorcentaje}%`,

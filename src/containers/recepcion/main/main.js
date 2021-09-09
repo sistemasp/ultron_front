@@ -70,8 +70,6 @@ TabPanel.propTypes = {
 export const MainContainer = props => {
 
 	const rolRecepcionistaId = process.env.REACT_APP_RECEPCIONISTA_ROL_ID;
-	const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
-	const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
 	const rolDiosSupremoId = process.env.REACT_APP_DIOS_SUPREMO_ROL_ID;
 	const rolMasterId = process.env.REACT_APP_MASTER_ROL_ID;
 	const rolSupervisorId = process.env.REACT_APP_SUPERVISOR_ROL_ID;
@@ -134,7 +132,7 @@ export const MainContainer = props => {
 	}
 
 	useEffect(() => {
-		if (sucursal._id === sucursalManuelAcunaId || sucursal._id === sucursalRubenDarioId) findCorte();
+		findCorte();
 	}, []);
 
 	return (
@@ -206,32 +204,29 @@ export const MainContainer = props => {
 						<ListItemIcon> <AccessibilityNewIcon /> </ListItemIcon>
 						<ListItemText primary={'PACIENTES'} />
 					</ListItem>
-					{
-						sucursal._id === sucursalManuelAcunaId || sucursal._id === sucursalRubenDarioId ?
-							<Fragment>
-								<ListItem button key={'DERMATOLÓGOS'} onClick={(e) => onChangeTab(e, 1, handleDrawerClose)}>
-									<ListItemIcon> <People /> </ListItemIcon>
-									<ListItemText primary={'DERMATOLÓGOS'} />
-								</ListItem>
-								<ListItem button key={'CONSULTORIOS / CABINAS'} onClick={(e) => onChangeTab(e, 2, handleDrawerClose)}>
-									<ListItemIcon> <AirlineSeatReclineNormalIcon /> </ListItemIcon>
-									<ListItemText primary={'CONSULTORIOS / CABINAS'} />
-								</ListItem>
-								<ListItem button key={'CORTE'} onClick={(e) => onChangeTab(e, 3, handleDrawerClose)}>
-									<ListItemIcon> <AttachMoneyIcon /> </ListItemIcon>
-									<ListItemText primary={'CORTE'} />
-								</ListItem>
-								<ListItem button key={'LISTA DE ESPERA'} onClick={(e) => onChangeTab(e, 4, handleDrawerClose)}>
-									<ListItemIcon> <ListAltIcon /> </ListItemIcon>
-									<ListItemText primary={'LISTA DE ESPERA'} />
-								</ListItem>
-								<ListItem button key={'RAZÓN SOCIAL'} onClick={(e) => onChangeTab(e, 5, handleDrawerClose)}>
-									<ListItemIcon> <Description /> </ListItemIcon>
-									<ListItemText primary={'RAZÓN SOCIAL'} />
-								</ListItem>
-							</Fragment>
-							: ''
-					}
+
+					<Fragment>
+						<ListItem button key={'DERMATOLÓGOS'} onClick={(e) => onChangeTab(e, 1, handleDrawerClose)}>
+							<ListItemIcon> <People /> </ListItemIcon>
+							<ListItemText primary={'DERMATOLÓGOS'} />
+						</ListItem>
+						<ListItem button key={'CONSULTORIOS / CABINAS'} onClick={(e) => onChangeTab(e, 2, handleDrawerClose)}>
+							<ListItemIcon> <AirlineSeatReclineNormalIcon /> </ListItemIcon>
+							<ListItemText primary={'CONSULTORIOS / CABINAS'} />
+						</ListItem>
+						<ListItem button key={'CORTE'} onClick={(e) => onChangeTab(e, 3, handleDrawerClose)}>
+							<ListItemIcon> <AttachMoneyIcon /> </ListItemIcon>
+							<ListItemText primary={'CORTE'} />
+						</ListItem>
+						<ListItem button key={'LISTA DE ESPERA'} onClick={(e) => onChangeTab(e, 4, handleDrawerClose)}>
+							<ListItemIcon> <ListAltIcon /> </ListItemIcon>
+							<ListItemText primary={'LISTA DE ESPERA'} />
+						</ListItem>
+						<ListItem button key={'RAZÓN SOCIAL'} onClick={(e) => onChangeTab(e, 5, handleDrawerClose)}>
+							<ListItemIcon> <Description /> </ListItemIcon>
+							<ListItemText primary={'RAZÓN SOCIAL'} />
+						</ListItem>
+					</Fragment>
 
 					{
 						empleado.rol._id !== rolRecepcionistaId ?

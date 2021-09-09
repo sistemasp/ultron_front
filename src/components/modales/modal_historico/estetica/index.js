@@ -65,7 +65,7 @@ const TabEstetica = (props) => {
             item.precio_moneda = toFormatterCurrency(item.precio);
             const date = new Date(item.fecha_hora);
             const dia = addZero(date.getDate());
-            const mes = addZero(date.getMonth());
+            const mes = addZero(date.getMonth() + 1);
             const anio = date.getFullYear();
             const hora = Number(date.getHours());
             const minutos = date.getMinutes();

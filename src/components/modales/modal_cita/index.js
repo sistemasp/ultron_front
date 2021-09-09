@@ -156,6 +156,7 @@ const ModalCita = (props) => {
     frecuencia: cita.frecuencia._id,
     forma_pago: cita.forma_pago._id,
     medio: cita.medio._id,
+    disparos: cita.disparos,
   });
 
   const loadMedios = async () => {
@@ -432,6 +433,10 @@ const ModalCita = (props) => {
     setValues({ ...values, tiempo: e.target.value });
   };
 
+  const handleChangeDisparos = e => {
+    setValues({ ...values, disparos: e.target.value });
+  };
+
   const handleChangePagado = (e) => {
     setValues({ ...values, pagado: !values.pagado });
     setOpenModalPagos(!values.pagado);
@@ -578,6 +583,7 @@ const ModalCita = (props) => {
                 onChangeCosmetologa={(e) => handleChangeCosmetologa(e)}
                 onChangeDermatologo={(e) => handleChangeDermatologo(e)}
                 onChangeTiempo={(e) => handleChangeTiempo(e)}
+                onChangeDisparos={(e) => handleChangeDisparos(e)}
                 frecuencias={frecuencias}
                 onChangeFrecuencia={(e) => handleChangeFrecuencia(e)}
                 tratamientos={tratamientos}

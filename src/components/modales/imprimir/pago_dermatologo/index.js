@@ -296,9 +296,13 @@ const ModalImprimirPagoDermatologo = (props) => {
         if (dermatologo._id === dermatologoDirectoId) {
           estetica.total_aplicacion = estetica.total;
         }
-        estetica.producto_nombre = estetica.producto.map((prod) => {
-          return `${prod.nombre}`;
-        });
+        estetica.producto_nombre = dermatologo._id === dermatologoDirectoId
+          ? estetica.toxinas_rellenos.map((toxina_relleno) => {
+            return `${toxina_relleno.nombre}`;
+          })
+          : estetica.producto.map((prod) => {
+            return `${prod.nombre}`;
+          });
         estetica.forma_pago_nombre = estetica.pagos.map((pago) => {
           return `${pago.forma_pago.nombre} `
         });
