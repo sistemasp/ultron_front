@@ -80,6 +80,7 @@ const AgendarCirugia = (props) => {
 	const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
 	const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
 	const sucursalFedeId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
+	const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
 	const dermatologoDirectoId = process.env.REACT_APP_DERMATOLOGO_DIRECTO_ID;
 	const tipoCitaRealizadoId = process.env.REACT_APP_TIPO_CITA_REALIZADO_ID;
 	const cirugiaServicioId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID;
@@ -272,6 +273,16 @@ const AgendarCirugia = (props) => {
 		data.hora_llegada = '--:--';
 		data.hora_atencion = '--:--';
 		data.hora_salida = '--:--';
+		if (sucursal._id !== sucursalManuelAcunaId && sucursal._id !== sucursalRubenDarioId) {
+			const dateNow = new Date();
+			data.hora_llegada = `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;
+			dateNow.setMinutes(0);
+			dateNow.setSeconds(0);
+			data.fecha_hora = dateNow;
+			data.status = asistioStatusId;
+			data.hora_aplicacion = new Date();
+			// data.quien_confirma_asistencia = empleado._id;
+		}
 		const response = await createCirugia(data, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			setOpenAlert(true);

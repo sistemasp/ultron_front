@@ -89,6 +89,8 @@ const AgendarEstetica = (props) => {
 	const efectivoFormaPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
 	const sesionAnticipadaFormaPagoId = process.env.REACT_APP_FORMA_PAGO_SESION_ANTICIPADA;
 	const fisicoMedioId = process.env.REACT_APP_MEDIO_FISICO_ID;
+	const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
+	const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
 
 	const [openAlert, setOpenAlert] = useState(false);
 	const [openModalTraspaso, setOpenModalTraspaso] = useState(false);
@@ -295,6 +297,16 @@ const AgendarEstetica = (props) => {
 		data.hora_llegada = '--:--';
 		data.hora_atencion = '--:--';
 		data.hora_salida = '--:--';
+		if (sucursal._id !== sucursalManuelAcunaId && sucursal._id !== sucursalRubenDarioId) {
+			const dateNow = new Date();
+			data.hora_llegada = `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;
+			dateNow.setMinutes(0);
+			dateNow.setSeconds(0);
+			data.fecha_hora = dateNow;
+			data.status = asistioStatusId;
+			data.hora_aplicacion = new Date();
+			// data.quien_confirma_asistencia = empleado._id;
+		}
 		const response = await createEstetica(data, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			setOpenAlert(true);

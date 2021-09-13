@@ -95,6 +95,7 @@ const AgendarDermapen = (props) => {
 	const efectivoFormaPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
 	const sesionAnticipadaFormaPagoId = process.env.REACT_APP_FORMA_PAGO_SESION_ANTICIPADA;
 	const fisicoMedioId = process.env.REACT_APP_MEDIO_FISICO_ID;
+	const asistioStatusId = process.env.REACT_APP_ASISTIO_STATUS_ID;
 
 	const [openAlert, setOpenAlert] = useState(false);
 	const [openModalTraspaso, setOpenModalTraspaso] = useState(false);
@@ -291,6 +292,16 @@ const AgendarDermapen = (props) => {
 		data.hora_salida = '--:--';
 		data.total = data.precio;
 		// data.tiempo = getTimeToTratamiento(data.tratamientos);
+		if (sucursal._id !== sucursalManuelAcunaId && sucursal._id !== sucursalRubenDarioId) {
+			const dateNow = new Date();
+			data.hora_llegada = `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;
+			dateNow.setMinutes(0);
+			dateNow.setSeconds(0);
+			data.fecha_hora = dateNow;
+			data.status = asistioStatusId;
+			data.hora_aplicacion = new Date();
+			// data.quien_confirma_asistencia = empleado._id;
+		}
 
 		const response = await createDermapen(data, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {

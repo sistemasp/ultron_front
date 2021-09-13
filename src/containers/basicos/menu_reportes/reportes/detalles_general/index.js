@@ -122,6 +122,8 @@ const ReportesDetallesGeneral = (props) => {
 		{ title: 'RFC', field: 'rfc' },
 		{ title: 'NO. DE FACTURA', field: 'no_factura' },
 		{ title: 'FECHA FACTURACIÓN', field: 'fecha_facturacion' },
+		{ title: 'COSMETÓLOGA', field: 'cosmetologa_nombre' },
+		{ title: 'PROMOVENDEDOR (A)', field: 'promovendedor_nombre' },
 		{ title: 'OBSERVACIONES', field: 'observaciones' },
 
 	];
@@ -1038,6 +1040,7 @@ const ReportesDetallesGeneral = (props) => {
 			item.precio_moneda = toFormatterCurrency(item.precio);
 			item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
 			item.promovendedor_nombre = item.promovendedor ? item.promovendedor.nombre : 'SIN ASIGNAR';
+			item.cosmetologa_nombre = item.cosmetologa ? item.cosmetologa.nombre : 'SIN ASIGNAR';
 			item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
 			item.observaciones = item.observaciones ? item.observaciones : "*";
 

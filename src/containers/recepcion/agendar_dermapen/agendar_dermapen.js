@@ -204,8 +204,7 @@ export const AgendarDermapenContainer = (props) => {
 							className={classes.button}
 							color="primary"
 							variant="contained"
-							disabled={!isValid || isSubmitting || !paciente.nombres || !values.dermatologo
-								|| !values.fecha_hora || !values.tiempo}
+							disabled={!isValid || isSubmitting || !paciente.nombres || !values.dermatologo || !values.tiempo}
 							onClick={() => onClickAgendar(values)}
 							text='GUARDAR' />
 					</Grid>
@@ -312,47 +311,51 @@ export const AgendarDermapenContainer = (props) => {
 							onChange={onChangeObservaciones}
 							variant="outlined" />
 					</Grid>
-					<Grid item xs={12} sm={2}>
-						<MuiPickersUtilsProvider utils={DateFnsUtils}>
-							<Grid
-								container
-								justify="center"
-								alignItems="center" >
-								<KeyboardDatePicker
-									className={classes.formControl}
-									disableToolbar
-									//disablePast
-									autoOk
-									disabled={disableDate}
-									variant="inline"
-									format="dd/MM/yyyy"
-									margin="normal"
-									id="date-picker-inline"
-									label="FECHA"
-									value={values.fecha_hora}
-									onChange={onChangeFecha}
-									KeyboardButtonProps={{
-										'aria-label': 'change date',
-									}}
-									invalidDateMessage='Selecciona una fecha' />
+					{sucursal._id === process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID ||
+						sucursal._id === process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID ?
+						<Fragment>
+							<Grid item xs={12} sm={2}>
+								<MuiPickersUtilsProvider utils={DateFnsUtils}>
+									<Grid
+										container
+										justify="center"
+										alignItems="center" >
+										<KeyboardDatePicker
+											className={classes.formControl}
+											disableToolbar
+											//disablePast
+											autoOk
+											disabled={disableDate}
+											variant="inline"
+											format="dd/MM/yyyy"
+											margin="normal"
+											id="date-picker-inline"
+											label="FECHA"
+											value={values.fecha_hora}
+											onChange={onChangeFecha}
+											KeyboardButtonProps={{
+												'aria-label': 'change date',
+											}}
+											invalidDateMessage='Selecciona una fecha' />
+									</Grid>
+								</MuiPickersUtilsProvider>
 							</Grid>
-						</MuiPickersUtilsProvider>
-					</Grid>
-					<Grid item xs={12} sm={2}>
-						<FormControl variant="outlined" className={classes.formControl}>
-							<InputLabel id="simple-select-outlined-hora">HORA</InputLabel>
-							<Select
-								labelId="simple-select-outlined-hora"
-								id="simple-select-outlined-hora"
-								value={values.hora}
-								error={Boolean(errors.hora)}
-								onChange={onChangeHora}
-								disabled={!values.fecha_hora}
-								label="HORA" >
-								{horarios.sort().map((item, index) => <MenuItem key={index} value={item.hora}>{item.hora}</MenuItem>)}
-							</Select>
-						</FormControl>
-					</Grid>
+							<Grid item xs={12} sm={2}>
+								<FormControl variant="outlined" className={classes.formControl}>
+									<InputLabel id="simple-select-outlined-hora">HORA</InputLabel>
+									<Select
+										labelId="simple-select-outlined-hora"
+										id="simple-select-outlined-hora"
+										value={values.hora}
+										error={Boolean(errors.hora)}
+										onChange={onChangeHora}
+										disabled={!values.fecha_hora}
+										label="HORA" >
+										{horarios.sort().map((item, index) => <MenuItem key={index} value={item.hora}>{item.hora}</MenuItem>)}
+									</Select>
+								</FormControl>
+							</Grid>
+						</Fragment> : ''}
 					<Grid item xs={12} sm={2}>
 						<TextField
 							className={classes.formControl}
