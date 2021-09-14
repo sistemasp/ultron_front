@@ -37,6 +37,7 @@ const TabSesionesAnticipadas = (props) => {
   const columns = [
     { title: 'FECHA PAGO', field: 'fecha_pago_show' },
     { title: 'FECHA ASISTENCIA', field: 'fecha_asistencia_show' },
+    { title: 'NÚMERO DE SESIÓN', field: 'numero_sesion' },
     { title: 'SUCURSAL', field: 'sucursal.nombre' },
     { title: 'SERVICIO', field: 'servicio.nombre' },
     { title: 'PRODUCTO (ÁREAS)', field: 'producto' },

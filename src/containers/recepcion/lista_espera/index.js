@@ -29,6 +29,7 @@ import InputIcon from '@material-ui/icons/Input';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
+import ReplayIcon from '@material-ui/icons/Replay';
 import { addZero, generateFolio } from "../../../utils/utils";
 import {
 	findFacialById,
@@ -88,6 +89,11 @@ const useStyles = makeStyles(theme => ({
 const ListaEspera = (props) => {
 
 	const classes = useStyles();
+
+	const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
+	const sucursalFedeId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
+	const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
+	const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
 
 	const [openAlert, setOpenAlert] = useState(false);
 	const [consultorios, setConsultorios] = useState([]);
@@ -215,50 +221,62 @@ const ListaEspera = (props) => {
 	const loadListaEsperaConsultas = async () => {
 		const response = await waitingListConsulta(sucursal, asistioStatusId, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			response.data.forEach(item => {
+			const filterData = response.data.filter(item => {
+				return (sucursal === sucursalManuelAcunaId || sucursal === sucursalRubenDarioId) ? true : item.pagado;
+			});
+			filterData.forEach(item => {
 				item.folio = generateFolio(item);
 				item.paciente_nombre = item.paciente ? `${item.paciente.nombres} ${item.paciente.apellidos}` : 'ALGUN ERROR ESTA PASANDO';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
 			});
-			setListaEsperaConsultas(response.data);
+			setListaEsperaConsultas(filterData);
 		}
 	}
 
 	const loadListaEsperaFaciales = async () => {
 		const response = await waitingFacialList(sucursal, asistioStatusId, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			response.data.forEach(item => {
+			const filterData = response.data.filter(item => {
+				return (sucursal === sucursalManuelAcunaId || sucursal === sucursalRubenDarioId) ? true : item.pagado;
+			});
+			filterData.forEach(item => {
 				item.folio = generateFolio(item);
 				item.paciente_nombre = item.paciente ? `${item.paciente.nombres} ${item.paciente.apellidos}` : 'ALGUN ERROR ESTA PASANDO';
 				item.cosmetologa_nombre = item.cosmetologa ? item.cosmetologa.nombre : 'SIN ASIGNAR';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
 			});
-			setListaEsperaFaciales(response.data);
+			setListaEsperaFaciales(filterData);
 		}
 	}
 
 	const loadListaEsperaDermapens = async () => {
 		const response = await waitingDermapenList(sucursal, asistioStatusId, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			response.data.forEach(item => {
+			const filterData = response.data.filter(item => {
+				return (sucursal === sucursalManuelAcunaId || sucursal === sucursalRubenDarioId) ? true : item.pagado;
+			});
+			filterData.forEach(item => {
 				item.folio = generateFolio(item);
 				item.paciente_nombre = item.paciente ? `${item.paciente.nombres} ${item.paciente.apellidos}` : 'ALGUN ERROR ESTA PASANDO';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
 			});
-			setListaEsperaDermapens(response.data);
+			setListaEsperaDermapens(filterData);
 		}
 	}
 
 	const loadListaEsperaAparatologias = async () => {
 		const response = await waitingAparatologiaList(sucursal, asistioStatusId, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			response.data.forEach(item => {
+			const filterData = response.data.filter(item => {
+				return (sucursal === sucursalManuelAcunaId || sucursal === sucursalRubenDarioId) ? true : item.pagado;
+			});
+			filterData.forEach(item => {
 				item.folio = generateFolio(item);
 				item.paciente_nombre = item.paciente ? `${item.paciente.nombres} ${item.paciente.apellidos}` : 'ALGUN ERROR ESTA PASANDO';
 				item.cosmetologa_nombre = item.cosmetologa ? item.cosmetologa.nombre : 'SIN ASIGNAR';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
 			});
-			setListaEsperaAparatologias(response.data);
+			setListaEsperaAparatologias(filterData);
 		}
 	}
 
@@ -277,24 +295,30 @@ const ListaEspera = (props) => {
 	const loadListaEsperaCirugias = async () => {
 		const response = await waitingListCirugia(sucursal, asistioStatusId, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			response.data.forEach(item => {
+			const filterData = response.data.filter(item => {
+				return (sucursal === sucursalManuelAcunaId || sucursal === sucursalRubenDarioId) ? true : item.pagado;
+			});
+			filterData.forEach(item => {
 				item.folio = generateFolio(item);
 				item.paciente_nombre = item.paciente ? `${item.paciente.nombres} ${item.paciente.apellidos}` : 'LIBRE';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'SIN DERMATÓLOGO';
 			});
-			setListaEsperaCirugias(response.data);
+			setListaEsperaCirugias(filterData);
 		}
 	}
 
 	const loadListaEsperaEstetica = async () => {
 		const response = await waitingListEstetica(sucursal, asistioStatusId, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			response.data.forEach(item => {
+			const filterData = response.data.filter(item => {
+				return (sucursal === sucursalManuelAcunaId || sucursal === sucursalRubenDarioId) ? true : item.pagado;
+			});
+			filterData.forEach(item => {
 				item.folio = generateFolio(item);
 				item.paciente_nombre = item.paciente ? `${item.paciente.nombres} ${item.paciente.apellidos}` : 'ALGUN ERROR ESTA PASANDO';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
 			});
-			setListaEsperaEstetica(response.data);
+			setListaEsperaEstetica(filterData);
 			setIsLoading(false);
 		}
 	}
@@ -441,6 +465,29 @@ const ListaEspera = (props) => {
 		}
 	}
 
+	const handleOnClickRegresarListaEspera = async (event, rowData) => {
+		const dateNow = new Date();
+		const responseCita = await findConsultById(rowData.servicio, empleado.access_token);
+
+		if (responseCita && `${responseCita.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			const cita = responseCita.data;
+			let updateCita = cita;
+			updateCita.status = asistioStatusId;
+			updateCita.hora_atencion = '--:--';
+
+			await updateConsult(cita._id, updateCita, empleado.access_token);
+
+			rowData.disponible = true;
+			await updateSurgery(rowData._id, rowData);
+			const response = await breakFreeSurgeryByIdPaciente(rowData._id, empleado.access_token);
+			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+				setOpenAlert(true);
+				setMessage('EL PACIENTE REGRESO A LA LISTA DE ESPERA');
+				await loadAll();
+			}
+		}
+	}
+
 	const handleOnClickLiberarSalaCirugia = async (event, rowData) => {
 		const dateNow = new Date();
 		const responseServicio = rowData.tipo_servicio === cirugiaServicioId ? await findCirugiaById(rowData.servicio, empleado.access_token) : await findEsteticaById(rowData.servicio, empleado.access_token);
@@ -503,7 +550,15 @@ const ListaEspera = (props) => {
 				icon: InputIcon,
 				tooltip: 'CAMBIAR DE CONSULTORIO',
 				onClick: handleOnConsultorioCambiarPaciente
-			} : ''),
+			} : ''
+		),
+		rowData => {
+			return (!rowData.disponible && rowData.consultaId) ? {
+				icon: ReplayIcon,
+				tooltip: 'REGRESAR A LA LISTA DE ESPERA',
+				onClick: handleOnClickRegresarListaEspera
+			} : ''
+		},
 	];
 
 	const onChangeActionsConsultorio = (e, rowData) => {

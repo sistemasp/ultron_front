@@ -182,55 +182,11 @@ const ModalFormPago = (props) => {
                         }}
                         variant="outlined" />
                     </Grid>
-                    {/*
-              <Grid item xs={12}>
-                <TextField
-                  className={classes.textField}
-                  name="porcentaje_descuento_clinica"
-                  error={Boolean(errors.porcentaje_descuento_clinica)}
-                  label="% DESCUENTO"
-                  value={values.porcentaje_descuento_clinica}
-                  onChange={onChangeDescuento}
-                  type='Number'
-
-                  onInput={(e) => {
-                    e.target.value = e.target.value > 100 ? 100 : e.target.value;
-                    e.target.value = Math.max(0, parseFloat(e.target.value)).toString().slice(0, 5)
-                  }}
-                  variant="outlined" />
-              </Grid>
-
-              <Grid item xs={12}>
-                <CheckCustom
-                  checked={values.has_descuento_dermatologo}
-                  onChange={onChangDescuentoDermatologo}
-                  name="checkedC"
-                  label="DESCUENTO DERMATÓLOGO" />
-              </Grid>
-
-              <Grid item xs={12}>
-                <h3 className={classes.label}>{`${values.porcentaje_descuento_clinica}% DESCUENTO CLINICA: ${toFormatterCurrency(values.descuento_clinica)}`}</h3>
-              </Grid>
-
-              <Grid item xs={12}>
-                <h3 className={classes.label}>{`DESCUENTO DERMATÓLOGO: ${toFormatterCurrency(values.descuento_dermatologo)}`}</h3>
-              </Grid>
-                */}
                     <Grid item xs={12}>
                       <h2 className={classes.label}>{`TOTAL: ${toFormatterCurrency(values.total)}`}</h2>
                     </Grid>
 
-                    {
-                      values.forma_pago === process.env.REACT_APP_FORMA_PAGO_TARJETA ?
-                        <Grid item xs={6}>
-                          <CheckCustom
-                            checked={values.confirmado}
-                            onChange={onChangeConfirmado}
-                            name="checkedC"
-                            label="PAGO CONFIRMADO"
-                          />
-                        </Grid> : ''
-                    }
+
                   </Fragment>
               }
 
