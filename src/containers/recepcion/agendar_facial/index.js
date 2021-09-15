@@ -786,7 +786,7 @@ const AgendarFacial = (props) => {
 								cosmetologas={cosmetologas}
 								onClickAgendar={handleClickAgendar}
 								onChangeTiempo={(e) => handleChangeTiempo(e)}
-								titulo={`FACIALES (${dateToString(filterDate.fecha_show)})`}
+								titulo={`FACIALES (${dateToString(filterDate.fecha_show)}) (${faciales.length})`}
 								columns={columns}
 								options={options}
 								citas={faciales}

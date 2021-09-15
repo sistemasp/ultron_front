@@ -686,7 +686,7 @@ const AgendarCirugia = (props) => {
 								onClickAgendar={handleClickAgendar}
 								onChangeTiempo={(e) => handleChangeTiempo(e)}
 								onChangePaymentMethod={(e) => handleChangePaymentMethod(e)}
-								titulo={`CIRUGíA (${dateToString(filterDate.fecha_show)})`}
+								titulo={`CIRUGíA (${dateToString(filterDate.fecha_show)}) (${cirugias.length})`}
 								onChangeTotal={handleChangeTotal}
 								columns={columns}
 								options={options}

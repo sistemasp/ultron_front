@@ -772,7 +772,7 @@ const AgendarEstetica = (props) => {
 								formasPago={formasPago}
 								onClickAgendar={handleClickAgendar}
 								onChangeTiempo={(e) => handleChangeTiempo(e)}
-								titulo={`ESTÉTICA (${dateToString(filterDate.fecha_show)})`}
+								titulo={`ESTÉTICA (${dateToString(filterDate.fecha_show)}) (${esteticas.length})`}
 								onChangeToxinasRellenos={(e) => handleChangeToxinasRellenos(e)}
 								onChangePaymentMethod={(e) => handleChangePaymentMethod(e)}
 								onChangeTotal={handleChangeTotal}

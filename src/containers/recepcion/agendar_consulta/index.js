@@ -826,7 +826,7 @@ const AgendarConsulta = (props) => {
 						onChangeTiempo={(e) => handleChangeTiempo(e)}
 						onChangeObservaciones={(e) => handleChangeObservaciones(e)}
 						onChangePaymentMethod={(e) => handleChangePaymentMethod(e)}
-						titulo={`CONSULTAS (${dateToString(filterDate.fecha_show)})`}
+						titulo={`CONSULTAS (${dateToString(filterDate.fecha_show)}) (${consultas.length})`}
 						columns={columns}
 						options={options}
 						citas={consultas}

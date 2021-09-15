@@ -799,7 +799,7 @@ const AgendarAparatologia = (props) => {
 								promovendedores={promovendedores}
 								cosmetologas={cosmetologas}
 								onClickAgendar={handleClickAgendar}
-								titulo={`APARATOLOGIAS (${dateToString(filterDate.fecha_show)})`}
+								titulo={`APARATOLOGIAS (${dateToString(filterDate.fecha_show)}) (${aparatologias.length})`}
 								columns={columns}
 								options={options}
 								aparatologias={aparatologias}

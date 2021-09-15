@@ -756,7 +756,7 @@ const AgendarDermapen = (props) => {
 								cosmetologas={cosmetologas}
 								onClickAgendar={handleClickAgendar}
 								onChangeTiempo={(e) => handleChangeTiempo(e)}
-								titulo={`DERMAPEN (${dateToString(filterDate.fecha_show)})`}
+								titulo={`DERMAPEN (${dateToString(filterDate.fecha_show)}) (${dermapens.length})`}
 								columns={columns}
 								options={options}
 								dermapens={dermapens}
