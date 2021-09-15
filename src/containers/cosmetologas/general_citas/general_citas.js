@@ -11,12 +11,9 @@ export const GeneralCitasContainer = (props) => {
 	const {
 		onChangeFilterDate,
 		filterDate,
-		consultas,
 		faciales,
 		aparatologias,
 		dermapens,
-		cirugias,
-		esteticas,
 		// TABLE DATES PROPERTIES
 		titulo,
 		columns,
@@ -26,12 +23,9 @@ export const GeneralCitasContainer = (props) => {
 	} = props;
 
 	const citas = [
-		...consultas,
 		...faciales,
 		...aparatologias,
 		...dermapens,
-		...cirugias,
-		...esteticas,
 	];
 
 	citas.sort((a, b) => {

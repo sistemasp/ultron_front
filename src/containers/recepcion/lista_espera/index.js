@@ -162,7 +162,8 @@ const ListaEspera = (props) => {
 	const optionsConsultorio = {
 		rowStyle: rowData => {
 			return {
-				backgroundColor: rowData.disponible ? process.env.REACT_APP_LIBRE_COLOR : process.env.REACT_APP_OCUPADO_COLOR
+				fontWeight: 'bolder',
+				color: rowData.disponible ? process.env.REACT_APP_LIBRE_COLOR : process.env.REACT_APP_OCUPADO_COLOR
 			};
 		},
 		headerStyle: {
@@ -180,7 +181,8 @@ const ListaEspera = (props) => {
 	const optionsEspera = {
 		rowStyle: rowData => {
 			return {
-				backgroundColor: rowData.servicio.color
+				fontWeight: 'bolder',
+				color: rowData.servicio.color
 			};
 		},
 		headerStyle: {

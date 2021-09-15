@@ -258,12 +258,9 @@ const GeneralCitas = (props) => {
 					<GeneralCitasContainer
 						onChangeFilterDate={(e) => handleChangeFilterDate(e)}
 						filterDate={filterDate.fecha_show}
-						consultas={consultas}
 						faciales={faciales}
 						aparatologias={aparatologias}
 						dermapens={dermapens}
-						cirugias={cirugias}
-						esteticas={esteticas}
 						titulo={`LISTADO GENERAL DE CITAS (${dateToString(filterDate.fecha_show)})`}
 						columns={columns}
 						options={options}
