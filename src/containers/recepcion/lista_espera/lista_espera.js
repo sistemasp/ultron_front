@@ -5,6 +5,8 @@ import { makeStyles } from '@material-ui/core';
 import ModalConsultorioAgregarPaciente from '../../../components/modales/modal_consultorio_agregar_paciente';
 import ModalCabinaAgregarPaciente from '../../../components/modales/modal_cabina_agregar_paciente';
 import ModalCirugiaAgregarPaciente from '../../../components/modales/modal_cirugia_agregar_paciente';
+import { ButtonCustom } from '../../../components/basic/ButtonCustom';
+import myStyles from '../../../css';
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -17,8 +19,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const ListaEsperaContainer = (props) => {
-
-  const classes = useStyles();
 
   const {
     empleado,
@@ -65,7 +65,10 @@ export const ListaEsperaContainer = (props) => {
     actionsEsperaSalaCirugia,
     componentsConsultorio,
     colorBase,
+    onClickActualizar,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   const listaEsperaSalaCirugia = [...listaEsperaEstetica, ...listaEsperaCirugias];
   const listaEsperaTratamientos = [...listaEsperaFaciales, ...listaEsperaLasers, ...listaEsperaAparatologias, ...listaEsperaDermapens];
@@ -128,6 +131,15 @@ export const ListaEsperaContainer = (props) => {
       <h1>LISTA DE ESPERA</h1>
 
       <Grid container spacing={3}>
+
+        <Grid item xs={12} sm={12} className={classes.grid_center}>
+          <ButtonCustom
+            className={classes.button}
+            color="primary"
+            variant="contained"
+            onClick={() => onClickActualizar()}
+            text='ACTUALIZAR' />
+        </Grid>
 
         <Grid item xs={12} sm={6}>
           <TableComponent

@@ -666,6 +666,10 @@ const ListaEspera = (props) => {
 		setIsLoading(false);
 	}
 
+	const handleClickActualizar = (event, rowData) => {
+		loadAll();
+	}
+
 	useEffect(() => {
 		loadAll();
 	}, []);
@@ -720,6 +724,7 @@ const ListaEspera = (props) => {
 						actionsEsperaSalaCirugia={actionsEsperaSalaCirugia}
 						componentsConsultorio={componentsConsultorio}
 						colorBase={colorBase}
+						onClickActualizar={handleClickActualizar}
 					/> :
 					<Backdrop className={classes.backdrop} open={isLoading} >
 						<CircularProgress color="inherit" />
