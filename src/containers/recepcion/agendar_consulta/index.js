@@ -335,7 +335,7 @@ const AgendarConsulta = (props) => {
 		const response = await createConsult(data, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			const resConsult = response.data;
-			if (sucursal._id === sucursalOccidentalId || sucursal._id === sucursalFederalismoId && data.forma_pago === efectivoFormaPagoId) {
+			if (sucursal._id === sucursalOccidentalId || sucursal._id === sucursalFederalismoId && data.forma_pago === efectivoFormaPagoId && data.producto === productoConsultaId) {
 				const entrada = {
 					create_date: create_date,
 					hora_aplicacion: create_date,

@@ -690,9 +690,9 @@ const ListaEspera = (props) => {
 						tituloConsultorios='CONSULTORIOS'
 						tituloCabinas='CABINAS'
 						tituloSalaCirugia='SALA CIRUGíAS'
-						tituloEsperaConsultas='CONSULTAS EN ESPERA'
-						tituloEsperaTratamientos='TRATAMIENTOS EN ESPERA'
-						tituloEsperaSalaCirugia="CIRUGíAS EN ESPERA"
+						tituloEsperaConsultas={`CONSULTAS EN ESPERA (${listaEsperaConsultas.length})`}
+						tituloEsperaTratamientos={`TRATAMIENTOS EN ESPERA (${listaEsperaFaciales.length + listaEsperaLasers.length + listaEsperaAparatologias.length + listaEsperaDermapens.length})`}
+						tituloEsperaSalaCirugia={`CIRUGíAS EN ESPERA (${listaEsperaEstetica.length + listaEsperaCirugias.length})`}
 						optionsEspera={optionsEspera}
 						optionsConsultorio={optionsConsultorio}
 						consultorio={consultorio}
