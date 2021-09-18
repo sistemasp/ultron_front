@@ -35,12 +35,9 @@ const Pacientes = (props) => {
 
 	const {
 		empleado,
-		onClickAgendar,
 		onClickAgendarConsulta,
 		onClickAgendarFaciales,
-		onClickAgendarLaser,
 		onClickAgendarAparatologia,
-		onClickAgendarDermapen,
 		colorBase,
 		sucursal,
 	} = props;
@@ -119,7 +116,7 @@ const Pacientes = (props) => {
 		setIsLoading(false);
 	}
 
-	const handleOnClickGuardarAgendar = async (e, val) => {
+	const handleOnClickConsulta = async (e, val) => {
 		setIsLoading(true);
 		const existPatient = paciente._id ? '' : await findPatientByPhoneNumber(val.telefono, empleado.access_token);
 		setOpenAlert(true);
@@ -138,7 +135,7 @@ const Pacientes = (props) => {
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
 			|| `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			setSeverity('success');
-			onClickAgendar(e, val);
+			onClickAgendarConsulta(e, response.data);
 			setMessage(paciente._id ? 'PACIENTE ACTUALIZADO' : 'PACIENTE CREADO');
 		}
 
@@ -264,7 +261,7 @@ const Pacientes = (props) => {
 						sucursal={sucursal}
 						telefono={paciente.telefono}
 						onClickGuardar={handleOnClickGuardar}
-						onClickGuardarAgendar={handleOnClickGuardarAgendar}
+						onClickcConsulta={handleOnClickConsulta}
 						handleOpen={handleOpen}
 						handleClose={handleClose}
 						colorBase={colorBase}

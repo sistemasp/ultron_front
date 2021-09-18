@@ -25,7 +25,7 @@ export const PacientesContainer = (props) => {
     handleOpen,
     handleClose,
     onClickGuardar,
-    onClickGuardarAgendar,
+    onClickcConsulta,
     colorBase,
   } = props;
 
@@ -57,8 +57,9 @@ export const PacientesContainer = (props) => {
             open={open}
             onClose={handleClose}
             paciente={paciente}
+            sucursal={sucursal}
             onClickGuardar={onClickGuardar}
-            onClickGuardarAgendar={onClickGuardarAgendar}
+            onClickcConsulta={onClickcConsulta}
             colorBase={colorBase}
             empleado={empleado} /> : ''
       }

@@ -32,9 +32,11 @@ const ModalFormPaciente = (props) => {
     dataComplete,
     onClickCancel,
     onClickGuardar,
+    onClickcConsulta,
     open,
     sexos,
     colorBase,
+    sucursal,
   } = props;
 
   const classes = myStyles(colorBase)();
@@ -154,6 +156,20 @@ const ModalFormPaciente = (props) => {
                   onClick={(e) => onClickGuardar(e, values)}
                   text='GUARDAR' />
               </Grid>
+              { sucursal._id === process.env.REACT_APP_SUCURSAL_OCCI_ID ||
+                sucursal._id === process.env.REACT_APP_SUCURSAL_FEDE_ID ?
+                <Grid item xs={12} sm={6}>
+                  <ButtonCustom
+                    className={classes.button}
+                    color="primary"
+                    variant="contained"
+                    disabled={dataComplete}
+                    onClick={(e) => onClickcConsulta(e, values)}
+                    text='CONSULTA' />
+                </Grid>
+                : ''
+              }
+
             </Grid>
           </form>
         </div>

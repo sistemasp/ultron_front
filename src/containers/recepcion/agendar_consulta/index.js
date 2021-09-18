@@ -31,11 +31,14 @@ import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import { findProductoByServicio } from "../../../services/productos";
 import { findEmployeesByRolIdAvailable } from "../../../services/empleados";
 import { createFactura } from "../../../services/facturas";
-import { 
+import {
 	findConsecutivoBySucursal,
 	createConsecutivo,
- } from "../../../services/consecutivos";
+} from "../../../services/consecutivos";
 import { updateSesionAnticipada } from "../../../services/sesiones_anticipadas";
+import { createEntrada, updateEntrada } from "../../../services/entradas";
+import { createPago } from "../../../services/pagos";
+import { findTurnoActualBySucursal } from "../../../services/corte";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -101,6 +104,11 @@ const AgendarConsulta = (props) => {
 	const efectivoFormaPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
 	const sesionAnticipadaFormaPagoId = process.env.REACT_APP_FORMA_PAGO_SESION_ANTICIPADA;
 	const fisicoMedioId = process.env.REACT_APP_MEDIO_FISICO_ID;
+	const sucursalOccidentalId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
+	const sucursalFederalismoId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
+	const tipoEntradaConsultaId = process.env.REACT_APP_TIPO_ENTRADA_CONSULTA_ID;
+	const servicioConsultaId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
+	const tratamientoConsultaId = process.env.REACT_APP_CONSULTA_TRATAMIENTO_ID;
 
 	const date = new Date();
 
@@ -152,6 +160,7 @@ const AgendarConsulta = (props) => {
 	const [estetica, setEstetica] = useState({
 		materiales: []
 	});
+	const [turno, setTurno] = useState({});
 
 	const dia = addZero(date.getDate());
 	const mes = addZero(date.getMonth() + 1);
@@ -303,6 +312,7 @@ const AgendarConsulta = (props) => {
 
 	const handleClickAgendar = async (data) => {
 		setIsLoading(true);
+		const create_date = new Date();
 		data.quien_agenda = empleado._id;
 		data.sucursal = sucursal._id;
 		data.status = pendienteStatusId;
@@ -313,18 +323,65 @@ const AgendarConsulta = (props) => {
 		data.servicio = consultaServicioId;
 		data.tipo_cita = data.frecuencia === frecuenciaPrimeraVezId ? tipoCitaRevisionId : tipoCitaDerivadaId;
 		if (sucursal._id !== sucursalManuelAcunaId && sucursal._id !== sucursalRubenDarioId) {
-			const dateNow = new Date();
-			data.hora_llegada = `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;
-			dateNow.setMinutes(0);
-			dateNow.setSeconds(0);
-			data.fecha_hora = dateNow;
+			data.hora_llegada = `${addZero(create_date.getHours())}:${addZero(create_date.getMinutes())}`;
+			create_date.setMinutes(0);
+			create_date.setSeconds(0);
+			data.fecha_hora = create_date;
 			data.status = asistioStatusId;
-			data.hora_aplicacion = new Date();
+			data.hora_aplicacion = create_date;
 			// data.quien_confirma_asistencia = empleado._id;
 		}
 
 		const response = await createConsult(data, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+			const resConsult = response.data;
+			if (sucursal._id === sucursalOccidentalId || sucursal._id === sucursalFederalismoId && data.forma_pago === efectivoFormaPagoId) {
+				const entrada = {
+					create_date: create_date,
+					hora_aplicacion: create_date,
+					recepcionista: empleado._id,
+					concepto: `FOLIO: ${generateFolio({})}`,
+					cantidad: data.precio,
+					tipo_entrada: tipoEntradaConsultaId,
+					sucursal: sucursal,
+					forma_pago: efectivoFormaPagoId,
+					pago_anticipado: false,
+				};
+				const entradaResponse = await createEntrada(entrada, token);
+				if (`${entradaResponse.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+					const resEntrada = entradaResponse.data;
+					const pago = {
+						create_date: create_date,
+						fecha_pago: create_date,
+						hora_aplicacion: create_date,
+						paciente: data.paciente,
+						dermatologo: data.dermatologo,
+						tratamientos: [tratamientoConsultaId],
+						quien_recibe_pago: data.quien_agenda,
+						cantidad: data.precio,
+						total: data.precio,
+						forma_pago: efectivoFormaPagoId,
+						sucursal: sucursal._id,
+						observaciones: data.observaciones,
+						porcentaje_descuento_clinica: '0',
+						descuento_clinica: 0,
+						descuento_dermatologo: 0,
+						tipo_servicio: servicioConsultaId,
+						servicio: resConsult._id,
+						pago_anticipado: false,
+						entrada: resEntrada._id,
+						turno: turno,
+					};
+					const pagoResponse = await createPago(pago, token);
+					if (`${pagoResponse.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+						const resPago = pagoResponse.data;
+						resEntrada.pago = resPago._id;
+						await updateEntrada(resEntrada._id, resEntrada, token);
+						resConsult.pagos = [resPago];
+						handleGuardarModalPagos(resConsult);
+					}
+				}
+			}
 			setOpenAlert(true);
 			setSeverity('success');
 			setMessage('LA CONSULTA SE AGENDO CORRECTAMENTE');
@@ -429,28 +486,6 @@ const AgendarConsulta = (props) => {
 	const handleClickTraspaso = (event, rowData) => {
 		setConsulta(rowData);
 		setOpenModalTraspaso(true);
-	}
-
-	const handleClickCirugia = async (event, rowData) => {
-		const response = await findCirugiaByConsultaId(rowData._id);
-		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			if (response.data !== '') {
-				setCirugia(response.data);
-			}
-		}
-		setConsulta(rowData);
-		setOpenModalCirugias(true);
-	}
-
-	const handleClickEstetica = async (event, rowData) => {
-		const response = await findEsteticaByConsultaId(rowData._id);
-		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			if (response.data !== '') {
-				setEstetica(response.data);
-			}
-		}
-		setConsulta(rowData);
-		setOpenModalEstetica(true);
 	}
 
 	const handleCloseVerPagos = () => {
@@ -789,6 +824,14 @@ const AgendarConsulta = (props) => {
 		}
 	}
 
+	const getTurno = async () => {
+		const response = await findTurnoActualBySucursal(sucursal._id, token);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			const corte = response.data;
+			setTurno(corte.turno);
+		}
+	}
+
 	const loadAll = async () => {
 		setIsLoading(true);
 		await loadConsultas(new Date());
@@ -799,6 +842,7 @@ const AgendarConsulta = (props) => {
 		await loadFrecuencias();
 		await loadMedios();
 		await loadFormasPago();
+		await getTurno();
 		await loadHorarios(values.fecha_hora);
 		setIsLoading(false);
 	}

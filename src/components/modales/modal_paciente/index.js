@@ -9,8 +9,9 @@ const ModalPaciente = (props) => {
     open,
     onClose,
     paciente,
+    sucursal,
     onClickGuardar,
-    onClickGuardarAgendar,
+    onClickcConsulta,
     colorBase,
   } = props;
 
@@ -77,8 +78,9 @@ const ModalPaciente = (props) => {
       values={values}
       onClickCancel={onClose}
       paciente={paciente}
+      sucursal={sucursal}
       onClickGuardar={onClickGuardar}
-      onClickGuardarAgendar={onClickGuardarAgendar}
+      onClickcConsulta={onClickcConsulta}
       dataComplete={dataComplete}
       onChange={handleChange}
       onChangeSexo={handleChangeSexo}
