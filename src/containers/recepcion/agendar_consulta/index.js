@@ -73,6 +73,7 @@ const AgendarConsulta = (props) => {
 		onClickAgendarFaciales,
 		onClickAgendarAparatologia,
 		colorBase,
+		turno,
 	} = props;
 
 	const token = empleado.access_token;
@@ -141,6 +142,7 @@ const AgendarConsulta = (props) => {
 		promovendedor: promovendedorSinPromovendedorId,
 		dermatologo: dermatologoDirectoId,
 		medio: fisicoMedioId,
+		turno: turno === 'm' ?'MATUTINO' : 'VESPERTINO',
 	});
 
 	const [consultas, setConsultas] = useState([]);
@@ -160,7 +162,6 @@ const AgendarConsulta = (props) => {
 	const [estetica, setEstetica] = useState({
 		materiales: []
 	});
-	const [turno, setTurno] = useState({});
 
 	const dia = addZero(date.getDate());
 	const mes = addZero(date.getMonth() + 1);
@@ -173,6 +174,7 @@ const AgendarConsulta = (props) => {
 
 	const columns = [
 		{ title: 'FOLIO', field: 'consecutivo' },
+		{ title: 'TURNO', field: 'turno' },
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'TELÉFONO', field: 'paciente.telefono' },
@@ -825,14 +827,6 @@ const AgendarConsulta = (props) => {
 		}
 	}
 
-	const getTurno = async () => {
-		const response = await findTurnoActualBySucursal(sucursal._id, token);
-		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			const corte = response.data;
-			setTurno(corte.turno);
-		}
-	}
-
 	const loadAll = async () => {
 		setIsLoading(true);
 		await loadConsultas(new Date());
@@ -843,7 +837,6 @@ const AgendarConsulta = (props) => {
 		await loadFrecuencias();
 		await loadMedios();
 		await loadFormasPago();
-		await getTurno();
 		await loadHorarios(values.fecha_hora);
 		setIsLoading(false);
 	}

@@ -67,6 +67,7 @@ const AgendarFacial = (props) => {
 		setPacienteAgendado,
 		sucursal,
 		colorBase,
+		turno,
 	} = props;
 
 	const token = empleado.access_token;
@@ -135,6 +136,7 @@ const AgendarFacial = (props) => {
 		frecuencia: frecuenciaPrimeraVezId,
 		forma_pago: efectivoMetodoPagoId,
 		medio: fisicoMedioId,
+		turno: turno === 'm' ?'MATUTINO' : 'VESPERTINO',
 	});
 	const [faciales, setFaciales] = useState([]);
 	const [areas, setAreas] = useState([]);
@@ -157,6 +159,7 @@ const AgendarFacial = (props) => {
 
 	const columns = [
 		{ title: 'FOLIO', field: 'consecutivo' },
+		{ title: 'TURNO', field: 'turno' },
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'TELÉFONO', field: 'paciente.telefono' },
@@ -756,7 +759,7 @@ const AgendarFacial = (props) => {
 
 	useEffect(() => {
 		loadAll();
-	}, [sucursal]);
+	}, []);
 
 	return (
 		<Fragment>

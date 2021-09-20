@@ -22,6 +22,7 @@ const MenuPatient = (props) => {
         empleado,
         history,
         colorBase,
+        turno,
     } = props;
 
     const handleChangeTab = (event, newValue) => {
@@ -109,7 +110,8 @@ const MenuPatient = (props) => {
                 setMessage={setMessage}
                 setSeverity={setSeverity}
                 setOpenAlert={setOpenAlert}
-                history={history} />
+                history={history}
+                turno={turno} />
             <Snackbar open={openAlert} autoHideDuration={5000} onClose={handleCloseAlert}>
                 <Alert onClose={handleCloseAlert} severity={severity}>
                     {message}

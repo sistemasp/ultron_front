@@ -89,6 +89,7 @@ export const MainContainer = props => {
 		setSeverity,
 		setOpenAlert,
 		history,
+		turno,
 	} = props;
 
 	const colorBase = sucursal.color;
@@ -264,6 +265,7 @@ export const MainContainer = props => {
 				<Fragment className={classes.fragment}>
 					<TabPanel value={value} index={0}>
 						<MenuPatient
+							turno={turno}
 							empleado={empleado}
 							sucursal={sucursal}
 							colorBase={colorBase}

@@ -59,6 +59,7 @@ const AgendarCirugia = (props) => {
 		consultaAgendada,
 		sucursal,
 		colorBase,
+		turno,
 	} = props;
 
 	const token = empleado.access_token;
@@ -121,6 +122,7 @@ const AgendarCirugia = (props) => {
 		medio: fisicoMedioId,
 		hora: 0,
 		minutos: 0,
+		turno: turno === 'm' ?'MATUTINO' : 'VESPERTINO',
 	});
 	const [cirugias, setCirugias] = useState([]);
 	const [openModal, setOpenModal] = useState(false);
@@ -144,6 +146,7 @@ const AgendarCirugia = (props) => {
 
 	const columns = [
 		{ title: 'FOLIO', field: 'consecutivo' },
+		{ title: 'TURNO', field: 'turno' },
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'TELÉFONO', field: 'paciente.telefono' },

@@ -71,6 +71,7 @@ export const MenuContainer = props => {
 		sucursal,
 		history,
 		colorBase,
+		turno,
 	} = props;
 
 	const useStyles = makeStyles(theme => ({
@@ -121,6 +122,7 @@ export const MenuContainer = props => {
 					onClickAgendarConsulta={onClickAgendarConsulta}
 					onClickAgendarAparatologia={onClickAgendarAparatologia}
 					colorBase={colorBase}
+					turno={turno}
 					onChangeTab={onChangeTab} />
 			</TabPanel>
 			<TabPanel value={value} index={1}>
@@ -135,6 +137,7 @@ export const MenuContainer = props => {
 					onClickAgendarFaciales={onClickAgendarFaciales}
 					onClickAgendarAparatologia={onClickAgendarAparatologia}
 					colorBase={colorBase}
+					turno={turno}
 					history={history} />
 			</TabPanel>
 			<TabPanel value={value} index={2}>
@@ -143,6 +146,7 @@ export const MenuContainer = props => {
 					setPacienteAgendado={setPacienteAgendado}
 					empleado={empleado}
 					colorBase={colorBase}
+					turno={turno}
 					sucursal={sucursal._id} />
 			</TabPanel>
 			<TabPanel value={value} index={3}>
@@ -151,6 +155,7 @@ export const MenuContainer = props => {
 					setPacienteAgendado={setPacienteAgendado}
 					empleado={empleado}
 					colorBase={colorBase}
+					turno={turno}
 					sucursal={sucursal._id} />
 			</TabPanel>
 			<TabPanel value={value} index={4}>
@@ -160,6 +165,7 @@ export const MenuContainer = props => {
 					setPacienteAgendado={setPacienteAgendado}
 					empleado={empleado}
 					colorBase={colorBase}
+					turno={turno}
 					sucursal={sucursal._id} />
 			</TabPanel>
 			<TabPanel value={value} index={5}>
@@ -169,6 +175,7 @@ export const MenuContainer = props => {
 					setPacienteAgendado={setPacienteAgendado}
 					empleado={empleado}
 					colorBase={colorBase}
+					turno={turno}
 					sucursal={sucursal._id} />
 			</TabPanel>
 			<TabPanel value={value} index={6}>
@@ -178,6 +185,7 @@ export const MenuContainer = props => {
 					setPacienteAgendado={setPacienteAgendado}
 					empleado={empleado}
 					colorBase={colorBase}
+					turno={turno}
 					sucursal={sucursal._id} />
 			</TabPanel>
 			<TabPanel value={value} index={7}>

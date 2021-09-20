@@ -63,6 +63,7 @@ const AgendarDermapen = (props) => {
 		empleado,
 		sucursal,
 		colorBase,
+		turno,
 	} = props;
 
 	const token = empleado.access_token;
@@ -132,6 +133,7 @@ const AgendarDermapen = (props) => {
 		frecuencia: frecuenciaPrimeraVezId,
 		forma_pago: efectivoFormaPagoId,
 		medio: fisicoMedioId,
+		turno: turno === 'm' ?'MATUTINO' : 'VESPERTINO',
 	});
 	const [dermapens, setDermapens] = useState([]);
 	const [areas, setAreas] = useState([]);
@@ -155,6 +157,7 @@ const AgendarDermapen = (props) => {
 
 	const columns = [
 		{ title: 'FOLIO', field: 'consecutivo' },
+		{ title: 'TURNO', field: 'turno' },
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'TELÉFONO', field: 'paciente.telefono' },

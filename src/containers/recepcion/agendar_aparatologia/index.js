@@ -67,6 +67,7 @@ const AgendarAparatologia = (props) => {
 		setPacienteAgendado,
 		sucursal,
 		colorBase,
+		turno,
 	} = props;
 
 	const token = empleado.access_token;
@@ -133,6 +134,7 @@ const AgendarAparatologia = (props) => {
 		forma_pago: efectivoFormaPagoId,
 		medio: fisicoMedioId,
 		tiempo: 0,
+		turno: turno === 'm' ?'MATUTINO' : 'VESPERTINO',
 	});
 	const [aparatologias, setAparatologias] = useState([]);
 	const [areas, setAreas] = useState([]);
@@ -156,6 +158,7 @@ const AgendarAparatologia = (props) => {
 
 	const columns = [
 		{ title: 'FOLIO', field: 'consecutivo' },
+		{ title: 'TURNO', field: 'turno' },
 		{ title: 'HORA', field: 'hora' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'TELÉFONO', field: 'paciente.telefono' },
