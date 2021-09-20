@@ -363,21 +363,21 @@ export const AgendarEsteticaContainer = (props) => {
 										}}
 										variant="outlined" />
 								</Grid>
+								<Grid item xs={12} sm={2}>
+									<TextField
+										className={classes.textField}
+										name="minutos"
+										label="MINUTOS"
+										value={values.minutos}
+										type='Text'
+										onChange={onChangeMinutos}
+										onInput={(e) => {
+											e.target.value = e.target.value < 0 ? 0 : (e.target.value > 60 ? 60 : e.target.value);
+											e.target.value = (e.target.value).toString().slice(0, 2)
+										}}
+										variant="outlined" />
+								</Grid>
 							</Fragment> : ''}
-						<Grid item xs={12} sm={2}>
-							<TextField
-								className={classes.textField}
-								name="minutos"
-								label="MINUTOS"
-								value={values.minutos}
-								type='Text'
-								onChange={onChangeMinutos}
-								onInput={(e) => {
-									e.target.value = e.target.value < 0 ? 0 : (e.target.value > 60 ? 60 : e.target.value);
-									e.target.value = (e.target.value).toString().slice(0, 2)
-								}}
-								variant="outlined" />
-						</Grid>
 						<Grid item xs={12} sm={2}>
 							<TextField
 								className={classes.textField}

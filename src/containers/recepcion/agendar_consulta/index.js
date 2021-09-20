@@ -322,11 +322,10 @@ const AgendarConsulta = (props) => {
 		data.total = data.precio;
 		data.servicio = consultaServicioId;
 		data.tipo_cita = data.frecuencia === frecuenciaPrimeraVezId ? tipoCitaRevisionId : tipoCitaDerivadaId;
-		if (sucursal._id !== sucursalManuelAcunaId && sucursal._id !== sucursalRubenDarioId) {
+		if (sucursal._id === sucursalOccidentalId || sucursal._id === sucursalFederalismoId) {
+			const fecha_hora = `${addZero(create_date.getHours())}:00:00`;
 			data.hora_llegada = `${addZero(create_date.getHours())}:${addZero(create_date.getMinutes())}`;
-			create_date.setMinutes(0);
-			create_date.setSeconds(0);
-			data.fecha_hora = create_date;
+			data.fecha_hora = fecha_hora;
 			data.status = asistioStatusId;
 			data.hora_aplicacion = create_date;
 			// data.quien_confirma_asistencia = empleado._id;

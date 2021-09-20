@@ -204,7 +204,7 @@ export const AgendarDermapenContainer = (props) => {
 							className={classes.button}
 							color="primary"
 							variant="contained"
-							disabled={!isValid || isSubmitting || !paciente.nombres || !values.dermatologo || !values.tiempo}
+							disabled={!isValid || isSubmitting || !paciente.nombres || !values.dermatologo}
 							onClick={() => onClickAgendar(values)}
 							text='GUARDAR' />
 					</Grid>
@@ -355,21 +355,22 @@ export const AgendarDermapenContainer = (props) => {
 									</Select>
 								</FormControl>
 							</Grid>
+							<Grid item xs={12} sm={2}>
+								<TextField
+									className={classes.formControl}
+									name="tiempo"
+									error={Boolean(errors.tiempo)}
+									label="TIEMPO"
+									value={values.tiempo}
+									type='Number'
+									onChange={onChangeTiempo}
+									onInput={(e) => {
+										e.target.value = Math.max(0, parseInt(e.target.value)).toString().slice(0, 3)
+									}}
+									variant="outlined" />
+							</Grid>
 						</Fragment> : ''}
-					<Grid item xs={12} sm={2}>
-						<TextField
-							className={classes.formControl}
-							name="tiempo"
-							error={Boolean(errors.tiempo)}
-							label="TIEMPO"
-							value={values.tiempo}
-							type='Number'
-							onChange={onChangeTiempo}
-							onInput={(e) => {
-								e.target.value = Math.max(0, parseInt(e.target.value)).toString().slice(0, 3)
-							}}
-							variant="outlined" />
-					</Grid>
+
 					<Grid item xs={12} sm={2}>
 						<TextField
 							className={classes.textField}
