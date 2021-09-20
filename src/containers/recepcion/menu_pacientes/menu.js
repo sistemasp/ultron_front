@@ -78,7 +78,7 @@ export const MenuContainer = props => {
 		root: {
 			flexGrow: 1,
 			backgroundColor: theme.palette.background.paper,
-		}		
+		}
 	}));
 
 	const classes = myStyles(colorBase)();
@@ -121,6 +121,9 @@ export const MenuContainer = props => {
 					onClickAgendarFaciales={onClickAgendarFaciales}
 					onClickAgendarConsulta={onClickAgendarConsulta}
 					onClickAgendarAparatologia={onClickAgendarAparatologia}
+					onClickAgendarCirugia={onClickAgendarCirugia}
+					onClickAgendarEstetica={onClickAgendarEstetica}
+					onClickAgendarDermapen={onClickAgendarDermapen}
 					colorBase={colorBase}
 					turno={turno}
 					onChangeTab={onChangeTab} />

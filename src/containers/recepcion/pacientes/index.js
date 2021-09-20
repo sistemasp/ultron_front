@@ -38,6 +38,9 @@ const Pacientes = (props) => {
 		onClickAgendarConsulta,
 		onClickAgendarFaciales,
 		onClickAgendarAparatologia,
+		onClickAgendarCirugia,
+		onClickAgendarEstetica,
+		onClickAgendarDermapen,
 		colorBase,
 		sucursal,
 	} = props;
@@ -169,15 +172,25 @@ const Pacientes = (props) => {
 			tooltip: 'AGREGAR FACIAL',
 			onClick: onClickAgendarFaciales
 		},
-		/*{
-			icon: EventAvailableIcon,
-			tooltip: 'AGREGAR LÁSER',
-			onClick: onClickAgendarLaser
-		},*/
 		{
 			icon: EventAvailableIcon,
 			tooltip: 'AGREGAR APARATOLOGÍA',
 			onClick: onClickAgendarAparatologia
+		},
+		{
+			icon: EventAvailableIcon,
+			tooltip: 'AGREGAR DERMAPEN',
+			onClick: onClickAgendarDermapen
+		},
+		{
+			icon: EventAvailableIcon,
+			tooltip: 'AGREGAR CIRUGíA',
+			onClick: onClickAgendarCirugia
+		},
+		{
+			icon: EventAvailableIcon,
+			tooltip: 'AGREGAR ESTÉTICA',
+			onClick: onClickAgendarEstetica
 		},
 		{
 			icon: EditIcon,
@@ -201,9 +214,15 @@ const Pacientes = (props) => {
 			case 'AGREGAR FACIAL':
 				onClickAgendarFaciales(e, rowData);
 				break;
-			/*case 'AGREGAR LÁSER':
-				onClickAgendarLaser(e, rowData);
-				break;*/
+			case 'AGREGAR CIRUGíA':
+				onClickAgendarCirugia(e, rowData);
+				break;
+			case 'AGREGAR ESTÉTICA':
+				onClickAgendarEstetica(e, rowData);
+				break;
+			case 'AGREGAR DERMAPEN':
+				onClickAgendarDermapen(e, rowData);
+				break;
 			case 'AGREGAR APARATOLOGÍA':
 				onClickAgendarAparatologia(e, rowData);
 				break;

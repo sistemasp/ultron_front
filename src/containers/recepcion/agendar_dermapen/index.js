@@ -68,7 +68,7 @@ const AgendarDermapen = (props) => {
 
 	const token = empleado.access_token;
 
-	const paciente = consultaAgendada.paciente ? consultaAgendada.paciente : {};
+	const paciente = consultaAgendada.paciente ? consultaAgendada.paciente : consultaAgendada;
 
 	const dermatologoRolId = process.env.REACT_APP_DERMATOLOGO_ROL_ID;
 	const promovendedorRolId = process.env.REACT_APP_PROMOVENDEDOR_ROL_ID;
