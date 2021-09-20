@@ -133,7 +133,7 @@ const AgendarDermapen = (props) => {
 		frecuencia: frecuenciaPrimeraVezId,
 		forma_pago: efectivoFormaPagoId,
 		medio: fisicoMedioId,
-		turno: turno === 'm' ?'MATUTINO' : 'VESPERTINO',
+		turno: turno === 'm' ? 'M' : 'V',
 	});
 	const [dermapens, setDermapens] = useState([]);
 	const [areas, setAreas] = useState([]);

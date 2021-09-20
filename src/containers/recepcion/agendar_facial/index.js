@@ -136,7 +136,7 @@ const AgendarFacial = (props) => {
 		frecuencia: frecuenciaPrimeraVezId,
 		forma_pago: efectivoMetodoPagoId,
 		medio: fisicoMedioId,
-		turno: turno === 'm' ?'MATUTINO' : 'VESPERTINO',
+		turno: turno === 'm' ? 'M' : 'V',
 	});
 	const [faciales, setFaciales] = useState([]);
 	const [areas, setAreas] = useState([]);

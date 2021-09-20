@@ -128,7 +128,7 @@ const AgendarEstetica = (props) => {
 		medio: fisicoMedioId,
 		hora: 0,
 		minutos: 0,
-		turno: turno === 'm' ?'MATUTINO' : 'VESPERTINO',
+		turno: turno === 'm' ? 'M' : 'V',
 	});
 	const [esteticas, setEsteticas] = useState([]);
 	const [openModal, setOpenModal] = useState(false);

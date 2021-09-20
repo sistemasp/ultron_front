@@ -134,7 +134,7 @@ const AgendarAparatologia = (props) => {
 		forma_pago: efectivoFormaPagoId,
 		medio: fisicoMedioId,
 		tiempo: 0,
-		turno: turno === 'm' ?'MATUTINO' : 'VESPERTINO',
+		turno: turno === 'm' ? 'M' : 'V',
 	});
 	const [aparatologias, setAparatologias] = useState([]);
 	const [areas, setAreas] = useState([]);

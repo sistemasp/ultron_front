@@ -142,7 +142,7 @@ const AgendarConsulta = (props) => {
 		promovendedor: promovendedorSinPromovendedorId,
 		dermatologo: dermatologoDirectoId,
 		medio: fisicoMedioId,
-		turno: turno === 'm' ?'MATUTINO' : 'VESPERTINO',
+		turno: turno === 'm' ? 'M' : 'V',
 	});
 
 	const [consultas, setConsultas] = useState([]);
