@@ -323,7 +323,9 @@ const AgendarConsulta = (props) => {
 		data.servicio = consultaServicioId;
 		data.tipo_cita = data.frecuencia === frecuenciaPrimeraVezId ? tipoCitaRevisionId : tipoCitaDerivadaId;
 		if (sucursal._id === sucursalOccidentalId || sucursal._id === sucursalFederalismoId) {
-			const fecha_hora = `${addZero(create_date.getHours())}:00:00`;
+			const fecha_hora = new Date();
+			fecha_hora.setMinutes(0);
+			fecha_hora.setSeconds(0);
 			data.hora_llegada = `${addZero(create_date.getHours())}:${addZero(create_date.getMinutes())}`;
 			data.fecha_hora = fecha_hora;
 			data.status = asistioStatusId;
