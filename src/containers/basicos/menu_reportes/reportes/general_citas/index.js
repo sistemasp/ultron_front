@@ -80,6 +80,7 @@ const ReporteGeneralCitas = (props) => {
 		{ title: 'MEDIO', field: 'medio.nombre' },
 		{ title: 'TIPO', field: 'tipo_cita.nombre' },
 		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
+		{ title: 'COSMETÓLOGA', field: 'cosmetologa_nombre' },
 		{ title: 'PROMOVENDEDOR (A)', field: 'promovendedor_nombre' },
 		{ title: 'STATUS', field: 'status.nombre' },
 		{ title: 'PRECIO', field: 'precio_moneda' },
@@ -120,6 +121,7 @@ const ReporteGeneralCitas = (props) => {
 
 	const processResponse = (data) => {
 		data.forEach(item => {
+			console.log("KAOZ", item);
 			//item.folio = generateFolio(item);
 			const date = new Date(item.fecha_hora);
             const dia = addZero(date.getDate());
