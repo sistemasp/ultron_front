@@ -118,6 +118,7 @@ const AgregarPagosAnticipados = (props) => {
     { title: 'DESCUENTO PORCENTAJE', field: 'descuento_porcentaje' },
     { title: 'DESCUENTO CANTIDAD', field: 'descuento_moneda' },
     { title: 'TOTAL', field: 'total_moneda' },
+    { title: 'NÚMERO SESIÓN', field: 'numero_sesion' },
     { title: 'OBSERVACIONES', field: 'observaciones' },
   ];
 
@@ -235,7 +236,7 @@ const AgregarPagosAnticipados = (props) => {
   const handleChangeDescuento = (event) => {
     const datos = {
       ...values,
-      porcentaje_descuento_clinica: event.target.value,
+      porcentaje_descuento_clinica: event.target.value ? event.target.value : 0,
     }
     calcularTotal(datos);
   }
@@ -246,6 +247,7 @@ const AgregarPagosAnticipados = (props) => {
     value.sucursal = sucursal._id;
     value.recepcionista = empleado._id;
     value.paciente = paciente._id;
+    value.numero_sesion = sesionesAnticipadas.length + 1;
     if (value.tratamientos) {
       value.tratamientos.map((tratamiento) => {
         tratamiento.areas = [];
@@ -393,7 +395,6 @@ const AgregarPagosAnticipados = (props) => {
         servicio.factura = response.data;
 
         servicio.sesiones_anticipadas.map(async (sesionAnticipada, index) => {
-          sesionAnticipada.numero_sesion = index + 1;
           sesionAnticipada.pagado = true;
           sesionAnticipada.factura = servicio.factura;
           let sesionTotal = Number(sesionAnticipada.total);
@@ -596,7 +597,7 @@ const AgregarPagosAnticipados = (props) => {
             pago_anticipado: true,
           }
 
-          if (servicio.pagos[ind] && servicio.pagos[ind].total === 0 && index < (servicio.sesiones_anticipadas.length - 1)) { ind++ }
+          if (servicio.pagos[ind] && servicio.pagos[ind + 1] && servicio.pagos[ind].total === 0 && index < (servicio.sesiones_anticipadas.length - 1)) { ind++ }
 
           const responsEntrada = await createEntrada(entrada);
 

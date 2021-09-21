@@ -1086,19 +1086,19 @@ const ReportesDetallesGeneral = (props) => {
 			const coincidencias = facialesProcesadas.filter(facialProcesada => {
 				return falcial._id === facialProcesada._id && falcial.producto === facialProcesada.producto;
 			});
-			falcial.cantidad_servicios = falcial.cantidad_servicios === 0 ? 0 : (1 / coincidencias.length);
+			falcial.cantidad_servicios = falcial.forma_pago === formaPagoSesionAnticipadaId ? 0 : falcial.cantidad_servicios === 0 ? 0 : (1 / coincidencias.length);
 		});
 		aparatologiasProcesadas.forEach(aparatologia => {
 			const coincidencias = aparatologiasProcesadas.filter(aparatologiaProcesada => {
 				return aparatologia._id === aparatologiaProcesada._id && aparatologia.producto === aparatologiaProcesada.producto;
 			});
-			aparatologia.cantidad_servicios = aparatologia.cantidad_servicios === 0 ? 0 : (1 / coincidencias.length);
+			aparatologia.cantidad_servicios = aparatologia.forma_pago === formaPagoSesionAnticipadaId ? 0 : aparatologia.cantidad_servicios === 0 ? 0 : (1 / coincidencias.length);
 		});
 		consultasProcesadas.forEach(consulta => {
 			const coincidencias = consultasProcesadas.filter(consultaProcesada => {
 				return consulta._id === consultaProcesada._id && consulta.producto === consultaProcesada.producto;
 			});
-			consulta.cantidad_servicios = consulta.cantidad_servicios === 0 ? 0 : (1 / coincidencias.length);
+			consulta.cantidad_servicios = consulta.forma_pago === formaPagoSesionAnticipadaId ? 0 : consulta.cantidad_servicios === 0 ? 0 : (1 / coincidencias.length);
 		});
 		// dermapensProcesadas.forEach(dermapen => {
 		// 	const coincidencias = dermapensProcesadas.filter(dermapenProcesada => {
