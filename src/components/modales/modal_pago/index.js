@@ -246,8 +246,15 @@ const ModalPago = (props) => {
 
     servicio.forma_pago._id = rowData.forma_pago;
     if (rowData.forma_pago === formaPagoPagoAnticipadoId && rowData.sesion_anicipada) {
+
+      const sesionAnticipada = sesionesAnticipadas.find((sesion) => {
+        return sesion._id === rowData.sesion_anicipada;
+      });
+
       rowData.pago_anticipado = true;
       rowData.has_descuento_dermatologo = false;
+      rowData.cantidad = sesionAnticipada.total;
+      rowData.total = sesionAnticipada.total;
 
       servicio.forma_pago._id = formaPagoPagoAnticipadoId;
       servicio.total = 0;
@@ -264,9 +271,7 @@ const ModalPago = (props) => {
         pago_anticipado: true,
       }
 
-      const sesionAnticipada = sesionesAnticipadas.find((sesion) => {
-        return sesion._id === rowData.sesion_anicipada;
-      });
+      
       sesionAnticipada.fecha_asistencia = new Date();
 
       await updateSesionAnticipada(sesionAnticipada._id, sesionAnticipada, empleado.access_token);

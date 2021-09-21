@@ -121,7 +121,6 @@ const ReporteGeneralCitas = (props) => {
 
 	const processResponse = (data) => {
 		data.forEach(item => {
-			console.log("KAOZ", item);
 			//item.folio = generateFolio(item);
 			const date = new Date(item.fecha_hora);
             const dia = addZero(date.getDate());
