@@ -434,8 +434,8 @@ const AgendarConsulta = (props) => {
 		setIsHoliDay(false);
 		setValues({
 			...values,
-			precio: date.getDay() === 6 ? (!cambioTurno && turno === 'm' ? sucursal.precio_sabado_vespertino : sucursal.precio_sabado_matutino) // SABADO
-					: (!cambioTurno && turno === 'm' ? sucursal.precio_vespertino : sucursal.precio_matutino), // L-V
+			precio: date.getDay() === 6 ? (values.precio === sucursal.precio_sabado_matutino ? sucursal.precio_sabado_vespertino : sucursal.precio_sabado_matutino) // SABADO
+				: (values.precio === sucursal.precio_matutino ? sucursal.precio_vespertino : sucursal.precio_matutino) // L-V
 		})
 		setCambioTurno(!cambioTurno);
 	}
