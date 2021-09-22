@@ -35,6 +35,8 @@ import {
 	createConsecutivo,
 } from "../../../services/consecutivos";
 import { updateSesionAnticipada } from "../../../services/sesiones_anticipadas";
+import { createPago } from "../../../services/pagos";
+import { createEntrada, updateEntrada } from "../../../services/entradas";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -99,6 +101,9 @@ const AgendarFacial = (props) => {
 	const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
 	const sesionAnticipadaFormaPagoId = process.env.REACT_APP_FORMA_PAGO_SESION_ANTICIPADA;
 	const fisicoMedioId = process.env.REACT_APP_MEDIO_FISICO_ID;
+	const asistioStatusId = process.env.REACT_APP_ASISTIO_STATUS_ID;
+	const efectivoFormaPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
+	const tipoEntradaFacialesId = process.env.REACT_APP_TIPO_ENTRADA_FACIALES_ID;
 
 	const [openAlert, setOpenAlert] = useState(false);
 	const [openModalTraspaso, setOpenModalTraspaso] = useState(false);
@@ -144,6 +149,7 @@ const AgendarFacial = (props) => {
 	const [openModalProxima, setOpenModalProxima] = useState(false);
 	const [facial, setFacial] = useState();
 	const [openModalPagos, setOpenModalPagos] = useState(false);
+	const [esHoy, setEsHoy] = useState(false);
 	const [openModalImprimirCita, setOpenModalImprimirCita] = useState(false);
 	const [datosImpresion, setDatosImpresion] = useState();
 
@@ -380,6 +386,61 @@ const AgendarFacial = (props) => {
 
 		const response = await createFacial(data, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+			if (esHoy) {
+				const resFacial = response.data;
+				const create_date = new Date();
+				resFacial.hora_llegada = `${addZero(create_date.getHours())}:${addZero(create_date.getMinutes())}`;
+				resFacial.status = asistioStatusId;
+				resFacial.hora_aplicacion = create_date;
+				await updateFacial(resFacial._id, resFacial, token);
+				if ( resFacial.forma_pago === efectivoFormaPagoId ) {
+					const entrada = {
+						create_date: create_date,
+						hora_aplicacion: create_date,
+						recepcionista: empleado._id,
+						concepto: `FOLIO: ${generateFolio({})}`,
+						cantidad: resFacial.precio,
+						tipo_entrada: tipoEntradaFacialesId,
+						sucursal: sucursal,
+						forma_pago: efectivoFormaPagoId,
+						pago_anticipado: false,
+					};
+					const entradaResponse = await createEntrada(entrada, token);
+					if (`${entradaResponse.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+						const resEntrada = entradaResponse.data;
+						const pago = {
+							create_date: create_date,
+							fecha_pago: create_date,
+							hora_aplicacion: create_date,
+							paciente: resFacial.paciente,
+							dermatologo: resFacial.dermatologo,
+							tratamientos: resFacial.tratamientos,
+							quien_recibe_pago: resFacial.quien_agenda,
+							cantidad: resFacial.precio,
+							total: resFacial.precio,
+							forma_pago: efectivoFormaPagoId,
+							sucursal: sucursal._id,
+							observaciones: resFacial.observaciones,
+							porcentaje_descuento_clinica: '0',
+							descuento_clinica: 0,
+							descuento_dermatologo: 0,
+							tipo_servicio: servicioFacialId,
+							servicio: resFacial._id,
+							pago_anticipado: false,
+							entrada: resEntrada._id,
+							turno: turno,
+						};
+						const pagoResponse = await createPago(pago, token);
+						if (`${pagoResponse.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+							const resPago = pagoResponse.data;
+							resEntrada.pago = resPago._id;
+							await updateEntrada(resEntrada._id, resEntrada, token);
+							resFacial.pagos = [resPago];
+							handleGuardarModalPagos(resFacial);
+						}
+					}
+				}
+			}
 			setOpenAlert(true);
 			setSeverity('success');
 			setMessage('EL FACIAL SE AGREGO CORRECTAMENTE');
@@ -687,6 +748,10 @@ const AgendarFacial = (props) => {
 		});
 	}
 
+	const handleChangeEsHoy = (e) => {
+		setEsHoy(!esHoy);
+	}
+
 	const loadFormasPago = async () => {
 		const response = await showAllMetodoPago();
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
@@ -818,6 +883,8 @@ const AgendarFacial = (props) => {
 								openModalImprimirCita={openModalImprimirCita}
 								datosImpresion={datosImpresion}
 								openModalTraspaso={openModalTraspaso}
+								esHoy={esHoy}
+								onChangeEsHoy={(e) => handleChangeEsHoy(e)}
 								onCloseImprimirConsulta={handleCloseImprimirConsulta}
 								onCloseTraspasos={handleCloseTraspasos}
 								sucursal={sucursal}

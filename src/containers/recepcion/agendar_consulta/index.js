@@ -126,12 +126,13 @@ const AgendarConsulta = (props) => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [disableDate, setDisableDate] = useState(true);
 	const [isHoliDay, setIsHoliDay] = useState(false);
+	const [cambioTurno, setCambioTurno] = useState(false);
 	const [values, setValues] = useState({
 		hora: '',
 		fecha_hora: new Date(),
 		producto: productoConsultaId,
 		paciente: `${paciente._id}`,
-		precio: isHoliDay ? sucursal.precio_festivo : // Dia Festivo
+		precio: isHoliDay ? sucursal.precio_festivo : // DÍA FESTIVO
 			date.getDay() === 6 ? (date.getHours() >= 13 ? sucursal.precio_sabado_vespertino : sucursal.precio_sabado_matutino) // SABADO
 				: (date.getHours() >= 14 ? sucursal.precio_vespertino : sucursal.precio_matutino), // L-V
 		porcentaje_descuento_clinica: 0,
@@ -429,6 +430,16 @@ const AgendarConsulta = (props) => {
 		setIsHoliDay(!isHoliDay);
 	}
 
+	const handleChangeCambioTurno = (e) => {
+		setIsHoliDay(false);
+		setValues({
+			...values,
+			precio: date.getDay() === 6 ? (!cambioTurno && turno === 'm' ? sucursal.precio_sabado_vespertino : sucursal.precio_sabado_matutino) // SABADO
+					: (!cambioTurno && turno === 'm' ? sucursal.precio_vespertino : sucursal.precio_matutino), // L-V
+		})
+		setCambioTurno(!cambioTurno);
+	}
+
 	const handleChangeObservaciones = e => {
 		setValues({ ...values, observaciones: e.target.value.toUpperCase() });
 	}
@@ -520,7 +531,7 @@ const AgendarConsulta = (props) => {
 
 	const handleGuardarModalPagos = async (servicio) => {
 		servicio.pagado = servicio.pagos.length > 0;
-
+		setIsLoading(true);
 		if (!servicio.consecutivo) {
 			const response = await findConsecutivoBySucursal(sucursal._id, token);
 			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
@@ -576,6 +587,7 @@ const AgendarConsulta = (props) => {
 		}
 
 		setOpenModalPagos(false);
+		setIsLoading(false);
 	}
 
 	const actions = [
@@ -875,6 +887,7 @@ const AgendarConsulta = (props) => {
 						empleado={empleado}
 						sucursal={sucursal}
 						isHoliDay={isHoliDay}
+						cambioTurno={cambioTurno}
 						colorBase={colorBase}
 						onClickCancel={handleCloseModal}
 						loadConsultas={loadConsultas}
@@ -888,6 +901,7 @@ const AgendarConsulta = (props) => {
 						onChangeDermatologos={(e) => handleChangeDermatologos(e)}
 						onChangePromovendedor={(e) => handleChangePromovendedor(e)}
 						onChangeHoliDay={(e) => handleChangeHoliDay(e)}
+						onChangeCambioTurno={(e) => handleChangeCambioTurno(e)}
 						setOpenAlert={setOpenAlert}
 						setMessage={setMessage}
 						setSeverity={setSeverity}

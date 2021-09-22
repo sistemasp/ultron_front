@@ -19,6 +19,7 @@ import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import ModalProximaCita from '../../../components/modales/modal_proxima_cita';
 import myStyles from '../../../css';
 import ModalTraspasoServicio from '../../../components/modales/traspaso_servicio';
+import { CheckCustom } from '../../../components/basic/CheckCustom';
 
 export const AgendarFacialContainer = (props) => {
 
@@ -29,6 +30,8 @@ export const AgendarFacialContainer = (props) => {
 		areas,
 		horarios,
 		tipoCitas,
+		esHoy,
+		onChangeEsHoy,
 		onChangeServicio,
 		onChangeTratamientos,
 		onChangeAreas,
@@ -193,10 +196,23 @@ export const AgendarFacialContainer = (props) => {
 					<Grid item xs={12} sm={8}>
 						<h1>{paciente.nombres ? `${paciente.nombres} ${paciente.apellidos}` : 'SELECCIONA UN PACIENTE'}</h1>
 					</Grid>
-					<Grid item xs={12} sm={2}>
+					<Grid item xs={12} sm={true}>
 						<h1>{toFormatterCurrency(values.precio)}</h1>
 					</Grid>
-					<Grid item xs={12} sm={2} className={classes.grid_center}>
+					{
+						sucursal === process.env.REACT_APP_SUCURSAL_OCCI_ID ||
+							sucursal === process.env.REACT_APP_SUCURSAL_FEDE_ID ?
+							<Grid item xs={12} sm={true} className={classes.grid_center}>
+								<CheckCustom
+									checked={esHoy}
+									onChange={onChangeEsHoy}
+									name="checkedH"
+									label="HOY"
+								/>
+							</Grid>
+							: ''
+					}
+					<Grid item xs={12} sm={true} className={classes.grid_center}>
 						<ButtonCustom
 							className={classes.button}
 							color="primary"

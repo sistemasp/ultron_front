@@ -26,7 +26,9 @@ export const AgendarConsultaContainer = (props) => {
   const {
     values,
     isHoliDay,
+    cambioTurno,
     onChangeHoliDay,
+    onChangeCambioTurno,
     servicios,
     tratamientos,
     productos,
@@ -199,7 +201,7 @@ export const AgendarConsultaContainer = (props) => {
           <Grid item xs={12} sm={2}>
             <h1>{toFormatterCurrency(values.precio)}</h1>
           </Grid>
-          <Grid item xs={12} sm={2} className={classes.grid_center}>
+          <Grid item xs={12} sm={true} className={classes.grid_center}>
             <CheckCustom
               checked={isHoliDay}
               onChange={onChangeHoliDay}
@@ -207,7 +209,21 @@ export const AgendarConsultaContainer = (props) => {
               label="ES FESTIVO"
             />
           </Grid>
-          <Grid item xs={12} sm={2} className={classes.grid_center}>
+          {
+            sucursal._id === process.env.REACT_APP_SUCURSAL_OCCI_ID ||
+              sucursal._id === process.env.REACT_APP_SUCURSAL_FEDE_ID ?
+              <Grid item xs={12} sm={true} className={classes.grid_center}>
+                <CheckCustom
+                  checked={cambioTurno}
+                  onChange={onChangeCambioTurno}
+                  name="checkedCT"
+                  label="CAMBIO TURNO"
+                />
+              </Grid>
+              : ''
+          }
+
+          <Grid item xs={12} sm={true} className={classes.grid_center}>
             <ButtonCustom
               className={classes.button}
               color="primary"
@@ -263,7 +279,7 @@ export const AgendarConsultaContainer = (props) => {
               </Select>
             </FormControl>
           </Grid>
-          
+
           <Grid item xs={12} sm={2}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="simple-select-outlined-tipo-cita">MEDIO</InputLabel>
