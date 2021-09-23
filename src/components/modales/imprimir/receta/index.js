@@ -7,8 +7,6 @@ import myStyles from '../../../../css';
 
 const ModalImprimirReceta = (props) => {
 
-  const classes = myStyles(colorBase)();
-
   const {
     open,
     onClose,
@@ -17,6 +15,8 @@ const ModalImprimirReceta = (props) => {
     receta,
     colorBase,
   } = props;
+  
+  const classes = myStyles(colorBase)();
 
   const [show, setShow] = useState(true);
   const [isLoading, setIsLoading] = useState(true);

@@ -15,8 +15,6 @@ import ModalFormPacienteDomicilio from './ModalFormPacienteDomicilio';
 
 const ModalPacienteDomicilio = (props) => {
 
-  const classes = myStyles(colorBase)();
-
   const {
     open,
     dermatologo,
@@ -29,6 +27,8 @@ const ModalPacienteDomicilio = (props) => {
     findConsultorio,
     colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   const [ocupaciones, setOcupaciones] = useState([]);
   const [estados, setEstados] = useState([]);

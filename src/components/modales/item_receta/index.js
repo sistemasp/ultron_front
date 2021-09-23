@@ -11,7 +11,6 @@ import { createProductoComercial, showProductoComercialByLaboratorioId, updatePr
 
 const ModalItemReceta = (props) => {
 
-  const classes = myStyles(colorBase)();
 
   const {
     open,
@@ -20,6 +19,8 @@ const ModalItemReceta = (props) => {
     onAgregarProducto,
     colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   const [isLoading, setIsLoading] = useState(true);
 

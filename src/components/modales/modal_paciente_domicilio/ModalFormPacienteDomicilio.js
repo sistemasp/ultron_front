@@ -19,7 +19,6 @@ function getModalStyle() {
 }
 
 const ModalFormPacienteDomicilio = (props) => {
-  const classes = myStyles(colorBase)();
 
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
@@ -44,6 +43,8 @@ const ModalFormPacienteDomicilio = (props) => {
     onClickGuardar,
     colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   return (
     <div>
