@@ -19,6 +19,7 @@ import ModalImprimirCirugia from '../../../components/modales/imprimir/cirugia';
 import myStyles from '../../../css';
 import ModalTraspasoServicio from '../../../components/modales/traspaso_servicio';
 import ModalProximaEstetica from '../../../components/modales/modal_proxima_estetica';
+import ModalImprimirEstetica from '../../../components/modales/imprimir/estetica';
 
 export const AgendarEsteticaContainer = (props) => {
 
@@ -29,7 +30,6 @@ export const AgendarEsteticaContainer = (props) => {
 		tratamientos,
 		areas,
 		horarios,
-		tipoCitas,
 		onChangeServicio,
 		onChangeTratamientos,
 		onChangeAreas,
@@ -175,7 +175,7 @@ export const AgendarEsteticaContainer = (props) => {
 			}
 			{
 				openModalImprimirCita ?
-					<ModalImprimirCirugia
+					<ModalImprimirEstetica
 						open={openModalImprimirCita}
 						onClose={onCloseImprimirConsulta}
 						servicio="TOXINAS Y RELLENOS"

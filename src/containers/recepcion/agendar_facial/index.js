@@ -141,7 +141,6 @@ const AgendarFacial = (props) => {
 		frecuencia: frecuenciaPrimeraVezId,
 		forma_pago: efectivoMetodoPagoId,
 		medio: fisicoMedioId,
-		turno: turno === 'm' ? 'M' : 'V',
 	});
 	const [faciales, setFaciales] = useState([]);
 	const [areas, setAreas] = useState([]);
@@ -705,6 +704,7 @@ const AgendarFacial = (props) => {
 			}
 		}
 
+		servicio.turno = servicio.turno ? servicio.turno : servicio.pagos[0].turno === 'm' ? 'M' : 'V';
 		if (servicio.factura) {
 			if (servicio.factura._id) {
 				await updateFacial(servicio._id, servicio, token);

@@ -299,8 +299,8 @@ export const AgendarAparatologiaContainer = (props) => {
 									<Select
 										labelId="simple-select-outlined-tipo-cita"
 										id="simple-select-outlined-tipo-cita"
-										value={values.tipoCita}
-										error={Boolean(errors.tipoCita)}
+										value={values.tipo_cita}
+										error={Boolean(errors.tipo_cita)}
 										onChange={onChangeTipoCita}
 										label="TIPO" >
 										{tipoCitas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}

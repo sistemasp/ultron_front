@@ -66,7 +66,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ModalFormImprimirCirugia = (props) => {
+const ModalFormImprimirEstetica = (props) => {
 
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
@@ -90,6 +90,8 @@ const ModalFormImprimirCirugia = (props) => {
   const classes = myStyles(colorBase)();
 
   const fecha = new Date();
+
+  console.log("KAOZ", datos);
 
   return (
     <div>
@@ -117,35 +119,33 @@ const ModalFormImprimirCirugia = (props) => {
               <h4 className={classes.label_left}>PACIENTE: {datos.paciente_nombre}</h4>
             </Grid>
             <br />
-            <Grid container>
-              <Grid item xs={true} className={classes.label_left}>
-                <h3 className={classes.label_left}>{`1 - ${servicio}`}</h3>
-              </Grid>
-              <Grid item xs={true} className={classes.label_right}>
-                <h3 className={classes.label_right}>{`${toFormatterCurrency(datos.total_aplicacion)}`}</h3>
-              </Grid>
-            </Grid>
-
             {
-              datos.biopsias.length > 0
-                ? <Fragment>
-                  <Grid item xs={true} className={classes.label_left}>
-                    <h3 className={classes.label_left}>{`${datos.biopsias.length} - BIOPSIAS`}</h3>
+              datos.producto.map(prod => {
+                const toxinasRellenos = datos.toxinas_rellenos.filter(toxina_relleno => {
+                  return prod._id === toxina_relleno.producto._id;
+                });
+                return <Fragment>
+                  <Grid item xs={12} className={classes.label_left}>
+                    <h3 className={classes.label_left}>{`${prod.nombre}`}</h3>
                   </Grid>
-                  <Grid item xs={true} className={classes.label_right}>
-                    <h3 className={classes.label_right}>{`${toFormatterCurrency(datos.costo_biopsias)}`}</h3>
-                  </Grid>
+                  {
+                    toxinasRellenos.map(toxinaRelleno => {
+                      return <Grid item xs={12} className={classes.label_right}>
+                        <h4 className={classes.label_right}>{`${toxinaRelleno.unidades} UNIDADES ${toxinaRelleno.nombre}`}</h4>
+                      </Grid>
+                    })
+                  }
                 </Fragment>
-                : ''
+              })
             }
             {
               datos.materiales.length > 0
                 ? datos.materiales.map(material => {
                   return <Grid container>
-                    <Grid item xs={true} className={classes.label_left}>
+                    <Grid item xs={8} className={classes.label_left}>
                       <h3 className={classes.label_left}>{`${material.nombre}`}</h3>
                     </Grid>
-                    <Grid item xs={true} className={classes.label_right}>
+                    <Grid item xs={3} className={classes.label_right}>
                       <h3 className={classes.label_right}>{`${toFormatterCurrency(material.precio)}`}</h3>
                     </Grid>
                   </Grid>
@@ -193,4 +193,4 @@ const ModalFormImprimirCirugia = (props) => {
   );
 }
 
-export default ModalFormImprimirCirugia;
+export default ModalFormImprimirEstetica;

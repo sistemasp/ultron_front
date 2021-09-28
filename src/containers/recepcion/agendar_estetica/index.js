@@ -128,7 +128,6 @@ const AgendarEstetica = (props) => {
 		medio: fisicoMedioId,
 		hora: 0,
 		minutos: 0,
-		turno: turno === 'm' ? 'M' : 'V',
 	});
 	const [esteticas, setEsteticas] = useState([]);
 	const [openModal, setOpenModal] = useState(false);
@@ -555,6 +554,7 @@ const AgendarEstetica = (props) => {
 			}
 		}
 
+		servicio.turno = servicio.turno ? servicio.turno : servicio.pagos[0].turno === 'm' ? 'M' : 'V';
 		if (servicio.factura) {
 			if (servicio.factura._id) {
 				await updateEstetica(servicio._id, servicio, token);

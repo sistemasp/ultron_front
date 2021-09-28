@@ -30,7 +30,6 @@ export const AgendarDermapenContainer = (props) => {
 		tratamientos,
 		areas,
 		horarios,
-		tipoCitas,
 		onChangeServicio,
 		onChangeTratamientos,
 		onChangeAreas,

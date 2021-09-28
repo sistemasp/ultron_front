@@ -122,7 +122,6 @@ const AgendarCirugia = (props) => {
 		medio: fisicoMedioId,
 		hora: 0,
 		minutos: 0,
-		turno: turno === 'm' ? 'M' : 'V',
 	});
 	const [cirugias, setCirugias] = useState([]);
 	const [openModal, setOpenModal] = useState(false);
@@ -521,6 +520,7 @@ const AgendarCirugia = (props) => {
 			}
 		}
 
+		servicio.turno = servicio.turno ? servicio.turno : servicio.pagos[0].turno === 'm' ? 'M' : 'V';
 		if (servicio.factura) {
 			if (servicio.factura._id) {
 				await updateCirugia(servicio._id, servicio, token);

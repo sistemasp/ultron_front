@@ -133,7 +133,6 @@ const AgendarDermapen = (props) => {
 		frecuencia: frecuenciaPrimeraVezId,
 		forma_pago: efectivoFormaPagoId,
 		medio: fisicoMedioId,
-		turno: turno === 'm' ? 'M' : 'V',
 	});
 	const [dermapens, setDermapens] = useState([]);
 	const [areas, setAreas] = useState([]);
@@ -554,6 +553,7 @@ const AgendarDermapen = (props) => {
 			}
 		}
 
+		servicio.turno = servicio.turno ? servicio.turno : servicio.pagos[0].turno === 'm' ? 'M' : 'V';
 		if (servicio.factura) {
 			if (servicio.factura._id) {
 				await updateDermapen(servicio._id, servicio, token);

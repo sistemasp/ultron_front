@@ -134,7 +134,6 @@ const AgendarAparatologia = (props) => {
 		forma_pago: efectivoFormaPagoId,
 		medio: fisicoMedioId,
 		tiempo: 0,
-		turno: turno === 'm' ? 'M' : 'V',
 	});
 	const [aparatologias, setAparatologias] = useState([]);
 	const [areas, setAreas] = useState([]);
@@ -659,6 +658,7 @@ const AgendarAparatologia = (props) => {
 			}
 		}
 
+		servicio.turno = servicio.turno ? servicio.turno : servicio.pagos[0].turno === 'm' ? 'M' : 'V';
 		if (servicio.factura) {
 			if (servicio.factura._id) {
 				await updateAparatologia(servicio._id, servicio, token);

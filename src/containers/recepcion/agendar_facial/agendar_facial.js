@@ -312,7 +312,7 @@ export const AgendarFacialContainer = (props) => {
 									<Select
 										labelId="simple-select-outlined-tipo-cita"
 										id="simple-select-outlined-tipo-cita"
-										value={values.tipoCita}
+										value={values.tipo_cita}
 										onChange={onChangeTipoCita}
 										label="TIPO" >
 										{tipoCitas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}

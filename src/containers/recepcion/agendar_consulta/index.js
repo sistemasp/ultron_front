@@ -143,7 +143,6 @@ const AgendarConsulta = (props) => {
 		promovendedor: promovendedorSinPromovendedorId,
 		dermatologo: dermatologoDirectoId,
 		medio: fisicoMedioId,
-		turno: turno === 'm' ? 'M' : 'V',
 	});
 
 	const [consultas, setConsultas] = useState([]);
@@ -560,6 +559,7 @@ const AgendarConsulta = (props) => {
 			}
 		}
 
+		servicio.turno = servicio.turno ? servicio.turno : servicio.pagos[0].turno === 'm' ? 'M' : 'V';
 		if (servicio.factura) {
 			if (servicio.factura._id) {
 				await updateConsult(servicio._id, servicio, token);
