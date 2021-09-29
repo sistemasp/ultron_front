@@ -10,7 +10,7 @@ import {
 import {
   createSalida, findSalidaByPagoDermatologoId, updateSalida,
 } from '../../../../services/salidas';
-import { showCorteTodayBySucursalAndTurno } from '../../../../services/corte';
+import { findTurnoActualBySucursal, showCorteTodayBySucursalAndTurno } from '../../../../services/corte';
 import { findFacialesByPayOfDoctorHoraAplicacion, findFacialesByPayOfDoctorHoraAplicacionPA, updateFacial } from '../../../../services/faciales';
 import { findAparatologiasByPayOfDoctorHoraAplicacion, findAparatologiasByPayOfDoctorHoraAplicacionPA, updateAparatologia } from '../../../../services/aparatolgia';
 import { findCirugiasByPayOfDoctorHoraAplicacion, findCirugiasByPayOfDoctorHoraAplicacionPA, updateCirugia } from '../../../../services/cirugias';
@@ -706,6 +706,14 @@ const ModalImprimirPagoDermatologo = (props) => {
     setTurno(turno === 'm' ? 'v' : 'm');
   };
 
+  const turnoActual = async () => {
+    const response = await findTurnoActualBySucursal(sucursal._id);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      const corte = response.data;
+      setTurno(corte.turno);
+    }
+  }
+
   const findCorte = async () => {
     const response = await showCorteTodayBySucursalAndTurno(sucursal._id, turno, token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
@@ -715,6 +723,7 @@ const ModalImprimirPagoDermatologo = (props) => {
   }
 
   useEffect(() => {
+    turnoActual();
     setIsLoading(true);
     findCorte();
   }, []);

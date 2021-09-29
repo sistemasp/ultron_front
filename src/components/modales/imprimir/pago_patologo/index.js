@@ -3,14 +3,14 @@ import { Backdrop, CircularProgress, makeStyles } from '@material-ui/core';
 import {
   createSalida,
 } from '../../../../services/salidas';
-import { showCorteTodayBySucursalAndTurno } from '../../../../services/corte';
+import { findTurnoActualBySucursal, showCorteTodayBySucursalAndTurno } from '../../../../services/corte';
 import {
   indCirugiasByPayOfDoctorHoraAplicacionPA,
   findCirugiasByPayOfPatologoHoraAplicacion,
   updateCirugia
 } from '../../../../services/cirugias';
 import ModalFormImprimirPagoPatologo from './ModalFormImprimirPagoPatologo';
-import { createPagoPatologo, showTodayPagoPatologoBySucursalTurno } from '../../../../services/pago_patologo';
+import { createPagoPatologo, showTodayPagoPatologoBySucursalTurno, updatePagoPatologo } from '../../../../services/pago_patologo';
 import myStyles from '../../../../css';
 
 const useStyles = makeStyles(theme => ({
@@ -33,6 +33,8 @@ const ModalImprimirPagoPatologo = (props) => {
     colorBase,
   } = props;
 
+  const token = empleado.access_token;
+
   const classes = myStyles(colorBase)();
 
   const [show, setShow] = useState(true);
@@ -47,7 +49,7 @@ const ModalImprimirPagoPatologo = (props) => {
   const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
 
   const loadCirugias = async (hora_apertura, hora_cierre) => {
-    const response = await findCirugiasByPayOfPatologoHoraAplicacion(sucursal._id, patologo._id, hora_apertura, hora_cierre ? hora_cierre : new Date(),  empleado.access_token);
+    const response = await findCirugiasByPayOfPatologoHoraAplicacion(sucursal._id, patologo._id, hora_apertura, hora_cierre ? hora_cierre : new Date(),  token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       const cirugias = response.data;
       cirugias.forEach(cirugia => {
@@ -94,7 +96,7 @@ const ModalImprimirPagoPatologo = (props) => {
     cirugias.forEach(async (cirugia) => {
       const pagoPatologo = Number(cirugia.costo_biopsias);
       cirugia.pago_patologo = pagoPatologo;
-      updateCirugia(cirugia._id, cirugia,  empleado.access_token)
+      updateCirugia(cirugia._id, cirugia,  token)
       total += Number(pagoPatologo);
     });
 
@@ -109,8 +111,8 @@ const ModalImprimirPagoPatologo = (props) => {
       pagado: true,
     }
 
+    const response = await (pagoPatologo._id ? updatePagoPatologo(pagoPatologo._id, pagoPatologo, token) : createPagoPatologo(pagoPatologo, token));
 
-    const response = await createPagoPatologo(pagoPatologo, empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
       || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
       const data = response.data;
@@ -128,7 +130,7 @@ const ModalImprimirPagoPatologo = (props) => {
         forma_pago: efectivoMetodoPagoId,
       }
 
-      const resp = await createSalida(salida, empleado.access_token);
+      const resp = await createSalida(salida, token);
       if (`${resp.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
         setIsLoading(false);
       }
@@ -144,6 +146,13 @@ const ModalImprimirPagoPatologo = (props) => {
   const handleCambioTurno = () => {
     setTurno(turno === 'm' ? 'v' : 'm');
   };
+  const turnoActual = async () => {
+    const response = await findTurnoActualBySucursal(sucursal._id);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      const corte = response.data;
+      setTurno(corte.turno);
+    }
+  }
 
   const findCorte = async () => {
     const response = await showCorteTodayBySucursalAndTurno(sucursal._id, turno);
@@ -154,6 +163,7 @@ const ModalImprimirPagoPatologo = (props) => {
   }
 
   useEffect(() => {
+    turnoActual();
     setIsLoading(true);
     findCorte();
   }, []);

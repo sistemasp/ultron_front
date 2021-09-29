@@ -18,6 +18,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import { addZero, toFormatterCurrency } from "../../../utils/utils";
 import {
   createCorte,
+  findTurnoActualBySucursal,
   showCorteTodayBySucursalAndTurno,
   updateCorte,
 } from "../../../services/corte";
@@ -71,7 +72,7 @@ const Corte = (props) => {
   const {
     sucursal,
     empleado,
-		colorBase,
+    colorBase,
   } = props;
 
   const columnsEntrada = [
@@ -419,6 +420,14 @@ const Corte = (props) => {
     setOpenAlert(false);
   };
 
+  const turnoActual = async () => {
+    const response = await findTurnoActualBySucursal(sucursal);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      const corte = response.data;
+      setTurno(corte.turno);
+    }
+  }
+
   const handleObtenerInformacion = async () => {
     const response = await showCorteTodayBySucursalAndTurno(sucursal, turno);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
@@ -435,6 +444,7 @@ const Corte = (props) => {
   };
 
   useEffect(() => {
+    turnoActual();
     handleObtenerInformacion();
   }, []);
 

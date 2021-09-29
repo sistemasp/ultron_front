@@ -28,3 +28,21 @@ export const showTodayPagoPatologoBySucursalTurno = async (patologoId, sucursalI
         console.log('showTodayPagoPatologoBySucursalTurno', error);
     }
 }
+
+export const updatePagoPatologo = async (pagoPatologoId, pagoPatologo, token) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/pagoPatologo/${pagoPatologoId}`,
+            method: 'PUT',
+            data: pagoPatologo,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response;
+    } catch (error) {
+        console.log('updatePagoPatologo', error);
+        return error;
+    }
+}
+

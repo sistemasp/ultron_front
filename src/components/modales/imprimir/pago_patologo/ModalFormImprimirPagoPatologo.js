@@ -221,28 +221,25 @@ const ModalFormImprimirPagoPatologo = (props) => {
             {
               show ?
                 <Fragment>
-                  {
-                    pagoDermatologo.pagado ?
-                      <Grid item xs={12}>
-                        <ButtonCustom
-                          className={classes.button}
-                          color="primary"
-                          variant="contained"
-                          onClick={onClickImprimir}
-                          text='IMPRIMIR' />
-                      </Grid>
-                      :
-                      cirugias.length > 0 ?
-                        <Grid item xs={12}>
-                          <ButtonCustom
-                            className={classes.button}
-                            color="primary"
-                            variant="contained"
-                            onClick={onClickPagar}
-                            text='PAGAR' />
-                        </Grid>
-                        : ''
-                  }
+
+                  <Grid item xs={12}>
+                    <ButtonCustom
+                      className={classes.button}
+                      color="primary"
+                      variant="contained"
+                      onClick={onClickImprimir}
+                      text='IMPRIMIR' />
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <ButtonCustom
+                      className={classes.button}
+                      color="primary"
+                      variant="contained"
+                      onClick={onClickPagar}
+                      text='PAGAR' />
+                  </Grid>
+
                   {
                     corte.hora_cierre || corte.turno === 'v' ?
                       <Fragment>
