@@ -35,6 +35,7 @@ export const CorteContainer = (props) => {
     handleOpenImprimir,
     handleOpenNuevoEntrada,
     handleOpenNuevoSalida,
+    turnoActual,
     sucursal,
     empleado,
     setOpenAlert,
@@ -94,7 +95,7 @@ export const CorteContainer = (props) => {
             sucursal={sucursal}
             empleado={empleado}
             corte={corte}
-            onObtenerInformacion={onObtenerInformacion}
+            onObtenerInformacion={turnoActual}
             setOpenAlert={setOpenAlert}
             setMessage={setMessage}
             colorBase={colorBase}
@@ -110,7 +111,7 @@ export const CorteContainer = (props) => {
             sucursal={sucursal}
             empleado={empleado}
             corte={corte}
-            onObtenerInformacion={onObtenerInformacion}
+            onObtenerInformacion={turnoActual}
             setOpenAlert={setOpenAlert}
             colorBase={colorBase}
             setMessage={setMessage}
@@ -151,7 +152,7 @@ export const CorteContainer = (props) => {
             className={classes.button}
             color="primary"
             variant="contained"
-            onClick={onObtenerInformacion}
+            onClick={() => onObtenerInformacion(turno)}
             text='TRAER INFORMACIÓN' />
         </Grid>
         <Grid item xs={4} className={classes.label}>

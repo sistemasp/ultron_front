@@ -420,24 +420,27 @@ const Corte = (props) => {
     setOpenAlert(false);
   };
 
+  const handleObtenerInformacion = async (reqTurno) => {
+    setIsLoading(true);
+    const response = await showCorteTodayBySucursalAndTurno(sucursal, reqTurno ? reqTurno : turno );
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      const resCorte = response.data;
+      setCorte(resCorte);
+      await loadTipoEntradas(resCorte);
+      await loadTipoSalidas(resCorte);
+    }
+    setIsLoading(false);
+
+  };
+
   const turnoActual = async () => {
     const response = await findTurnoActualBySucursal(sucursal);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       const corte = response.data;
       setTurno(corte.turno);
+      handleObtenerInformacion(corte.turno);
     }
   }
-
-  const handleObtenerInformacion = async () => {
-    const response = await showCorteTodayBySucursalAndTurno(sucursal, turno);
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setCorte(response.data);
-      await loadTipoEntradas(response.data);
-      await loadTipoSalidas(response.data);
-    }
-    setIsLoading(false);
-
-  };
 
   const handleCambioTurno = () => {
     setTurno(turno === 'm' ? 'v' : 'm');
@@ -445,7 +448,6 @@ const Corte = (props) => {
 
   useEffect(() => {
     turnoActual();
-    handleObtenerInformacion();
   }, []);
 
   const handleGuardarCorte = async () => {
@@ -465,7 +467,7 @@ const Corte = (props) => {
       setSeverity('success');
       setMessage("CORTE GUARDADO CORRECTAMENTE.");
       setOpenAlert(true);
-      handleObtenerInformacion();
+      turnoActual();
     }
   }
 
@@ -486,7 +488,7 @@ const Corte = (props) => {
       setSeverity('success');
       setMessage("EL CORTE SE GENERO.");
       setOpenAlert(true);
-      handleObtenerInformacion();
+      turnoActual();
     }
   }
 
@@ -499,7 +501,7 @@ const Corte = (props) => {
       setSeverity('success');
       setMessage("CORTE CERRADO.");
       setOpenAlert(true);
-      handleObtenerInformacion();
+      turnoActual();
       if (corte.turno === 'm') {
         const newCorte = {
           create_date: date,
@@ -537,6 +539,7 @@ const Corte = (props) => {
             turno={turno}
             onCambioTurno={() => handleCambioTurno()}
             onObtenerInformacion={() => handleObtenerInformacion()}
+            turnoActual={() => turnoActual()}
             sucursal={sucursal}
             empleado={empleado}
             colorBase={colorBase}

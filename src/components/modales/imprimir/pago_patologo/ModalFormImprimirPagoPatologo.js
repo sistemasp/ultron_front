@@ -256,7 +256,7 @@ const ModalFormImprimirPagoPatologo = (props) => {
                             className={classes.button}
                             color="primary"
                             variant="contained"
-                            onClick={() => findCorte()}
+                            onClick={() => findCorte(turno)}
                             text='TRAER INFORMACIÓN' />
                         </Grid>
                       </Fragment>

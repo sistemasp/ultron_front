@@ -695,7 +695,7 @@ const ModalImprimirPagoDermatologo = (props) => {
       }
     }
 
-    findCorte();
+    findCorte(turno);
   };
 
   const handleObtenerInformacion = async (corte) => {
@@ -706,15 +706,8 @@ const ModalImprimirPagoDermatologo = (props) => {
     setTurno(turno === 'm' ? 'v' : 'm');
   };
 
-  const turnoActual = async () => {
-    const response = await findTurnoActualBySucursal(sucursal._id);
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      const corte = response.data;
-      setTurno(corte.turno);
-    }
-  }
-
-  const findCorte = async () => {
+  const findCorte = async (turno) => {
+    setIsLoading(true);
     const response = await showCorteTodayBySucursalAndTurno(sucursal._id, turno, token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setCorte(response.data);
@@ -722,10 +715,17 @@ const ModalImprimirPagoDermatologo = (props) => {
     }
   }
 
+  const turnoActual = async () => {
+    const response = await findTurnoActualBySucursal(sucursal._id);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      const corte = response.data;
+      setTurno(corte.turno);
+      findCorte(corte.turno);
+    }
+  }
+
   useEffect(() => {
     turnoActual();
-    setIsLoading(true);
-    findCorte();
   }, []);
 
   return (
