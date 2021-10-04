@@ -318,8 +318,10 @@ const Corte = (props) => {
 
       let total = 0;
       salidasPorTipo.forEach(salida => {
-        return total += Number(salida.cantidad);
+
+        return total += Number(salida.cantidad ? salida.cantidad : 0);
       });
+
       const dataSalida = {
         tipo_salida: tipoSalida.nombre,
         salidas_por_tipo: salidasPorTipo,

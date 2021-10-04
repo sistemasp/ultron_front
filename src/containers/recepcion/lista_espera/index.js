@@ -94,6 +94,7 @@ const ListaEspera = (props) => {
 	const sucursalFedeId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
 	const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
 	const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
+	const productoRevisionId = process.env.REACT_APP_PRODUCTO_REVISION_ID;
 
 	const [openAlert, setOpenAlert] = useState(false);
 	const [consultorios, setConsultorios] = useState([]);
@@ -230,6 +231,7 @@ const ListaEspera = (props) => {
 				item.folio = generateFolio(item);
 				item.paciente_nombre = item.paciente ? `${item.paciente.nombres} ${item.paciente.apellidos}` : 'ALGUN ERROR ESTA PASANDO';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
+				item.servicio.color = item.producto === productoRevisionId ? '#43CD30' : item.servicio.color;
 			});
 			setListaEsperaConsultas(filterData);
 		}

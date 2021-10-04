@@ -1,6 +1,6 @@
 {
   "name": "ultron",
-  "version": "1.5.12",
+  "version": "1.5.13",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.4",
