@@ -20,6 +20,8 @@ import { showAllStatusVisibles } from '../../../services/status';
 import { findEmployeesByRolIdAvailable } from '../../../services/empleados';
 import { createSalida, findSalidaById, updateSalida } from '../../../services/salidas';
 import { findTurnoActualBySucursal } from '../../../services/corte';
+import { deleteEntrada } from '../../../services/entradas';
+import { deletePago } from '../../../services/pagos';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -61,6 +63,7 @@ const ModalCirugia = (props) => {
   const frecuenciaReconsultaId = process.env.REACT_APP_FRECUENCIA_RECONSULTA_ID;
   const productoCirugiaId = process.env.REACT_APP_PRODUCTO_CIRUGIA_ID;
   const tipoSalidaCuracionesId = process.env.REACT_APP_TIPO_SALIDA_CURACIONES_ID;
+  const canceloSPStatusId = process.env.REACT_APP_CANCELO_SP_STATUS_ID;
 
   const [isLoading, setIsLoading] = useState(true);
   const [materiales, setMateriales] = useState([]);
@@ -81,7 +84,6 @@ const ModalCirugia = (props) => {
   const fecha_cita = new Date(cirugia.fecha_hora);
   const fecha = `${addZero(fecha_cita.getDate())}/${addZero(Number(fecha_cita.getMonth()) + 1)}/${addZero(fecha_cita.getFullYear())}`;
   const hora = `${addZero(Number(fecha_cita.getHours()))}:${addZero(fecha_cita.getMinutes())}`;
-
 
   const [values, setValues] = useState({
     _id: cirugia._id,
@@ -155,6 +157,14 @@ const ModalCirugia = (props) => {
         });
       }
       data.biopsias = data.hasBiopsia ? idBiopsias : [];
+    }
+
+    if (data.status._id === canceloSPStatusId) {
+      data.pagos.forEach(async (pago) => {
+        await deleteEntrada(pago.entrada);
+        await deletePago(pago._id);
+      });
+      data.pagado = false;
     }
 
     if (data.status._id !== pendienteStatusId) {

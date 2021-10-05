@@ -70,8 +70,14 @@ export const ListaEsperaContainer = (props) => {
 
   const classes = myStyles(colorBase)();
 
-  const listaEsperaSalaCirugia = [...listaEsperaEstetica, ...listaEsperaCirugias];
+  const listaEsperaConsultasAll = [...listaEsperaConsultas, ...listaEsperaEstetica, ...listaEsperaCirugias]
   const listaEsperaTratamientos = [...listaEsperaFaciales, ...listaEsperaLasers, ...listaEsperaAparatologias, ...listaEsperaDermapens];
+
+  listaEsperaConsultasAll.sort((a, b) => {
+    if (a.create_date < b.create_date) return -1;
+    if (a.create_date > b.create_date) return 1;
+    return 0;
+  });
 
   return (
     <Fragment>
@@ -145,7 +151,7 @@ export const ListaEsperaContainer = (props) => {
           <TableComponent
             titulo={tituloEsperaConsultas}
             columns={columnsEsperaConsultas}
-            data={listaEsperaConsultas}
+            data={listaEsperaConsultasAll}
             actions={actionsEsperaConsultorio}
             options={optionsEspera} />
           <br />
@@ -156,12 +162,6 @@ export const ListaEsperaContainer = (props) => {
             actions={actionsEsperaCabina}
             options={optionsEspera} />
           <br />
-          <TableComponent
-            titulo={tituloEsperaSalaCirugia}
-            columns={columnsEspera}
-            data={listaEsperaSalaCirugia}
-            actions={actionsEsperaSalaCirugia}
-            options={optionsEspera} />
         </Grid>
 
         <Grid item xs={12} sm={6}>

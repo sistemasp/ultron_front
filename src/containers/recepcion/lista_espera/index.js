@@ -95,6 +95,7 @@ const ListaEspera = (props) => {
 	const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
 	const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
 	const productoRevisionId = process.env.REACT_APP_PRODUCTO_REVISION_ID;
+	const servicioConsultaId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
 
 	const [openAlert, setOpenAlert] = useState(false);
 	const [consultorios, setConsultorios] = useState([]);
@@ -156,6 +157,7 @@ const ListaEspera = (props) => {
 	const columnsEsperaConsultas = [
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
+		{ title: 'SERVICIO', field: 'servicio.nombre' },
 		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
 		{ title: 'CONSECUTIVO', field: 'consecutivo' },
 	];
@@ -228,6 +230,7 @@ const ListaEspera = (props) => {
 				return (sucursal === sucursalManuelAcunaId || sucursal === sucursalRubenDarioId) ? true : item.pagado;
 			});
 			filterData.forEach(item => {
+				console.log("KAOZ", item);
 				item.folio = generateFolio(item);
 				item.paciente_nombre = item.paciente ? `${item.paciente.nombres} ${item.paciente.apellidos}` : 'ALGUN ERROR ESTA PASANDO';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
@@ -332,7 +335,11 @@ const ListaEspera = (props) => {
 		setServicio(rowData._id);
 		setPaciente(rowData.paciente);
 		setCambio(false);
-		setOpenModalConsultorioAsignar(true);
+		if (rowData.servicio._id === servicioConsultaId) {
+			setOpenModalConsultorioAsignar(true);
+		} else {
+			setOpenModalSalaCirugiaAsignar(true);
+		}
 	}
 
 	const handleOnClickCabinaAsignarPaciente = (event, rowData) => {
@@ -348,7 +355,6 @@ const ListaEspera = (props) => {
 		setServicio(rowData._id);
 		setPaciente(rowData.paciente);
 		setCambio(false);
-		setOpenModalSalaCirugiaAsignar(true);
 	}
 
 	const handleOnConsultorioCambiarPaciente = async (event, rowData) => {
@@ -692,7 +698,7 @@ const ListaEspera = (props) => {
 						tituloConsultorios='CONSULTORIOS'
 						tituloCabinas='CABINAS'
 						tituloSalaCirugia='SALA CIRUGíAS'
-						tituloEsperaConsultas={`CONSULTAS EN ESPERA (${listaEsperaConsultas.length})`}
+						tituloEsperaConsultas={`CONSULTAS EN ESPERA (${listaEsperaConsultas.length + listaEsperaEstetica.length + listaEsperaCirugias.length})`}
 						tituloEsperaTratamientos={`TRATAMIENTOS EN ESPERA (${listaEsperaFaciales.length + listaEsperaLasers.length + listaEsperaAparatologias.length + listaEsperaDermapens.length})`}
 						tituloEsperaSalaCirugia={`CIRUGíAS EN ESPERA (${listaEsperaEstetica.length + listaEsperaCirugias.length})`}
 						optionsEspera={optionsEspera}

@@ -535,7 +535,6 @@ const AgendarFacial = (props) => {
 
   const handleOnClickRevision = async (event, rowData) => {
     setIsLoading(true);
-    console.log("KAOZ", rowData);
     const create_date = new Date();
     const fecha_hora = new Date();
     fecha_hora.setMinutes(0);
@@ -547,8 +546,8 @@ const AgendarFacial = (props) => {
       producto: productoRevisionId,
       paciente: rowData.paciente._id,
       precio: '0',
-      porcentaje_descuento_clinica: '100',
-      descuento_clinica: '280',
+      porcentaje_descuento_clinica: '0',
+      descuento_clinica: '0',
       descuento_dermatologo: '0',
       frecuencia: frecuenciaReconsultaId,
       forma_pago: noPagaFormaPagoId,
