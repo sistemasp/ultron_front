@@ -6,6 +6,8 @@ import './App.css';
 import MenuMainDermatologos from './containers/dermatologos/main';
 import MenuMainCosmetologas from './containers/cosmetologas/main';
 import MenuMainAdministracion from './containers/administracion/main';
+import ImprimirPagoDermatologo from './containers/imprimir/pago_dermatologo';
+import ImprimirPagoPatologo from './containers/imprimir/pago_patologo';
 
 const App = () => {
 
@@ -17,7 +19,7 @@ const App = () => {
           component={LoginForm} />
         <Route
           exact path="/administracion"
-        component={MenuMainAdministracion} />
+          component={MenuMainAdministracion} />
         <Route
           exact path="/cabinas"
           component={MenuMainCosmetologas} />
@@ -27,6 +29,12 @@ const App = () => {
         <Route
           exact path="/recepcion"
           component={MenuMainRecepcion} />
+        <Route
+          exact path="/imprimir/pagodermatologo"
+          component={ImprimirPagoDermatologo} />
+        <Route
+          exact path="/imprimir/pagopatologo"
+          component={ImprimirPagoPatologo} />
       </div>
     </Router>
   );

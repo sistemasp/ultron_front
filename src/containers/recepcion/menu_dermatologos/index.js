@@ -41,8 +41,9 @@ const Dermatologos = (props) => {
 		sucursal,
 		empleado,
 		colorBase,
+		history,
 	} = props;
-
+	
 	const [openPagoDermatologo, setOpenPagoDermatologo] = useState(false);
 	const [openPagoPatologo, setOpenPagoPatologo] = useState(false);
 	const [openHistoric, setOpenHistoric] = useState(false);
@@ -116,12 +117,24 @@ const Dermatologos = (props) => {
 
 	const handleClickGenerarPagoDermatologo = (event, rowData) => {
 		setDermatologo(rowData);
-		setOpenPagoDermatologo(true);
+		history.push('/imprimir/pagodermatologo', 
+		{
+			empleado: empleado,
+			sucursal: sucursal,
+			dermatologo: rowData,
+			colorBase: colorBase,
+		});
 	}
 
 	const handleClickGenerarPagoPatologo = (event, rowData) => {
 		setPatologo(rowData);
-		setOpenPagoPatologo(true);
+		history.push('/imprimir/pagopatologo', 
+		{
+			empleado: empleado,
+			sucursal: sucursal,
+			patologo: rowData,
+			colorBase: colorBase,
+		});
 	}
 
 

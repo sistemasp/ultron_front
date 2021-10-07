@@ -47,6 +47,7 @@ import PieChartIcon from '@material-ui/icons/PieChart';
 const TabPanel = (props) => {
 	const { children, value, index, ...other } = props;
 
+
 	return (
 		<Typography
 			component="div"
@@ -275,7 +276,8 @@ export const MainContainer = props => {
 						<Dermatologos
 							empleado={empleado}
 							colorBase={colorBase}
-							sucursal={sucursal} />
+							sucursal={sucursal}
+							history={history} />
 					</TabPanel>
 					<TabPanel value={value} index={2}>
 						<Consultorios
@@ -291,7 +293,8 @@ export const MainContainer = props => {
 							setPacienteAgendado={setPacienteAgendado}
 							empleado={empleado}
 							colorBase={colorBase}
-							sucursal={sucursal._id} />
+							sucursal={sucursal._id}
+							history={history} />
 					</TabPanel>
 					<TabPanel value={value} index={4}>
 						<ListaEspera
@@ -315,7 +318,8 @@ export const MainContainer = props => {
 							setPacienteAgendado={setPacienteAgendado}
 							empleado={empleado}
 							colorBase={colorBase}
-							sucursal={sucursal._id} />
+							sucursal={sucursal._id}
+							history={history} />
 					</TabPanel>
 					<TabPanel value={value} index={7}>
 						<MenuSuperAdmin

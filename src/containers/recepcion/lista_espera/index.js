@@ -157,7 +157,7 @@ const ListaEspera = (props) => {
 	const columnsEsperaConsultas = [
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
-		{ title: 'SERVICIO', field: 'servicio.nombre' },
+		{ title: 'PRODUCTO', field: 'producto.nombre' },
 		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
 		{ title: 'CONSECUTIVO', field: 'consecutivo' },
 	];
@@ -234,7 +234,7 @@ const ListaEspera = (props) => {
 				item.folio = generateFolio(item);
 				item.paciente_nombre = item.paciente ? `${item.paciente.nombres} ${item.paciente.apellidos}` : 'ALGUN ERROR ESTA PASANDO';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
-				item.servicio.color = item.producto === productoRevisionId ? '#43CD30' : item.servicio.color;
+				item.servicio.color = item.producto._id === productoRevisionId ? '#43CD30' : item.servicio.color;
 			});
 			setListaEsperaConsultas(filterData);
 		}
