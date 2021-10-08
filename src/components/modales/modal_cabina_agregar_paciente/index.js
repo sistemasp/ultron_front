@@ -80,26 +80,27 @@ const ModalCabinaAgregarPaciente = (props) => {
 
     if (`${responseCita.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       const cita = responseCita.data;
+      const dateNow = new Date();
+      let updateCita = cita;
+      updateCita.status = enCabinaStatusId;
+      updateCita.cosmetologa = values.cabina.cosmetologa;
+      switch (tipo_servicio) {
+        case facialServicioId:
+          responseCita = await updateFacial(cita._id, updateCita, empleado.access_token);
+          break;
+        case dermapenServicioId:
+          responseCita = await updateDermapen(cita._id, updateCita, empleado.access_token);
+          break;
+        case laserServicioId:
+          responseCita = await updateLaser(cita._id, updateCita, empleado.access_token);
+          break;
+        case aparatologiaServicioId:
+          responseCita = await updateAparatologia(cita._id, updateCita, empleado.access_token);
+          break;
+      }
       if (!cambio) {
-        const dateNow = new Date();
-        let updateCita = cita;
-        updateCita.status = enCabinaStatusId;
         updateCita.hora_atencion = `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;
-        updateCita.cosmetologa = values.cabina.cosmetologa;
-        switch (tipo_servicio) {
-          case facialServicioId:
-            responseCita = await updateFacial(cita._id, updateCita, empleado.access_token);
-            break;
-          case dermapenServicioId:
-            responseCita = await updateDermapen(cita._id, updateCita, empleado.access_token);
-            break;
-          case laserServicioId:
-            responseCita = await updateLaser(cita._id, updateCita, empleado.access_token);
-            break;
-          case aparatologiaServicioId:
-            responseCita = await updateAparatologia(cita._id, updateCita, empleado.access_token);
-            break;
-        }
+
       }
 
       setValues({ cabina: { paciente: cita.paciente._id } });

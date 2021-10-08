@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { TextField, Button, Grid } from '@material-ui/core';
@@ -49,6 +49,7 @@ const ModalFormPagos = (props) => {
     onCloseBuscarRazonSocial,
     datosImpresion,
     handlePrint,
+    handleEliminarFactura,
     openModalImprimirDatosFacturacion,
     handleCloseImprimirDatosFacturacion,
     actions,
@@ -62,6 +63,8 @@ const ModalFormPagos = (props) => {
   } = props;
 
   const classes = myStyles(colorBase)();
+
+  console.log("KAOZ 2", values);
 
   return (
     <div>
@@ -142,24 +145,41 @@ const ModalFormPagos = (props) => {
 
             <Grid item xs={true} sm={true} className={classes.grid_center}>
               <CheckCustom
-                checked={servicio.isFactura}
+                checked={values.isFactura}
                 onChange={onChangeFactura}
-                disabled={servicio.factura}
+                disabled={values.factura}
                 name="checkedF"
                 label="REQUIERE FACTURA"
               />
             </Grid>
             {
-              servicio.factura || values.isFactura ?
-                <Grid item xs={true} sm={true}>
-                  <ButtonCustom
-                    className={classes.button}
-                    color="primary"
-                    variant="contained"
-                    onClick={(event) => handlePrint(event, servicio)}
-                    text='IMPRIMIR DATOS' />
-                </Grid>
+              values.factura || values.isFactura ?
+                <Fragment>
+                  <Grid item xs={true} sm={true}>
+                    <ButtonCustom
+                      className={classes.button}
+                      color="primary"
+                      variant="contained"
+                      onClick={(event) => handlePrint(event, values)}
+                      text='IMPRIMIR DATOS' />
+                  </Grid>
+                </Fragment>
                 : ''
+            }
+
+            {
+              // values.factura && values.factura._id ?
+              //   <Fragment>
+              //     <Grid item xs={true} sm={true}>
+              //       <ButtonCustom
+              //         className={classes.button}
+              //         color="primary"
+              //         variant="contained"
+              //         onClick={(event) => handleEliminarFactura(event, values)}
+              //         text='ELIMINAR FACTURA' />
+              //     </Grid>
+              //   </Fragment>
+              //   : ''
             }
           </Grid>
           <TableComponent

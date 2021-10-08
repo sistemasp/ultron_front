@@ -8,6 +8,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import myStyles from '../../../css';
 import { deleteEntrada } from '../../../services/entradas';
 import { deletePago, findPagosByTipoServicioAndServicio } from '../../../services/pagos';
+import { deleteFactura } from '../../../services/facturas';
 
 const ModalPagos = (props) => {
 
@@ -63,6 +64,7 @@ const ModalPagos = (props) => {
     has_descuento_dermatologo: servicio.has_descuento_dermatologo,
     total: servicio.total,
     isFactura: !!servicio.factura,
+    factura: servicio.factura,
   });
 
   servicio.isFactura = !!servicio.factura;
@@ -168,12 +170,34 @@ const ModalPagos = (props) => {
     setOpenModalImprimirDatosFacturacion(true);
   }
 
+  const handleEliminarFactura = async (event, rowData) => {
+    setIsLoading(true);
+    delete servicio.factura;
+    servicio.isFactura = false;
+    onGuardarModalPagos(servicio);
+    // const factura = rowData.factura;
+    // const response = await deleteFactura(factura._id);
+    // if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+    //   delete rowData.factura;
+    //   rowData.isFactura = false;
+    //   setValues({
+    //     ...values,
+    //     isFactura: false,
+    //   });
+    // }
+    setIsLoading(false);
+  }
+
+  console.log("KAOZ 2", values);
+
+
   const handleCloseBuscarRazonSocial = (val, datosFactura) => {
     servicio.isFactura = val;
     servicio.factura = datosFactura;
     setValues({
       ...values,
       isFactura: val,
+      factura: datosFactura,
     });
     // TODO: CREATE FACTURA
     setOpenModalFactura(false);
@@ -336,6 +360,7 @@ const ModalPagos = (props) => {
             openModalImprimirDatosFacturacion={openModalImprimirDatosFacturacion}
             handleCloseImprimirDatosFacturacion={handleCloseImprimirDatosFacturacion}
             handlePrint={handlePrint}
+            handleEliminarFactura={handleEliminarFactura}
             sucursal={sucursal}
             onGuardarModalPagos={onGuardarModalPagos}
             titulo={`PAGOS: ${servicio.paciente.nombres} ${servicio.paciente.apellidos}`}

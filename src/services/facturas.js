@@ -49,3 +49,18 @@ export const findFacturaByRazonSocialId = async (razonSocialId, token) => {
         console.log('findFacturaByRazonSocialId', error);
     }
 }
+
+export const deleteFactura = async (facialId, token) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/factura/${facialId}`,
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response;
+    } catch (error) {
+        console.log('deleteFactura', error);
+    }
+}
