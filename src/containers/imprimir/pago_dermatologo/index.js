@@ -39,11 +39,11 @@ const ImprimirPagoDermatologo = (props) => {
   } = props;
 
   const {
-		empleado,
-		sucursal,
+    empleado,
+    sucursal,
     dermatologo,
     colorBase,
-	} = props.location.state;
+  } = props.location.state;
 
   const token = empleado.access_token;
 
@@ -573,15 +573,14 @@ const ImprimirPagoDermatologo = (props) => {
         pagado: true,
       }
 
-      const response = await (pagoDermatologo._id ? updatePagoDermatologo(pagoDermatologo._id, pagoDermatologo, token) : createPagoDermatologo(pagoDermatologo, token));
+      const response = await (pagoDermatologoObj._id ? updatePagoDermatologo(pagoDermatologoObj._id, pagoDermatologo, token) : createPagoDermatologo(pagoDermatologo, token));
 
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
         || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
         const data = pagoDermatologo._id ? pagoDermatologo : response.data;
 
         const responseSalida = await findSalidaByPagoDermatologoId(data._id);
-        if (`${responseSalida.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
-          || `${responseSalida.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+        if (`${responseSalida.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
           const resSalida = responseSalida.data;
 
           const salida = {
@@ -599,7 +598,7 @@ const ImprimirPagoDermatologo = (props) => {
             pago_dermatologo: data._id,
           }
 
-          const resp = await (salida._id ? updateSalida(salida._id, salida, token) : createSalida(salida, token));
+          const resp = await (resSalida._id ? updateSalida(resSalida._id, salida, token) : createSalida(salida, token));
           if (`${resp.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
             setIsLoading(false);
           }
