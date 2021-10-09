@@ -354,7 +354,6 @@ const ReporteImprimirPagoDermatologo = (props) => {
   }
 
   const findPagoToday = async (hora_apertura, hora_cierre) => {
-    console.log("KAOZ", dermatologo);
 
     await loadConsultas(hora_apertura, hora_cierre);
     await loadCirugias(hora_apertura, hora_cierre);

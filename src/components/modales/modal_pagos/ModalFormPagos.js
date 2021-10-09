@@ -64,8 +64,6 @@ const ModalFormPagos = (props) => {
 
   const classes = myStyles(colorBase)();
 
-  console.log("KAOZ 2", values);
-
   return (
     <div>
       {

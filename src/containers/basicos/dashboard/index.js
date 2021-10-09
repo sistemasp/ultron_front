@@ -127,7 +127,6 @@ const DashboardForm = (props) => {
       sucursal.total_pagos = totalEntradas;
     });
 
-    console.log("KAOZ", resSucursales);
     setSucursales(resSucursales);
     setTimeout(async () => {
       setIsLoading(false);

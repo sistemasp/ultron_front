@@ -230,7 +230,6 @@ const ListaEspera = (props) => {
 				return (sucursal === sucursalManuelAcunaId || sucursal === sucursalRubenDarioId) ? true : item.pagado;
 			});
 			filterData.forEach(item => {
-				console.log("KAOZ", item);
 				item.folio = generateFolio(item);
 				item.paciente_nombre = item.paciente ? `${item.paciente.nombres} ${item.paciente.apellidos}` : 'ALGUN ERROR ESTA PASANDO';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';

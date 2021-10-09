@@ -57,6 +57,7 @@ const ModalPagos = (props) => {
   const [openModalImprimirDatosFacturacion, setOpenModalImprimirDatosFacturacion] = useState(false);
   const [restante, setRestante] = useState(0);
   const [values, setValues] = useState({
+    ...servicio,
     cantidad: servicio.precio,
     porcentaje_descuento_clinica: servicio.porcentaje_descuento_clinica ? servicio.porcentaje_descuento_clinica : 0,
     descuento_clinica: 0,
@@ -65,6 +66,7 @@ const ModalPagos = (props) => {
     total: servicio.total,
     isFactura: !!servicio.factura,
     factura: servicio.factura,
+    paciente: servicio.paciente,
   });
 
   servicio.isFactura = !!servicio.factura;
@@ -187,9 +189,6 @@ const ModalPagos = (props) => {
     // }
     setIsLoading(false);
   }
-
-  console.log("KAOZ 2", values);
-
 
   const handleCloseBuscarRazonSocial = (val, datosFactura) => {
     servicio.isFactura = val;

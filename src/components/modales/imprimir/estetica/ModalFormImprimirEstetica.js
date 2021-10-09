@@ -90,9 +90,7 @@ const ModalFormImprimirEstetica = (props) => {
   const classes = myStyles(colorBase)();
 
   const fecha = new Date();
-
-  console.log("KAOZ", datos);
-
+  
   return (
     <div>
       <Modal
