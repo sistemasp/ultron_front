@@ -67,3 +67,19 @@ export const findPagoDermatologosByRangeDateAndSucursal = async (diai, mesi, ani
         return error;
     }
 }
+
+export const deletePagoDermatologo = async (pagoDermatologoId, token) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/pagoDermatologo/${pagoDermatologoId}`,
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response;
+    } catch (error) {
+        console.log('deletePagoDermatologo', error);
+        return error;
+    }
+}

@@ -87,6 +87,7 @@ const ModalCita = (props) => {
   const pendienteStatusId = process.env.REACT_APP_PENDIENTE_STATUS_ID;
   const confirmadoStatusId = process.env.REACT_APP_CONFIRMADO_STATUS_ID;
   const asistioStatusId = process.env.REACT_APP_ASISTIO_STATUS_ID;
+  const atendidoStatusId = process.env.REACT_APP_ATENDIDO_STATUS_ID;
   const reagendoStatusId = process.env.REACT_APP_REAGENDO_STATUS_ID;
   const canceloCPStatusId = process.env.REACT_APP_CANCELO_CP_STATUS_ID;
   const canceloSPStatusId = process.env.REACT_APP_CANCELO_SP_STATUS_ID;
@@ -140,6 +141,7 @@ const ModalCita = (props) => {
     quien_confirma: cita.quien_confirma,
     promovendedor: cita.promovendedor ? cita.promovendedor._id : '',
     cosmetologa: cita.cosmetologa ? cita.cosmetologa._id : '',
+    quien_realiza: cita.quien_realiza ? cita.quien_realiza._id : '',
     status: cita.status._id,
     precio: cita.precio,
     total: cita.total,
@@ -272,6 +274,10 @@ const ModalCita = (props) => {
 
   const handleChangeCosmetologa = e => {
     setValues({ ...values, cosmetologa: e.target.value });
+  }
+
+  const handleChangeQuienRealiza = e => {
+    setValues({ ...values, quien_realiza: e.target.value });
   }
 
   const handleChangeStatus = e => {
@@ -533,7 +539,10 @@ const ModalCita = (props) => {
       const resStatus = empleado.super_admin ? response.data : response.data.filter(item => {
         return item._id !== asistioStatusId ? true : (new Date(cita.fecha_hora).getDate() === new Date().getDate() && cita.status._id === confirmadoStatusId);
       });
-      setStatements(resStatus);
+      const resStatus2 = empleado.super_admin ? resStatus : resStatus.filter(item => {
+        return item._id !== atendidoStatusId ? true : (sucursal !== sucursalRubenDarioId && sucursal !== sucursalManuelAcunaId);
+      });
+      setStatements(resStatus2);
     }
     setIsLoading(false);
   }
@@ -581,6 +590,7 @@ const ModalCita = (props) => {
                 onChangeStatus={(e) => handleChangeStatus(e)}
                 onChangePromovendedor={(e) => handleChangePromovendedor(e)}
                 onChangeCosmetologa={(e) => handleChangeCosmetologa(e)}
+                onChangeQuienRealiza={(e) => handleChangeQuienRealiza(e)}
                 onChangeDermatologo={(e) => handleChangeDermatologo(e)}
                 onChangeTiempo={(e) => handleChangeTiempo(e)}
                 onChangeDisparos={(e) => handleChangeDisparos(e)}

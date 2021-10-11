@@ -71,7 +71,7 @@ export const CorteContainer = (props) => {
   let totalSalidas = 0;
   let totalEfectivo = 0;
 
-  const newEntradas = [ ...dataEntradas, ...dataPagosAnticipados];
+  const newEntradas = [...dataEntradas, ...dataPagosAnticipados];
 
   newEntradas.forEach(data => {
     if (data.forma_pago === 'EFECTIVO') {

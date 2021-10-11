@@ -46,3 +46,18 @@ export const updatePagoPatologo = async (pagoPatologoId, pagoPatologo, token) =>
     }
 }
 
+export const deletePagoPatologo = async (pagoPatologoId, token) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/pagoPatologo/${pagoPatologoId}`,
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response;
+    } catch (error) {
+        console.log('deletePagoPatologo', error);
+        return error;
+    }
+}

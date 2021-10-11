@@ -96,3 +96,19 @@ export const updateSalida = async (salidaId, salida, token) => {
         return error;
     }
 }
+
+export const deleteSalida = async (salidaId, token) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/salida/${salidaId}`,
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response;
+    } catch (error) {
+        console.log('deleteSalida', error);
+        return error;
+    }
+}

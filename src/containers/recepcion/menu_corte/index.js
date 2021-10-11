@@ -11,6 +11,7 @@ import {
   showEntradasTodayBySucursalAndHoraAplicacion, showEntradasTodayBySucursalAndHoraAplicacionPA,
 } from '../../../services/entradas';
 import {
+  deleteSalida,
   showSalidasTodayBySucursalAndHoraAplicacion,
 } from '../../../services/salidas';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -23,6 +24,9 @@ import {
   updateCorte,
 } from "../../../services/corte";
 import { showAllTipoEntradas } from "../../../services/tipo_entradas";
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import { deletePagoDermatologo } from "../../../services/pago_dermatologos";
+import { deletePagoPatologo } from "../../../services/pago_patologo";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -53,6 +57,9 @@ const Corte = (props) => {
 
   const classes = useStyles();
 
+  const tipoSalidaPagoDermatologoId = process.env.REACT_APP_TIPO_SALIDA_PAGO_DERMATOLOGO_ID;
+  const tipoSalidaPagoPatologoId = process.env.REACT_APP_TIPO_SALIDA_PAGO_PATOLOGO_ID;
+
   const [openModalNuevoEntrada, setOpenModalNuevoEntrada] = useState(false);
   const [openModalNuevoSalida, setOpenModalNuevoSalida] = useState(false);
   const [openModalImprimir, setOpenModalInmprimir] = useState(false);
@@ -74,6 +81,8 @@ const Corte = (props) => {
     empleado,
     colorBase,
   } = props;
+
+  const token = empleado.access_token;
 
   const columnsEntrada = [
     { title: 'FORMA DE PAGO', field: 'forma_pago' },
@@ -179,6 +188,27 @@ const Corte = (props) => {
     }
   ];
 
+  const handleEliminarSalida = async (event, rowData) => {
+    setIsLoading(true);
+    if (rowData.tipo_salida._id === tipoSalidaPagoDermatologoId) {
+      await deletePagoDermatologo(rowData.pago_dermatologo, token);
+      await deleteSalida(rowData._id, token);
+    } else if (rowData.tipo_salida._id === tipoSalidaPagoPatologoId){
+      await deletePagoPatologo(rowData.pago_dermatologo, token);
+      await deleteSalida(rowData._id, token);
+    }
+    turnoActual();
+    setIsLoading(false);
+  }
+
+  const actions = [
+    {
+      icon: DeleteForeverIcon,
+      tooltip: 'ELIMINAR SALIDA',
+      onClick: handleEliminarSalida
+    },
+  ];
+
   const detailPanelSalida = [
     {
       tooltip: 'DETALLES',
@@ -186,6 +216,7 @@ const Corte = (props) => {
         return (
           <Fragment>
             <TableComponent
+              actions={actions}
               columns={columnsSalidaDetalles}
               data={rowData.salidas_por_tipo}
               options={optionsDetail} />
@@ -424,7 +455,7 @@ const Corte = (props) => {
 
   const handleObtenerInformacion = async (reqTurno) => {
     setIsLoading(true);
-    const response = await showCorteTodayBySucursalAndTurno(sucursal, reqTurno ? reqTurno : turno );
+    const response = await showCorteTodayBySucursalAndTurno(sucursal, reqTurno ? reqTurno : turno);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       const resCorte = response.data;
       setCorte(resCorte);
@@ -522,6 +553,7 @@ const Corte = (props) => {
       {
         !isLoading ?
           <CorteContainer
+            actions={actions}
             columnsEntrada={columnsEntrada}
             columnsSalida={columnsSalida}
             tituloEntrada='ENTRADAS'

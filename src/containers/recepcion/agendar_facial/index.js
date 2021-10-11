@@ -143,6 +143,7 @@ const AgendarFacial = (props) => {
     descuento_dermatologo: 0,
     cosmetologa: cosmetologaSinAsignarId,
     promovendedor: promovendedorSinPromovendedorId,
+    quien_realiza: cosmetologaSinAsignarId,
     frecuencia: frecuenciaPrimeraVezId,
     forma_pago: efectivoMetodoPagoId,
     medio: fisicoMedioId,
@@ -675,6 +676,7 @@ const AgendarFacial = (props) => {
               label="ACCIONES">
               {
                 props.actions.map((item, index) => {
+
                   let menuItem = <MenuItem
                     key={index}
                     value={item.tooltip}
@@ -699,6 +701,14 @@ const AgendarFacial = (props) => {
                       break;
                     case 'TRASPASO':
                       menuItem = props.data.status._id !== atendidoStatusId ?
+                        <MenuItem
+                          key={index}
+                          value={item.tooltip}
+                        >{item.tooltip}</MenuItem>
+                        : '';
+                      break;
+                    case 'REVISÓN':
+                      menuItem = props.data.sucursal._id !== sucursalManuelAcunaId && props.data.sucursal._id !== sucursalRubenDarioId?
                         <MenuItem
                           key={index}
                           value={item.tooltip}

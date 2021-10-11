@@ -130,6 +130,7 @@ const AgendarAparatologia = (props) => {
 		descuento_dermatologo: 0,
 		cosmetologa: cosmetologaSinAsignarId,
 		promovendedor: promovendedorSinPromovendedorId,
+		quien_realiza: cosmetologaSinAsignarId,
 		frecuencia: frecuenciaPrimeraVezId,
 		forma_pago: efectivoFormaPagoId,
 		medio: fisicoMedioId,

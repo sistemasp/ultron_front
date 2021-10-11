@@ -72,6 +72,7 @@ const ModalFormCita = (props) => {
     onChangeStatus,
     onChangePromovendedor,
     onChangeCosmetologa,
+    onChangeQuienRealiza,
     isValid,
     onClickCancel,
     onClickActualizarCita,
@@ -334,7 +335,24 @@ const ModalFormCita = (props) => {
                     </FormControl>
                 }
               </Grid>
-
+              <Grid item xs={12}>
+                {
+                  /* values.cosmetologa */ false ?
+                    <h3 className={classes.label}>QUIEN REALIZA: {values.cosmetologa.nombre}</h3> :
+                    <FormControl variant="outlined" className={classes.formControl}>
+                      <InputLabel id="simple-select-outlined-quien-realiza">QUIEN REALIZA</InputLabel>
+                      <Select
+                        labelId="simple-select-outlined-quien-realiza"
+                        id="simple-select-outlined-quien-realiza"
+                        value={values.quien_realiza}
+                        error={Boolean(errors.quien_realiza)}
+                        onChange={onChangeCosmetologa}
+                        label="QUIEN REALIZA" >
+                        {cosmetologas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                      </Select>
+                    </FormControl>
+                }
+              </Grid>
               <Grid item xs={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="simple-select-outlined-payment">FORMA DE PAGO</InputLabel>
