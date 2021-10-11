@@ -586,7 +586,7 @@ const FormImprimirPagoDermatologo = (props) => {
             <Fragment>
               <Grid container className={classes.container}>
                 <Grid item xs={12}>
-                  <p className={classes.label_title_descripcion}> {`${esteticas.length} TOXINAS Y RELLENOS`}</p>
+                  <p className={classes.label_title_descripcion}> {`${esteticas.length} ESTÉTICAS`}</p>
                 </Grid>
                 <Grid item xs={true} className={classes.label}>
                   <p className={classes.label_cells_totales}>PACIENTE</p>

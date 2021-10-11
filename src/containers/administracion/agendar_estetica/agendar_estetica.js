@@ -178,7 +178,7 @@ export const AgendarEsteticaContainer = (props) => {
 					<ModalImprimirCirugia
 						open={openModalImprimirCita}
 						onClose={onCloseImprimirConsulta}
-						servicio="TOXINAS Y RELLENOS"
+						servicio="ESTÉTICAS"
 						colorBase={colorBase}
 						datos={datosImpresion} />
 					: ''

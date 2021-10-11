@@ -583,15 +583,6 @@ const AgendarAparatologia = (props) => {
 										value={item.tooltip}
 									>{item.tooltip}</MenuItem>;
 									switch (item.tooltip) {
-										case 'EDITAR':
-											menuItem = props.data.status._id !== canceladoCPStatusId && props.data.status._id !== canceladoSPStatusId
-												?
-												<MenuItem
-													key={index}
-													value={item.tooltip}
-												>{item.tooltip}</MenuItem>
-												: '';
-											break;
 										case 'PAGOS':
 											menuItem = props.data.status._id !== pendienteStatusId && props.data.status._id !== confirmadoStatusId ?
 												<MenuItem

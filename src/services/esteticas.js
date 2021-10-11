@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const baseUrl = process.env.REACT_APP_BASE_URL;
 
-// ESTÉTICA ( TOXINAS Y RELLENOS )
+// ESTÉTICA ( ESTÉTICAS )
 
 export const createEstetica = async (estetica, token) => {
     try {
