@@ -337,8 +337,8 @@ const ModalFormCita = (props) => {
               </Grid>
               <Grid item xs={12}>
                 {
-                  /* values.cosmetologa */ false ?
-                    <h3 className={classes.label}>QUIEN REALIZA: {values.cosmetologa.nombre}</h3> :
+                  /* values.quien_realiza */ false ?
+                    <h3 className={classes.label}>QUIEN REALIZA: {values.quien_realiza.nombre}</h3> :
                     <FormControl variant="outlined" className={classes.formControl}>
                       <InputLabel id="simple-select-outlined-quien-realiza">QUIEN REALIZA</InputLabel>
                       <Select
@@ -346,7 +346,7 @@ const ModalFormCita = (props) => {
                         id="simple-select-outlined-quien-realiza"
                         value={values.quien_realiza}
                         error={Boolean(errors.quien_realiza)}
-                        onChange={onChangeCosmetologa}
+                        onChange={onChangeQuienRealiza}
                         label="QUIEN REALIZA" >
                         {cosmetologas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
                       </Select>
