@@ -13,7 +13,7 @@ import {
 import { findTurnoActualBySucursal, showCorteTodayBySucursalAndTurno } from '../../../services/corte';
 import { findFacialesByPayOfDoctorHoraAplicacion, updateFacial } from '../../../services/faciales';
 import { findAparatologiasByPayOfDoctorHoraAplicacion, updateAparatologia } from '../../../services/aparatolgia';
-import { findCirugiasByPayOfDoctorHoraAplicacion, updateCirugia } from '../../../services/cirugias';
+import { findCuracionesByPayOfDoctorHoraAplicacion, updateCuracion } from '../../../services/curaciones';
 import { findEsteticasByPayOfDoctorHoraAplicacion, updateEstetica } from '../../../services/esteticas';
 import { findDermapensByPayOfDoctorHoraAplicacion, updateDermapen } from '../../../services/dermapens';
 import { createPagoDermatologo, showTodayPagoDermatologoBySucursalTurno, updatePagoDermatologo } from '../../../services/pago_dermatologos';
@@ -52,7 +52,7 @@ const ImprimirPagoDermatologo = (props) => {
   const [consultasPrivada, setConsultasPrivada] = useState([]);
   const [consultasPrimeraVez, setConsultasPrimeraVez] = useState([]);
   const [consultasReconsultas, setConsultasReconsultas] = useState([]);
-  const [cirugias, setCirugias] = useState([]);
+  const [curaciones, setCuraciones] = useState([]);
   const [faciales, setFaciales] = useState([]);
   const [dermapens, setDermapens] = useState([]);
   const [aparatologias, setAparatologias] = useState([]);
@@ -150,17 +150,17 @@ const ImprimirPagoDermatologo = (props) => {
     }
   }
 
-  const loadCirugias = async (hora_apertura, hora_cierre) => {
-    const response = await findCirugiasByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), token);
+  const loadCuraciones = async (hora_apertura, hora_cierre) => {
+    const response = await findCuracionesByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      const cirugias = response.data;
-      cirugias.forEach((cirugia) => {
-        cirugia.forma_pago_nombre = cirugia.pagos.map((pago) => {
+      const curaciones = response.data;
+      curaciones.forEach((curacion) => {
+        curacion.forma_pago_nombre = curacion.pagos.map((pago) => {
           return `${pago.forma_pago.nombre} `
         });
       });
 
-      setCirugias(cirugias);
+      setCuraciones(curaciones);
     }
   }
 
@@ -282,7 +282,7 @@ const ImprimirPagoDermatologo = (props) => {
       const pagoDermatologo = response.data;
       setPagoDermatologoObj(pagoDermatologo);
       await loadConsultas(hora_apertura, hora_cierre);
-      await loadCirugias(hora_apertura, hora_cierre);
+      await loadCuraciones(hora_apertura, hora_cierre);
       await loadFaciales(hora_apertura, hora_cierre);
       await loadDermapens(hora_apertura, hora_cierre);
       await loadAparatologias(hora_apertura, hora_cierre);
@@ -335,15 +335,15 @@ const ImprimirPagoDermatologo = (props) => {
     });
 
 
-    // TOTAL DE LAS CIRUGíAS
-    cirugias.forEach(async (cirugia) => {
-      if (isSesionAnticipada(cirugia)) {
-        cirugia.pago_dermatologo = 0;
-        updateCirugia(cirugia._id, cirugia, token);
+    // TOTAL DE LAS CURACION
+    curaciones.forEach(async (curacion) => {
+      if (isSesionAnticipada(curacion)) {
+        curacion.pago_dermatologo = 0;
+        updateCuracion(curacion._id, curacion, token);
       } else {
-        const pagoDermatologo = cirugia.has_descuento_dermatologo ? 0 : Number(cirugia.total_aplicacion) * Number(dermatologo.esquema.porcentaje_cirugias) / 100;
-        cirugia.pago_dermatologo = pagoDermatologo;
-        updateCirugia(cirugia._id, cirugia, token);
+        const pagoDermatologo = curacion.has_descuento_dermatologo ? 0 : Number(curacion.total_aplicacion) * Number(dermatologo.esquema.porcentaje_curaciones) / 100;
+        curacion.pago_dermatologo = pagoDermatologo;
+        updateCuracion(curacion._id, curacion, token);
         total += Number(pagoDermatologo);
       }
 
@@ -561,7 +561,7 @@ const ImprimirPagoDermatologo = (props) => {
         fecha_pago: new Date(),
         dermatologo: dermatologo,
         consultas: consultas,
-        cirugias: cirugias,
+        curaciones: curaciones,
         faciales: faciales,
         dermapens: dermapens,
         aparatologias: aparatologias,
@@ -653,7 +653,7 @@ const ImprimirPagoDermatologo = (props) => {
             consultasPrivada={consultasPrivada}
             consultasPrimeraVez={consultasPrimeraVez}
             consultasReconsultas={consultasReconsultas}
-            cirugias={cirugias}
+            curaciones={curaciones}
             faciales={faciales}
             dermapens={dermapens}
             aparatologias={aparatologias}

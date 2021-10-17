@@ -29,7 +29,7 @@ const FormImprimirPagoDermatologo = (props) => {
     consultasPrivada,
     consultasPrimeraVez,
     consultasReconsultas,
-    cirugias,
+    curaciones,
     esteticas,
     faciales,
     dermapens,
@@ -514,11 +514,11 @@ const FormImprimirPagoDermatologo = (props) => {
         }
 
         {
-          cirugias.length > 0 ?
+          curaciones.length > 0 ?
             <Fragment>
               <Grid container className={classes.container}>
                 <Grid item xs={12}>
-                  <p className={classes.label_title_descripcion}> {`${cirugias.length} CIRUGíAS`}</p>
+                  <p className={classes.label_title_descripcion}> {`${curaciones.length} CURACION`}</p>
                 </Grid>
                 <Grid item xs={true} className={classes.label}>
                   <p className={classes.label_cells_totales}>PACIENTE</p>
@@ -545,32 +545,32 @@ const FormImprimirPagoDermatologo = (props) => {
                   <hr className={classes.label} />
                 </Grid>
                 {
-                  cirugias ?
-                    cirugias.map(cirugia => {
-                      const pagoDermatologo = cirugia.has_descuento_dermatologo ? 0 : Number(cirugia.total_aplicacion) * Number(dermatologo.esquema.porcentaje_cirugias) / 100;
+                  curaciones ?
+                    curaciones.map(curacion => {
+                      const pagoDermatologo = curacion.has_descuento_dermatologo ? 0 : Number(curacion.total_aplicacion) * Number(dermatologo.esquema.porcentaje_curaciones) / 100;
                       pagoTotal += Number(pagoDermatologo);
-                      const date = new Date(cirugia.hora_aplicacion);
+                      const date = new Date(curacion.hora_aplicacion);
                       return <Grid container>
                         <Grid item xs={true} className={classes.label}>
-                          <p className={classes.label_cells}>{`${cirugia.paciente.nombres} ${cirugia.paciente.apellidos}`}</p>
+                          <p className={classes.label_cells}>{`${curacion.paciente.nombres} ${curacion.paciente.apellidos}`}</p>
                         </Grid>
                         <Grid item xs={true} className={classes.label}>
-                          <p className={classes.label_cells}>{`${cirugia.consecutivo}`}</p>
+                          <p className={classes.label_cells}>{`${curacion.consecutivo}`}</p>
                         </Grid>
                         <Grid item xs={true} className={classes.label}>
-                          <p className={classes.label_cells}>{`${cirugia.producto.nombre}`}</p>
+                          <p className={classes.label_cells}>{`${curacion.producto.nombre}`}</p>
                         </Grid>
                         <Grid item xs={true} className={classes.label}>
-                          <p className={classes.label_cells}>{`${cirugia.factura ? '(FACTURA)' : ''}${cirugia.forma_pago_nombre}`}</p>
+                          <p className={classes.label_cells}>{`${curacion.factura ? '(FACTURA)' : ''}${curacion.forma_pago_nombre}`}</p>
                         </Grid>
                         <Grid item xs={true} className={classes.label}>
-                          <p className={classes.label_cells_total}> {`${toFormatterCurrency(cirugia.total_aplicacion)}`} </p>
+                          <p className={classes.label_cells_total}> {`${toFormatterCurrency(curacion.total_aplicacion)}`} </p>
                         </Grid>
                         <Grid item xs={true} className={classes.label}>
                           <p className={classes.label_cells_total}> {`${toFormatterCurrency(pagoDermatologo)}`} </p>
                         </Grid>
                         <Grid item xs={2} className={classes.label}>
-                          <p className={classes.label_cells}>{`${cirugia.observaciones ? cirugia.observaciones : ''}`}</p>
+                          <p className={classes.label_cells}>{`${curacion.observaciones ? curacion.observaciones : ''}`}</p>
                         </Grid>
                       </Grid>
                     })
@@ -586,7 +586,7 @@ const FormImprimirPagoDermatologo = (props) => {
             <Fragment>
               <Grid container className={classes.container}>
                 <Grid item xs={12}>
-                  <p className={classes.label_title_descripcion}> {`${esteticas.length} ESTÉTICAS`}</p>
+                  <p className={classes.label_title_descripcion}> {`${esteticas.length} TOXINAS Y RELLENOS`}</p>
                 </Grid>
                 <Grid item xs={true} className={classes.label}>
                   <p className={classes.label_cells_totales}>PACIENTE</p>

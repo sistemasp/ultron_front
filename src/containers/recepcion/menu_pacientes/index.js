@@ -54,9 +54,9 @@ const MenuPatient = (props) => {
         setValue(Number(process.env.REACT_APP_PAGE_AGENDAR_CONSULTA));
     }
 
-    const handleClickAgendarCirugia = (event, rowData) => {
+    const handleClickAgendarCuracion = (event, rowData) => {
         setConsultaAgendada(rowData);
-        setValue(Number(process.env.REACT_APP_PAGE_AGENDAR_CIRUGIA));
+        setValue(Number(process.env.REACT_APP_PAGE_AGENDAR_CURACION));
     }
 
     const handleClickAgendarEstetica = (event, rowData) => {
@@ -94,7 +94,7 @@ const MenuPatient = (props) => {
                 onChangeTab={handleChangeTab}
                 onClickAgendarFaciales={handleAgendarFaciales}
                 onClickAgendarConsulta={handleClickAgendarConsulta}
-                onClickAgendarCirugia={handleClickAgendarCirugia}
+                onClickAgendarCuracion={handleClickAgendarCuracion}
                 onClickAgendarEstetica={handleClickAgendarEstetica}
                 onClickAgendarAparatologia={handleAgendarAparatologia}
                 onClickAgendarDermapen={handleAgendarDermapen}

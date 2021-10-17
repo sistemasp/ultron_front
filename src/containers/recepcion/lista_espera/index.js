@@ -6,9 +6,9 @@ import {
 	findCabinaBySucursalId,
 	updateCabina,
 	breakFreeCabinaByIdPaciente,
-	findSalaCirugiaBySucursalId,
-	updateSalaCirugia,
-	breakFreeSalaCirugiaByIdPaciente,
+	findSalaCuracionBySucursalId,
+	updateSalaCuracion,
+	breakFreeSalaCuracionByIdPaciente,
 } from '../../../services';
 import {
 	waitingListConsulta,
@@ -16,10 +16,10 @@ import {
 	findConsultById
 } from '../../../services/consultas';
 import {
-	waitingListCirugia,
-	findCirugiaById,
-	updateCirugia,
-} from '../../../services/cirugias';
+	waitingListCuracion,
+	findCuracionById,
+	updateCuracion,
+} from '../../../services/curaciones';
 import {
 	waitingListEstetica,
 	findEsteticaById,
@@ -100,8 +100,8 @@ const ListaEspera = (props) => {
 	const [openAlert, setOpenAlert] = useState(false);
 	const [consultorios, setConsultorios] = useState([]);
 	const [cabinas, setCabinas] = useState([]);
-	const [salaCirugias, setSalaCirugias] = useState([]);
-	const [listaEsperaCirugias, setListaEsperaCirugias] = useState([]);
+	const [salaCuraciones, setSalaCuraciones] = useState([]);
+	const [listaEsperaCuraciones, setListaEsperaCuraciones] = useState([]);
 	const [listaEsperaConsultas, setListaEsperaConsultas] = useState([]);
 	const [listaEsperaTratamientos, setListaEsperaTratamientos] = useState([]);
 	const [listaEsperaEstetica, setListaEsperaEstetica] = useState([]);
@@ -115,7 +115,7 @@ const ListaEspera = (props) => {
 	const [severity, setSeverity] = useState('success');
 	const [openModalConsultorioAsignar, setOpenModalConsultorioAsignar] = useState(false);
 	const [openModalCabinaAsignar, setOpenModalCabinaAsignar] = useState(false);
-	const [openModalSalaCirugiaAsignar, setOpenModalSalaCirugiaAsignar] = useState(false);
+	const [openModalSalaCuracionAsignar, setOpenModalSalaCuracionAsignar] = useState(false);
 	const [tipo_servicio, setTipoServicio] = useState('');
 	const [servicio, setServicio] = useState('');
 	const [cambio, setCambio] = useState(false);
@@ -140,7 +140,7 @@ const ListaEspera = (props) => {
 		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
 	];
 
-	const columnsSalaCirugias = [
+	const columnsSalaCuraciones = [
 		{ title: 'SALA', field: 'nombre' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
@@ -205,7 +205,7 @@ const ListaEspera = (props) => {
 	const consultaServicioId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
 	const enProcedimientoStatusId = process.env.REACT_APP_EN_PROCEDIMIENTO_STATUS_ID;
 	const enConsultorioStatusId = process.env.REACT_APP_EN_CONSULTORIO_STATUS_ID;
-	const cirugiaServicioId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID;
+	const curacionServicioId = process.env.REACT_APP_CURACION_SERVICIO_ID;
 	const facialServicioId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
 	const dermapenServicioId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID;
 	const laserServicioId = process.env.REACT_APP_LASER_SERVICIO_ID;
@@ -286,20 +286,20 @@ const ListaEspera = (props) => {
 		}
 	}
 
-	const loadSalaCirugias = async () => {
-		const response = await findSalaCirugiaBySucursalId(sucursal, empleado.access_token);
+	const loadSalaCuraciones = async () => {
+		const response = await findSalaCuracionBySucursalId(sucursal, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			response.data.forEach(item => {
 				item.folio = generateFolio(item);
 				item.paciente_nombre = item.paciente ? `${item.paciente.nombres} ${item.paciente.apellidos}` : 'LIBRE';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'SIN DERMATÓLOGO';
 			});
-			setSalaCirugias(response.data);
+			setSalaCuraciones(response.data);
 		}
 	}
 
-	const loadListaEsperaCirugias = async () => {
-		const response = await waitingListCirugia(sucursal, asistioStatusId, empleado.access_token);
+	const loadListaEsperaCuraciones = async () => {
+		const response = await waitingListCuracion(sucursal, asistioStatusId, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			const filterData = response.data.filter(item => {
 				return (sucursal === sucursalManuelAcunaId || sucursal === sucursalRubenDarioId) ? true : item.pagado;
@@ -309,7 +309,7 @@ const ListaEspera = (props) => {
 				item.paciente_nombre = item.paciente ? `${item.paciente.nombres} ${item.paciente.apellidos}` : 'LIBRE';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'SIN DERMATÓLOGO';
 			});
-			setListaEsperaCirugias(filterData);
+			setListaEsperaCuraciones(filterData);
 		}
 	}
 
@@ -337,7 +337,7 @@ const ListaEspera = (props) => {
 		if (rowData.servicio._id === servicioConsultaId) {
 			setOpenModalConsultorioAsignar(true);
 		} else {
-			setOpenModalSalaCirugiaAsignar(true);
+			setOpenModalSalaCuracionAsignar(true);
 		}
 	}
 
@@ -349,7 +349,7 @@ const ListaEspera = (props) => {
 		setOpenModalCabinaAsignar(true);
 	}
 
-	const handleOnClickSalaCirugiaAsignarPaciente = (event, rowData) => {
+	const handleOnClickSalaCuracionAsignarPaciente = (event, rowData) => {
 		setTipoServicio(rowData.servicio._id);
 		setServicio(rowData._id);
 		setPaciente(rowData.paciente);
@@ -387,17 +387,17 @@ const ListaEspera = (props) => {
 		setIsLoading(false);
 	}
 
-	const handleOnSalaCirugiaCambiarPaciente = async (event, rowData) => {
+	const handleOnSalaCuracionCambiarPaciente = async (event, rowData) => {
 		setIsLoading(true);
-		const response = await breakFreeSalaCirugiaByIdPaciente(rowData._id, empleado.access_token);
+		const response = await breakFreeSalaCuracionByIdPaciente(rowData._id, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			//rowData.disponible = true;
 			setPaciente(rowData.paciente);
 			setServicio(rowData.servicio);
 			setTipoServicio(rowData.tipo_servicio);
 			setCambio(true);
-			setOpenModalSalaCirugiaAsignar(true);
-			//await updateSalaCirugia(rowData._id, rowData);
+			setOpenModalSalaCuracionAsignar(true);
+			//await updateSalaCuracion(rowData._id, rowData);
 		}
 		setIsLoading(false);
 	}
@@ -497,19 +497,19 @@ const ListaEspera = (props) => {
 		}
 	}
 
-	const handleOnClickLiberarSalaCirugia = async (event, rowData) => {
+	const handleOnClickLiberarSalaCuracion = async (event, rowData) => {
 		const dateNow = new Date();
-		const responseServicio = rowData.tipo_servicio === cirugiaServicioId ? await findCirugiaById(rowData.servicio, empleado.access_token) : await findEsteticaById(rowData.servicio, empleado.access_token);
-		//const responseServicio = await findCirugiaById(rowData.servicio);
+		const responseServicio = rowData.tipo_servicio === curacionServicioId ? await findCuracionById(rowData.servicio, empleado.access_token) : await findEsteticaById(rowData.servicio, empleado.access_token);
+		//const responseServicio = await findCuracionById(rowData.servicio);
 		if (`${responseServicio.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			const currentService = responseServicio.data;
 			let updateData = currentService;
 			updateData.status = atendidoStatusId;
 			updateData.hora_salida = `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;
-			rowData.tipo_servicio === cirugiaServicioId ? await updateCirugia(currentService._id, updateData, empleado.access_token) : await updateEstetica(currentService._id, updateData, empleado.access_token);
+			rowData.tipo_servicio === curacionServicioId ? await updateCuracion(currentService._id, updateData, empleado.access_token) : await updateEstetica(currentService._id, updateData, empleado.access_token);
 			rowData.disponible = true;
-			await updateSalaCirugia(rowData._id, rowData, empleado.access_token);
-			const response = await breakFreeSalaCirugiaByIdPaciente(rowData._id, empleado.access_token);
+			await updateSalaCuracion(rowData._id, rowData, empleado.access_token);
+			const response = await breakFreeSalaCuracionByIdPaciente(rowData._id, empleado.access_token);
 			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 				setOpenAlert(true);
 				setMessage('SALIO EL PACIENTE');
@@ -536,12 +536,12 @@ const ListaEspera = (props) => {
 		} //: ''
 	];
 
-	const actionsEsperaSalaCirugia = [
+	const actionsEsperaSalaCuracion = [
 		//new Date(anio, mes - 1, dia) < filterDate.fecha_show  ? 
 		{
 			icon: InputIcon,
-			tooltip: 'ASIGNAR A SALA DE CIRUGÍAS',
-			onClick: handleOnClickSalaCirugiaAsignarPaciente
+			tooltip: 'ASIGNAR A SALA DE CURACION',
+			onClick: handleOnClickSalaCuracionAsignarPaciente
 		} //: ''
 	];
 
@@ -622,19 +622,19 @@ const ListaEspera = (props) => {
 			} : ''),
 	];
 
-	const actionsSalaCirugia = [
+	const actionsSalaCuracion = [
 		//new Date(anio, mes - 1, dia) < filterDate.fecha_show  ? 
 		rowData => (
 			!rowData.disponible ? {
 				icon: DirectionsWalkIcon,
 				tooltip: 'SALIDA PACIENTE',
-				onClick: handleOnClickLiberarSalaCirugia
+				onClick: handleOnClickLiberarSalaCuracion
 			} : ''),
 		rowData => (
 			!rowData.disponible ? {
 				icon: InputIcon,
-				tooltip: 'CAMBIAR SALA DE CIRUGÍA',
-				onClick: handleOnSalaCirugiaCambiarPaciente
+				tooltip: 'CAMBIAR SALA DE CURACIÓN',
+				onClick: handleOnSalaCuracionCambiarPaciente
 			} : ''),
 	];
 
@@ -642,7 +642,7 @@ const ListaEspera = (props) => {
 		setConsultorio({});
 		setOpenModalConsultorioAsignar(false);
 		setOpenModalCabinaAsignar(false);
-		setOpenModalSalaCirugiaAsignar(false);
+		setOpenModalSalaCuracionAsignar(false);
 	};
 
 	const handleCloseAlert = () => {
@@ -669,9 +669,9 @@ const ListaEspera = (props) => {
 		await loadListaEsperaAparatologias();
 		await loadListaEsperaDermapens();
 		await loadCabinas();
-		await loadSalaCirugias();
+		await loadSalaCuraciones();
 		await loadListaEsperaEstetica();
-		await loadListaEsperaCirugias();
+		await loadListaEsperaCuraciones();
 		setIsLoading(false);
 	}
 
@@ -692,14 +692,14 @@ const ListaEspera = (props) => {
 						columnsConsultorios={columnsConsultorios}
 						columnsEspera={columnsEspera}
 						columnsCabinas={columnsCabinas}
-						columnsSalaCirugias={columnsSalaCirugias}
+						columnsSalaCuraciones={columnsSalaCuraciones}
 						columnsEsperaConsultas={columnsEsperaConsultas}
 						tituloConsultorios='CONSULTORIOS'
 						tituloCabinas='CABINAS'
-						tituloSalaCirugia='SALA CIRUGíAS'
-						tituloEsperaConsultas={`CONSULTAS EN ESPERA (${listaEsperaConsultas.length + listaEsperaEstetica.length + listaEsperaCirugias.length})`}
+						tituloSalaCuracion='SALA CURACION'
+						tituloEsperaConsultas={`CONSULTAS EN ESPERA (${listaEsperaConsultas.length + listaEsperaEstetica.length + listaEsperaCuraciones.length})`}
 						tituloEsperaTratamientos={`TRATAMIENTOS EN ESPERA (${listaEsperaFaciales.length + listaEsperaLasers.length + listaEsperaAparatologias.length + listaEsperaDermapens.length})`}
-						tituloEsperaSalaCirugia={`CIRUGíAS EN ESPERA (${listaEsperaEstetica.length + listaEsperaCirugias.length})`}
+						tituloEsperaSalaCuracion={`CURACION EN ESPERA (${listaEsperaEstetica.length + listaEsperaCuraciones.length})`}
 						optionsEspera={optionsEspera}
 						optionsConsultorio={optionsConsultorio}
 						consultorio={consultorio}
@@ -710,14 +710,14 @@ const ListaEspera = (props) => {
 						listaEsperaAparatologias={listaEsperaAparatologias}
 						listaEsperaFaciales={listaEsperaFaciales}
 						listaEsperaDermapens={listaEsperaDermapens}
-						listaEsperaCirugias={listaEsperaCirugias}
+						listaEsperaCuraciones={listaEsperaCuraciones}
 						actionsEsperaConsultorio={actionsEsperaConsultorio}
 						actionsEsperaCabina={actionsEsperaCabina}
 						actionsConsultorio={actionsConsultorio}
 						actionsCabina={actionsCabina}
 						openModalConsultorioAsignar={openModalConsultorioAsignar}
 						openModalCabinaAsignar={openModalCabinaAsignar}
-						openModalSalaCirugiaAsignar={openModalSalaCirugiaAsignar}
+						openModalSalaCuracionAsignar={openModalSalaCuracionAsignar}
 						tipo_servicio={tipo_servicio}
 						servicio={servicio}
 						handleClose={handleClose}
@@ -727,10 +727,10 @@ const ListaEspera = (props) => {
 						setOpenAlert={setOpenAlert}
 						setMessage={setMessage}
 						paciente={paciente}
-						salaCirugias={salaCirugias}
-						actionsSalaCirugia={actionsSalaCirugia}
+						salaCuraciones={salaCuraciones}
+						actionsSalaCuracion={actionsSalaCuracion}
 						listaEsperaEstetica={listaEsperaEstetica}
-						actionsEsperaSalaCirugia={actionsEsperaSalaCirugia}
+						actionsEsperaSalaCuracion={actionsEsperaSalaCuracion}
 						componentsConsultorio={componentsConsultorio}
 						colorBase={colorBase}
 						onClickActualizar={handleClickActualizar}

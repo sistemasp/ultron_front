@@ -8,7 +8,7 @@ import { updateFacial } from '../../../services/faciales';
 import { updateDermapen } from '../../../services/dermapens';
 import { updateAparatologia } from '../../../services/aparatolgia';
 import { updateConsult } from '../../../services/consultas';
-import { updateCirugia } from '../../../services/cirugias';
+import { updateCuracion } from '../../../services/curaciones';
 import { updateEstetica } from '../../../services/esteticas';
 
 const Alert = (props) => {
@@ -57,7 +57,7 @@ const ModalUsoCfdi = (props) => {
   const servicioDermapenlId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID;
   const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
   const servicioConsultaId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
-  const servicioCirugiaId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID;
+  const servicioCuracionId = process.env.REACT_APP_CURACION_SERVICIO_ID;
   const servicioEsteticaId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
   
   const [values, setValues] = useState({

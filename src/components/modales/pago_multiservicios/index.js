@@ -42,7 +42,7 @@ const PagoMultiservicio = (props) => {
 
   const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
   const tipoEntradaConsultaId = process.env.REACT_APP_TIPO_ENTRADA_CONSULTA_ID;
-  const tipoEntradaCirugiaId = process.env.REACT_APP_TIPO_ENTRADA_CIRUGIA_ID;
+  const tipoEntradaCuracionId = process.env.REACT_APP_TIPO_ENTRADA_CURACION_ID;
   const tipoEntradaFacialesId = process.env.REACT_APP_TIPO_ENTRADA_FACIALES_ID;
   const tipoEntradaEsteticaId = process.env.REACT_APP_TIPO_ENTRADA_ESTETICA_ID;
   const tipoEntradaAparatologiaId = process.env.REACT_APP_TIPO_ENTRADA_APARATOLOGIA_ID;
@@ -55,7 +55,7 @@ const PagoMultiservicio = (props) => {
   const servicioLaserId = process.env.REACT_APP_LASER_SERVICIO_ID;
   const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
   const servicioConsultaId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
-  const servicioCirugiaId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID;
+  const servicioCuracionId = process.env.REACT_APP_CURACION_SERVICIO_ID;
   const servicioBiopsiaId = process.env.REACT_APP_BIOPSIA_SERVICIO_ID;
   const servicioEsteticaId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
   const servicioPagoAnticipadoId = process.env.REACT_APP_PAGO_ANTICIPADO_SERVICIO_ID;
@@ -108,8 +108,8 @@ const PagoMultiservicio = (props) => {
   const getMayorDescuento = () => {
     let porcentajeDescuento = 0;
     switch (servicio.servicio._id) {
-      case servicioCirugiaId:
-        porcentajeDescuento = esquema.porcentaje_cirugias;
+      case servicioCuracionId:
+        porcentajeDescuento = esquema.porcentaje_curaciones;
         break;
       case servicioConsultaId:
         porcentajeDescuento = servicio.frecuencia._id === frecuenciaReconsultaId ? esquema.porcentaje_reconsulta : esquema.porcentaje_consulta;
@@ -227,8 +227,8 @@ const PagoMultiservicio = (props) => {
       case servicioConsultaId:
         tipoEntrada = tipoEntradaConsultaId;
         break;
-      case servicioCirugiaId:
-        tipoEntrada = tipoEntradaCirugiaId;
+      case servicioCuracionId:
+        tipoEntrada = tipoEntradaCuracionId;
         break;
       case servicioBiopsiaId:
         tipoEntrada = tipoEntradaOtrosId;

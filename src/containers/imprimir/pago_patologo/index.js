@@ -5,9 +5,9 @@ import {
 } from '../../../services/salidas';
 import { findTurnoActualBySucursal, showCorteTodayBySucursalAndTurno } from '../../../services/corte';
 import {
-  findCirugiasByPayOfPatologoHoraAplicacion,
-  updateCirugia
-} from '../../../services/cirugias';
+  findCuracionesByPayOfPatologoHoraAplicacion,
+  updateCuracion
+} from '../../../services/curaciones';
 import { createPagoPatologo, showTodayPagoPatologoBySucursalTurno, updatePagoPatologo } from '../../../services/pago_patologo';
 import myStyles from '../../../css';
 import FormImprimirPagoPatologo from './FormImprimirPagoPatologo';
@@ -32,7 +32,7 @@ const ImprimirPagoPatologo = (props) => {
   const classes = myStyles(colorBase)();
 
   const [show, setShow] = useState(true);
-  const [cirugias, setCirugias] = useState([]);
+  const [curaciones, setCuraciones] = useState([]);
   const [biopsias, setBiopsias] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [turno, setTurno] = useState('m');
@@ -46,14 +46,14 @@ const ImprimirPagoPatologo = (props) => {
     history.goBack();
   }
 
-  const loadCirugias = async (hora_apertura, hora_cierre) => {
-    const response = await findCirugiasByPayOfPatologoHoraAplicacion(sucursal._id, patologo._id, hora_apertura, hora_cierre ? hora_cierre : new Date(), token);
+  const loadCuraciones = async (hora_apertura, hora_cierre) => {
+    const response = await findCuracionesByPayOfPatologoHoraAplicacion(sucursal._id, patologo._id, hora_apertura, hora_cierre ? hora_cierre : new Date(), token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      const cirugias = response.data;
-      cirugias.forEach(cirugia => {
-        setBiopsias([...biopsias, ...cirugia.biopsias]);
+      const curaciones = response.data;
+      curaciones.forEach(curacion => {
+        setBiopsias([...biopsias, ...curacion.biopsias]);
       });
-      setCirugias(cirugias);
+      setCuraciones(curaciones);
     }
   }
 
@@ -65,7 +65,7 @@ const ImprimirPagoPatologo = (props) => {
       if (resPagoPatologo) {
       } else {
       }
-      await loadCirugias(hora_apertura, hora_cierre);
+      await loadCuraciones(hora_apertura, hora_cierre);
       setIsLoading(false);
     }
   }
@@ -82,11 +82,11 @@ const ImprimirPagoPatologo = (props) => {
     setIsLoading(true);
     let total = 0;
 
-    // TOTAL DE LAS CIRUGíAS
-    cirugias.forEach(async (cirugia) => {
-      const pagoPatologo = Number(cirugia.costo_biopsias);
-      cirugia.pago_patologo = pagoPatologo;
-      updateCirugia(cirugia._id, cirugia, token)
+    // TOTAL DE LAS CURACION
+    curaciones.forEach(async (curacion) => {
+      const pagoPatologo = Number(curacion.costo_biopsias);
+      curacion.pago_patologo = pagoPatologo;
+      updateCuracion(curacion._id, curacion, token)
       total += Number(pagoPatologo);
     });
 
@@ -176,7 +176,7 @@ const ImprimirPagoPatologo = (props) => {
             patologo={patologo}
             sucursal={sucursal}
             corte={corte}
-            cirugias={cirugias}
+            curaciones={curaciones}
             turno={turno}
             pagoDermatologo={pagoPatologo}
             colorBase={colorBase}

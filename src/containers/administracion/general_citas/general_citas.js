@@ -15,7 +15,7 @@ export const GeneralCitasContainer = (props) => {
 		faciales,
 		aparatologias,
 		dermapens,
-		cirugias,
+		curaciones,
 		esteticas,
 		// TABLE DATES PROPERTIES
 		titulo,
@@ -30,7 +30,7 @@ export const GeneralCitasContainer = (props) => {
 		...faciales,
 		...aparatologias,
 		...dermapens,
-		...cirugias,
+		...curaciones,
 		...esteticas,
 	];
 

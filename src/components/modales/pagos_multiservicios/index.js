@@ -30,7 +30,7 @@ const PagosMultiservicios = (props) => {
   const noPagaFormaPagoId = process.env.REACT_APP_FORMA_PAGO_NO_PAGA;
   const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
   const servicioConsultaId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
-  const servicioCirugiaId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID;
+  const servicioCuracionId = process.env.REACT_APP_CURACION_SERVICIO_ID;
   const servicioEsteticaId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
   const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
   const servicioDermapenId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID;

@@ -4,27 +4,27 @@ export const baseUrl = process.env.REACT_APP_BASE_URL;
 
 // DERMATÓLOGOS
 
-export const findCirugiasByPayOfDoctor = async (dia, mes, anio, sucursalId, dermatologoId) => {
+export const findCuracionesByPayOfDoctor = async (dia, mes, anio, sucursalId, dermatologoId) => {
     try {
         const response = await axios({
-            url: `${baseUrl}/cirugia/${dia}/${mes}/${anio}/sucursal/${sucursalId}/dermatologo/${dermatologoId}`,
+            url: `${baseUrl}/curacion/${dia}/${mes}/${anio}/sucursal/${sucursalId}/dermatologo/${dermatologoId}`,
             method: 'GET'
         });
         return response;
     } catch (error) {
-        console.log('findCirugiasByPayOfDoctor', error);
+        console.log('findCuracionesByPayOfDoctor', error);
     }
 }
 
-export const findCirugiasByPayOfDoctorTurno = async (dia, mes, anio, sucursalId, dermatologoId, turno) => {
+export const findCuracionesByPayOfDoctorTurno = async (dia, mes, anio, sucursalId, dermatologoId, turno) => {
     try {
         const response = await axios({
-            url: `${baseUrl}/cirugia/${dia}/${mes}/${anio}/sucursal/${sucursalId}/dermatologo/${dermatologoId}/turno/${turno}`,
+            url: `${baseUrl}/curacion/${dia}/${mes}/${anio}/sucursal/${sucursalId}/dermatologo/${dermatologoId}/turno/${turno}`,
             method: 'GET'
         });
         return response;
     } catch (error) {
-        console.log('findCirugiasByPayOfDoctorTurno', error);
+        console.log('findCuracionesByPayOfDoctorTurno', error);
     }
 }
 

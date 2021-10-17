@@ -61,3 +61,19 @@ export const deletePagoPatologo = async (pagoPatologoId, token) => {
         return error;
     }
 }
+
+export const findPagoPatologosByRangeDateAndSucursal = async (diai, mesi, anioi, diaf, mesf, aniof, sucursalId, token) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/pagoPatologo/fecha_inicio/${diai}/${mesi}/${anioi}/fecha_fin/${diaf}/${mesf}/${aniof}/sucursal/${sucursalId}`,
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response;
+    } catch (error) {
+        console.log('findPagoPatologosByRangeDateAndSucursal', error);
+        return error;
+    }
+}

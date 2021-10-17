@@ -22,7 +22,7 @@ const FormImprimirPagoPatologo = (props) => {
     sucursal,
     corte,
     biopsias,
-    cirugias,
+    curaciones,
     patologo,
     onReturn,
     onClickImprimir,
@@ -273,10 +273,10 @@ const FormImprimirPagoPatologo = (props) => {
         }
 
         {
-          cirugias.length > 0 ?
+          curaciones.length > 0 ?
             <Grid container className={classes.container}>
               <Grid item xs={12}>
-                <p className={classes.label_title_descripcion}> {`${cirugias.length} BIOPSIAS`}</p>
+                <p className={classes.label_title_descripcion}> {`${curaciones.length} BIOPSIAS`}</p>
               </Grid>
               <Grid item xs={true} className={classes.label}>
                 <p className={classes.label_cells_totales}>PACIENTE</p>
@@ -292,17 +292,17 @@ const FormImprimirPagoPatologo = (props) => {
               </Grid>
 
               {
-                cirugias ?
-                  cirugias.map(cirugia => {
-                    const pagoPatologo = Number(cirugia.costo_biopsias);
+                curaciones ?
+                  curaciones.map(curacion => {
+                    const pagoPatologo = Number(curacion.costo_biopsias);
                     pagoTotal += Number(pagoPatologo);
 
                     return <Grid container>
                       <Grid item xs={true} className={classes.label}>
-                        <p className={classes.label_cells}>{`${cirugia.paciente.nombres} ${cirugia.paciente.apellidos}`}</p>
+                        <p className={classes.label_cells}>{`${curacion.paciente.nombres} ${curacion.paciente.apellidos}`}</p>
                       </Grid>
                       <Grid item xs={true} className={classes.label}>
-                        <p className={classes.label_cells}>{`${cirugia.consecutivo}`}</p>
+                        <p className={classes.label_cells}>{`${curacion.consecutivo}`}</p>
                       </Grid>
                       <Grid item xs={true} className={classes.label}>
                         <p className={classes.label_cells_total}> {`${toFormatterCurrency(pagoPatologo)}`} </p>

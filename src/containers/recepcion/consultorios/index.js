@@ -6,8 +6,8 @@ import {
 	findCabinaBySucursalId,
 	createCabina,
 	breakFreeCabinaByIdDermatologo,
-	createSalaCirugia,
-	findSalaCirugiaBySucursalId,
+	createSalaCuracion,
+	findSalaCuracionBySucursalId,
 } from '../../../services';
 import AirlineSeatReclineExtraIcon from '@material-ui/icons/AirlineSeatReclineExtra';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -51,15 +51,15 @@ const Consultorios = (props) => {
 
 	const [openModalConsultorio, setOpenModalConsultorio] = useState(false);
 	const [openModalCabina, setOpenModalCabina] = useState(false);
-	const [openModalSalaCirugia, setOpenModalSalaCirugia] = useState(false);
+	const [openModalSalaCuracion, setOpenModalSalaCuracion] = useState(false);
 	const [openModalAsignar, setOpenModalAsignar] = useState(false);
 	const [openAlert, setOpenAlert] = useState(false);
 	const [consultorios, setConsultorios] = useState([]);
 	const [consultorio, setConsultorio] = useState({});
 	const [cabinas, setCabinas] = useState([]);
 	const [cabina, setCabina] = useState({});
-	const [salaCirugias, setSalaCirugias] = useState([]);
-	const [salaCirugia, setSalaCirugia] = useState({});
+	const [salaCuraciones, setSalaCuraciones] = useState([]);
+	const [salaCuracion, setSalaCuracion] = useState({});
 	const [isLoading, setIsLoading] = useState(true);
 	const [message, setMessage] = useState('');
 	const [severity, setSeverity] = useState('success');
@@ -82,7 +82,7 @@ const Consultorios = (props) => {
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 	];
 
-	const columnsSalaCirugia = [
+	const columnsSalaCuracion = [
 		{ title: 'NOMBRE', field: 'nombre' },
 		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
@@ -122,14 +122,14 @@ const Consultorios = (props) => {
 		}
 	}
 
-	const loadSalaCirugia = async () => {
-		const response = await findSalaCirugiaBySucursalId(sucursal);
+	const loadSalaCuracion = async () => {
+		const response = await findSalaCuracionBySucursalId(sucursal);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			response.data.forEach(item => {
 				item.paciente_nombre = item.paciente ? `${item.paciente.nombres} ${item.paciente.apellidos}` : '';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'SIN ASIGNAR';
 			});
-			setSalaCirugias(response.data);
+			setSalaCuraciones(response.data);
 		}
 	}
 
@@ -141,8 +141,8 @@ const Consultorios = (props) => {
 		setOpenModalCabina(true);
 	};
 
-	const handleOpenSalaCirugia = () => {
-		setOpenModalSalaCirugia(true);
+	const handleOpenSalaCuracion = () => {
+		setOpenModalSalaCuracion(true);
 	};
 
 	const handleClose = () => {
@@ -150,7 +150,7 @@ const Consultorios = (props) => {
 		setOpenModalConsultorio(false);
 		setOpenModalCabina(false);
 		setOpenModalAsignar(false);
-		setOpenModalSalaCirugia(false);
+		setOpenModalSalaCuracion(false);
 	};
 
 	const handleCloseAlert = () => {
@@ -208,16 +208,16 @@ const Consultorios = (props) => {
 		setIsLoading(false);
 	}
 
-	const handleClickGuardarSalaCirugia = async (event, data) => {
+	const handleClickGuardarSalaCuracion = async (event, data) => {
 		setIsLoading(true);
 		data.sucursal = sucursal;
-		const response = await createSalaCirugia(data);
+		const response = await createSalaCuracion(data);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			setOpenAlert(true);
-			setMessage('LA SALA DE CIRUGÍA SE GUARDO CORRECTAMENTE');
-			loadSalaCirugia();
+			setMessage('LA SALA DE CURACIÓN SE GUARDO CORRECTAMENTE');
+			loadSalaCuracion();
 		}
-		setOpenModalSalaCirugia(false);
+		setOpenModalSalaCuracion(false);
 		setIsLoading(false);
 	}
 
@@ -253,7 +253,7 @@ const Consultorios = (props) => {
 		)
 	];
 
-	const actionsSalaCirugia = [
+	const actionsSalaCuracion = [
 		rowData => (
 			!rowData.dermatologo ?
 				{
@@ -263,7 +263,7 @@ const Consultorios = (props) => {
 				} :
 				(!rowData.paciente ? {
 					icon: DirectionsWalkIcon,
-					tooltip: 'LIBERAR SALA DE CIRUGÍA',
+					tooltip: 'LIBERAR SALA DE CURACIÓN',
 					onClick: handleOnClickLiberarConsultorio
 				} : '')
 		)
@@ -292,21 +292,21 @@ const Consultorios = (props) => {
 			}
 		}
 
-		const loadSalaCirugia = async () => {
-			const response = await findSalaCirugiaBySucursalId(sucursal);
+		const loadSalaCuracion = async () => {
+			const response = await findSalaCuracionBySucursalId(sucursal);
 			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 				response.data.forEach(item => {
 					item.paciente_nombre = item.paciente ? `${item.paciente.nombres} ${item.paciente.apellidos}` : '';
 					item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'SIN ASIGNAR';
 				});
-				setSalaCirugias(response.data);
+				setSalaCuraciones(response.data);
 			}
 		}
 
 		setIsLoading(true);
 		loadConsultorios();
 		loadCabinas();
-		loadSalaCirugia();
+		loadSalaCuracion();
 		setIsLoading(false);
 	}, [sucursal]);
 
@@ -317,33 +317,33 @@ const Consultorios = (props) => {
 					<ConsultorioContainer
 						columnsConsultorio={columnsConsultorio}
 						columnsCabina={columnsCabina}
-						columnsSalaCirugia={columnsSalaCirugia}
+						columnsSalaCuracion={columnsSalaCuracion}
 						tituloConsultorio='CONSULTORIOS'
 						tituloCabina='CABINAS'
-						tituloSalaCirugia='SALA CIRUGÍAS'
+						tituloSalaCuracion='SALA CURACION'
 						actionsConsultorio={actionsConsultorio}
-						actionsSalaCirugia={actionsSalaCirugia}
+						actionsSalaCuracion={actionsSalaCuracion}
 						actionsCabina={actionsCabina}
 						options={options}
 						openModalConsultorio={openModalConsultorio}
 						openModalCabina={openModalCabina}
-						openModalSalaCirugia={openModalSalaCirugia}
+						openModalSalaCuracion={openModalSalaCuracion}
 						openModalAsignar={openModalAsignar}
 						consultorio={consultorio}
 						consultorios={consultorios}
 						cabinas={cabinas}
 						cabina={cabina}
-						salaCirugias={salaCirugias}
-						salaCirugia={salaCirugia}
+						salaCuraciones={salaCuraciones}
+						salaCuracion={salaCuracion}
 						empleado={empleado}
 						colorBase={colorBase}
 						handleOpenConsultorio={handleOpenConsultorio}
 						handleOpenCabina={handleOpenCabina}
-						handleOpenSalaCirugia={handleOpenSalaCirugia}
+						handleOpenSalaCuracion={handleOpenSalaCuracion}
 						handleClose={handleClose}
 						handleClickGuardarConsultorio={handleClickGuardarConsultorio}
 						handleClickGuardarCabina={handleClickGuardarCabina}
-						handleClickGuardarSalaCirugia={handleClickGuardarSalaCirugia}
+						handleClickGuardarSalaCuracion={handleClickGuardarSalaCuracion}
 						setOpenAlert={setOpenAlert}
 						setMessage={setMessage}
 						loadConsultorios={loadConsultorios} /> :

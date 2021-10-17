@@ -23,7 +23,7 @@ const ModalPaciente = (props) => {
     apellidos: paciente.apellidos,
     telefono: paciente.telefono,
     email: paciente.email,
-    sexo: paciente.sexo ? paciente.sexo._id : '',
+    sexo: paciente.sexo,
     fecha_nacimiento: paciente.fecha_nacimiento ? paciente.fecha_nacimiento : '',
     familiar: false,
   });
@@ -35,10 +35,10 @@ const ModalPaciente = (props) => {
     });
   }
 
-  const handleChangeSexo = (e) => {
+  const handleChangeSexo = (e, newValue) => {
     setValues({
       ...values,
-      sexo: e.target.value
+      sexo: newValue
     })
   }
 

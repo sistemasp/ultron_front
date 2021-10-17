@@ -2,8 +2,8 @@ import React, { useState, useEffect, Fragment } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import { ReportesPagosPatologosContainer } from "./pagos_patologos";
 import { Backdrop, CircularProgress } from "@material-ui/core";
-import { toFormatterCurrency, addZero, getPagoDermatologoByServicio, dateToString } from "../../../../../utils/utils";
-import { findPagoDermatologosByRangeDateAndSucursal } from "../../../../../services/pago_dermatologos";
+import { toFormatterCurrency, addZero, getPagoPatologoByServicio, dateToString } from "../../../../../utils/utils";
+import { findPagoPatologosByRangeDateAndSucursal } from "../../../../../services/pago_patologo";
 import PrintIcon from '@material-ui/icons/Print';
 
 const useStyles = makeStyles(theme => ({
@@ -26,7 +26,7 @@ const ReportePagosPatologos = (props) => {
 	const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
 	const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
 	const servicioConsultaId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
-	const servicioCirugiaId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID;
+	const servicioCuracionId = process.env.REACT_APP_CURACION_SERVICIO_ID;
 	const servicioEsteticaId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
 	const servicioDermapenId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID;
 	const formaPagoTarjetaId = process.env.REACT_APP_FORMA_PAGO_TARJETA;
@@ -34,7 +34,7 @@ const ReportePagosPatologos = (props) => {
 	const iva = process.env.REACT_APP_IVA;
 
 	const [isLoading, setIsLoading] = useState(true);
-	const [pagosDermatologos, setPagosDermatologos] = useState([]);
+	const [pagosPatologos, setPagosPatologos] = useState([]);
 	const [openModalImprimirPago, setOpenModalImprimirPago] = useState(false);
 	const [datosImpresion, setDatosImpresion] = useState();
 
@@ -101,7 +101,7 @@ const ReportePagosPatologos = (props) => {
 	];
 
 	const procesarDatos = async () => {
-		const datosCompletos = [...pagosDermatologos];
+		const datosCompletos = [...pagosPatologos];
 
 
 		setDatos(datosCompletos);
@@ -118,11 +118,11 @@ const ReportePagosPatologos = (props) => {
 		return data;
 	}
 
-	const loadPagosDermatologos = async (startDate, endDate) => {
-		const response = await findPagoDermatologosByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
+	const loadPagosPatologos = async (startDate, endDate) => {
+		const response = await findPagoPatologosByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
 			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			setPagosDermatologos(processResponse(response.data));
+			setPagosPatologos(processResponse(response.data));
 			procesarDatos();
 		}
 	}
@@ -154,7 +154,7 @@ const ReportePagosPatologos = (props) => {
 
 	const loadInfo = async (startDate, endDate) => {
 		setIsLoading(true);
-		await loadPagosDermatologos(startDate, endDate);
+		await loadPagosPatologos(startDate, endDate);
 		setIsLoading(false);
 	}
 

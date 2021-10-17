@@ -32,7 +32,7 @@ const ModalPagos = (props) => {
   const noPagaFormaPagoId = process.env.REACT_APP_FORMA_PAGO_NO_PAGA;
   const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
   const servicioConsultaId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
-  const servicioCirugiaId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID;
+  const servicioCuracionId = process.env.REACT_APP_CURACION_SERVICIO_ID;
   const servicioEsteticaId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
   const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
   const servicioDermapenId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID;
@@ -205,9 +205,9 @@ const ModalPagos = (props) => {
   const getMayorDescuento = () => {
     let porcentajeDescuento = 0;
     switch (servicio.servicio._id) {
-      case servicioCirugiaId:
-        const descuentoCirugia = (servicio.total_aplicacion * esquema.porcentaje_cirugias / 100);
-        porcentajeDescuento = (descuentoCirugia * 100 / values.total);
+      case servicioCuracionId:
+        const descuentoCuracion = (servicio.total_aplicacion * esquema.porcentaje_curaciones / 100);
+        porcentajeDescuento = (descuentoCuracion * 100 / values.total);
         break;
       case servicioConsultaId:
         porcentajeDescuento = servicio.frecuencia._id === frecuenciaReconsultaId ? esquema.porcentaje_reconsulta : esquema.porcentaje_consulta;

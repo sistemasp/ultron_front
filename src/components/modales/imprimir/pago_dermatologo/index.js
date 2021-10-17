@@ -13,7 +13,7 @@ import {
 import { findTurnoActualBySucursal, showCorteTodayBySucursalAndTurno } from '../../../../services/corte';
 import { findFacialesByPayOfDoctorHoraAplicacion, findFacialesByPayOfDoctorHoraAplicacionPA, updateFacial } from '../../../../services/faciales';
 import { findAparatologiasByPayOfDoctorHoraAplicacion, findAparatologiasByPayOfDoctorHoraAplicacionPA, updateAparatologia } from '../../../../services/aparatolgia';
-import { findCirugiasByPayOfDoctorHoraAplicacion, findCirugiasByPayOfDoctorHoraAplicacionPA, updateCirugia } from '../../../../services/cirugias';
+import { findCuracionesByPayOfDoctorHoraAplicacion, findCuracionesByPayOfDoctorHoraAplicacionPA, updateCuracion } from '../../../../services/curaciones';
 import { findEsteticasByPayOfDoctorHoraAplicacion, findEsteticasByPayOfDoctorHoraAplicacionPA, updateEstetica } from '../../../../services/esteticas';
 import { findDermapensByPayOfDoctorHoraAplicacion, findDermapensByPayOfDoctorHoraAplicacionPA, updateDermapen } from '../../../../services/dermapens';
 import { createPagoDermatologo, showTodayPagoDermatologoBySucursalTurno, updatePagoDermatologo } from '../../../../services/pago_dermatologos';
@@ -52,8 +52,8 @@ const ModalImprimirPagoDermatologo = (props) => {
   const [consultasPrimeraVezPA, setConsultasPrimeraVezPA] = useState([]);
   const [consultasReconsultas, setConsultasReconsultas] = useState([]);
   const [consultasReconsultasPA, setConsultasReconsultasPA] = useState([]);
-  const [cirugias, setCirugias] = useState([]);
-  const [cirugiasPA, setCirugiasPA] = useState([]);
+  const [curaciones, setCuraciones] = useState([]);
+  const [curacionesPA, setCuracionesPA] = useState([]);
   const [faciales, setFaciales] = useState([]);
   const [facialesPA, setFacialesPA] = useState([]);
   const [dermapens, setDermapens] = useState([]);
@@ -188,31 +188,31 @@ const ModalImprimirPagoDermatologo = (props) => {
     }
   }
 
-  const loadCirugias = async (hora_apertura, hora_cierre) => {
-    const response = await findCirugiasByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), token);
+  const loadCuraciones = async (hora_apertura, hora_cierre) => {
+    const response = await findCuracionesByPayOfDoctorHoraAplicacion(sucursal._id, dermatologo._id, atendidoId, hora_apertura, hora_cierre ? hora_cierre : new Date(), token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      const cirugias = response.data;
-      cirugias.forEach((cirugia) => {
-        cirugia.forma_pago_nombre = cirugia.pagos.map((pago) => {
+      const curaciones = response.data;
+      curaciones.forEach((curacion) => {
+        curacion.forma_pago_nombre = curacion.pagos.map((pago) => {
           return `${pago.forma_pago.nombre} `
         });
       });
 
-      setCirugias(cirugias);
+      setCuraciones(curaciones);
     }
   }
 
-  const loadCirugiasCPA = async (hora_apertura, hora_cierre) => {
-    const response = await findCirugiasByPayOfDoctorHoraAplicacionPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date(), token);
+  const loadCuracionesCPA = async (hora_apertura, hora_cierre) => {
+    const response = await findCuracionesByPayOfDoctorHoraAplicacionPA(sucursal._id, dermatologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date(), token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      const cirugias = response.data;
-      cirugias.forEach((cirugia) => {
-        cirugia.forma_pago_nombre = cirugia.pagos.map((pago) => {
+      const curaciones = response.data;
+      curaciones.forEach((curacion) => {
+        curacion.forma_pago_nombre = curacion.pagos.map((pago) => {
           return `${pago.forma_pago.nombre} `
         });
       });
 
-      setCirugiasPA(cirugias);
+      setCuracionesPA(curaciones);
     }
   }
 
@@ -362,8 +362,8 @@ const ModalImprimirPagoDermatologo = (props) => {
       const pagoDermatologo = response.data;
       setPagoDermatologoObj(pagoDermatologo);
       await loadConsultas(hora_apertura, hora_cierre);
-      await loadCirugias(hora_apertura, hora_cierre);
-      // await loadCirugiasCPA(hora_apertura, hora_cierre);
+      await loadCuraciones(hora_apertura, hora_cierre);
+      // await loadCuracionesCPA(hora_apertura, hora_cierre);
       await loadFaciales(hora_apertura, hora_cierre);
       // await loadFacialesCPA(hora_apertura, hora_cierre);
       await loadDermapens(hora_apertura, hora_cierre);
@@ -423,15 +423,15 @@ const ModalImprimirPagoDermatologo = (props) => {
     });
 
 
-    // TOTAL DE LAS CIRUGíAS
-    cirugias.forEach(async (cirugia) => {
-      if (isSesionAnticipada(cirugia)) {
-        cirugia.pago_dermatologo = 0;
-        updateCirugia(cirugia._id, cirugia, token);
+    // TOTAL DE LAS CURACION
+    curaciones.forEach(async (curacion) => {
+      if (isSesionAnticipada(curacion)) {
+        curacion.pago_dermatologo = 0;
+        updateCuracion(curacion._id, curacion, token);
       } else {
-        const pagoDermatologo = cirugia.has_descuento_dermatologo ? 0 : Number(cirugia.total_aplicacion) * Number(dermatologo.esquema.porcentaje_cirugias) / 100;
-        cirugia.pago_dermatologo = pagoDermatologo;
-        updateCirugia(cirugia._id, cirugia, token);
+        const pagoDermatologo = curacion.has_descuento_dermatologo ? 0 : Number(curacion.total_aplicacion) * Number(dermatologo.esquema.porcentaje_curaciones) / 100;
+        curacion.pago_dermatologo = pagoDermatologo;
+        updateCuracion(curacion._id, curacion, token);
         total += Number(pagoDermatologo);
       }
 
@@ -649,7 +649,7 @@ const ModalImprimirPagoDermatologo = (props) => {
         fecha_pago: new Date(),
         dermatologo: dermatologo,
         consultas: consultas,
-        cirugias: cirugias,
+        curaciones: curaciones,
         faciales: faciales,
         dermapens: dermapens,
         aparatologias: aparatologias,
@@ -745,8 +745,8 @@ const ModalImprimirPagoDermatologo = (props) => {
             consultasPrimeraVezPA={consultasPrimeraVezPA}
             consultasReconsultas={consultasReconsultas}
             consultasReconsultasPA={consultasReconsultasPA}
-            cirugias={cirugias}
-            cirugiasPA={cirugiasPA}
+            curaciones={curaciones}
+            curacionesPA={curacionesPA}
             faciales={faciales}
             facialesPA={facialesPA}
             dermapens={dermapens}

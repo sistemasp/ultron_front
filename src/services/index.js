@@ -275,9 +275,9 @@ export const findOfficeById = async (idSucursal) => {
     }
 }
 
-// SALA DE CIRUGíA
+// SALA DE CURACIÓN
 
-export const findSalaCirugiaBySucursalId = async (sucursalId) => {
+export const findSalaCuracionBySucursalId = async (sucursalId) => {
     try {
         const response = await axios({
             url: `${baseUrl}/salacirugia/sucursal/${sucursalId}`,
@@ -285,11 +285,11 @@ export const findSalaCirugiaBySucursalId = async (sucursalId) => {
         });
         return response;
     } catch (error) {
-        console.log('findSalaCirugiaBySucursalId', error);
+        console.log('findSalaCuracionBySucursalId', error);
     }
 }
 
-export const findSalaCirugiaBySucursalIdWaitingList = async (sucursalId) => {
+export const findSalaCuracionBySucursalIdWaitingList = async (sucursalId) => {
     try {
         const response = await axios({
             url: `${baseUrl}/salacirugia/waitinglist/sucursal/${sucursalId}`,
@@ -297,11 +297,11 @@ export const findSalaCirugiaBySucursalIdWaitingList = async (sucursalId) => {
         });
         return response;
     } catch (error) {
-        console.log('findSalaCirugiaBySucursalIdWaitingList', error);
+        console.log('findSalaCuracionBySucursalIdWaitingList', error);
     }
 }
 
-export const findSalaCirugiaBySucursalIdAndFree = async (sucursalId) => {
+export const findSalaCuracionBySucursalIdAndFree = async (sucursalId) => {
     try {
         const response = await axios({
             url: `${baseUrl}/salacirugia/sucursal/${sucursalId}/libre`,
@@ -309,11 +309,11 @@ export const findSalaCirugiaBySucursalIdAndFree = async (sucursalId) => {
         });
         return response;
     } catch (error) {
-        console.log('findSalaCirugiaBySucursalIdAndFree', error);
+        console.log('findSalaCuracionBySucursalIdAndFree', error);
     }
 }
 
-export const createSalaCirugia = async (consultorio) => {
+export const createSalaCuracion = async (consultorio) => {
     try {
         const response = await axios({
             url: `${baseUrl}/salacirugia`,
@@ -322,44 +322,44 @@ export const createSalaCirugia = async (consultorio) => {
         });
         return response;
     } catch (error) {
-        console.log('createSalaCirugia', error);
+        console.log('createSalaCuracion', error);
     }
 }
 
-export const updateSalaCirugia = async (salaCirugiaId, surgery) => {
+export const updateSalaCuracion = async (salaCuracionId, surgery) => {
     try {
         const response = await axios({
-            url: `${baseUrl}/salacirugia/${salaCirugiaId}`,
+            url: `${baseUrl}/salacirugia/${salaCuracionId}`,
             method: 'PUT',
             data: surgery
         });
         return response;
     } catch (error) {
-        console.log('updateSalaCirugia', error);
+        console.log('updateSalaCuracion', error);
     }
 }
 
-export const breakFreeSalaCirugiaByIdPaciente = async (salaCirugiaId) => {
+export const breakFreeSalaCuracionByIdPaciente = async (salaCuracionId) => {
     try {
         const response = await axios({
-            url: `${baseUrl}/salacirugia/liberar/paciente/${salaCirugiaId}`,
+            url: `${baseUrl}/salacirugia/liberar/paciente/${salaCuracionId}`,
             method: 'PUT'
         });
         return response;
     } catch (error) {
-        console.log('breakFreeSalaCirugiaByIdPaciente', error);
+        console.log('breakFreeSalaCuracionByIdPaciente', error);
     }
 }
 
-export const breakFreeSalaCirugiaByIdDermatologo = async (salaCirugiaId) => {
+export const breakFreeSalaCuracionByIdDermatologo = async (salaCuracionId) => {
     try {
         const response = await axios({
-            url: `${baseUrl}/salacirugia/liberar/dermatologo/${salaCirugiaId}`,
+            url: `${baseUrl}/salacirugia/liberar/dermatologo/${salaCuracionId}`,
             method: 'PUT'
         });
         return response;
     } catch (error) {
-        console.log('breakFreeSalaCirugiaByIdDermatologo', error);
+        console.log('breakFreeSalaCuracionByIdDermatologo', error);
     }
 }
 

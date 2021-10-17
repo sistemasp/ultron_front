@@ -84,9 +84,12 @@ const LoginForm = (props) => {
     history,
   } = props;
 
-  const handleChangeSucursal = e => {
+  const handleChangeSucursal = (e, newValue) => {
     setIsLoading(true);
-    setValues({ ...values, sucursal: e.target.value });
+    setValues({ 
+      ...values,
+      sucursal: newValue,
+    });
     setIsLoading(false);
   };
 
@@ -107,6 +110,7 @@ const LoginForm = (props) => {
   };
 
   const submit = async (data) => {
+    console.log("KAOZ", data);
     const response = await login(data.employee_number, data.password);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED && response.data !== '') {
       const empleado = response.data;
@@ -125,7 +129,7 @@ const LoginForm = (props) => {
         || empleado.rol._id === rolSupervisorId
       ) {
         history.push('/recepcion', { empleado: empleado, sucursal: data.sucursal });
-      } else if (empleado.rol._id === rolAdministacionId 
+      } else if (empleado.rol._id === rolAdministacionId
         || empleado.rol._id === rolAuxiliarAdministrativoId) {
         history.push('/administracion', { empleado: empleado, sucursal: data.sucursal });
       }
@@ -158,7 +162,7 @@ const LoginForm = (props) => {
               isLoading={isLoading}
               handleChangeNumber={(e) => handleChangeNumber(e)}
               handleChangePassword={(e) => handleChangePassword(e)}
-              onChangeSucursal={(e) => handleChangeSucursal(e)}
+              onChangeSucursal={handleChangeSucursal}
               handleClickShowPassword={handleClickShowPassword}
               handleMouseDownPassword={(e) => handleMouseDownPassword(e)}
               {...props} />}

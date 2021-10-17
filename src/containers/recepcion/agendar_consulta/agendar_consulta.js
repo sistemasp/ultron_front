@@ -12,13 +12,14 @@ import ModalConsulta from '../../../components/modales/modal_consulta';
 import ModalPagos from '../../../components/modales/modal_pagos';
 import ModalImprimirConsulta from '../../../components/modales/imprimir/consulta';
 import { optionSelect, optionSelect2, toFormatterCurrency } from '../../../utils/utils';
-import ModalCirugia from '../../../components/modales/modal_cirugia';
+import ModalCuracion from '../../../components/modales/modal_curacion';
 import ModalEstetica from '../../../components/modales/modal_estetica';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import ModalProximaConsulta from '../../../components/modales/modal_proxima_consulta';
 import ModalTraspasoConsulta from '../../../components/modales/traspaso_consulta';
 import myStyles from '../../../css';
 import { CheckCustom } from '../../../components/basic/CheckCustom';
+import { ComboCustom } from '../../../components/basic/ComboCustom';
 //import Select from 'react-select';
 
 export const AgendarConsultaContainer = (props) => {
@@ -83,9 +84,9 @@ export const AgendarConsultaContainer = (props) => {
     openModalImprimirConsultas,
     datosImpresion,
     onCloseImprimirConsulta,
-    openModalCirugias,
-    onCloseCirugia,
-    cirugia,
+    openModalCuraciones,
+    onCloseCuracion,
+    curacion,
     estetica,
     tipoServicioId,
     openModalEstetica,
@@ -238,15 +239,12 @@ export const AgendarConsultaContainer = (props) => {
 
           <Grid item xs={12} sm={2}>
             <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
-              <Select
-                labelId="simple-select-outlined-frecuencia"
-                id="simple-select-outlined-frecuencia"
+
+              <ComboCustom
+                label='FRECUENCIA'
                 value={values.frecuencia}
                 onChange={onChangeFrecuencia}
-                label="FRECUENCIA" >
-                {frecuencias.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-              </Select>
+                options={frecuencias} />
             </FormControl>
           </Grid>
           {

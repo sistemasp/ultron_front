@@ -15,8 +15,8 @@ import {
 	updateConsult
 } from "../../../services/consultas";
 import {
-	findCirugiaByConsultaId,
-} from "../../../services/cirugias";
+	findCuracionByConsultaId,
+} from "../../../services/curaciones";
 import {
 	findEsteticaByConsultaId,
 } from "../../../services/esteticas";
@@ -59,7 +59,7 @@ const AgendarConsulta = (props) => {
 		setPacienteAgendado,
 		sucursal,
 		history,
-		onClickAgendarCirugia,
+		onClickAgendarCuracion,
 		onClickAgendarEstetica,
 		onClickAgendarDermapen,
 		onClickAgendarFaciales,
@@ -132,13 +132,13 @@ const AgendarConsulta = (props) => {
 	const [openModal, setOpenModal] = useState(false);
 	const [openModalProxima, setOpenModalProxima] = useState(false);
 	const [openModalPagos, setOpenModalPagos] = useState(false);
-	const [openModalCirugias, setOpenModalCirugias] = useState(false);
+	const [openModalCuraciones, setOpenModalCuraciones] = useState(false);
 	const [openModalTraspaso, setOpenModalTraspaso] = useState(false);
 	const [openModalEstetica, setOpenModalEstetica] = useState(false);
 	const [consulta, setConsulta] = useState();
 	const [openModalImprimirConsultas, setOpenModalImprimirConsultas] = useState(false);
 	const [datosImpresion, setDatosImpresion] = useState();
-	const [cirugia, setCirugia] = useState({
+	const [curacion, setCuracion] = useState({
 		materiales: []
 	});
 	const [estetica, setEstetica] = useState({
@@ -422,15 +422,15 @@ const AgendarConsulta = (props) => {
 		setOpenModalTraspaso(true);
 	}
 
-	const handleClickCirugia = async (event, rowData) => {
-		const response = await findCirugiaByConsultaId(rowData._id);
+	const handleClickCuracion = async (event, rowData) => {
+		const response = await findCuracionByConsultaId(rowData._id);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			if (response.data !== '') {
-				setCirugia(response.data);
+				setCuracion(response.data);
 			}
 		}
 		setConsulta(rowData);
-		setOpenModalCirugias(true);
+		setOpenModalCuraciones(true);
 	}
 
 	const handleClickEstetica = async (event, rowData) => {
@@ -448,11 +448,11 @@ const AgendarConsulta = (props) => {
 		setOpenModalPagos(false);
 	}
 
-	const handleCloseCirugia = () => {
-		setCirugia({
+	const handleCloseCuracion = () => {
+		setCuracion({
 			materiales: [],
 		});
-		setOpenModalCirugias(false);
+		setOpenModalCuraciones(false);
 	}
 
 	const handleCloseEstetica = () => {
@@ -507,8 +507,8 @@ const AgendarConsulta = (props) => {
 		},
 		{
 			icon: LocalHospitalIcon,
-			tooltip: 'AGREGAR CIRUGíA',
-			onClick: onClickAgendarCirugia
+			tooltip: 'AGREGAR CURACIÓN',
+			onClick: onClickAgendarCuracion
 		},
 		{
 			icon: FaceIcon,
@@ -538,8 +538,8 @@ const AgendarConsulta = (props) => {
 				|| rowData.status._id === enCabinaStatusId || rowData.status._id === atendidoStatusId)
 				? {
 					icon: LocalHospitalIcon,
-					tooltip: 'AGREGAR CIRUGíA',
-					onClick: onClickAgendarCirugia
+					tooltip: 'AGREGAR CURACIÓN',
+					onClick: onClickAgendarCuracion
 				} : ''
 		},
 		rowData => {
@@ -576,8 +576,8 @@ const AgendarConsulta = (props) => {
 			case 'EDITAR':
 				handleOnClickEditarConsulta(e, rowData);
 				break;
-			case 'AGREGAR CIRUGíA':
-				onClickAgendarCirugia(e, rowData);
+			case 'AGREGAR CURACIÓN':
+				onClickAgendarCuracion(e, rowData);
 				break;
 			case 'AGREGAR ESTÉTICA':
 				onClickAgendarEstetica(e, rowData);
@@ -794,7 +794,7 @@ const AgendarConsulta = (props) => {
 						setFilterDate={setFilterDate}
 						OnCloseVerPagos={handleCloseVerPagos}
 						openModalPagos={openModalPagos}
-						openModalCirugias={openModalCirugias}
+						openModalCuraciones={openModalCuraciones}
 						openModalEstetica={openModalEstetica}
 						openModalProxima={openModalProxima}
 						openModalTraspaso={openModalTraspaso}
@@ -805,9 +805,9 @@ const AgendarConsulta = (props) => {
 						productos={productos}
 						onChangeFrecuencia={(e) => handleChangeFrecuencia(e)}
 						dataComplete={dataComplete}
-						onCloseCirugia={handleCloseCirugia}
+						onCloseCuracion={handleCloseCuracion}
 						onCloseEstetica={handleCloseEstetica}
-						cirugia={cirugia}
+						curacion={curacion}
 						estetica={estetica}
 						tipoServicioId={consultaServicioId}
 						frecuenciaPrimeraVezId={frecuenciaPrimeraVezId}

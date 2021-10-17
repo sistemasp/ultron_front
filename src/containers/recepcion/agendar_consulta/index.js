@@ -14,8 +14,8 @@ import {
 	updateConsult
 } from "../../../services/consultas";
 import {
-	findCirugiaByConsultaId,
-} from "../../../services/cirugias";
+	findCuracionByConsultaId,
+} from "../../../services/curaciones";
 import {
 	findEsteticaByConsultaId,
 } from "../../../services/esteticas";
@@ -39,6 +39,7 @@ import { updateSesionAnticipada } from "../../../services/sesiones_anticipadas";
 import { createEntrada, updateEntrada } from "../../../services/entradas";
 import { createPago } from "../../../services/pagos";
 import { findTurnoActualBySucursal } from "../../../services/corte";
+import { frecuenciaPrimeraVezObj } from "../../../utils/constants";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -67,7 +68,7 @@ const AgendarConsulta = (props) => {
 		setPacienteAgendado,
 		sucursal,
 		history,
-		onClickAgendarCirugia,
+		onClickAgendarCuracion,
 		onClickAgendarEstetica,
 		onClickAgendarDermapen,
 		onClickAgendarFaciales,
@@ -138,7 +139,7 @@ const AgendarConsulta = (props) => {
 		porcentaje_descuento_clinica: 0,
 		descuento_clinica: 0,
 		descuento_dermatologo: 0,
-		frecuencia: frecuenciaPrimeraVezId,
+		frecuencia: frecuenciaPrimeraVezObj,
 		forma_pago: efectivoFormaPagoId,
 		promovendedor: promovendedorSinPromovendedorId,
 		dermatologo: dermatologoDirectoId,
@@ -150,13 +151,13 @@ const AgendarConsulta = (props) => {
 	const [openModal, setOpenModal] = useState(false);
 	const [openModalProxima, setOpenModalProxima] = useState(false);
 	const [openModalPagos, setOpenModalPagos] = useState(false);
-	const [openModalCirugias, setOpenModalCirugias] = useState(false);
+	const [openModalCuraciones, setOpenModalCuraciones] = useState(false);
 	const [openModalTraspaso, setOpenModalTraspaso] = useState(false);
 	const [openModalEstetica, setOpenModalEstetica] = useState(false);
 	const [consulta, setConsulta] = useState();
 	const [openModalImprimirConsultas, setOpenModalImprimirConsultas] = useState(false);
 	const [datosImpresion, setDatosImpresion] = useState();
-	const [cirugia, setCirugia] = useState({
+	const [curacion, setCuracion] = useState({
 		materiales: []
 	});
 	const [estetica, setEstetica] = useState({
@@ -447,8 +448,9 @@ const AgendarConsulta = (props) => {
 		setValues({ ...values, promovendedor: e.target.value });
 	}
 
-	const handleChangeFrecuencia = (e) => {
-		const frecuencia = e.target.value;
+	const handleChangeFrecuencia = (e, newValue) => {
+		const frecuencia = newValue;
+
 		const dermatologo = dermatologos.find(item => {
 			return item._id === dermatologoDirectoId;
 		});
@@ -505,11 +507,11 @@ const AgendarConsulta = (props) => {
 		setOpenModalPagos(false);
 	}
 
-	const handleCloseCirugia = () => {
-		setCirugia({
+	const handleCloseCuracion = () => {
+		setCuracion({
 			materiales: [],
 		});
-		setOpenModalCirugias(false);
+		setOpenModalCuraciones(false);
 	}
 
 	const handleCloseEstetica = () => {
@@ -619,8 +621,8 @@ const AgendarConsulta = (props) => {
 		},
 		{
 			icon: LocalHospitalIcon,
-			tooltip: 'AGREGAR CIRUGíA',
-			onClick: onClickAgendarCirugia
+			tooltip: 'AGREGAR CURACIÓN',
+			onClick: onClickAgendarCuracion
 		},
 		{
 			icon: FaceIcon,
@@ -650,8 +652,8 @@ const AgendarConsulta = (props) => {
 				|| rowData.status._id === enCabinaStatusId || rowData.status._id === atendidoStatusId)
 				? {
 					icon: LocalHospitalIcon,
-					tooltip: 'AGREGAR CIRUGíA',
-					onClick: onClickAgendarCirugia
+					tooltip: 'AGREGAR CURACIÓN',
+					onClick: onClickAgendarCuracion
 				} : ''
 		},
 		rowData => {
@@ -688,8 +690,8 @@ const AgendarConsulta = (props) => {
 			case 'EDITAR':
 				handleOnClickEditarConsulta(e, rowData);
 				break;
-			case 'AGREGAR CIRUGíA':
-				onClickAgendarCirugia(e, rowData);
+			case 'AGREGAR CURACIÓN':
+				onClickAgendarCuracion(e, rowData);
 				break;
 			case 'AGREGAR ESTÉTICA':
 				onClickAgendarEstetica(e, rowData);
@@ -899,7 +901,7 @@ const AgendarConsulta = (props) => {
 						setFilterDate={setFilterDate}
 						OnCloseVerPagos={handleCloseVerPagos}
 						openModalPagos={openModalPagos}
-						openModalCirugias={openModalCirugias}
+						openModalCuraciones={openModalCuraciones}
 						openModalEstetica={openModalEstetica}
 						openModalProxima={openModalProxima}
 						openModalTraspaso={openModalTraspaso}
@@ -908,11 +910,11 @@ const AgendarConsulta = (props) => {
 						onCloseImprimirConsulta={handleCloseImprimirConsulta}
 						frecuencias={frecuencias}
 						productos={productos}
-						onChangeFrecuencia={(e) => handleChangeFrecuencia(e)}
+						onChangeFrecuencia={handleChangeFrecuencia}
 						dataComplete={dataComplete}
-						onCloseCirugia={handleCloseCirugia}
+						onCloseCuracion={handleCloseCuracion}
 						onCloseEstetica={handleCloseEstetica}
-						cirugia={cirugia}
+						curacion={curacion}
 						estetica={estetica}
 						tipoServicioId={consultaServicioId}
 						frecuenciaPrimeraVezId={frecuenciaPrimeraVezId}

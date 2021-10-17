@@ -12,7 +12,7 @@ import { ButtonCustom } from '../../basic/ButtonCustom';
 import TabAparatologia from './aparatologia';
 import TabFaciales from './faciales';
 import TabBiopsias from './biopsias';
-import TabCirugias from './cirugias';
+import TabCuraciones from './curaciones';
 import TabEstetica from './estetica';
 import TabDermapen from './dermapen';
 import myStyles from '../../../css';
@@ -123,7 +123,7 @@ export const MenuHistoricoContainer = props => {
 							empleado={empleado} />
 					</TabPanel>
 					<TabPanel value={value} index={2}>
-						<TabCirugias
+						<TabConsultas
 							paciente={paciente}
 							sucursal={sucursal}
 							servicio={servicios[2]}
@@ -131,7 +131,7 @@ export const MenuHistoricoContainer = props => {
 							empleado={empleado} />
 					</TabPanel>
 					<TabPanel value={value} index={3}>
-						<TabConsultas
+						<TabCuraciones
 							paciente={paciente}
 							sucursal={sucursal}
 							servicio={servicios[3]}

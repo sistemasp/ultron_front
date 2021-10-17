@@ -4,7 +4,7 @@ import { makeStyles, Grid } from '@material-ui/core';
 import ModalConsultorio from '../../../components/modales/modal_consultorio';
 import ModalConsultorioAgregarDermatologo from '../../../components/modales/modal_consultorio_agregar_dermatologo';
 import ModalCabina from '../../../components/modales/modal_cabina';
-import ModalSalaCirugia from '../../../components/modales/modal_sala_cirugia';
+import ModalSalaCuracion from '../../../components/modales/modal_sala_curacion';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import myStyles from '../../../css';
 
@@ -19,24 +19,24 @@ export const ConsultorioContainer = (props) => {
     consultorio,
     cabinas,
     cabina,
-    tituloSalaCirugia,
-    columnsSalaCirugia,
-    salaCirugias,
-    salaCirugia,
-    actionsSalaCirugia,
+    tituloSalaCuracion,
+    columnsSalaCuracion,
+    salaCuraciones,
+    salaCuracion,
+    actionsSalaCuracion,
     actionsConsultorio,
     actionsCabina,
     options,
     openModalConsultorio,
     openModalCabina,
-    openModalSalaCirugia,
+    openModalSalaCuracion,
     handleOpenConsultorio,
     handleOpenCabina,
-    handleOpenSalaCirugia,
+    handleOpenSalaCuracion,
     handleClose,
     handleClickGuardarConsultorio,
     handleClickGuardarCabina,
-    handleClickGuardarSalaCirugia,
+    handleClickGuardarSalaCuracion,
     openModalAsignar,
     setOpenAlert,
     setMessage,
@@ -74,13 +74,13 @@ export const ConsultorioContainer = (props) => {
             setMessage={setMessage} /> : ''
       }
       {
-        openModalSalaCirugia ?
-          <ModalSalaCirugia
-            open={openModalSalaCirugia}
+        openModalSalaCuracion ?
+          <ModalSalaCuracion
+            open={openModalSalaCuracion}
             empleado={empleado}
             onClose={handleClose}
-            salaCirugia={salaCirugia}
-            handleClickGuardar={handleClickGuardarSalaCirugia}
+            salaCuracion={salaCuracion}
+            handleClickGuardar={handleClickGuardarSalaCuracion}
             setOpenAlert={setOpenAlert}
             colorBase={colorBase}
             setMessage={setMessage} /> : ''
@@ -147,17 +147,17 @@ export const ConsultorioContainer = (props) => {
                 className={classes.button}
                 color="primary"
                 variant="contained"
-                onClick={handleOpenSalaCirugia}
-                text='NUEVA SALA DE CIRUGÍA' />
+                onClick={handleOpenSalaCuracion}
+                text='NUEVA SALA DE CURACIÓN' />
               : ''
           }
 
 
           <TableComponent
-            titulo={tituloSalaCirugia}
-            columns={columnsSalaCirugia}
-            data={salaCirugias}
-            actions={actionsSalaCirugia}
+            titulo={tituloSalaCuracion}
+            columns={columnsSalaCuracion}
+            data={salaCuraciones}
+            actions={actionsSalaCuracion}
             options={options} />
         </Grid>
       </Grid>

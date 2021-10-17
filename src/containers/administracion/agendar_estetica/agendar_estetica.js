@@ -15,7 +15,7 @@ import ModalPagos from '../../../components/modales/modal_pagos';
 import { toFormatterCurrency } from '../../../utils/utils';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import ModalEstetica from '../../../components/modales/modal_estetica';
-import ModalImprimirCirugia from '../../../components/modales/imprimir/cirugia';
+import ModalImprimirCuracion from '../../../components/modales/imprimir/curacion';
 import myStyles from '../../../css';
 import ModalTraspasoServicio from '../../../components/modales/traspaso_servicio';
 import ModalProximaEstetica from '../../../components/modales/modal_proxima_estetica';
@@ -175,10 +175,10 @@ export const AgendarEsteticaContainer = (props) => {
 			}
 			{
 				openModalImprimirCita ?
-					<ModalImprimirCirugia
+					<ModalImprimirCuracion
 						open={openModalImprimirCita}
 						onClose={onCloseImprimirConsulta}
-						servicio="ESTÉTICAS"
+						servicio="TOXINAS Y RELLENOS"
 						colorBase={colorBase}
 						datos={datosImpresion} />
 					: ''

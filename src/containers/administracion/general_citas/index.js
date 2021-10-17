@@ -7,7 +7,7 @@ import { findConsultsByDateAndSucursal } from "../../../services/consultas";
 import { findFacialByDateAndSucursal } from "../../../services/faciales";
 import { findAparatologiaByDateAndSucursal } from "../../../services/aparatolgia";
 import { findDermapenByDateAndSucursal } from "../../../services/dermapens";
-import { findCirugiaByDateAndSucursal } from "../../../services/cirugias";
+import { findCuracionByDateAndSucursal } from "../../../services/curaciones";
 import { findEsteticaByDateAndSucursal } from "../../../services/esteticas";
 
 const GeneralCitas = (props) => {
@@ -24,7 +24,7 @@ const GeneralCitas = (props) => {
 	const [faciales, setFaciales] = useState([]);
 	const [aparatologias, setAparatologias] = useState([]);
 	const [dermapens, setDermapens] = useState([]);
-	const [cirugias, setCirugias] = useState([]);
+	const [curaciones, setCuraciones] = useState([]);
 	const [esteticas, setEsteticas] = useState([]);
 
 	const [isLoading, setIsLoading] = useState(true);
@@ -173,8 +173,8 @@ const GeneralCitas = (props) => {
 		}
 	}
 
-	const loadCirugias = async (filterDate) => {
-		const response = await findCirugiaByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal, empleado.access_token, empleado.access_token);
+	const loadCuraciones = async (filterDate) => {
+		const response = await findCuracionByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal, empleado.access_token, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			response.data.forEach(item => {
 				item.folio = generateFolio(item);
@@ -188,7 +188,7 @@ const GeneralCitas = (props) => {
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
 				item.show_tratamientos = 'NO APLICA';
 			});
-			setCirugias(response.data);
+			setCuraciones(response.data);
 		}
 	}
 
@@ -224,7 +224,7 @@ const GeneralCitas = (props) => {
 		await loadFaciales(date);
 		await loadAparatologias(date);
 		await loadDermapens(date);
-		await loadCirugias(date);
+		await loadCuraciones(date);
 		await loadEsteticas(date);
 		setIsLoading(false);
 	}
@@ -234,7 +234,7 @@ const GeneralCitas = (props) => {
 		setFaciales([]);
 		setAparatologias([]);
 		setDermapens([]);
-		setCirugias([]);
+		setCuraciones([]);
 		setEsteticas([]);
 		const dia = addZero(date.getDate());
 		const mes = addZero(date.getMonth() + 1);
@@ -261,7 +261,7 @@ const GeneralCitas = (props) => {
 						faciales={faciales}
 						aparatologias={aparatologias}
 						dermapens={dermapens}
-						cirugias={cirugias}
+						curaciones={curaciones}
 						esteticas={esteticas}
 						titulo={`LISTADO GENERAL DE CITAS (${dateToString(filterDate.fecha_show)})`}
 						columns={columns}

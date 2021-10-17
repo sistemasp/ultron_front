@@ -17,7 +17,7 @@ import Laser from '../calendario/laser';
 import Aparatologia from '../calendario/aparatologia';
 import ModalDermapen from '../../../components/modales/modal_dermapen';
 import AgendarDermapen from '../agendar_dermapen';
-import AgendarCirugia from '../agendar_cirugia';
+import AgendarCuracion from '../agendar_curacion';
 import AgendarEstetica from '../agendar_estetica';
 import Calendario from '../calendario';
 import myStyles from '../../../css';
@@ -65,7 +65,7 @@ export const MenuContainer = props => {
 		//onClickAgendarLaser,
 		onClickAgendarAparatologia,
 		onClickAgendarDermapen,
-		onClickAgendarCirugia,
+		onClickAgendarCuracion,
 		onClickAgendarEstetica,
 		empleado,
 		sucursal,
@@ -100,7 +100,7 @@ export const MenuContainer = props => {
 					<Tab className={classes.tabs} label="FACIALES" {...a11yProps(2)} />
 					<Tab className={classes.tabs} label="APARATOLOGÍA" {...a11yProps(3)} />
 					<Tab className={classes.tabs} label="DERMAPEN" {...a11yProps(4)} />
-					<Tab className={classes.tabs} label="CIRUGíA" {...a11yProps(5)} />
+					<Tab className={classes.tabs} label="CURACIÓN" {...a11yProps(5)} />
 					<Tab className={classes.tabs} label="ESTÉTICA" {...a11yProps(6)} />
 					<Tab className={classes.tabs} label="GENERAL" {...a11yProps(7)} />
 					<Tab className={classes.tabs} label="CALENDARIO" {...a11yProps(8)} />
@@ -121,7 +121,7 @@ export const MenuContainer = props => {
 					onClickAgendarFaciales={onClickAgendarFaciales}
 					onClickAgendarConsulta={onClickAgendarConsulta}
 					onClickAgendarAparatologia={onClickAgendarAparatologia}
-					onClickAgendarCirugia={onClickAgendarCirugia}
+					onClickAgendarCuracion={onClickAgendarCuracion}
 					onClickAgendarEstetica={onClickAgendarEstetica}
 					onClickAgendarDermapen={onClickAgendarDermapen}
 					colorBase={colorBase}
@@ -134,7 +134,7 @@ export const MenuContainer = props => {
 					setPacienteAgendado={setPacienteAgendado}
 					empleado={empleado}
 					sucursal={sucursal}
-					onClickAgendarCirugia={onClickAgendarCirugia}
+					onClickAgendarCuracion={onClickAgendarCuracion}
 					onClickAgendarEstetica={onClickAgendarEstetica}
 					onClickAgendarDermapen={onClickAgendarDermapen}
 					onClickAgendarFaciales={onClickAgendarFaciales}
@@ -172,7 +172,7 @@ export const MenuContainer = props => {
 					sucursal={sucursal._id} />
 			</TabPanel>
 			<TabPanel value={value} index={5}>
-				<AgendarCirugia
+				<AgendarCuracion
 					consultaAgendada={consultaAgendada}
 					paciente={pacienteAgendado}
 					setPacienteAgendado={setPacienteAgendado}

@@ -1,6 +1,6 @@
 import React from "react";
 import TextField from "@material-ui/core/TextField";
-import { 
+import {
 	FormControl,
 	InputLabel,
 	Select,
@@ -15,6 +15,7 @@ import {
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { ButtonCustom } from "../../../components/basic/ButtonCustom";
+import { ComboCustom } from "../../../components/basic/ComboCustom";
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -59,31 +60,24 @@ export const LoginContainer = (props) => {
 		//setFieldTouched
 	} = props;
 	// console.table(props);
-    /*
+	/*
 	const change = (name, e) => {
 		e.persist();
 		handleChange(e);
 		setFieldTouched(name, true, false);
-    };*/
+	};*/
 
 	return (
 		<Paper>
 			<form>
 				<Grid container className={classes.root} justify="center" spacing={3}>
-					<Grid item xs={12}>
+					<Grid item xs={12} >
 						<FormControl variant="outlined" className={classes.margin, classes.textField}>
-							<InputLabel id="simple-select-outlined-sucursal">SUCURSALES</InputLabel>
-							<Select
-								labelId="simple-select-outlined-sucursal"
-								id="simple-select-outlined-sucursal"
+							<ComboCustom
+								label='SUCURSALES'
 								value={values.sucursal}
-								error={Boolean(errors.sucursal)}
 								onChange={onChangeSucursal}
-								label="SUCURSALES" >
-								{sucursales
-									? sucursales.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)
-									: ''}
-							</Select>
+								options={sucursales} />
 						</FormControl>
 					</Grid>
 					<Grid item xs={12}>

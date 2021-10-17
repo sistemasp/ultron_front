@@ -5,10 +5,10 @@ import {
 } from '../../../../services/salidas';
 import { showCorteTodayBySucursalAndTurno } from '../../../../services/corte';
 import {
-  indCirugiasByPayOfDoctorHoraAplicacionPA,
-  findCirugiasByPayOfPatologoHoraAplicacion,
-  updateCirugia
-} from '../../../../services/cirugias';
+  indCuracionesByPayOfDoctorHoraAplicacionPA,
+  findCuracionesByPayOfPatologoHoraAplicacion,
+  updateCuracion
+} from '../../../../services/curaciones';
 import ModalFormImprimirPagoPatologo from './ModalFormImprimirPagoPatologo';
 import { createPagoPatologo, showTodayPagoPatologoBySucursalTurno } from '../../../../services/pago_patologo';
 import myStyles from '../../../../css';
@@ -37,7 +37,7 @@ const ReporteImprimirPagoPatologo = (props) => {
   const classes = myStyles(colorBase)();
 
   const [show, setShow] = useState(true);
-  const [cirugias, setCirugias] = useState([]);
+  const [curaciones, setCuraciones] = useState([]);
   const [biopsias, setBiopsias] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [turno, setTurno] = useState('m');
@@ -47,21 +47,21 @@ const ReporteImprimirPagoPatologo = (props) => {
   const pagoPatologoTipoSalidaId = process.env.REACT_APP_TIPO_SALIDA_PAGO_PATOLOGO_ID;
   const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
 
-  const loadCirugias = async (hora_apertura, hora_cierre) => {
-    const response = await findCirugiasByPayOfPatologoHoraAplicacion(sucursal._id, patologo._id, hora_apertura, hora_cierre ? hora_cierre : new Date(),  empleado.access_token);
+  const loadCuraciones = async (hora_apertura, hora_cierre) => {
+    const response = await findCuracionesByPayOfPatologoHoraAplicacion(sucursal._id, patologo._id, hora_apertura, hora_cierre ? hora_cierre : new Date(),  empleado.access_token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      const cirugias = response.data;
-      cirugias.forEach(cirugia => {
-        setBiopsias([...biopsias, ...cirugia.biopsias]);
+      const curaciones = response.data;
+      curaciones.forEach(curacion => {
+        setBiopsias([...biopsias, ...curacion.biopsias]);
       });
-      setCirugias(cirugias);
+      setCuraciones(curaciones);
     }
   }
 
-  const loadCirugiasCPA = async (hora_apertura, hora_cierre) => {
-    /*const response = await findCirugiasByPayOfDoctorHoraAplicacionPA(sucursal._id, patologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date());
+  const loadCuracionesCPA = async (hora_apertura, hora_cierre) => {
+    /*const response = await findCuracionesByPayOfDoctorHoraAplicacionPA(sucursal._id, patologo._id, canceladoCPId, hora_apertura, hora_cierre ? hora_cierre : new Date());
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setCirugiasPA(response.data);
+      setCuracionesPA(response.data);
     }*/
   }
 
@@ -73,8 +73,8 @@ const ReporteImprimirPagoPatologo = (props) => {
       if (pagoDermatologo) {
       } else {
       }
-      await loadCirugias(hora_apertura, hora_cierre);
-      await loadCirugiasCPA(hora_apertura, hora_cierre);
+      await loadCuraciones(hora_apertura, hora_cierre);
+      await loadCuracionesCPA(hora_apertura, hora_cierre);
       setIsLoading(false);
     }
   }
@@ -91,11 +91,11 @@ const ReporteImprimirPagoPatologo = (props) => {
     setIsLoading(true);
     let total = 0;
 
-    // TOTAL DE LAS CIRUGíAS
-    cirugias.forEach(async (cirugia) => {
-      const pagoPatologo = Number(cirugia.costo_biopsias);
-      cirugia.pago_patologo = pagoPatologo;
-      updateCirugia(cirugia._id, cirugia,  empleado.access_token)
+    // TOTAL DE LAS CURACION
+    curaciones.forEach(async (curacion) => {
+      const pagoPatologo = Number(curacion.costo_biopsias);
+      curacion.pago_patologo = pagoPatologo;
+      updateCuracion(curacion._id, curacion,  empleado.access_token)
       total += Number(pagoPatologo);
     });
 
@@ -171,7 +171,7 @@ const ReporteImprimirPagoPatologo = (props) => {
             patologo={patologo}
             sucursal={sucursal}
             corte={corte}
-            cirugias={cirugias}
+            curaciones={curaciones}
             turno={turno}
             pagoDermatologo={pagoDermatologo}
             colorBase={colorBase}

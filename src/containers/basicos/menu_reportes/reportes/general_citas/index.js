@@ -7,7 +7,7 @@ import { toFormatterCurrency, addZero, getPagoDermatologoByServicio } from "../.
 import { findFacialByRangeDateAndSucursal, findFacialByRangeDateAndSucursalAndService } from "../../../../../services/faciales";
 import { findAparatologiaByRangeDateAndSucursal, findAparatologiaByRangeDateAndSucursalAndService } from "../../../../../services/aparatolgia";
 import { findEsteticasByRangeDateAndSucursal } from "../../../../../services/esteticas";
-import { findCirugiasByRangeDateAndSucursal } from "../../../../../services/cirugias";
+import { findCuracionesByRangeDateAndSucursal } from "../../../../../services/curaciones";
 import { findDermapenByRangeDateAndSucursal } from "../../../../../services/dermapens";
 import { findDatesByRangeDateAndSucursal, showAllBanco, showAllMetodoPago, showAllTipoTarjeta } from "../../../../../services";
 import { findRazonSocialById } from "../../../../../services/razones_sociales";
@@ -33,7 +33,7 @@ const ReporteGeneralCitas = (props) => {
 	const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
 	const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
 	const servicioConsultaId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
-	const servicioCirugiaId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID;
+	const servicioCuracionId = process.env.REACT_APP_CURACION_SERVICIO_ID;
 	const servicioEsteticaId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
 	const servicioDermapenId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID;
 	const formaPagoTarjetaId = process.env.REACT_APP_FORMA_PAGO_TARJETA;
@@ -43,7 +43,7 @@ const ReporteGeneralCitas = (props) => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [consultas, setConsultas] = useState([]);
 	const [faciales, setFaciales] = useState([]);
-	const [cirugias, setCirugias] = useState([]);
+	const [curaciones, setCuraciones] = useState([]);
 	const [dermapens, setDermapens] = useState([]);
 	const [aparatologias, setAparatologias] = useState([]);
 	const [esteticas, setEsteticas] = useState([]);
@@ -81,6 +81,7 @@ const ReporteGeneralCitas = (props) => {
 		{ title: 'TIPO', field: 'tipo_cita.nombre' },
 		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
 		{ title: 'COSMETÓLOGA', field: 'cosmetologa_nombre' },
+		{ title: 'QUIEN REALIZA', field: 'quien_realiza_nombre' },
 		{ title: 'PROMOVENDEDOR (A)', field: 'promovendedor_nombre' },
 		{ title: 'STATUS', field: 'status.nombre' },
 		{ title: 'PRECIO', field: 'precio_moneda' },
@@ -108,7 +109,7 @@ const ReporteGeneralCitas = (props) => {
 	}
 
 	const procesarDatos = async () => {
-		const datosCompletos = [...consultas, ...faciales, ...dermapens, ...cirugias, ...esteticas, ...aparatologias];
+		const datosCompletos = [...consultas, ...faciales, ...dermapens, ...curaciones, ...esteticas, ...aparatologias];
 
 		datosCompletos.sort((a, b) => {
 			if (a.fecha_hora > b.fecha_hora) return 1;
@@ -135,6 +136,7 @@ const ReporteGeneralCitas = (props) => {
 			item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
 			item.promovendedor_nombre = item.promovendedor ? item.promovendedor.nombre : 'SIN ASIGNAR';
 			item.cosmetologa_nombre = item.cosmetologa ? item.cosmetologa.nombre : 'SIN ASIGNAR';
+			item.quien_realiza_nombre = item.quien_realiza ? item.quien_realiza.nombre : 'SIN ASIGNAR';
 			item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
 			item.show_tratamientos = item.tratamientos ? item.tratamientos.map(tratamiento => {
 				const show_areas = tratamiento.areasSeleccionadas ? tratamiento.areasSeleccionadas.map(area => {
@@ -182,11 +184,11 @@ const ReporteGeneralCitas = (props) => {
 		}
 	}
 
-	const loadCirugias = async (startDate, endDate) => {
-		const response = await findCirugiasByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
+	const loadCuraciones = async (startDate, endDate) => {
+		const response = await findCuracionesByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
 			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			setCirugias(processResponse(response.data));
+			setCuraciones(processResponse(response.data));
 			await loadEsteticas(startDate, endDate);
 		}
 	}
@@ -196,7 +198,7 @@ const ReporteGeneralCitas = (props) => {
 			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {				
 			setDermapens(processResponse(response.data));
-			await loadCirugias(startDate, endDate);
+			await loadCuraciones(startDate, endDate);
 		}
 	}
 

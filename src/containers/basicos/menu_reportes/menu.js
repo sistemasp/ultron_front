@@ -10,7 +10,7 @@ import ReportesConsultas from './reportes/consultas';
 import ReportesTratamientos from './reportes/tratamientos';
 import ReportesPagos from './reportes/pagos';
 import ReportesFacturas from './reportes/facturas';
-import ReportesCirugias from './reportes/cirugias';
+import ReportesCuraciones from './reportes/curaciones';
 import ReportesBiopsias from './reportes/biopsias';
 import ReportesFaciales from './reportes/faciales';
 import ReportesLaser from './reportes/reportes_laser';

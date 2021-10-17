@@ -1,1 +1,6 @@
-export const REACT_APP_RESPONSE_CODE_OK = 200;
+const frecuenciaPrimeraVezId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
+
+export const frecuenciaPrimeraVezObj = {
+    _id: frecuenciaPrimeraVezId,
+    nombre: "PRIMERA VEZ",
+}

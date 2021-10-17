@@ -9,7 +9,7 @@ import {
 import { Backdrop, CircularProgress, makeStyles } from '@material-ui/core';
 import { addZero } from '../../../utils/utils';
 import { findProductoByServicio } from '../../../services/productos';
-import { createCirugia } from '../../../services/cirugias';
+import { createCuracion } from '../../../services/curaciones';
 import ModalFormProximaEstetica from './ModalFormProximaEstetica';
 import { createEstetica } from '../../../services/esteticas';
 import { findEmployeesByRolIdAvailable } from '../../../services/empleados';
@@ -60,7 +60,7 @@ const ModalProximaEstetica = (props) => {
   const tipoCitaDerivadaId = process.env.REACT_APP_TIPO_CITA_DERIVADO_ID;
   const cosmetologaSinAsignarId = process.env.REACT_APP_COSMETOLOGA_SIN_ASIGNAR_ID;
   const esteticaServicioId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
-  const productoCirugiaId = process.env.REACT_APP_PRODUCTO_CIRUGIA_ID;
+  const productoCuracionId = process.env.REACT_APP_PRODUCTO_CURACION_ID;
 
   const [productos, setProductos] = useState([]);
   const [values, setValues] = useState({
@@ -167,7 +167,7 @@ const ModalProximaEstetica = (props) => {
     data.hora_atencion = '--:--';
     data.hora_salida = '--:--';
     const response = await createEstetica(data, empleado.access_token);
-    /*switch (cirugia.servicio._id) {
+    /*switch (curacion.servicio._id) {
       case servicioAparatologiaId:
         response = await createAparatologia(data);
         break;

@@ -12,8 +12,6 @@ import ModalConsulta from '../../../components/modales/modal_consulta';
 import ModalPagos from '../../../components/modales/modal_pagos';
 import ModalImprimirConsulta from '../../../components/modales/imprimir/consulta';
 import { optionSelect, optionSelect2, toFormatterCurrency } from '../../../utils/utils';
-import ModalCirugia from '../../../components/modales/modal_cirugia';
-import ModalEstetica from '../../../components/modales/modal_estetica';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import ModalProximaConsulta from '../../../components/modales/modal_proxima_consulta';
 import ModalTraspasoConsulta from '../../../components/modales/traspaso_consulta';
@@ -81,9 +79,9 @@ export const AgendarConsultaContainer = (props) => {
     openModalImprimirConsultas,
     datosImpresion,
     onCloseImprimirConsulta,
-    openModalCirugias,
-    onCloseCirugia,
-    cirugia,
+    openModalCuraciones,
+    onCloseCuracion,
+    curacion,
     estetica,
     tipoServicioId,
     openModalEstetica,

@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core';
 import ModalConsultorioAgregarPaciente from '../../../components/modales/modal_consultorio_agregar_paciente';
 import ModalCabinaAgregarPaciente from '../../../components/modales/modal_cabina_agregar_paciente';
-import ModalCirugiaAgregarPaciente from '../../../components/modales/modal_cirugia_agregar_paciente';
+import ModalCuracionAgregarPaciente from '../../../components/modales/modal_curacion_agregar_paciente';
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -37,7 +37,7 @@ export const ListaEsperaContainer = (props) => {
     listaEsperaDermapens,
     listaEsperaLasers,
     listaEsperaAparatologias,
-    listaEsperaCirugias,
+    listaEsperaCuraciones,
     optionsEspera,
     optionsConsultorio,
     actionsEsperaConsultorio,
@@ -46,7 +46,7 @@ export const ListaEsperaContainer = (props) => {
     actionsCabina,
     openModalConsultorioAsignar,
     openModalCabinaAsignar,
-    openModalSalaCirugiaAsignar,
+    openModalSalaCuracionAsignar,
     tipo_servicio,
     servicio,
     handleClose,
@@ -56,17 +56,17 @@ export const ListaEsperaContainer = (props) => {
     sucursal,
     cambio,
     paciente,
-    tituloSalaCirugia,
-    columnsSalaCirugias,
-    salaCirugias,
-    actionsSalaCirugia,
-    tituloEsperaSalaCirugia,
+    tituloSalaCuracion,
+    columnsSalaCuraciones,
+    salaCuraciones,
+    actionsSalaCuracion,
+    tituloEsperaSalaCuracion,
     listaEsperaEstetica,
-    actionsEsperaSalaCirugia,
+    actionsEsperaSalaCuracion,
     componentsConsultorio,
   } = props;
 
-  const listaEsperaSalaCirugia = [...listaEsperaEstetica, ...listaEsperaCirugias];
+  const listaEsperaSalaCuracion = [...listaEsperaEstetica, ...listaEsperaCuraciones];
   const listaEsperaTratamientos = [...listaEsperaFaciales, ...listaEsperaLasers, ...listaEsperaAparatologias, ...listaEsperaDermapens];
 
   return (
@@ -105,9 +105,9 @@ export const ListaEsperaContainer = (props) => {
       }
 
       {
-        openModalSalaCirugiaAsignar ?
-          <ModalCirugiaAgregarPaciente
-            open={openModalSalaCirugiaAsignar}
+        openModalSalaCuracionAsignar ?
+          <ModalCuracionAgregarPaciente
+            open={openModalSalaCuracionAsignar}
             onClose={handleClose}
             empleado={empleado}
             tipo_servicio={tipo_servicio}
@@ -141,10 +141,10 @@ export const ListaEsperaContainer = (props) => {
             options={optionsEspera} />
           <br />
           <TableComponent
-            titulo={tituloEsperaSalaCirugia}
+            titulo={tituloEsperaSalaCuracion}
             columns={columnsEspera}
-            data={listaEsperaSalaCirugia}
-            actions={actionsEsperaSalaCirugia}
+            data={listaEsperaSalaCuracion}
+            actions={actionsEsperaSalaCuracion}
             options={optionsEspera} />
         </Grid>
 
@@ -164,10 +164,10 @@ export const ListaEsperaContainer = (props) => {
             options={optionsConsultorio} />
           <br />
           <TableComponent
-            titulo={tituloSalaCirugia}
-            columns={columnsSalaCirugias}
-            data={salaCirugias}
-            actions={actionsSalaCirugia}
+            titulo={tituloSalaCuracion}
+            columns={columnsSalaCuraciones}
+            data={salaCuraciones}
+            actions={actionsSalaCuracion}
             options={optionsConsultorio} />
         </Grid>
       </Grid>

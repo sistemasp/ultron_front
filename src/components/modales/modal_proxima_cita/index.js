@@ -14,7 +14,7 @@ import { createLaser } from '../../../services/laser';
 import { Backdrop, CircularProgress, makeStyles } from '@material-ui/core';
 import { addZero } from '../../../utils/utils';
 import ModalFormProximaCita from './ModalFormProximaCita';
-import { createCirugia } from '../../../services/cirugias';
+import { createCuracion } from '../../../services/curaciones';
 import { createEstetica } from '../../../services/esteticas';
 import { createDermapen } from '../../../services/dermapens';
 import { findEmployeesByRolIdAvailable } from '../../../services/empleados';
@@ -74,7 +74,7 @@ const ModalProximaCita = (props) => {
   const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
   const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
   const servicioLaserId = process.env.REACT_APP_LASER_SERVICIO_ID;
-  const servicioCirugiaId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID;
+  const servicioCuracionId = process.env.REACT_APP_CURACION_SERVICIO_ID;
   const servicioEsteticaId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
   const servicioDermapenId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID;
 
@@ -178,8 +178,8 @@ const ModalProximaCita = (props) => {
       case servicioLaserId:
         response = await createLaser(data, empleado.access_token);
         break;
-      case servicioCirugiaId:
-        response = await createCirugia(data, empleado.access_token);
+      case servicioCuracionId:
+        response = await createCuracion(data, empleado.access_token);
         break;
       case servicioEsteticaId:
         response = await createEstetica(data, empleado.access_token);
@@ -210,8 +210,8 @@ const ModalProximaCita = (props) => {
       case servicioLaserId:
         await loadLaser(data.fecha_hora, empleado.access_token);
         break;
-      case servicioCirugiaId:
-        await createCirugia(data.fecha_hora, empleado.access_token);
+      case servicioCuracionId:
+        await createCuracion(data.fecha_hora, empleado.access_token);
         break;
       case servicioEsteticaId:
         await createEstetica(data.fecha_hora, empleado.access_token);

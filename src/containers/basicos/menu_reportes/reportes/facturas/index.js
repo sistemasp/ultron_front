@@ -6,7 +6,7 @@ import { ReportesFacturasContainer } from "./reportes_facturas";
 import { findAparatologiaById } from "../../../../../services/aparatolgia";
 import { findFacialById } from "../../../../../services/faciales";
 import { findConsultById } from "../../../../../services/consultas";
-import { findCirugiaById } from "../../../../../services/cirugias";
+import { findCuracionById } from "../../../../../services/curaciones";
 import { findBiopsiaById } from "../../../../../services/biopsias";
 import { findEsteticaById } from "../../../../../services/esteticas";
 import { findDermapenById } from "../../../../../services/dermapens";
@@ -36,7 +36,7 @@ const ReportesFacturas = (props) => {
 	const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID
 	const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID
 	const servicioConsultaId = process.env.REACT_APP_CONSULTA_SERVICIO_ID
-	const servicioCirugiaId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID
+	const servicioCuracionId = process.env.REACT_APP_CURACION_SERVICIO_ID
 	const servicioBiopsiaId = process.env.REACT_APP_BIOPSIA_SERVICIO_ID
 	const servicioEsteticaId = process.env.REACT_APP_ESTETICA_SERVICIO_ID
 	const servicioDermapenId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID
@@ -128,8 +128,8 @@ const ReportesFacturas = (props) => {
 			// 		case servicioConsultaId:
 			// 			servicioResponse = await findConsultById(item.servicio, token);
 			// 			break;
-			// 		case servicioCirugiaId:
-			// 			servicioResponse = await findCirugiaById(item.servicio, token);
+			// 		case servicioCuracionId:
+			// 			servicioResponse = await findCuracionById(item.servicio, token);
 			// 			break;
 			// 		case servicioBiopsiaId:
 			// 			servicioResponse = await findBiopsiaById(item.servicio, token);

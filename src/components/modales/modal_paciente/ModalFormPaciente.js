@@ -5,6 +5,7 @@ import { TextField, Button, Grid, FormControl, InputLabel, Select, MenuItem } fr
 import { ButtonCustom } from '../../basic/ButtonCustom';
 import myStyles from '../../../css';
 import { CheckCustom } from '../../basic/CheckCustom';
+import { ComboCustom } from '../../basic/ComboCustom';
 
 function getModalStyle() {
   const top = 50;
@@ -127,16 +128,11 @@ const ModalFormPaciente = (props) => {
               </Grid>
               <Grid item xs={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-hora">SEXO</InputLabel>
-                  <Select
-                    labelId="simple-select-outlined-dermatologo"
-                    id="simple-select-outlined-dermatologo"
+                  <ComboCustom
+                    label='SEXO'
                     value={values.sexo}
                     onChange={onChangeSexo}
-                    name="sexo"
-                    label="SEXO" >
-                    {sexos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                  </Select>
+                    options={sexos} />
                 </FormControl>
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -156,7 +152,7 @@ const ModalFormPaciente = (props) => {
                   onClick={(e) => onClickGuardar(e, values)}
                   text='GUARDAR' />
               </Grid>
-              { sucursal._id === process.env.REACT_APP_SUCURSAL_OCCI_ID ||
+              {sucursal._id === process.env.REACT_APP_SUCURSAL_OCCI_ID ||
                 sucursal._id === process.env.REACT_APP_SUCURSAL_FEDE_ID ?
                 <Grid item xs={12} sm={6}>
                   <ButtonCustom

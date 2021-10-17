@@ -6,7 +6,7 @@ import { showAllStatusVisibles } from '../../../services/status';
 import { createEntrada, deleteEntrada, updateEntrada } from '../../../services/entradas';
 import { createFacial, updateFacial } from '../../../services/faciales';
 import { createAparatologia, updateAparatologia } from '../../../services/aparatolgia';
-import { createCirugia, updateCirugia } from '../../../services/cirugias';
+import { createCuracion, updateCuracion } from '../../../services/curaciones';
 import { createEstetica, updateEstetica } from '../../../services/esteticas';
 import { createDermapen, updateDermapen } from '../../../services/dermapens';
 import { createPago, deletePago } from '../../../services/pagos';
@@ -32,7 +32,7 @@ const ModalTraspasoServicio = (props) => {
   const pendienteStatusId = process.env.REACT_APP_PENDIENTE_STATUS_ID;
   const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
   const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
-  const servicioCirugiaId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID;
+  const servicioCuracionId = process.env.REACT_APP_CURACION_SERVICIO_ID;
   const servicioEsteticaId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
   const servicioDermapenId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID;
 
@@ -71,8 +71,8 @@ const ModalTraspasoServicio = (props) => {
       servicioResponse = await updateFacial(servicio._id, servicio, empleado.access_token);
     } else if (servicio.servicio._id === servicioAparatologiaId) {
       servicioResponse = await updateAparatologia(servicio._id, servicio, empleado.access_token);
-    } else if (servicio.servicio._id === servicioCirugiaId) {
-      servicioResponse = await updateCirugia(servicio._id, servicio, empleado.access_token);
+    } else if (servicio.servicio._id === servicioCuracionId) {
+      servicioResponse = await updateCuracion(servicio._id, servicio, empleado.access_token);
     } else if (servicio.servicio._id === servicioEsteticaId) {
       servicioResponse = await updateEstetica(servicio._id, servicio, empleado.access_token);
     } else if (servicio.servicio._id === servicioDermapenId) {
@@ -97,8 +97,8 @@ const ModalTraspasoServicio = (props) => {
         response = await createFacial(servicio, empleado.access_token);
       } else if (servicio.servicio._id === servicioAparatologiaId) {
         response = await createAparatologia(servicio, empleado.access_token);
-      } else if (servicio.servicio._id === servicioCirugiaId) {
-        response = await createCirugia(servicio, empleado.access_token);
+      } else if (servicio.servicio._id === servicioCuracionId) {
+        response = await createCuracion(servicio, empleado.access_token);
       } else if (servicio.servicio._id === servicioEsteticaId) {
         response = await createEstetica(servicio, empleado.access_token);
       } else if (servicio.servicio._id === servicioDermapenId) {

@@ -38,7 +38,7 @@ const Pacientes = (props) => {
 		onClickAgendarConsulta,
 		onClickAgendarFaciales,
 		onClickAgendarAparatologia,
-		onClickAgendarCirugia,
+		onClickAgendarCuracion,
 		onClickAgendarEstetica,
 		onClickAgendarDermapen,
 		colorBase,
@@ -184,8 +184,8 @@ const Pacientes = (props) => {
 		},
 		{
 			icon: EventAvailableIcon,
-			tooltip: 'AGREGAR CIRUGíA',
-			onClick: onClickAgendarCirugia
+			tooltip: 'AGREGAR CURACIÓN',
+			onClick: onClickAgendarCuracion
 		},
 		{
 			icon: EventAvailableIcon,
@@ -214,8 +214,8 @@ const Pacientes = (props) => {
 			case 'AGREGAR FACIAL':
 				onClickAgendarFaciales(e, rowData);
 				break;
-			case 'AGREGAR CIRUGíA':
-				onClickAgendarCirugia(e, rowData);
+			case 'AGREGAR CURACIÓN':
+				onClickAgendarCuracion(e, rowData);
 				break;
 			case 'AGREGAR ESTÉTICA':
 				onClickAgendarEstetica(e, rowData);

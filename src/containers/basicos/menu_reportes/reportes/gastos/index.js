@@ -7,7 +7,7 @@ import { toFormatterCurrency, addZero, getPagoDermatologoByServicio } from "../.
 import { findFacialByRangeDateAndSucursal, findFacialByRangeDateAndSucursalAndService } from "../../../../../services/faciales";
 import { findAparatologiaByRangeDateAndSucursal, findAparatologiaByRangeDateAndSucursalAndService } from "../../../../../services/aparatolgia";
 import { findEsteticasByRangeDateAndSucursal } from "../../../../../services/esteticas";
-import { findCirugiasByRangeDateAndSucursal } from "../../../../../services/cirugias";
+import { findCuracionesByRangeDateAndSucursal } from "../../../../../services/curaciones";
 import { findDermapenByRangeDateAndSucursal } from "../../../../../services/dermapens";
 import { showAllBanco, showAllMetodoPago, showAllTipoTarjeta } from "../../../../../services";
 import { findRazonSocialById } from "../../../../../services/razones_sociales";
