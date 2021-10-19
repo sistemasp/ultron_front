@@ -116,6 +116,7 @@ const ModalCuracion = (props) => {
     patologo: curacion.biopsias.length > 0 ? curacion.biopsias[0].patologo : undefined,
     hora: 0,
     minutos: 0,
+    pagos: curacion.pagos,
   });
 
   const dataComplete = values.pagado;
@@ -133,6 +134,14 @@ const ModalCuracion = (props) => {
     setIsLoading(true);
     const fecha_actual = new Date();
     data.servicio = curacionServicioId;
+
+    if (data.status === canceloSPStatusId) {
+      data.pagos.forEach(async (pago) => {
+        await deleteEntrada(pago.entrada);
+        await deletePago(pago._id);
+      });
+      data.pagado = false;
+    }
 
     if (data.hasBiopsia && curacion.biopsias.length === 0) {
       const biopsias = [];
@@ -159,15 +168,7 @@ const ModalCuracion = (props) => {
       data.biopsias = data.hasBiopsia ? idBiopsias : [];
     }
 
-    if (data.status._id === canceloSPStatusId) {
-      data.pagos.forEach(async (pago) => {
-        await deleteEntrada(pago.entrada);
-        await deletePago(pago._id);
-      });
-      data.pagado = false;
-    }
-
-    if (data.status._id !== pendienteStatusId) {
+    if (data.status !== pendienteStatusId) {
       data.quien_confirma_asistencia = empleado._id;
 
       if (data.status === asistioStatusId) {

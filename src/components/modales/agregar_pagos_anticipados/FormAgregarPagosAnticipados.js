@@ -62,6 +62,8 @@ const FormAgregarPagosAnticipados = (props) => {
     onChangeDigitos,
     onChangePagoAnticipado,
     onChangDescuentoDermatologo,
+    cambioTurno,
+    onChangeCambioTurno,
     isHoliDay,
     onChangeHoliDay,
     frecuencias,
@@ -181,7 +183,7 @@ const FormAgregarPagosAnticipados = (props) => {
               {
                 values.servicio._id === consultaServicioId ?
                   <Fragment>
-                    <Grid item xs={12} sm={2} className={classes.grid_center}>
+                    <Grid item xs={12} sm={true} className={classes.grid_center}>
                       <CheckCustom
                         checked={isHoliDay}
                         onChange={onChangeHoliDay}
@@ -189,6 +191,19 @@ const FormAgregarPagosAnticipados = (props) => {
                         label="ES FESTIVO"
                       />
                     </Grid>
+                    {
+                      sucursal === process.env.REACT_APP_SUCURSAL_OCCI_ID ||
+                        sucursal === process.env.REACT_APP_SUCURSAL_FEDE_ID ?
+                        <Grid item xs={12} sm={true} className={classes.grid_center}>
+                          <CheckCustom
+                            checked={cambioTurno}
+                            onChange={onChangeCambioTurno}
+                            name="checkedCT"
+                            label="CAMBIO TURNO"
+                          />
+                        </Grid>
+                        : ''
+                    }
                   </Fragment>
                   :
                   <Fragment>

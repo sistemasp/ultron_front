@@ -173,7 +173,7 @@ const ReportesDetallesGeneral = (props) => {
 			const impuesto = importe2 * (impuestoPorcentaje / 100);
 			const descuentoPorcentaje = 100 - (pago.total * 100 / consulta.precio);
 			const descuentoCantidad = (consulta.precio * descuentoPorcentaje / 100);
-			const pagoDermatologo = pago.total * consulta.pago_dermatologo / (consulta.total === "0" ? pago.total : consulta.total);
+			const pagoDermatologo = pago.total * consulta.pago_dermatologo / (Number(consulta.total === "0" ? pago.total : consulta.total) === 0 ? 1 : (consulta.total === "0" ? pago.total : consulta.total));
 			const pagoClinica = pago.total - pagoDermatologo;
 			const descuentoClinicaPorcentaje = consulta.porcentaje_descuento_clinica ? consulta.porcentaje_descuento_clinica : 0;
 			const descuentoDermatologoPorcentaje = consulta.descuento_dermatologo ? consulta.descuento_dermatologo : 0;
@@ -1012,6 +1012,7 @@ const ReportesDetallesGeneral = (props) => {
 		const sesionesAnticipadas = [];
 		pagoAnticipados.map((pagoAnticipado) => {
 			pagoAnticipado.sesiones_anticipadas.map((sesionAnticipada) => {
+				console.log("KAOZ", sesionAnticipada);
 				sesionAnticipada.fecha_hora = sesionAnticipada.fecha_pago;
 
 				sesionAnticipada.hora_llegada = "NO APLICA";

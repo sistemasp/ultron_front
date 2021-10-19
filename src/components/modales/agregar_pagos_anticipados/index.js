@@ -102,6 +102,7 @@ const AgregarPagosAnticipados = (props) => {
   const [openModalPagosMultiservicios, setOpenModalPagosMultiservicios] = useState(false);
   const [pagoAnticipado, setPagoAnticipado] = useState({});
   const [isHoliDay, setIsHoliDay] = useState(false);
+  const [cambioTurno, setCambioTurno] = useState(false);
 
   const [values, setValues] = useState({
     porcentaje_descuento_clinica: 0,
@@ -344,6 +345,20 @@ const AgregarPagosAnticipados = (props) => {
       setOpenModalPagosMultiservicios(false);
     }
     setIsLoading(false);
+  }
+
+  const handleChangeCambioTurno = (e) => {
+    setIsHoliDay(false);
+    const precio = date.getDay() === 6 ? (values.precio === sucursal.precio_sabado_matutino ? sucursal.precio_sabado_vespertino : sucursal.precio_sabado_matutino) // SABADO
+      : (values.precio === sucursal.precio_matutino ? sucursal.precio_vespertino : sucursal.precio_matutino); // L-V
+
+    setValues({
+      ...values,
+      precio: precio,
+      total: precio,
+    });
+
+    setCambioTurno(!cambioTurno);
   }
 
   const loadSesionesAnticipadas = async () => {
@@ -774,6 +789,8 @@ const AgregarPagosAnticipados = (props) => {
             onClickPagosMultiservicios={(e) => handleClickPagosMultiservicios(e)}
             onClosePagosMultiservicios={handleClosePagosMultiservicios}
             colorBase={colorBase}
+            cambioTurno={cambioTurno}
+            onChangeCambioTurno={(e) => handleChangeCambioTurno(e)}
             selectedAreas={selectedAreas}
             onGuardarModalPagosMultiservicios={handleGuardarModalPagosMultiservicios} />
           : <Backdrop className={classes.backdrop} open={isLoading} >
