@@ -148,7 +148,6 @@ const ReportesDetallesGeneral = (props) => {
 
 	const procesarConsulta = (consulta, datos) => {
 		consulta.iva = false;
-			console.log("KAOZ", consulta);
 		consulta.pagos.forEach(pago => {
 			const metodoPago = metodosPago.find(metodoPago => {
 				return metodoPago._id === pago.forma_pago;

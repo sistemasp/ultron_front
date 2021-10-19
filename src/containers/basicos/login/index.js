@@ -110,7 +110,6 @@ const LoginForm = (props) => {
   };
 
   const submit = async (data) => {
-    console.log("KAOZ", data);
     const response = await login(data.employee_number, data.password);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED && response.data !== '') {
       const empleado = response.data;

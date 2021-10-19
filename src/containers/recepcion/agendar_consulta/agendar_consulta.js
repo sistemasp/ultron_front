@@ -248,7 +248,7 @@ export const AgendarConsultaContainer = (props) => {
             </FormControl>
           </Grid>
           {
-            values.frecuencia === frecuenciaReconsultaId
+            values.frecuencia && values.frecuencia._id === frecuenciaReconsultaId
               ? <Grid item xs={12} sm={2}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="simple-select-outlined-hora">PRODUCTO</InputLabel>
@@ -293,7 +293,7 @@ export const AgendarConsultaContainer = (props) => {
           </Grid>
 
           {
-            values.frecuencia === frecuenciaReconsultaId
+            values.frecuencia && values.frecuencia._id === frecuenciaReconsultaId
               ? <Grid item xs={12} sm={2}>
                 <h2> {values.promovendedor.nombre} </h2>
               </Grid>

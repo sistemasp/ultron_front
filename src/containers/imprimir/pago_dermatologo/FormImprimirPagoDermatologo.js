@@ -549,6 +549,7 @@ const FormImprimirPagoDermatologo = (props) => {
                     curaciones.map(curacion => {
                       const pagoDermatologo = curacion.has_descuento_dermatologo ? 0 : Number(curacion.total_aplicacion) * Number(dermatologo.esquema.porcentaje_curaciones) / 100;
                       pagoTotal += Number(pagoDermatologo);
+
                       const date = new Date(curacion.hora_aplicacion);
                       return <Grid container>
                         <Grid item xs={true} className={classes.label}>
