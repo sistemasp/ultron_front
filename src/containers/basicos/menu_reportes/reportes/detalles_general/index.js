@@ -1012,7 +1012,6 @@ const ReportesDetallesGeneral = (props) => {
 		const sesionesAnticipadas = [];
 		pagoAnticipados.map((pagoAnticipado) => {
 			pagoAnticipado.sesiones_anticipadas.map((sesionAnticipada) => {
-				console.log("KAOZ", sesionAnticipada);
 				sesionAnticipada.fecha_hora = sesionAnticipada.fecha_pago;
 
 				sesionAnticipada.hora_llegada = "NO APLICA";

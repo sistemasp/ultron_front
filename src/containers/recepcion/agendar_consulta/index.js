@@ -39,7 +39,10 @@ import { updateSesionAnticipada } from "../../../services/sesiones_anticipadas";
 import { createEntrada, updateEntrada } from "../../../services/entradas";
 import { createPago } from "../../../services/pagos";
 import { findTurnoActualBySucursal } from "../../../services/corte";
-import { frecuenciaPrimeraVezObj } from "../../../utils/constants";
+import { 
+	frecuenciaPrimeraVezObj,
+	productoConsultaObj
+} from "../../../utils/constants";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -131,7 +134,7 @@ const AgendarConsulta = (props) => {
 	const [values, setValues] = useState({
 		hora: '',
 		fecha_hora: new Date(),
-		producto: productoConsultaId,
+		producto: productoConsultaObj,
 		paciente: `${paciente._id}`,
 		precio: isHoliDay ? sucursal.precio_festivo : // DÍA FESTIVO
 			date.getDay() === 6 ? (date.getHours() >= 13 ? sucursal.precio_sabado_vespertino : sucursal.precio_sabado_matutino) // SABADO
@@ -309,8 +312,8 @@ const AgendarConsulta = (props) => {
 		setValues({ ...values, medio: e.target.value });
 	}
 
-	const handleChangeProductos = (e) => {
-		setValues({ ...values, producto: e.target.value });
+	const handleChangeProductos = (e, newValue) => {
+		setValues({ ...values, producto: newValue });
 	}
 
 	const handleClickAgendar = async (data) => {
@@ -324,7 +327,7 @@ const AgendarConsulta = (props) => {
 		data.hora_salida = '--:--';
 		data.total = data.precio;
 		data.servicio = consultaServicioId;
-		data.tipo_cita = data.frecuencia === frecuenciaPrimeraVezId ? tipoCitaRevisionId : tipoCitaDerivadaId;
+		data.tipo_cita = data.frecuencia._id === frecuenciaPrimeraVezId ? tipoCitaRevisionId : tipoCitaDerivadaId;
 		if (sucursal._id === sucursalOccidentalId || sucursal._id === sucursalFederalismoId) {
 			const fecha_hora = new Date();
 			fecha_hora.setMinutes(0);
@@ -460,9 +463,9 @@ const AgendarConsulta = (props) => {
 		setValues({
 			...values,
 			frecuencia: frecuencia,
-			dermatologo: frecuencia === frecuenciaPrimeraVezId ? dermatologo._id : dermatologoDirectoId,
-			promovendedor: frecuencia === frecuenciaReconsultaId ? promovendedor : promovendedorSinPromovendedorId,
-			producto: frecuencia === frecuenciaPrimeraVezId ? productoConsultaId : values.producto,
+			dermatologo: frecuencia && frecuencia._id === frecuenciaPrimeraVezId ? dermatologo._id : dermatologoDirectoId,
+			promovendedor: frecuencia && frecuencia._id === frecuenciaReconsultaId ? promovendedor : promovendedorSinPromovendedorId,
+			producto: frecuencia && frecuencia._id === frecuenciaPrimeraVezId ? productoConsultaId : values.producto,
 		});
 	}
 
@@ -888,7 +891,7 @@ const AgendarConsulta = (props) => {
 						medios={medios}
 						onChangeTipoCita={(e) => handleChangeTipoCita(e)}
 						onChangeMedio={(e) => handleChangeMedio(e)}
-						onChangeProductos={(e) => handleChangeProductos(e)}
+						onChangeProductos={handleChangeProductos}
 						dermatologos={dermatologos}
 						promovendedores={promovendedores}
 						onChangeDermatologos={(e) => handleChangeDermatologos(e)}
