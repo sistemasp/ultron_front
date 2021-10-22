@@ -183,7 +183,7 @@ const ModalFormPago = (props) => {
                         variant="outlined" />
                     </Grid>
                     <Grid item xs={12}>
-                      <h2 className={classes.label}>{`TOTAL: ${toFormatterCurrency(values.total)}`}</h2>
+                      <h2 className={classes.labelBig}>{`TOTAL: ${toFormatterCurrency(values.total)}`}</h2>
                     </Grid>
 
 

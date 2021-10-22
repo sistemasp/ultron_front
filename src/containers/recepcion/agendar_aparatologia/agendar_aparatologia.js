@@ -244,7 +244,7 @@ export const AgendarAparatologiaContainer = (props) => {
 										id="simple-select-outlined-tratamientos"
 										value={values.tratamientos[0]}
 										onChange={(e) => onChangeTratamientos(e)}
-										label="RATAMIENTOS" >
+										label="TRATAMIENTOS" >
 										{tratamientos.sort().map((item, index) => <MenuItem key={index} value={item}>{item.nombre}</MenuItem>)}
 									</Select>
 								</FormControl>

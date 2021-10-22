@@ -39,7 +39,7 @@ import { updateSesionAnticipada } from "../../../services/sesiones_anticipadas";
 import { createEntrada, updateEntrada } from "../../../services/entradas";
 import { createPago } from "../../../services/pagos";
 import { findTurnoActualBySucursal } from "../../../services/corte";
-import { 
+import {
 	frecuenciaPrimeraVezObj,
 	productoConsultaObj
 } from "../../../utils/constants";
@@ -107,6 +107,8 @@ const AgendarConsulta = (props) => {
 	const medioSinCitaId = process.env.REACT_APP_MEDIO_SIN_CITA_ID;
 	const productoConsultaId = process.env.REACT_APP_PRODUCTO_CONSULTA_ID;
 	const efectivoFormaPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
+	const tarjetaFormaPagoId = process.env.REACT_APP_FORMA_PAGO_TARJETA;
+	const noPagaFormaPagoId = process.env.REACT_APP_FORMA_PAGO_NO_PAGA;
 	const sesionAnticipadaFormaPagoId = process.env.REACT_APP_FORMA_PAGO_SESION_ANTICIPADA;
 	const fisicoMedioId = process.env.REACT_APP_MEDIO_FISICO_ID;
 	const sucursalOccidentalId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
@@ -116,6 +118,12 @@ const AgendarConsulta = (props) => {
 	const tratamientoConsultaId = process.env.REACT_APP_CONSULTA_TRATAMIENTO_ID;
 
 	const date = new Date();
+
+	const getPrecio = () => {
+		return isHoliDay ? sucursal.precio_festivo : // DÍA FESTIVO
+			date.getDay() === 6 ? (date.getHours() >= 13 ? sucursal.precio_sabado_vespertino : sucursal.precio_sabado_matutino) // SABADO
+				: (date.getHours() >= 14 ? sucursal.precio_vespertino : sucursal.precio_matutino) // L-V
+	}
 
 	const [openAlert, setOpenAlert] = useState(false);
 	const [message, setMessage] = useState('');
@@ -136,9 +144,7 @@ const AgendarConsulta = (props) => {
 		fecha_hora: new Date(),
 		producto: productoConsultaObj,
 		paciente: `${paciente._id}`,
-		precio: isHoliDay ? sucursal.precio_festivo : // DÍA FESTIVO
-			date.getDay() === 6 ? (date.getHours() >= 13 ? sucursal.precio_sabado_vespertino : sucursal.precio_sabado_matutino) // SABADO
-				: (date.getHours() >= 14 ? sucursal.precio_vespertino : sucursal.precio_matutino), // L-V
+		precio: getPrecio(),
 		porcentaje_descuento_clinica: 0,
 		descuento_clinica: 0,
 		descuento_dermatologo: 0,
@@ -313,7 +319,14 @@ const AgendarConsulta = (props) => {
 	}
 
 	const handleChangeProductos = (e, newValue) => {
-		setValues({ ...values, producto: newValue });
+		setValues({
+			...values,
+			producto: newValue,
+			forma_pago: newValue && newValue._id === productoConsultaId ? efectivoFormaPagoId : noPagaFormaPagoId,
+			precio: newValue && newValue._id === productoConsultaId ? getPrecio() : '0',
+			porcentaje_descuento_clinica: newValue && newValue._id === productoConsultaId ? '0' : '100',
+			descuento_clinica: newValue && newValue._id === productoConsultaId ? 0 : getPrecio(),
+		});
 	}
 
 	const handleClickAgendar = async (data) => {
@@ -342,18 +355,19 @@ const AgendarConsulta = (props) => {
 		const response = await createConsult(data, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			const resConsult = response.data;
-			if (sucursal._id === sucursalOccidentalId || sucursal._id === sucursalFederalismoId && data.forma_pago === efectivoFormaPagoId && data.producto._id === productoConsultaId) {
+			if (sucursal._id === sucursalOccidentalId || sucursal._id === sucursalFederalismoId && data.forma_pago !== tarjetaFormaPagoId) {
 				const entrada = {
 					create_date: create_date,
 					hora_aplicacion: create_date,
 					recepcionista: empleado._id,
-					concepto: `FOLIO: ${generateFolio({})}`,
+					concepto: `PACIENTE: ${paciente.nombres} ${paciente.apellidos}`,
 					cantidad: data.precio,
 					tipo_entrada: tipoEntradaConsultaId,
 					sucursal: sucursal,
-					forma_pago: efectivoFormaPagoId,
+					forma_pago: data.forma_pago,
 					pago_anticipado: false,
 				};
+
 				const entradaResponse = await createEntrada(entrada, token);
 				if (`${entradaResponse.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 					const resEntrada = entradaResponse.data;
@@ -367,11 +381,11 @@ const AgendarConsulta = (props) => {
 						quien_recibe_pago: data.quien_agenda,
 						cantidad: data.precio,
 						total: data.precio,
-						forma_pago: efectivoFormaPagoId,
+						forma_pago: data.forma_pago,
 						sucursal: sucursal._id,
 						observaciones: data.observaciones,
-						porcentaje_descuento_clinica: '0',
-						descuento_clinica: 0,
+						porcentaje_descuento_clinica: values.porcentaje_descuento_clinica,
+						descuento_clinica: values.descuento_clinica,
 						descuento_dermatologo: 0,
 						tipo_servicio: servicioConsultaId,
 						servicio: resConsult._id,
@@ -379,6 +393,7 @@ const AgendarConsulta = (props) => {
 						entrada: resEntrada._id,
 						turno: turno,
 					};
+
 					const pagoResponse = await createPago(pago, token);
 					if (`${pagoResponse.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 						const resPago = pagoResponse.data;
@@ -780,9 +795,13 @@ const AgendarConsulta = (props) => {
 	}
 
 	const handleChangePaymentMethod = (e) => {
+		const formaPago = e.target.value;
 		setValues({
 			...values,
-			forma_pago: e.target.value,
+			forma_pago: formaPago,
+			precio: formaPago !== noPagaFormaPagoId ? getPrecio() : '0',
+			porcentaje_descuento_clinica: formaPago !== noPagaFormaPagoId ? '0' : '100',
+			descuento_clinica: formaPago !== noPagaFormaPagoId ? 0 : getPrecio(),
 		});
 	}
 

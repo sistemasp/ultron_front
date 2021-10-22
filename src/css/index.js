@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core";
 
-const drawerWidth = 250;
+const drawerWidth = 300;
 const marginBase = 10;
 
 const myStyles = (colorBase) => makeStyles( (theme) => {
@@ -12,7 +12,7 @@ const myStyles = (colorBase) => makeStyles( (theme) => {
         },
         paper: {
             position: 'absolute',
-            width: 400,
+            width: '60%',
             backgroundColor: theme.palette.background.paper,
             border: '2px solid #000',
             boxShadow: theme.shadows[5],
@@ -101,6 +101,12 @@ const myStyles = (colorBase) => makeStyles( (theme) => {
             marginBottom: '0px',
             marginRight: '10px',
             textAlign: 'right',
+        },
+        labelBig: {
+            fontSize: '50px',
+            marginTop: '0px',
+            marginBottom: '0px',
+            textAlign: 'center',
         },
         gridItem: {
             display: 'flex',

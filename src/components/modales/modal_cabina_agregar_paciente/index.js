@@ -33,6 +33,8 @@ const ModalCabinaAgregarPaciente = (props) => {
     colorBase,
   } = props;
 
+  console.log("KAOZ", cambio);
+
   const [isLoading, setIsLoading] = useState(true);
   const [cabinas, setCabinas] = useState([]);
   //const [consulta, setConsulta] = useState();
@@ -84,6 +86,9 @@ const ModalCabinaAgregarPaciente = (props) => {
       let updateCita = cita;
       updateCita.status = enCabinaStatusId;
       updateCita.cosmetologa = values.cabina.cosmetologa;
+      if (!cambio) {
+        updateCita.hora_atencion = `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;
+      }
       switch (tipo_servicio) {
         case facialServicioId:
           responseCita = await updateFacial(cita._id, updateCita, empleado.access_token);
@@ -97,10 +102,6 @@ const ModalCabinaAgregarPaciente = (props) => {
         case aparatologiaServicioId:
           responseCita = await updateAparatologia(cita._id, updateCita, empleado.access_token);
           break;
-      }
-      if (!cambio) {
-        updateCita.hora_atencion = `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;
-
       }
 
       setValues({ cabina: { paciente: cita.paciente._id } });

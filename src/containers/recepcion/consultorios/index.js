@@ -95,6 +95,7 @@ const Consultorios = (props) => {
 			fontWeight: 'bolder',
 			fontSize: '18px'
 		},
+		paging: false,
 		exportAllData: true,
 		exportButton: false,
 		exportDelimiter: ';'

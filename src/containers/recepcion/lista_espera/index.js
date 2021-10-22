@@ -421,6 +421,7 @@ const ListaEspera = (props) => {
 				break;
 		}
 
+		console.log("KAOZ", responseCita.data);
 		if (responseCita && `${responseCita.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			const cita = responseCita.data;
 			let updateCita = cita;
