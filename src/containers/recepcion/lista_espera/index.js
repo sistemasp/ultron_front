@@ -95,6 +95,7 @@ const ListaEspera = (props) => {
 	const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
 	const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
 	const productoRevisionId = process.env.REACT_APP_PRODUCTO_REVISION_ID;
+	const productoConsultaId = process.env.REACT_APP_PRODUCTO_CONSULTA_ID;
 	const servicioConsultaId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
 
 	const [openAlert, setOpenAlert] = useState(false);
@@ -157,7 +158,7 @@ const ListaEspera = (props) => {
 	const columnsEsperaConsultas = [
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
-		{ title: 'PRODUCTO', field: 'producto.nombre' },
+		{ title: 'PRODUCTO', field: 'producto.show' },
 		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
 		{ title: 'CONSECUTIVO', field: 'consecutivo' },
 	];
@@ -210,6 +211,7 @@ const ListaEspera = (props) => {
 	const dermapenServicioId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID;
 	const laserServicioId = process.env.REACT_APP_LASER_SERVICIO_ID;
 	const aparatologiaServicioId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
+	const primeraVezFrecuenciaId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
 
 	const loadConsultorios = async () => {
 		const response = await findSurgeryBySucursalIdWaitingList(sucursal, empleado.access_token);
@@ -233,7 +235,8 @@ const ListaEspera = (props) => {
 				item.folio = generateFolio(item);
 				item.paciente_nombre = item.paciente ? `${item.paciente.nombres} ${item.paciente.apellidos}` : 'ALGUN ERROR ESTA PASANDO';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
-				item.servicio.color = item.producto._id === productoRevisionId ? '#43CD30' : item.servicio.color;
+				item.servicio.color = item.producto._id !== productoConsultaId ? '#43CD30' : item.servicio.color;
+				item.producto.show = `(${item.frecuencia === primeraVezFrecuenciaId ? 'PV' : 'R'}) ${item.producto.nombre}`;
 			});
 			setListaEsperaConsultas(filterData);
 		}
@@ -308,6 +311,7 @@ const ListaEspera = (props) => {
 				item.folio = generateFolio(item);
 				item.paciente_nombre = item.paciente ? `${item.paciente.nombres} ${item.paciente.apellidos}` : 'LIBRE';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'SIN DERMATÓLOGO';
+				item.producto.show = `(${item.frecuencia === primeraVezFrecuenciaId ? 'PV' : 'R'}) ${item.producto.nombre}`;
 			});
 			setListaEsperaCuraciones(filterData);
 		}
@@ -320,9 +324,14 @@ const ListaEspera = (props) => {
 				return (sucursal === sucursalManuelAcunaId || sucursal === sucursalRubenDarioId) ? true : item.pagado;
 			});
 			filterData.forEach(item => {
+				console.log("KAOZ", item);
 				item.folio = generateFolio(item);
 				item.paciente_nombre = item.paciente ? `${item.paciente.nombres} ${item.paciente.apellidos}` : 'ALGUN ERROR ESTA PASANDO';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
+				item.producto_descripcion = item.producto.map(prod => {
+					return prod.nombre;
+				});
+				item.producto.show = `(${item.frecuencia === primeraVezFrecuenciaId ? 'PV' : 'R'}) ${item.producto_descripcion}`;
 			});
 			setListaEsperaEstetica(filterData);
 			setIsLoading(false);
@@ -421,7 +430,6 @@ const ListaEspera = (props) => {
 				break;
 		}
 
-		console.log("KAOZ", responseCita.data);
 		if (responseCita && `${responseCita.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			const cita = responseCita.data;
 			let updateCita = cita;
