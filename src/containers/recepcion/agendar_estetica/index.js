@@ -164,7 +164,7 @@ const AgendarEstetica = (props) => {
 		{ title: 'STATUS', field: 'status.nombre' },
 		{ title: 'PRECIO', field: 'precio_moneda' },
 		{ title: 'TOTAL', field: 'total_moneda' },
-		{ title: 'FORMA DE PAGO', field: 'forma_pago.nombre' },
+		{ title: 'FORMA DE PAGO', field: 'forma_pago_show' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
 		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
 		{ title: 'HORA SALIDA', field: 'hora_salida' },
@@ -282,6 +282,7 @@ const AgendarEstetica = (props) => {
 					});
 					return `►${product.nombre}(${show_toxinas}) `;
 				});
+				item.forma_pago_show = `${item.forma_pago.nombre}${item.factura ? ' (FACTURA)' : ''}`;
 			});
 			setEsteticas(response.data);
 		}
