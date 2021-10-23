@@ -213,7 +213,10 @@ const ModalFormImprimirPagoDermatologo = (props) => {
     });
   });
 
-  let totalConsultasPrimeraVez = 0;
+  let totalFaciales = 0;
+  faciales.forEach(facial => {
+    totalFaciales += facial.tratamientos.length;
+  });
 
   return (
     <div>
@@ -816,7 +819,7 @@ const ModalFormImprimirPagoDermatologo = (props) => {
                 <Fragment>
                   <Grid container className={classes.container}>
                     <Grid item xs={12}>
-                      <p className={classes.label_title_descripcion}> {`${faciales.length} FACIALES`}</p>
+                      <p className={classes.label_title_descripcion}> {`${totalFaciales} FACIALES`}</p>
                     </Grid>
                     <Grid item xs={true} className={classes.label}>
                       <p className={classes.label_cells_totales}>TIPO DE CITA</p>

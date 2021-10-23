@@ -153,6 +153,7 @@ const ListaEspera = (props) => {
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
 		{ title: 'CONSECUTIVO', field: 'consecutivo' },
 		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
+		{ title: 'OBSERVACIONES', field: 'observaciones' },
 	];
 
 	const columnsEsperaConsultas = [
@@ -161,6 +162,7 @@ const ListaEspera = (props) => {
 		{ title: 'PRODUCTO', field: 'producto.show' },
 		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
 		{ title: 'CONSECUTIVO', field: 'consecutivo' },
+		{ title: 'OBSERVACIONES', field: 'observaciones' },
 	];
 
 	const optionsConsultorio = {

@@ -205,7 +205,15 @@ const FormImprimirPagoDermatologo = (props) => {
     });
   });
 
-  let totalConsultasPrimeraVez = 0;
+  let totalFaciales = 0;
+  faciales.forEach(facial => {
+    totalFaciales += facial.forma_pago._id === formaPagoSesionAnticipadaId ? 0 : facial.tratamientos.length;
+  });
+
+  let totalAparatologias = 0;
+  aparatologias.forEach(aparatologia => {
+    totalAparatologias += aparatologia.forma_pago._id === formaPagoSesionAnticipadaId ? 0 : 1;
+  });
 
   return (
     <Fragment
@@ -663,7 +671,7 @@ const FormImprimirPagoDermatologo = (props) => {
             <Fragment>
               <Grid container className={classes.container}>
                 <Grid item xs={12}>
-                  <p className={classes.label_title_descripcion}> {`${faciales.length} FACIALES`}</p>
+                  <p className={classes.label_title_descripcion}> {`${totalFaciales} FACIALES`}</p>
                 </Grid>
                 <Grid item xs={true} className={classes.label}>
                   <p className={classes.label_cells_totales}>TIPO DE CITA</p>
@@ -859,7 +867,7 @@ const FormImprimirPagoDermatologo = (props) => {
             <Fragment>
               <Grid container className={classes.container}>
                 <Grid item xs={12} >
-                  <p className={classes.label_title_descripcion}> {`${aparatologias.length} APARATOLOGIA`}</p>
+                  <p className={classes.label_title_descripcion}> {`${totalAparatologias} APARATOLOGIA`}</p>
                 </Grid>
                 <Grid item xs={true} className={classes.label}>
                   <p className={classes.label_cells_totales}>TIPO DE CITA</p>
