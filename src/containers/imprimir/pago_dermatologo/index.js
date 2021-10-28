@@ -83,6 +83,7 @@ const ImprimirPagoDermatologo = (props) => {
   const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
   const formaPagoSesionAnticipadaId = process.env.REACT_APP_FORMA_PAGO_SESION_ANTICIPADA;
   const tratamientoLuzpulzadaId = process.env.REACT_APP_LUZ_PULZADA_TRATAMIENTO_ID;
+  const curacionServicioId = process.env.REACT_APP_CURACION_SERVICIO_ID;
 
   const handleReturn = () => {
     history.goBack();
@@ -497,6 +498,9 @@ const ImprimirPagoDermatologo = (props) => {
             tratamiento.importe1 = importe1;
           });
           pagoDermatologo = comisionDermatologo - ((comisionDermatologo * (sesionAnticipada.porcentaje_descuento_clinica ? sesionAnticipada.porcentaje_descuento_clinica : 0)) / 100);
+        } else if (sesionAnticipada.servicio._id === curacionServicioId) {
+          pagoDermatologo = sesionAnticipada.has_descuento_dermatologo ? 0 : Number(sesionAnticipada.total_aplicacion) * Number(dermatologo.esquema.porcentaje_curaciones) / 100;
+          sesionAnticipada.pago_dermatologo = pagoDermatologo;
         } else {
           sesionAnticipada.tratamientos.map(tratamiento => {
             let importe1 = 0;
@@ -549,8 +553,8 @@ const ImprimirPagoDermatologo = (props) => {
           });
           pagoDermatologo = comisionDermatologo - ((comisionDermatologo * (sesionAnticipada.porcentaje_descuento_clinica ? sesionAnticipada.porcentaje_descuento_clinica : 0)) / 100);
         }
-        total += Number(pagoDermatologo);
       }
+      total += Number(pagoDermatologo);
 
       updateSesionAnticipada(sesionAnticipada._id, sesionAnticipada, token);
     });
