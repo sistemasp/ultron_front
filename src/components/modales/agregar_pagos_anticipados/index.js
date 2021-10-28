@@ -242,6 +242,14 @@ const AgregarPagosAnticipados = (props) => {
     calcularTotal(datos);
   }
 
+  const handleChangePrecio = (event) => {
+    const datos = {
+      ...values,
+      precio: event.target.value,
+    };
+    calcularTotal(datos);
+  }
+
   const handleClickAgregarSesion = async (event, value) => {
     setIsLoading(true);
     value.fecha_pago = new Date();
@@ -783,6 +791,7 @@ const AgregarPagosAnticipados = (props) => {
             onChangeTratamientos={(e) => handleChangeTratamientos(e)}
             onChangeAreas={handleChangeAreas}
             onChangeDescuento={(e) => handleChangeDescuento(e)}
+            onChangePrecio={(e) => handleChangePrecio(e)}
             onClickAgregarSesion={handleClickAgregarSesion}
             onChange={handleChange}
             onChangeIds={handleChangeIds}

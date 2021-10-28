@@ -363,7 +363,7 @@ const ModalPago = (props) => {
           });
           return `►${tratamiento.nombre}(${show_areas}) `;
         });
-        sesionAnticipada.descripcion = `${sesionAnticipada.numero_sesion}: (${dateToString(sesionAnticipada.fecha_pago)}) ${producto}`;
+        sesionAnticipada.descripcion = `${sesionAnticipada.numero_sesion}: (${dateToString(sesionAnticipada.fecha_pago)}) ${sesionAnticipada.servicio.nombre} - ${producto}`;
       });
       setSesionesAnticipadas(sesionesVigenes);
     }

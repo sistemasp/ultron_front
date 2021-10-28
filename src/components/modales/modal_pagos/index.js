@@ -139,9 +139,10 @@ const ModalPagos = (props) => {
         item.banco_nombre = item.banco ? item.banco.nombre : '-';
         item.tipo_tarjeta_nombre = item.tipo_tarjeta ? item.tipo_tarjeta.nombre : '-';
         item.digitos_show = item.digitos ? item.digitos : '-';
-        acomulado = Number(acomulado) + Number(item.cantidad);
+        acomulado += Number(item.cantidad);
       });
-      setRestante(Number(values.total) - Number(acomulado));
+      const restante = (Number(values.total) - Number(acomulado)) < 0 ? 0 : Number(values.total) - Number(acomulado);
+      setRestante(restante);
       servicio.pagos = response.data;
       setPagos(response.data);
     }

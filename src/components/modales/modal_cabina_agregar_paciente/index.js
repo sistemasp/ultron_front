@@ -33,8 +33,6 @@ const ModalCabinaAgregarPaciente = (props) => {
     colorBase,
   } = props;
 
-  console.log("KAOZ", cambio);
-
   const [isLoading, setIsLoading] = useState(true);
   const [cabinas, setCabinas] = useState([]);
   //const [consulta, setConsulta] = useState();

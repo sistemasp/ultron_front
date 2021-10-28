@@ -288,6 +288,9 @@ const ModalFormImprimirPagoPatologo = (props) => {
                     <p className={classes.label_cells_totales}>CONSECUTIVO</p>
                   </Grid>
                   <Grid item xs={true} className={classes.label}>
+                    <p className={classes.label_cells_totales}>DERMATÓLOGO</p>
+                  </Grid>
+                  <Grid item xs={true} className={classes.label}>
                     <p className={classes.label_cells_totales}>CANTIDAD</p>
                   </Grid>
                   <Grid item xs={12} className={classes.label}>
@@ -306,6 +309,9 @@ const ModalFormImprimirPagoPatologo = (props) => {
                           </Grid>
                           <Grid item xs={true} className={classes.label}>
                             <p className={classes.label_cells}>{`${curacion.consecutivo}`}</p>
+                          </Grid>
+                          <Grid item xs={true} className={classes.label}>
+                            <p className={classes.label_cells}>{`${curacion.dermatologo.nombre}`}</p>
                           </Grid>
                           <Grid item xs={true} className={classes.label}>
                             <p className={classes.label_cells_total}> {`${toFormatterCurrency(pagoPatologo)}`} </p>

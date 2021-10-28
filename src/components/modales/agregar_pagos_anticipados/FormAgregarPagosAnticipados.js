@@ -30,6 +30,7 @@ const FormAgregarPagosAnticipados = (props) => {
   const [modalStyle] = React.useState(getModalStyle);
 
   const consultaServicioId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
+  const curacionServicioId = process.env.REACT_APP_CURACION_SERVICIO_ID;
 
   const {
     values,
@@ -59,7 +60,7 @@ const FormAgregarPagosAnticipados = (props) => {
     onChangeConfirmado,
     onChange,
     onChangeIds,
-    onChangeDigitos,
+    onChangePrecio,
     onChangePagoAnticipado,
     onChangDescuentoDermatologo,
     cambioTurno,
@@ -239,8 +240,24 @@ const FormAgregarPagosAnticipados = (props) => {
               }
 
               <Grid item xs={12} />
+
               <Grid item xs={12} sm={3} className={classes.grid_center}>
-                <h2 className={classes.label}>{`PRECIO: ${toFormatterCurrency(values.precio)}`}</h2>
+                {
+                  values.servicio._id === curacionServicioId ?
+                    <TextField
+                      className={classes.textField}
+                      name="precio"
+                      label="PRECIO"
+                      value={values.precio}
+                      onChange={onChangePrecio}
+                      type='Number'
+
+                      onInput={(e) => {
+                        e.target.value = Math.max(0, parseFloat(e.target.value)).toString().slice(0, 5)
+                      }}
+                      variant="outlined" />
+                    : <h2 className={classes.label}>{`PRECIO: ${toFormatterCurrency(values.precio)}`}</h2>
+                }
               </Grid>
 
               <Grid item xs={12} sm={3} className={classes.grid_center}>
