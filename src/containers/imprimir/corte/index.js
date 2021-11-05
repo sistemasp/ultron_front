@@ -1,11 +1,11 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { makeStyles } from '@material-ui/core';
-import ModalFormImprimirCorte from './ModalFormImprimirCorte';
+import FormImprimirCorte from './FormImprimirCorte';
 import {
   showAllTipoSalidas,
   showAllMetodoPago,
-} from '../../../../services';
-import { showAllTipoEntradas } from '../../../../services/tipo_entradas';
+} from '../../../services';
+import { showAllTipoEntradas } from '../../../services/tipo_entradas';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -14,20 +14,23 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const ModalImprimirCorte = (props) => {
+const ImprimirCorte = (props) => {
 
   const classes = useStyles();
 
+  
   const {
-    open,
-    onClose,
+    history,
+  } = props;
+
+  const {
     dataEntradas,
     dataPagosAnticipados,
     dataSalidas,
     corte,
     empleado,
     sucursal,
-  } = props;
+  } = props.location.state;
 
   const [show, setShow] = useState(true);
   const [tipoEntradas, setTipoEntradas] = useState([]);
@@ -35,10 +38,15 @@ const ModalImprimirCorte = (props) => {
   const [formaPagos, setMetodoPagos] = useState([]);
 
   const handleClickImprimir = (e) => {
+    setShow(false);
     setTimeout(() => {
       window.print();
-    }, 500);
-    setTimeout(() => { onClose(); }, 550);
+    }, 0);
+    setTimeout(() => { setShow(true); }, 15);
+  }
+
+  const handleReturn = () => {
+    history.goBack();
   }
 
   useEffect(() => {
@@ -67,20 +75,18 @@ const ModalImprimirCorte = (props) => {
     loadTipoEntrada();
     loadTipoSalida();
     loadMetodoPago();
-    handleClickImprimir();
   }, []);
 
   return (
     <Fragment>
-      <ModalFormImprimirCorte
+      <FormImprimirCorte
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
-        open={open}
-        onClose={onClose}
         corte={corte}
         empleado={empleado}
         sucursal={sucursal}
         onClickImprimir={handleClickImprimir}
+        onReturn={handleReturn}
         show={show}
         tipoEntradas={tipoEntradas}
         tipoSalidas={tipoSalidas}
@@ -93,4 +99,4 @@ const ModalImprimirCorte = (props) => {
   );
 }
 
-export default ModalImprimirCorte;
+export default ImprimirCorte;

@@ -8,6 +8,7 @@ import MenuMainCosmetologas from './containers/cosmetologas/main';
 import MenuMainAdministracion from './containers/administracion/main';
 import ImprimirPagoDermatologo from './containers/imprimir/pago_dermatologo';
 import ImprimirPagoPatologo from './containers/imprimir/pago_patologo';
+import ImprimirCorte from './containers/imprimir/corte';
 
 const App = () => {
 
@@ -35,6 +36,9 @@ const App = () => {
         <Route
           exact path="/imprimir/pagopatologo"
           component={ImprimirPagoPatologo} />
+        <Route
+          exact path="/imprimir/corte"
+          component={ImprimirCorte} />
       </div>
     </Router>
   );

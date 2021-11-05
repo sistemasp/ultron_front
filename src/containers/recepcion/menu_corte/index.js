@@ -80,6 +80,7 @@ const Corte = (props) => {
     sucursal,
     empleado,
     colorBase,
+    history,
   } = props;
 
   const token = empleado.access_token;
@@ -193,7 +194,7 @@ const Corte = (props) => {
     if (rowData.tipo_salida._id === tipoSalidaPagoDermatologoId) {
       await deletePagoDermatologo(rowData.pago_dermatologo, token);
       await deleteSalida(rowData._id, token);
-    } else if (rowData.tipo_salida._id === tipoSalidaPagoPatologoId){
+    } else if (rowData.tipo_salida._id === tipoSalidaPagoPatologoId) {
       await deletePagoPatologo(rowData.pago_dermatologo, token);
       await deleteSalida(rowData._id, token);
     }
@@ -440,8 +441,23 @@ const Corte = (props) => {
   };
 
   const handleOpenImprimir = () => {
-    setOpenModalInmprimir(true);
-  };
+    const newEntradas = [...dataEntradas, ...dataPagosAnticipados];
+
+    history.push('/imprimir/corte',
+      {
+        empleado: empleado,
+        sucursal: sucursal,
+        colorBase: colorBase,
+        corte: corte,
+        dataEntradas: newEntradas,
+        dataPagosAnticipados: dataPagosAnticipados,
+        dataSalidas: dataSalidas,
+      });
+  }
+
+  // const handleOpenImprimir = () => {
+  //   setOpenModalInmprimir(true);
+  // };
 
   const handleClose = () => {
     setOpenModalNuevoEntrada(false);
