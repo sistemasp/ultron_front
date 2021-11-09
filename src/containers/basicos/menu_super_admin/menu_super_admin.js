@@ -3,18 +3,22 @@ import { Fragment } from 'react';
 import { Grid, List, ListItem, ListItemText, Paper } from '@material-ui/core';
 import myStyles from '../../../css';
 import Crud from './crud';
+import { ListItemButton } from '@mui/material';
 
 export const MenuSuperAdminContainer = props => {
 	const {
 		onClickCatalogo,
 		catalogos,
 		catalogo,
+		loadCatalogos,
 		data,
+		empleado,
 		setMessage,
 		setSeverity,
 		setOpenAlert,
 		sucursal,
 		colorBase,
+		selectedIndex,
 	} = props;
 
 	const classes = myStyles(colorBase)();
@@ -27,13 +31,15 @@ export const MenuSuperAdminContainer = props => {
 						<h1>CATÁLOGOS</h1>
 						<List component='nav' aria-label='menu-catalogos'>
 							{
-								catalogos.map((catalogoItem) => {
+								catalogos.map((catalogoItem, index) => {
 									return (
 										<Fragment>
-											<ListItem button>
-												<ListItemText
-													primary={`${catalogoItem.nombre}`}
-													onClick={(event) => onClickCatalogo(event, catalogoItem)} />
+											<ListItem disablePadding>
+												<ListItemButton
+													selected={selectedIndex === index}
+													onClick={() => onClickCatalogo(catalogoItem, index)}>
+													<ListItemText primary={`${catalogoItem.nombre}`} />
+												</ListItemButton>
 											</ListItem>
 										</Fragment>
 									)
@@ -46,7 +52,9 @@ export const MenuSuperAdminContainer = props => {
 					<Paper>
 						<Crud
 							catalogo={catalogo}
+							loadCatalogos={loadCatalogos}
 							data={data}
+							empleado={empleado}
 							setMessage={setMessage}
 							setSeverity={setSeverity}
 							setOpenAlert={setOpenAlert}

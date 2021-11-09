@@ -8,10 +8,11 @@ import { showAllLaboratorios } from "../../../services/laboratorios";
 import { showAllProductoComercials } from "../../../services/productos_comerciales";
 import { showAllOcupacions } from "../../../services/ocupacion";
 import { showAllEspecialidades } from "../../../services/especialidades";
-import { addZero } from "../../../utils/utils";
+import { addZero, getToken } from "../../../utils/utils";
 import { getAllServices } from "../../../services/servicios";
 import { getAllTreatments } from "../../../services/tratamientos";
 import { findEmployeesByRolIdAvailable } from "../../../services/empleados";
+import { showAllEsquemas } from "../../../services/esquemas";
 
 const Alert = (props) => {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -26,10 +27,12 @@ const MenuSuperAdmin = (props) => {
     const dermatologosCatalogoId = process.env.REACT_APP_DERMATOLOGOS_CATALOGO_ID;
     const serviciosCatalogoId = process.env.REACT_APP_SERVICIOS_CATALOGO_ID;
     const tratamientosCatalogoId = process.env.REACT_APP_TRATAMIENTOS_CATALOGO_ID;
+    const esquemassCatalogoId = process.env.REACT_APP_ESQUEMAS_CATALOGO_ID;
 
     const dermatologoRolId = process.env.REACT_APP_DERMATOLOGO_ROL_ID;
 
     const [catalogos, setCatalogos] = useState([]);
+    const [selectedIndex, setSelectedIndex] = useState();
     const [data, setData] = useState([]);
     const [catalogo, setCatalogo] = useState({});
     const [openAlert, setOpenAlert] = useState(false);
@@ -44,6 +47,7 @@ const MenuSuperAdmin = (props) => {
         colorBase,
     } = props;
 
+    const token = getToken(empleado);
     const classes = myStyles(colorBase)();
 
     const loadLaboratorios = async () => {
@@ -75,16 +79,8 @@ const MenuSuperAdmin = (props) => {
     }
 
     const loadDermatologos = async () => {
-        const response = await findEmployeesByRolIdAvailable(dermatologoRolId, empleado.access_token);
+        const response = await findEmployeesByRolIdAvailable(dermatologoRolId, token);
         if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-            response.data.forEach(item => {
-                const fecha_entrada = new Date(item.fecha_entrada);
-                const fecha_entrada_show = `${addZero(fecha_entrada.getDate())}/${addZero(Number(fecha_entrada.getMonth() + 1))}/${fecha_entrada.getFullYear()}`;
-                const fecha_baja = new Date(item.fecha_baja);
-                const fecha_baja_show = `${addZero(fecha_baja.getDate())}/${addZero(Number(fecha_baja.getMonth() + 1))}/${fecha_baja.getFullYear()}`;
-                item.fecha_entrada = fecha_entrada_show;
-                item.fecha_baja = item.fecha_baja ? fecha_baja_show : 'VIGENTE';
-            });
             setData(response.data);
         }
     }
@@ -98,6 +94,13 @@ const MenuSuperAdmin = (props) => {
 
     const loadTratamientos = async () => {
         const response = await getAllTreatments();
+        if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+            setData(response.data);
+        }
+    }
+
+    const loadEsquemas = async () => {
+        const response = await showAllEsquemas();
         if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
             setData(response.data);
         }
@@ -127,11 +130,14 @@ const MenuSuperAdmin = (props) => {
             case tratamientosCatalogoId:
                 await loadTratamientos();
                 break;
+            case esquemassCatalogoId:
+                await loadEsquemas();
         }
         setIsLoading(false);
     }
 
-    const handleClickCatalogo = (e, catalogoItem) => {
+    const handleClickCatalogo = (catalogoItem, index) => {
+        setSelectedIndex(index);
         searchData(catalogoItem);
         setCatalogo(catalogoItem);
     }
@@ -143,7 +149,9 @@ const MenuSuperAdmin = (props) => {
     const loadCatalogos = async () => {
         const response = await showAllCatalogos();
         if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-            setCatalogos(response.data);
+            const resCatalogos = response.data;
+            setCatalogos(resCatalogos);
+            handleClickCatalogo(resCatalogos[0], 0);
         }
     }
 
@@ -165,6 +173,8 @@ const MenuSuperAdmin = (props) => {
                         empleado={empleado}
                         sucursal={sucursal}
                         onClickCatalogo={handleClickCatalogo}
+                        loadCatalogos={loadCatalogos}
+                        selectedIndex={selectedIndex}
                         catalogos={catalogos}
                         catalogo={catalogo}
                         data={data}

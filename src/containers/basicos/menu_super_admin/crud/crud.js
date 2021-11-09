@@ -15,6 +15,8 @@ export const CrudContainer = props => {
 		// MODALES
 		onCloseModal,
 		openModalServicios,
+		empleado,
+		loadCatalogos,
 		// MODAL NUEVO ITEM
 		onClicKNuevo,
 		openModal,
@@ -38,6 +40,8 @@ export const CrudContainer = props => {
 					<ModalItemCatalogo
 						open={openModal}
 						onClose={onCloseModal}
+						loadCatalogos={loadCatalogos}
+						empleado={empleado}
 						item={item}
 						catalogo={catalogo}
 						setMessage={setMessage}

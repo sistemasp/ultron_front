@@ -164,6 +164,20 @@ const ModalFormPagos = (props) => {
                 </Fragment>
                 : ''
             }
+            {
+              values.factura && values.factura._id ?
+                <Fragment>
+                  <Grid item xs={true} sm={true}>
+                    <ButtonCustom
+                      className={classes.buttonCancel}
+                      color="primary"
+                      variant="contained"
+                      onClick={(event) => handleEliminarFactura(event, values)}
+                      text='ELIMINAR FACTURA' />
+                  </Grid>
+                </Fragment>
+                : ''
+            }
 
             {
               // values.factura && values.factura._id ?

@@ -10,12 +10,14 @@ const Crud = (props) => {
     const {
         catalogo,
         data,
+        loadCatalogos,
+        empleado,
         setMessage,
         setSeverity,
         setOpenAlert,
         colorBase,
     } = props;
-
+    
     const classes = myStyles(colorBase)();
 
     const [openModal, setOpenModal] = useState(false);
@@ -124,6 +126,8 @@ const Crud = (props) => {
                 catalogo={catalogo}
                 data={data}
                 item={item}
+                loadCatalogos={loadCatalogos}
+                empleado={empleado}
                 onClicKNuevo={handleClicKNuevo}
                 onCloseModal={handleCloseModal}
                 columns={columns}

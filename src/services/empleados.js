@@ -104,3 +104,19 @@ export const updateEmployee = async (employeeId, employee, token) => {
         console.log('updateEmployee', error);
     }
 }
+
+export const createEmployee = async (employee, token) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/empleado`,
+            method: 'POST',
+            data: employee,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response;
+    } catch (error) {
+        console.log('createEmployee', error);
+    }
+}

@@ -10,10 +10,12 @@ import myStyles from '../../../css';
 import { createProductoComercial, updateProductoComercial } from '../../../services/productos_comerciales';
 import { createOcupacion, updateOcupacion } from '../../../services/ocupacion';
 import { createEspecialidad, updateEspecialidad } from '../../../services/especialidades';
+import { esquemassCatalogoId } from '../../../utils/constants';
+import { createEsquema, showAllEsquemas, updateEsquema } from '../../../services/esquemas';
+import { getToken } from '../../../utils/utils';
+import { createEmployee, updateEmployee } from '../../../services/empleados';
 
 const ModalItemCatalogo = (props) => {
-
-  const classes = myStyles(colorBase)();
 
   const laboratoriosCatalogoId = process.env.REACT_APP_LABORATORIOS_CATALOGO_ID;
   const productoComercialCatalogoId = process.env.REACT_APP_PRODUCTO_COMERCIAL_CATALOGO_ID;
@@ -21,9 +23,22 @@ const ModalItemCatalogo = (props) => {
   const especialidadCatalogoId = process.env.REACT_APP_ESPECIALIDAD_CATALOGO_ID;
   const dermatologosCatalogoId = process.env.REACT_APP_DERMATOLOGOS_CATALOGO_ID;
 
+  const booleanObjects = [
+    {
+      value: true,
+      descripcion: 'SI',
+    },
+    {
+      value: false,
+      descripcion: 'NO',
+    },
+  ];
+
   const {
+    empleado,
     open,
     onClose,
+    loadCatalogos,
     item,
     catalogo,
     setMessage,
@@ -32,15 +47,18 @@ const ModalItemCatalogo = (props) => {
     colorBase,
   } = props;
 
+  const token = getToken(empleado);
+
+  const classes = myStyles(colorBase)();
+
   const [isLoading, setIsLoading] = useState(true);
 
   const [values, setValues] = useState({
-    _id: item._id,
-    nombre: item.nombre,
-    laboratorio: item.laboratorio ? item.laboratorio._id : undefined,
+    ...item,
   });
 
   const [laboratorios, setLaboratorios] = useState([]);
+  const [esquemas, setEsquemas] = useState([]);
 
   const handleChange = (event) => {
     setValues({
@@ -63,9 +81,36 @@ const ModalItemCatalogo = (props) => {
     }
   }
 
+  const loadEsquemas = async () => {
+    const response = await showAllEsquemas();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      const resEsquemas = response.data;
+      setEsquemas(resEsquemas);
+    }
+  }
+
+  const handleChangeCombo = (event, newValue) => {
+    setIsLoading(true);
+    setValues({
+      ...values,
+      [event.target.name]: newValue ? newValue._id : newValue,
+    });
+    setIsLoading(false);
+  };
+
+  const handleChangeDate = async (date, show, field) => {
+		setIsLoading(true);
+		setValues({
+			...values,
+			[field]: date,
+		});
+		setIsLoading(false);
+	};
+
   const loadAll = async () => {
     setIsLoading(true);
     if (catalogo.columns.filter(column => column.title === 'LABORATORIO').length > 0) await loadLaboratorios();
+    if (catalogo.columns.filter(column => column.title === 'ESQUEMA').length > 0) await loadEsquemas();
     setIsLoading(false);
   }
 
@@ -89,6 +134,13 @@ const ModalItemCatalogo = (props) => {
       case especialidadCatalogoId:
         response = item._id ? await updateEspecialidad(item._id, newItem) : await createEspecialidad(newItem);
         break;
+      case esquemassCatalogoId:
+        response = item._id ? await updateEsquema(item._id, newItem, token) : await createEsquema(newItem, token);
+        break;
+      case dermatologosCatalogoId:
+        response = item._id ? await updateEmployee(item._id, newItem, token) : await createEmployee(newItem, token);
+        break;
+
     }
 
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
@@ -98,6 +150,8 @@ const ModalItemCatalogo = (props) => {
       setMessage(item._id ? 'REGISTRO ACTUALIZADO CORRECTAMENTE' : 'REGISTRO CREADO CORRECTAMENTE');
     }
 
+    loadCatalogos();
+    onClose();
     setIsLoading(false);
   }
 
@@ -109,13 +163,18 @@ const ModalItemCatalogo = (props) => {
             aria-labelledby="simple-modal-title"
             aria-describedby="simple-modal-description"
             values={values}
+            colorBase={colorBase}
             open={open}
             onClickCancel={onClose}
+            booleanObjects={booleanObjects}
             onChange={handleChange}
             onChangeSelect={handleChangeSelect}
+            onChangeCombo={handleChangeCombo}
             onGuardarItem={handleGuardarItem}
+            onChangeDate={handleChangeDate}
             catalogo={catalogo}
             laboratorios={laboratorios}
+            esquemas={esquemas}
           />
           : <Backdrop className={classes.backdrop} open={isLoading} >
             <CircularProgress color="inherit" />

@@ -18,6 +18,10 @@ export const addZero = (value) => {
   return value < 10 ? '0' + value : value;
 }
 
+export const getToken = (empleado) => {
+  return empleado.access_token;
+}
+
 export const exportTableToExcel = (tableID, filename = '') => {
   var downloadLink;
   var dataType = 'application/vnd.ms-excel';

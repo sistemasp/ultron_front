@@ -175,19 +175,13 @@ const ModalPagos = (props) => {
 
   const handleEliminarFactura = async (event, rowData) => {
     setIsLoading(true);
-    delete servicio.factura;
-    servicio.isFactura = false;
-    onGuardarModalPagos(servicio);
-    // const factura = rowData.factura;
-    // const response = await deleteFactura(factura._id);
-    // if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-    //   delete rowData.factura;
-    //   rowData.isFactura = false;
-    //   setValues({
-    //     ...values,
-    //     isFactura: false,
-    //   });
-    // }
+    const factura = rowData.factura;
+    const response = await deleteFactura(factura._id, token);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      delete rowData.factura;
+      rowData.isFactura = false;
+      onGuardarModalPagos(rowData);
+    }
     setIsLoading(false);
   }
 
