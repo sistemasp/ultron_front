@@ -977,7 +977,7 @@ const ReportesDetallesGeneral = (props) => {
 
 					const dato = {
 						...estetica,
-						servicio: { nombre: "ESTETICA" },
+						servicio: { nombre: "ESTÉTICA" },
 						producto: { nombre: toxina_relleno.nombre },
 						metodo_pago_nombre: metodoPago.nombre,
 						tipo_tarjeta: pago.tipo_tarjeta_nombre,
