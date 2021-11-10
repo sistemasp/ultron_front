@@ -259,6 +259,7 @@ const ImprimirPagoDermatologo = (props) => {
     const response = await findPagosAnticipadssByPayOfDoctorFechaPago(sucursal._id, dermatologo._id, hora_apertura, hora_cierre ? hora_cierre : new Date(), token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       response.data.map((pagoAnticipado) => {
+        console.log("KAOZ", pagoAnticipado);
         pagoAnticipado.forma_pago_nombre = pagoAnticipado.pagos.map((pago) => {
           return `${pago.forma_pago.nombre} `
         });

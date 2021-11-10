@@ -7,6 +7,7 @@ import bannerDermastetic from './../../../bannerDermastetic.jpeg';
 import { addZero, comisionAreaBySucursalAndTipo, dateToString, precioAreaBySucursal, toFormatterCurrency } from '../../../utils/utils';
 import myStyles from '../../../css';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
+import { laserTratamientoId } from '../../../utils/constants';
 
 function getModalStyle() {
   return {
@@ -1004,16 +1005,54 @@ const FormImprimirPagoDermatologo = (props) => {
                       let comisionDermatologo = 0;
                       let pagoDermatologo = 0;
                       if (!sesionAnticipada.has_descuento_dermatologo) {
-                        if (sesionAnticipada.servicio._id === servicioAparatologiaId && index === 0) {
+                        if (sesionAnticipada.servicio._id === servicioAparatologiaId) {
                           sesionAnticipada.tratamientos.forEach(tratamiento => {
-
-                            tratamiento.areasSeleccionadas.map(area => {
-                              const itemPrecio = precioAreaBySucursal(sucursal._id, area);
-
-                              comisionDermatologo += (Number(itemPrecio) * Number(dermatologo.esquema.porcentaje_laser) / 100);
-                            });
+                            if (tratamiento._id === laserTratamientoId && index === 0) {
+                              tratamiento.areasSeleccionadas.map(area => {
+                                const itemPrecio = precioAreaBySucursal(sucursal._id, area);
+                                comisionDermatologo += (Number(itemPrecio) * Number(dermatologo.esquema.porcentaje_laser) / 100);
+                              });
+                            } else {
+                              sesionAnticipada.tratamientos.map(tratamiento => {
+                                tratamiento.areasSeleccionadas.map(areaSeleccionada => {
+                                  switch (sesionAnticipada.tipo_cita._id) {
+                                    case revisadoTipoCitaId:
+                                      comisionDermatologo += Number(
+                                        sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.comision_revisado_ma
+                                          : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.comision_revisado_rd
+                                            : areaSeleccionada.comision_revisado)
+                                      );
+                                      break;
+                                    case derivadoTipoCitaId:
+                                      comisionDermatologo += Number(
+                                        sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.comision_derivado_ma
+                                          : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.comision_derivado_rd
+                                            : areaSeleccionada.comision_derivado)
+                                      );
+                                      break;
+                                    case realizadoTipoCitaId:
+                                      comisionDermatologo += Number(
+                                        sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.comision_realizado_ma
+                                          : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.comision_realizado_rd
+                                            : areaSeleccionada.comision_realizado)
+                                      );
+                                      break;
+                                    case directoTipoCitaId: // TOMA EL 100%
+                                      comisionDermatologo += Number(
+                                        sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.precio_ma
+                                          : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.precio_rd
+                                            : areaSeleccionada.precio_fe)
+                                      );
+                                      break;
+                                    case noAplicaTipoCitaId:
+                                      comisionDermatologo += Number(0);
+                                      break;
+                                  }
+                                });
+                              });
+                            }
                           });
-                          pagoDermatologo = comisionDermatologo - ((comisionDermatologo * (sesionAnticipada.porcentaje_descuento_clinica ? sesionAnticipada.porcentaje_descuento_clinica : 0)) / 100);
+                          pagoDermatologo = comisionDermatologo;
                         } else {
                           sesionAnticipada.tratamientos.map(tratamiento => {
                             tratamiento.areasSeleccionadas.map(areaSeleccionada => {
