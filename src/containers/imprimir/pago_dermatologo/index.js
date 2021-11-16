@@ -20,6 +20,7 @@ import { createPagoDermatologo, showTodayPagoDermatologoBySucursalTurno, updateP
 import { findSesionesAnticipadasByPayOfDoctorFechaPago, updateSesionAnticipada } from '../../../services/sesiones_anticipadas';
 import { findPagosAnticipadssByPayOfDoctorFechaPago } from '../../../services/pagos_anticipados';
 import { comisionAreaBySucursalAndTipo, precioAreaBySucursal } from '../../../utils/utils';
+import { laserTratamientoId } from '../../../utils/constants';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -259,7 +260,6 @@ const ImprimirPagoDermatologo = (props) => {
     const response = await findPagosAnticipadssByPayOfDoctorFechaPago(sucursal._id, dermatologo._id, hora_apertura, hora_cierre ? hora_cierre : new Date(), token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       response.data.map((pagoAnticipado) => {
-        console.log("KAOZ", pagoAnticipado);
         pagoAnticipado.forma_pago_nombre = pagoAnticipado.pagos.map((pago) => {
           return `${pago.forma_pago.nombre} `
         });
@@ -483,36 +483,61 @@ const ImprimirPagoDermatologo = (props) => {
     });
 
     sesionesAnticipadas.map((sesionAnticipada, index) => {
+      console.log("KAOZ", sesionAnticipada);
       let comisionDermatologo = 0;
       let pagoDermatologo = 0;
       if (!sesionAnticipada.has_descuento_dermatologo) {
-        if (sesionAnticipada.servicio._id === servicioAparatologiaId && index === 0) {
-          let importe1 = 0;
+        if (sesionAnticipada.servicio._id === servicioAparatologiaId) {
           sesionAnticipada.tratamientos.forEach(tratamiento => {
-
-            tratamiento.areasSeleccionadas.map(area => {
-              const itemPrecio = precioAreaBySucursal(sucursal._id, area);
-
-              comisionDermatologo += (Number(itemPrecio) * Number(dermatologo.esquema.porcentaje_laser) / 100);
-              importe1 += Number(itemPrecio);
-            });
-            tratamiento.importe1 = importe1;
+            if (tratamiento._id === laserTratamientoId && index === 0) {
+              tratamiento.areasSeleccionadas.map(area => {
+                const itemPrecio = precioAreaBySucursal(sucursal._id, area);
+                comisionDermatologo += (Number(itemPrecio) * Number(dermatologo.esquema.porcentaje_laser) / 100);
+              });
+            } else {
+              sesionAnticipada.tratamientos.map(tratamiento => {
+                tratamiento.areasSeleccionadas.map(areaSeleccionada => {
+                  switch (sesionAnticipada.tipo_cita._id) {
+                    case revisadoTipoCitaId:
+                      comisionDermatologo += Number(
+                        sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.comision_revisado_ma
+                          : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.comision_revisado_rd
+                            : areaSeleccionada.comision_revisado)
+                      );
+                      break;
+                    case derivadoTipoCitaId:
+                      comisionDermatologo += Number(
+                        sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.comision_derivado_ma
+                          : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.comision_derivado_rd
+                            : areaSeleccionada.comision_derivado)
+                      );
+                      break;
+                    case realizadoTipoCitaId:
+                      comisionDermatologo += Number(
+                        sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.comision_realizado_ma
+                          : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.comision_realizado_rd
+                            : areaSeleccionada.comision_realizado)
+                      );
+                      break;
+                    case directoTipoCitaId: // TOMA EL 100%
+                      comisionDermatologo += Number(
+                        sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.precio_ma
+                          : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.precio_rd
+                            : areaSeleccionada.precio_fe)
+                      );
+                      break;
+                    case noAplicaTipoCitaId:
+                      comisionDermatologo += Number(0);
+                      break;
+                  }
+                });
+              });
+            }
           });
-          pagoDermatologo = comisionDermatologo - ((comisionDermatologo * (sesionAnticipada.porcentaje_descuento_clinica ? sesionAnticipada.porcentaje_descuento_clinica : 0)) / 100);
-        } else if (sesionAnticipada.servicio._id === curacionServicioId) {
-          pagoDermatologo = sesionAnticipada.has_descuento_dermatologo ? 0 : Number(sesionAnticipada.total_aplicacion) * Number(dermatologo.esquema.porcentaje_curaciones) / 100;
-          sesionAnticipada.pago_dermatologo = pagoDermatologo;
+          pagoDermatologo = comisionDermatologo;
         } else {
           sesionAnticipada.tratamientos.map(tratamiento => {
-            let importe1 = 0;
             tratamiento.areasSeleccionadas.map(areaSeleccionada => {
-              const itemPrecio = sucursal._id === sucursalManuelAcunaId ? areaSeleccionada.precio_ma
-                : (sucursal._id === sucursalRubenDarioId ? areaSeleccionada.precio_rd
-                  : (sucursal._id === sucursalOcciId ? areaSeleccionada.precio_oc
-                    : (sucursal._id === sucursalFedeId ? areaSeleccionada.precio_fe : '0')));
-
-              importe1 += Number(itemPrecio);
-
               switch (sesionAnticipada.tipo_cita._id) {
                 case revisadoTipoCitaId:
                   comisionDermatologo += Number(
@@ -546,15 +571,12 @@ const ImprimirPagoDermatologo = (props) => {
                   comisionDermatologo += Number(0);
                   break;
               }
-              const precioReal = (itemPrecio - (itemPrecio * (sesionAnticipada.porcentaje_descuento_clinica ? sesionAnticipada.porcentaje_descuento_clinica : 0) / 100));
-              areaSeleccionada.comision_real = !sesionAnticipada.has_descuento_dermatologo ? comisionDermatologo : 0;
-              areaSeleccionada.precio_real = precioReal;
             });
-            tratamiento.importe1 = importe1;
           });
           pagoDermatologo = comisionDermatologo - ((comisionDermatologo * (sesionAnticipada.porcentaje_descuento_clinica ? sesionAnticipada.porcentaje_descuento_clinica : 0)) / 100);
         }
       }
+      console.log("KAOZ", pagoDermatologo);
       total += Number(pagoDermatologo);
 
       updateSesionAnticipada(sesionAnticipada._id, sesionAnticipada, token);

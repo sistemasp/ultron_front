@@ -1,10 +1,10 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import { ReportesPagosPatologosContainer } from "./pagos_patologos";
 import { Backdrop, CircularProgress } from "@material-ui/core";
-import { toFormatterCurrency, addZero, getPagoPatologoByServicio, dateToString } from "../../../../../utils/utils";
-import { findPagoPatologosByRangeDateAndSucursal } from "../../../../../services/pago_patologo";
-import PrintIcon from '@material-ui/icons/Print';
+import { toFormatterCurrency, addZero, getPagoDermatologoByServicio, dateToString } from "../../../../../utils/utils";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { findCortesByRangeDateAndSucursal } from "../../../../../services/corte";
+import { ReportesCortesContainer } from "./cortes";
 
 const useStyles = makeStyles(theme => ({
 	backdrop: {
@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-const ReportePagosPatologos = (props) => {
+const ReporteCortes = (props) => {
 
 	const classes = useStyles();
 
@@ -23,18 +23,10 @@ const ReportePagosPatologos = (props) => {
 		colorBase,
 	} = props;
 
-	const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
-	const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
-	const servicioConsultaId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
-	const servicioCuracionId = process.env.REACT_APP_CURACION_SERVICIO_ID;
-	const servicioEsteticaId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
-	const servicioDermapenId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID;
-	const formaPagoTarjetaId = process.env.REACT_APP_FORMA_PAGO_TARJETA;
-	const dermatologoDirectoId = process.env.REACT_APP_DERMATOLOGO_DIRECTO_ID;
 	const iva = process.env.REACT_APP_IVA;
 
 	const [isLoading, setIsLoading] = useState(true);
-	const [pagosPatologos, setPagosPatologos] = useState([]);
+	const [pagosDermatologos, setPagosDermatologos] = useState([]);
 	const [openModalImprimirPago, setOpenModalImprimirPago] = useState(false);
 	const [datosImpresion, setDatosImpresion] = useState();
 
@@ -56,12 +48,11 @@ const ReportePagosPatologos = (props) => {
 	});
 
 	const columnsGeneral = [
-		{ title: 'SUCURSAL', field: 'sucursal.nombre' },
 		{ title: 'FECHA', field: 'fecha_show' },
 		{ title: 'TURNO', field: 'turno_show' },
-		{ title: 'PATÓLOGO', field: 'patologo.nombre' },
-		{ title: 'PAGO TOTAL', field: 'total_moneda' },
-		{ title: 'RETENCIÓN', field: 'retencion_moneda' },
+		{ title: 'RECEPCIONISTA', field: 'recepcionista.nombre'},	
+		{ title: 'TOTAL ENTRADAS', field: 'total_entradas' },
+		{ title: 'TOTAL SALIDAS', field: 'total_salidas' },
 	];
 
 	const options = {
@@ -93,14 +84,14 @@ const ReportePagosPatologos = (props) => {
 
 	const actions = [
 		{
-			icon: PrintIcon,
-			tooltip: 'IMPRIMIR',
+			icon: VisibilityIcon,
+			tooltip: 'DETALLES',
 			onClick: handlePrint
 		}
 	];
 
 	const procesarDatos = async () => {
-		const datosCompletos = [...pagosPatologos];
+		const datosCompletos = [...pagosDermatologos];
 
 
 		setDatos(datosCompletos);
@@ -108,19 +99,27 @@ const ReportePagosPatologos = (props) => {
 
 	const processResponse = (data) => {
 		data.forEach(item => {
-			item.fecha_show = dateToString(item.fecha_pago);
+			item.fecha_show = dateToString(item.create_date);
 			item.turno_show = item.turno === 'm' ? 'MATUTINO' : 'VESPERTINO';
-			item.total_moneda = toFormatterCurrency(item.total);
-			item.retencion_moneda = toFormatterCurrency(item.retencion);
+			let totalEntradas = 0;
+			let totalSalidas = 0;
+			item.entradas.forEach(entrada => {
+				totalEntradas += Number(entrada.cantidad);
+			});
+			item.salidas.forEach(salida => {
+				totalSalidas += Number(salida.cantidad);
+			});
+			item.total_entradas = toFormatterCurrency(totalEntradas);
+			item.total_salidas = toFormatterCurrency(totalSalidas);
 		});
 		return data;
 	}
 
-	const loadPagosPatologos = async (startDate, endDate) => {
-		const response = await findPagoPatologosByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
+	const loadPagosDermatologos = async (startDate, endDate) => {
+		const response = await findCortesByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
 			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			setPagosPatologos(processResponse(response.data));
+			setPagosDermatologos(processResponse(response.data));
 			procesarDatos();
 		}
 	}
@@ -152,7 +151,7 @@ const ReportePagosPatologos = (props) => {
 
 	const loadInfo = async (startDate, endDate) => {
 		setIsLoading(true);
-		await loadPagosPatologos(startDate, endDate);
+		await loadPagosDermatologos(startDate, endDate);
 		setIsLoading(false);
 	}
 
@@ -168,12 +167,12 @@ const ReportePagosPatologos = (props) => {
 		<Fragment>
 			{
 				!isLoading ?
-					<ReportesPagosPatologosContainer
+					<ReportesCortesContainer
 						onChangeStartDate={(e) => handleChangeStartDate(e)}
 						onChangeEndDate={(e) => handleChangeEndDate(e)}
 						startDate={startDate.fecha_show}
 						endDate={endDate.fecha_show}
-						titulo={`REPORTES PAGOS PATOLÓGOS (${startDate.fecha} - ${endDate.fecha})`}
+						titulo={`REPORTES CORTES (${startDate.fecha} - ${endDate.fecha})`}
 						columns={columnsGeneral}
 						options={options}
 						datos={datos}
@@ -192,4 +191,4 @@ const ReportePagosPatologos = (props) => {
 	);
 }
 
-export default ReportePagosPatologos;
+export default ReporteCortes;
