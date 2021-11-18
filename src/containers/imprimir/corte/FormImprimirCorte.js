@@ -465,7 +465,7 @@ const FormImprimirCorte = (props) => {
 
         <Grid container xs={6} className={classes.grid_right}>
           <Grid item xs={12} className={classes.label}>
-            <h1 className={classes.label_utilidad_perdida}>{`TOTAL CORTE EFECTIVO: ${toFormatterCurrency(totalEfectivo - pagoDermatologos - retirosParciales - otrasSalidas)}`}<br /><br /></h1>
+            <h1 className={classes.label_utilidad_perdida}>{`TOTAL CORTE EFECTIVO: ${toFormatterCurrency((pagoDermatologos + retirosParciales + otrasSalidas) - totalEfectivo)}`}<br /><br /></h1>
           </Grid>
 
           <Grid item xs={12} className={classes.label}>

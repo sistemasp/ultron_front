@@ -147,7 +147,7 @@ export const ListaEsperaContainer = (props) => {
             text='ACTUALIZAR' />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={7}>
           <TableComponent
             titulo={tituloEsperaConsultas}
             columns={columnsEsperaConsultas}
@@ -164,7 +164,7 @@ export const ListaEsperaContainer = (props) => {
           <br />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={5}>
           <TableComponent
             titulo={tituloConsultorios}
             columns={columnsConsultorios}

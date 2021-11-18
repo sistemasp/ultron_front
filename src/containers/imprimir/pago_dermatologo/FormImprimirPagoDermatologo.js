@@ -7,7 +7,7 @@ import bannerDermastetic from './../../../bannerDermastetic.jpeg';
 import { addZero, comisionAreaBySucursalAndTipo, dateToString, precioAreaBySucursal, toFormatterCurrency } from '../../../utils/utils';
 import myStyles from '../../../css';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
-import { laserTratamientoId } from '../../../utils/constants';
+import { esquemaNominalId, laserTratamientoId } from '../../../utils/constants';
 
 function getModalStyle() {
   return {
@@ -527,7 +527,7 @@ const FormImprimirPagoDermatologo = (props) => {
             <Fragment>
               <Grid container className={classes.container}>
                 <Grid item xs={12}>
-                  <p className={classes.label_title_descripcion}> {`${curaciones.length} CURACION`}</p>
+                  <p className={classes.label_title_descripcion}> {`${curaciones.length} CURACIÓN`}</p>
                 </Grid>
                 <Grid item xs={true} className={classes.label}>
                   <p className={classes.label_cells_totales}>PACIENTE</p>
@@ -710,7 +710,8 @@ const FormImprimirPagoDermatologo = (props) => {
                     faciales.map(facial => {
                       let comisionDermatologo = 0;
                       let pagoDermatologo = 0;
-                      if (!facial.has_descuento_dermatologo && facial.forma_pago._id !== formaPagoSesionAnticipadaId) {
+                      if (!facial.has_descuento_dermatologo && facial.forma_pago._id !== formaPagoSesionAnticipadaId 
+                        && dermatologo.esquema._id !== esquemaNominalId) {
                         facial.tratamientos.map(tratamiento => {
                           tratamiento.areasSeleccionadas.map(areaSeleccionada => {
                             switch (facial.tipo_cita._id) {

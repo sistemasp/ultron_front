@@ -556,6 +556,7 @@ const ReportesDetallesGeneral = (props) => {
 				datos.push(dato);
 			} while (totalPago !== 0 && totalAplicacion !== 0);
 
+			console.log("KAOZ", curacion, curacion.materiales);
 			curacion.materiales.forEach(material => {
 				let precioMaterial = Number(material.precio);
 				do {

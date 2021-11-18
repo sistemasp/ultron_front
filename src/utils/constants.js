@@ -1,8 +1,11 @@
 const frecuenciaPrimeraVezId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
 const productoConsultaId = process.env.REACT_APP_PRODUCTO_CONSULTA_ID;
 
+export const curacionServicioId = process.env.REACT_APP_CURACION_SERVICIO_ID;
 export const esquemassCatalogoId = process.env.REACT_APP_ESQUEMAS_CATALOGO_ID;
 export const laserTratamientoId = process.env.REACT_APP_LASER_TRATAMIENTO_ID;
+
+export const esquemaNominalId = process.env.REACT_APP_ESQUEMA_NOMINAL_ID;
 
 export const frecuenciaPrimeraVezObj = {
     _id: frecuenciaPrimeraVezId,

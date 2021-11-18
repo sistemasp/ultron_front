@@ -20,7 +20,7 @@ import { createPagoDermatologo, showTodayPagoDermatologoBySucursalTurno, updateP
 import { findSesionesAnticipadasByPayOfDoctorFechaPago, updateSesionAnticipada } from '../../../services/sesiones_anticipadas';
 import { findPagosAnticipadssByPayOfDoctorFechaPago } from '../../../services/pagos_anticipados';
 import { comisionAreaBySucursalAndTipo, precioAreaBySucursal } from '../../../utils/utils';
-import { laserTratamientoId } from '../../../utils/constants';
+import { esquemaNominalId, laserTratamientoId } from '../../../utils/constants';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -339,16 +339,10 @@ const ImprimirPagoDermatologo = (props) => {
 
     // TOTAL DE LAS CURACION
     curaciones.forEach(async (curacion) => {
-      if (isSesionAnticipada(curacion)) {
-        curacion.pago_dermatologo = 0;
-        updateCuracion(curacion._id, curacion, token);
-      } else {
-        const pagoDermatologo = curacion.has_descuento_dermatologo ? 0 : Number(curacion.total_aplicacion) * Number(dermatologo.esquema.porcentaje_curaciones) / 100;
-        curacion.pago_dermatologo = pagoDermatologo;
-        updateCuracion(curacion._id, curacion, token);
-        total += Number(pagoDermatologo);
-      }
-
+      const pagoDermatologo = curacion.has_descuento_dermatologo ? 0 : Number(curacion.total_aplicacion) * Number(dermatologo.esquema.porcentaje_curaciones) / 100;
+      curacion.pago_dermatologo = pagoDermatologo;
+      updateCuracion(curacion._id, curacion, token);
+      total += Number(pagoDermatologo);
     });
 
     // TOTAL DERMAPENS
@@ -371,7 +365,7 @@ const ImprimirPagoDermatologo = (props) => {
         facial.pago_dermatologo = 0;
         updateFacial(facial._id, facial, token);
       } else {
-        if (!facial.has_descuento_dermatologo) {
+        if (!facial.has_descuento_dermatologo && dermatologo.esquema._id !== esquemaNominalId) {
           facial.tratamientos.map(tratamiento => {
             let importe1 = 0;
             tratamiento.areasSeleccionadas.map(areaSeleccionada => {
@@ -483,7 +477,6 @@ const ImprimirPagoDermatologo = (props) => {
     });
 
     sesionesAnticipadas.map((sesionAnticipada, index) => {
-      console.log("KAOZ", sesionAnticipada);
       let comisionDermatologo = 0;
       let pagoDermatologo = 0;
       if (!sesionAnticipada.has_descuento_dermatologo) {

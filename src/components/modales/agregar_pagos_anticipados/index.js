@@ -30,6 +30,7 @@ import SesionesAnticipadas from '../pagos_anticipados/sesiones_anticipadas/Sesio
 import { createPagoAnticipado, deletePagoAnticipado, updatePagoAnticipado } from '../../../services/pagos_anticipados';
 import { createFactura } from '../../../services/facturas';
 import { createPago } from '../../../services/pagos';
+import { curacionServicioId } from '../../../utils/constants';
 
 const AgregarPagosAnticipados = (props) => {
 
@@ -252,6 +253,10 @@ const AgregarPagosAnticipados = (props) => {
 
   const handleClickAgregarSesion = async (event, value) => {
     setIsLoading(true);
+    if (value.servicio._id === curacionServicioId) {
+      value.materiales = [];
+      value.biopsias = [];
+    }
     value.fecha_pago = new Date();
     value.sucursal = sucursal._id;
     value.recepcionista = empleado._id;
