@@ -730,6 +730,8 @@ const AgendarFacial = (props) => {
   const handleGuardarModalPagos = async (servicio) => {
     servicio.pagado = servicio.pagos.length > 0;
 
+    // TODO: KAOZ
+    
     if (!servicio.consecutivo) {
       const response = await findConsecutivoBySucursal(sucursal, token);
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {

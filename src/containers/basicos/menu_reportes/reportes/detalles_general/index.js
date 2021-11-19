@@ -15,6 +15,7 @@ import { ControlCamera } from "@material-ui/icons";
 import { findEmployeeById } from "../../../../../services/empleados";
 import { findSesionAnticipadaByRangeDateAndSucursal } from "../../../../../services/sesiones_anticipadas";
 import { findPagoAnticipadoByRangeDateAndSucursal } from "../../../../../services/pagos_anticipados";
+import { statusCanceloSPId } from "../../../../../utils/constants";
 
 const useStyles = makeStyles(theme => ({
 	backdrop: {
@@ -146,8 +147,41 @@ const ReportesDetallesGeneral = (props) => {
 		exportDelimiter: ';'
 	}
 
+	const servicioCancelado = (servicio, datos) => {
+		console.log("KAOZ", servicio);
+		const dato = {
+			...servicio,
+			metodo_pago_nombre: "NO APLICA",
+			tipo_tarjeta: "NO APLICA",
+			banco_nombre: "NO APLICA",
+			digitos: "NO APLICA",
+			importe_1: toFormatterCurrency(0),
+			area: "NO APLICA",
+			descuento_porcentaje_clinica: `${redondearDecimales(0)}%`,
+			descuento_cantidad_clinica: toFormatterCurrency(0),
+			descuento_porcentaje_dermatologo: `${redondearDecimales(0)}%`,
+			descuento_cantidad_dermatologo: toFormatterCurrency(0),
+			descuento_porcentaje: `${redondearDecimales(0)}%`,
+			descuento_cantidad: toFormatterCurrency(0),
+			impuesto_porcentaje: `${0}%`,
+			importe_2: toFormatterCurrency(0),
+			impuesto_cantidad: toFormatterCurrency(0),
+			cantidad_servicios: 0,
+			total_moneda: toFormatterCurrency(0),
+			total_doctor: toFormatterCurrency(0),
+			doctor_efectivo: toFormatterCurrency(0),
+			doctor_retencion: toFormatterCurrency(0),
+			total_clinica: toFormatterCurrency(0),
+			turno: servicio.turno ? (servicio.turno === 'M' ? 'MATUTINO' : 'VESPERTINO') : "SIN TURNO",
+		}
+		datos.push(dato);
+	}
+
 	const procesarConsulta = (consulta, datos) => {
 		consulta.iva = false;
+		if (consulta.status && consulta.status._id === statusCanceloSPId) {
+			servicioCancelado(consulta, datos);
+		}
 		consulta.pagos.forEach(pago => {
 			const metodoPago = metodosPago.find(metodoPago => {
 				return metodoPago._id === pago.forma_pago;
@@ -209,6 +243,9 @@ const ReportesDetallesGeneral = (props) => {
 	}
 
 	const procesarFacial = (facial, datos) => {
+		if (facial.status && facial.status._id === statusCanceloSPId) {
+			servicioCancelado(facial, datos);
+		}
 		facial.tratamientos.forEach(tratamiento => {
 			const producto = tratamiento;
 			producto.areasSeleccionadas.forEach(areaSeleccionada => {
@@ -336,6 +373,9 @@ const ReportesDetallesGeneral = (props) => {
 	}
 
 	const procesarAparatologia = (aparatologia, datos) => {
+		if (aparatologia.status && aparatologia.status._id === statusCanceloSPId) {
+			servicioCancelado(aparatologia, datos);
+		}
 		aparatologia.tratamientos.forEach(tratamiento => {
 			const producto = tratamiento;
 			producto.areasSeleccionadas.forEach(areaSeleccionada => {
@@ -477,6 +517,9 @@ const ReportesDetallesGeneral = (props) => {
 
 	const procesarCuracion = (curacion, datos) => {
 		curacion.iva = false;
+		if (curacion.status && curacion.status._id === statusCanceloSPId) {
+			servicioCancelado(curacion, datos);
+		}
 		curacion.pagos.forEach(pago => {
 			let totalPago = Number(pago.total);
 			let totalAplicacion = Number(curacion.total_aplicacion);
@@ -556,7 +599,6 @@ const ReportesDetallesGeneral = (props) => {
 				datos.push(dato);
 			} while (totalPago !== 0 && totalAplicacion !== 0);
 
-			console.log("KAOZ", curacion, curacion.materiales);
 			curacion.materiales.forEach(material => {
 				let precioMaterial = Number(material.precio);
 				do {
@@ -675,6 +717,9 @@ const ReportesDetallesGeneral = (props) => {
 	}
 
 	const procesarDermapen = (dermapen, datos) => {
+		if (dermapen.status && dermapen.status._id === statusCanceloSPId) {
+			servicioCancelado(dermapen, datos);
+		}
 		let totalAplicacion = Number(dermapen.total_aplicacion);
 		dermapen.pagos.forEach(pago => {
 			let totalPago = Number(pago.total);
@@ -814,6 +859,9 @@ const ReportesDetallesGeneral = (props) => {
 	}
 
 	const procesarEstetica = (estetica, datos) => {
+		if (estetica.status && estetica.status._id === statusCanceloSPId) {
+			servicioCancelado(estetica, datos);
+		}
 		let totalAplicacion = Number(estetica.total_aplicacion);
 		estetica.pagos.forEach(pago => {
 			let totalPago = Number(pago.total);

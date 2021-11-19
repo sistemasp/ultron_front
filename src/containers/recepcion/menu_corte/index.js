@@ -27,6 +27,7 @@ import { showAllTipoEntradas } from "../../../services/tipo_entradas";
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { deletePagoDermatologo } from "../../../services/pago_dermatologos";
 import { deletePagoPatologo } from "../../../services/pago_patologo";
+import { tipoSalidaPagoDermatologoId, tipoSalidaPagoPatologoId } from "../../../utils/constants";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -56,9 +57,6 @@ const useStyles = makeStyles(theme => ({
 const Corte = (props) => {
 
   const classes = useStyles();
-
-  const tipoSalidaPagoDermatologoId = process.env.REACT_APP_TIPO_SALIDA_PAGO_DERMATOLOGO_ID;
-  const tipoSalidaPagoPatologoId = process.env.REACT_APP_TIPO_SALIDA_PAGO_PATOLOGO_ID;
 
   const [openModalNuevoEntrada, setOpenModalNuevoEntrada] = useState(false);
   const [openModalNuevoSalida, setOpenModalNuevoSalida] = useState(false);
@@ -191,13 +189,15 @@ const Corte = (props) => {
 
   const handleEliminarSalida = async (event, rowData) => {
     setIsLoading(true);
-    if (rowData.tipo_salida._id === tipoSalidaPagoDermatologoId) {
-      await deletePagoDermatologo(rowData.pago_dermatologo, token);
-      await deleteSalida(rowData._id, token);
-    } else if (rowData.tipo_salida._id === tipoSalidaPagoPatologoId) {
-      await deletePagoPatologo(rowData.pago_dermatologo, token);
-      await deleteSalida(rowData._id, token);
+    switch (rowData.tipo_salida._id) {
+      case tipoSalidaPagoDermatologoId:
+        await deletePagoDermatologo(rowData.pago_dermatologo, token);
+        break;
+      case tipoSalidaPagoPatologoId:
+        await deletePagoPatologo(rowData.pago_dermatologo, token);
+        break;
     }
+    await deleteSalida(rowData._id, token);
     turnoActual();
     setIsLoading(false);
   }

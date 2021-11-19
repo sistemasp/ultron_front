@@ -54,6 +54,8 @@ const Pacientes = (props) => {
 		{ title: 'FECHA DE NACIMIENTO', field: 'fecha_nacimiento' },
 	];
 
+	console.log("KAOZ", empleado);
+
 	const options = {
 		headerStyle: {
 			backgroundColor: colorBase,
@@ -69,7 +71,7 @@ const Pacientes = (props) => {
 			textAlign: 'center',
 		},
 		exportAllData: true,
-		exportButton: false,
+		exportButton: empleado.super_admin,
 		exportDelimiter: ';',
 	}
 
