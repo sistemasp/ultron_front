@@ -109,6 +109,7 @@ const Corte = (props) => {
 
   const columnsSalidaDetalles = [
     { title: 'CONCEPTO', field: 'concepto' },
+    { title: 'DESCRIPCIÓN', field: 'descripcion' },
     { title: 'RECEPCIONISTA', field: 'recepcionista.nombre' },
     { title: 'CANTIDAD', field: 'cantidad_moneda' },
 

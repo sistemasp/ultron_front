@@ -38,6 +38,15 @@ import { updateSesionAnticipada } from "../../../services/sesiones_anticipadas";
 import { createPago } from "../../../services/pagos";
 import { createEntrada, updateEntrada } from "../../../services/entradas";
 import { createConsult } from "../../../services/consultas";
+import {
+  sucursalOccidentalId,
+  sucursalFederalismoId,
+  peelingResorcinaTratamientoId,
+  micropeelingResorcinaTratamientoId,
+  tipoSalidaFacialesId,
+  formaPagoEfectivoId,
+} from "../../../utils/constants";
+import { createSalida } from "../../../services/salidas";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -700,7 +709,7 @@ const AgendarFacial = (props) => {
                         : '';
                       break;
                     case 'REVISÓN':
-                      menuItem = props.data.sucursal._id !== sucursalManuelAcunaId && props.data.sucursal._id !== sucursalRubenDarioId?
+                      menuItem = props.data.sucursal._id !== sucursalManuelAcunaId && props.data.sucursal._id !== sucursalRubenDarioId ?
                         <MenuItem
                           key={index}
                           value={item.tooltip}
@@ -730,7 +739,24 @@ const AgendarFacial = (props) => {
   const handleGuardarModalPagos = async (servicio) => {
     servicio.pagado = servicio.pagos.length > 0;
 
-    // TODO: KAOZ
+    servicio.tratamientos.forEach(async (tratamiento) => {
+      if (tratamiento._id === peelingResorcinaTratamientoId || tratamiento._id === micropeelingResorcinaTratamientoId) {
+        const today = new Date();
+        const salida = {
+          create_date: today,
+          turno: servicio.turno === 'M' ? 'MATUTINO' : 'VESPERTINO',
+          hora_aplicacion: today,
+          recepcionista: empleado._id,
+          concepto: tratamiento.nombre,
+          descripcion: servicio.paciente_nombre,
+          cantidad: "18.5",
+          tipo_salida: tipoSalidaFacialesId,
+          sucursal: servicio.sucursal._id,
+          forma_pago: formaPagoEfectivoId
+        }
+        await createSalida(salida, token);
+      }
+    });
     
     if (!servicio.consecutivo) {
       const response = await findConsecutivoBySucursal(sucursal, token);
