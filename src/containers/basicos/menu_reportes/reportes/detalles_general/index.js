@@ -148,7 +148,6 @@ const ReportesDetallesGeneral = (props) => {
 	}
 
 	const servicioCancelado = (servicio, datos) => {
-		console.log("KAOZ", servicio);
 		const dato = {
 			...servicio,
 			metodo_pago_nombre: "NO APLICA",

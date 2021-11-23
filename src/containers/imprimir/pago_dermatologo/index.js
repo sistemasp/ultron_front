@@ -569,7 +569,6 @@ const ImprimirPagoDermatologo = (props) => {
           pagoDermatologo = comisionDermatologo - ((comisionDermatologo * (sesionAnticipada.porcentaje_descuento_clinica ? sesionAnticipada.porcentaje_descuento_clinica : 0)) / 100);
         }
       }
-      console.log("KAOZ", pagoDermatologo);
       total += Number(pagoDermatologo);
 
       updateSesionAnticipada(sesionAnticipada._id, sesionAnticipada, token);

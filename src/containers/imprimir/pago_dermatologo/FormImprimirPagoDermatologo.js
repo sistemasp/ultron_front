@@ -411,7 +411,6 @@ const FormImprimirPagoDermatologo = (props) => {
               {
                 consultasPrimeraVez ?
                   consultasPrimeraVez.map(consulta => {
-                    console.log("KAOZ", consulta);
                     let totalPagos = 0;
                     if (!consulta.has_descuento_dermatologo) {
                       consulta.pagos.map(pago => {

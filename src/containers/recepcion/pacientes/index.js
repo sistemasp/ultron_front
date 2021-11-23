@@ -54,8 +54,6 @@ const Pacientes = (props) => {
 		{ title: 'FECHA DE NACIMIENTO', field: 'fecha_nacimiento' },
 	];
 
-	console.log("KAOZ", empleado);
-
 	const options = {
 		headerStyle: {
 			backgroundColor: colorBase,
