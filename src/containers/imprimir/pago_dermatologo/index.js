@@ -326,7 +326,7 @@ const ImprimirPagoDermatologo = (props) => {
           })
         }
 
-        let pagoDermatologo = Number(totalPagos) * Number(
+        let pagoDermatologo = Number(consulta.precio) * Number(
           consulta.frecuencia === reconsultaFrecuenciaId ? dermatologo.esquema.porcentaje_reconsulta
             : (consulta.frecuencia === privadaFrecuenciaId ? dermatologo.esquema.porcentaje_consulta_privada : dermatologo.esquema.porcentaje_consulta)) / 100;
         consulta.pago_dermatologo = pagoDermatologo;
