@@ -326,7 +326,7 @@ const ImprimirPagoDermatologo = (props) => {
           })
         }
 
-        let pagoDermatologo = Number(totalPagos) * Number(
+        let pagoDermatologo = Number(consulta.precio) * Number(
           consulta.frecuencia === reconsultaFrecuenciaId ? dermatologo.esquema.porcentaje_reconsulta
             : (consulta.frecuencia === privadaFrecuenciaId ? dermatologo.esquema.porcentaje_consulta_privada : dermatologo.esquema.porcentaje_consulta)) / 100;
         consulta.pago_dermatologo = pagoDermatologo;
@@ -569,7 +569,6 @@ const ImprimirPagoDermatologo = (props) => {
           pagoDermatologo = comisionDermatologo - ((comisionDermatologo * (sesionAnticipada.porcentaje_descuento_clinica ? sesionAnticipada.porcentaje_descuento_clinica : 0)) / 100);
         }
       }
-      console.log("KAOZ", pagoDermatologo);
       total += Number(pagoDermatologo);
 
       updateSesionAnticipada(sesionAnticipada._id, sesionAnticipada, token);

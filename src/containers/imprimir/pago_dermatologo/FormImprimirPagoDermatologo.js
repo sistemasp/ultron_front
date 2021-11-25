@@ -417,7 +417,7 @@ const FormImprimirPagoDermatologo = (props) => {
                         totalPagos += Number(pago.total);
                       });
                     }
-                    const pagoDermatologo = Number(totalPagos) * Number(dermatologo.esquema.porcentaje_consulta) / 100;
+                    const pagoDermatologo = Number(consulta.precio) * Number(dermatologo.esquema.porcentaje_consulta) / 100;
                     pagoTotal += Number(pagoDermatologo);
 
                     return <Grid container>
@@ -489,7 +489,7 @@ const FormImprimirPagoDermatologo = (props) => {
                         totalPagos += Number(pago.total);
                       });
                     }
-                    const pagoDermatologo = Number(totalPagos) * Number(dermatologo.esquema.porcentaje_reconsulta) / 100;
+                    const pagoDermatologo = Number(consulta.precio) * Number(dermatologo.esquema.porcentaje_reconsulta) / 100;
 
                     pagoTotal += Number(pagoDermatologo);
                     return <Grid container>

@@ -148,7 +148,6 @@ const ReportesDetallesGeneral = (props) => {
 	}
 
 	const servicioCancelado = (servicio, datos) => {
-		console.log("KAOZ", servicio);
 		const dato = {
 			...servicio,
 			metodo_pago_nombre: "NO APLICA",
@@ -180,7 +179,7 @@ const ReportesDetallesGeneral = (props) => {
 	const procesarConsulta = (consulta, datos) => {
 		consulta.iva = false;
 		if (consulta.status && consulta.status._id === statusCanceloSPId) {
-			servicioCancelado(consulta, datos);
+			// servicioCancelado(consulta, datos);
 		}
 		consulta.pagos.forEach(pago => {
 			const metodoPago = metodosPago.find(metodoPago => {
@@ -244,7 +243,7 @@ const ReportesDetallesGeneral = (props) => {
 
 	const procesarFacial = (facial, datos) => {
 		if (facial.status && facial.status._id === statusCanceloSPId) {
-			servicioCancelado(facial, datos);
+			// servicioCancelado(facial, datos);
 		}
 		facial.tratamientos.forEach(tratamiento => {
 			const producto = tratamiento;
@@ -374,7 +373,7 @@ const ReportesDetallesGeneral = (props) => {
 
 	const procesarAparatologia = (aparatologia, datos) => {
 		if (aparatologia.status && aparatologia.status._id === statusCanceloSPId) {
-			servicioCancelado(aparatologia, datos);
+			// servicioCancelado(aparatologia, datos);
 		}
 		aparatologia.tratamientos.forEach(tratamiento => {
 			const producto = tratamiento;
@@ -518,7 +517,7 @@ const ReportesDetallesGeneral = (props) => {
 	const procesarCuracion = (curacion, datos) => {
 		curacion.iva = false;
 		if (curacion.status && curacion.status._id === statusCanceloSPId) {
-			servicioCancelado(curacion, datos);
+			// servicioCancelado(curacion, datos);
 		}
 		curacion.pagos.forEach(pago => {
 			let totalPago = Number(pago.total);
@@ -718,7 +717,7 @@ const ReportesDetallesGeneral = (props) => {
 
 	const procesarDermapen = (dermapen, datos) => {
 		if (dermapen.status && dermapen.status._id === statusCanceloSPId) {
-			servicioCancelado(dermapen, datos);
+			// servicioCancelado(dermapen, datos);
 		}
 		let totalAplicacion = Number(dermapen.total_aplicacion);
 		dermapen.pagos.forEach(pago => {
@@ -860,7 +859,7 @@ const ReportesDetallesGeneral = (props) => {
 
 	const procesarEstetica = (estetica, datos) => {
 		if (estetica.status && estetica.status._id === statusCanceloSPId) {
-			servicioCancelado(estetica, datos);
+			// servicioCancelado(estetica, datos);
 		}
 		let totalAplicacion = Number(estetica.total_aplicacion);
 		estetica.pagos.forEach(pago => {
