@@ -45,6 +45,7 @@ const ModalFormCuracion = (props) => {
     onChangeItemPrecio,
     dataComplete,
     onChangeBiopsia,
+    onEliminarBiopsias,
     onChangeCantidadBiopsias,
     onChange,
     onChangeMotivos,
@@ -75,7 +76,11 @@ const ModalFormCuracion = (props) => {
     onChangeMinutos,
     horarios,
     colorBase,
+    isDataComplete,
+    eliminarBiopsias,
   } = props;
+
+  isDataComplete(values);
 
   const classes = myStyles(colorBase)();
 
@@ -315,15 +320,22 @@ const ModalFormCuracion = (props) => {
                 <br />
               </Grid>
               {
-                values._id ?
+                eliminarBiopsias ?
                   <Grid item xs={12} sm={2}>
+                    <ButtonCustom
+                      className={classes.buttonCancel}
+                      color="secondary"
+                      variant="contained"
+                      onClick={onEliminarBiopsias}
+                      text="ELIMINAR BIOPSIAS" />
+                  </Grid>
+                  : <Grid item xs={12} sm={2}>
                     <CheckCustom
                       checked={values.hasBiopsia}
                       onChange={onChangeBiopsia}
                       name="checkedG"
                       label="BIOPSIA" />
                   </Grid>
-                  : ''
               }
 
               {values.hasBiopsia ?
@@ -405,6 +417,7 @@ const ModalFormCuracion = (props) => {
                   className={classes.button}
                   color="primary"
                   variant="contained"
+                  disabled={!dataComplete}
                   onClick={(e) => onClickCrearCuracion(e, values)}
                   text="GUARDAR" />
               </Grid>

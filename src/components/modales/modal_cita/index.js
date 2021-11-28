@@ -113,6 +113,7 @@ const ModalCita = (props) => {
   const [previousState, setPreviousState] = useState();
   const [medios, setMedios] = useState([]);
   const [selectedAreas, setSelectedAreas] = useState(true);
+  const [dataComplete, setDataComplete] = useState(false);
 
   const [openModalPagos, setOpenModalPagos] = useState(false);
   const [openModalConfirmacion, setOpenModalConfirmacion] = useState(false);
@@ -160,6 +161,11 @@ const ModalCita = (props) => {
     medio: cita.medio._id,
     disparos: cita.disparos,
   });
+
+  const isDataComplete = (data) => {
+    setDataComplete( !!(data.status && data.frecuencia && data.tipo_cita && data.tratamientos && selectedAreas 
+      && data.dermatologo && data.promovendedor && data.cosmetologa && data.quien_realiza));
+  }
 
   const loadMedios = async () => {
     const response = await showAllMedios();
@@ -596,6 +602,7 @@ const ModalCita = (props) => {
                 onChangeDisparos={(e) => handleChangeDisparos(e)}
                 frecuencias={frecuencias}
                 onChangeFrecuencia={(e) => handleChangeFrecuencia(e)}
+                isDataComplete={isDataComplete}
                 tratamientos={tratamientos}
                 areas={areas}
                 medios={medios}
@@ -607,6 +614,7 @@ const ModalCita = (props) => {
                 formasPago={formasPago}
                 statements={statements}
                 colorBase={colorBase}
+                dataComplete={dataComplete}
                 onChangeSesion={handleChangeSesion}
                 onChangePrecio={handleChangePrecio}
                 onChangeMotivos={handleChangeMotivos}

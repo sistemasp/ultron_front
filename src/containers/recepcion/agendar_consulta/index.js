@@ -556,7 +556,7 @@ const AgendarConsulta = (props) => {
 			const response = await findConsecutivoBySucursal(sucursal._id, token);
 			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 				const resConsecutivo = response.data;
-				servicio.consecutivo = resConsecutivo.length;
+				servicio.consecutivo = resConsecutivo;
 
 				if (servicio.forma_pago._id === sesionAnticipadaFormaPagoId) {
 					servicio.sesion_anticipada.consecutivo = servicio.consecutivo;
@@ -612,7 +612,11 @@ const AgendarConsulta = (props) => {
 	}
 
 	const actions = [
-		//new Date(anio, mes - 1, dia) < filterDate.fecha_show  ? 
+		{
+			icon: AttachMoneyIcon,
+			tooltip: 'PAGOS',
+			onClick: handleClickVerPagos
+		},
 		{
 			icon: PrintIcon,
 			tooltip: 'IMPRIMIR',
@@ -652,13 +656,6 @@ const AgendarConsulta = (props) => {
 			icon: EventAvailableIcon,
 			tooltip: 'NUEVA CITA',
 			onClick: handleOnClickNuevaConsulta
-		},
-		{
-
-			icon: AttachMoneyIcon,
-			tooltip: 'PAGOS',
-			onClick: handleClickVerPagos
-
 		},
 		{
 			icon: AttachMoneyIcon,

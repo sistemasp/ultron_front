@@ -408,6 +408,11 @@ const AgendarDermapen = (props) => {
 
 	const actions = [
 		{
+			icon: AttachMoneyIcon,
+			tooltip: 'PAGOS',
+			onClick: handleClickVerPagos
+		},
+		{
 			icon: PrintIcon,
 			tooltip: 'IMPRIMIR',
 			onClick: handlePrint
@@ -416,11 +421,6 @@ const AgendarDermapen = (props) => {
 			icon: EditIcon,
 			tooltip: 'EDITAR',
 			onClick: handleOnClickEditarCita
-		},
-		{
-			icon: AttachMoneyIcon,
-			tooltip: 'PAGOS',
-			onClick: handleClickVerPagos
 		},
 		{
 			icon: EventAvailableIcon,
@@ -521,7 +521,7 @@ const AgendarDermapen = (props) => {
 			const response = await findConsecutivoBySucursal(sucursal, token);
 			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 				const resConsecutivo = response.data;
-				servicio.consecutivo = resConsecutivo.length;
+				servicio.consecutivo = resConsecutivo;
 
 				if (servicio.forma_pago._id === sesionAnticipadaFormaPagoId) {
 					servicio.sesion_anticipada.consecutivo = servicio.consecutivo;

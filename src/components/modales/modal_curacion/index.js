@@ -80,6 +80,7 @@ const ModalCuracion = (props) => {
   const [medios, setMedios] = useState([]);
   const [turno, setTurno] = useState({});
   const [openModalConfirmacion, setOpenModalConfirmacion] = useState(false);
+  const [dataComplete, setDataComplete] = useState(false);
 
   const fecha_cita = new Date(curacion.fecha_hora);
   const fecha = `${addZero(fecha_cita.getDate())}/${addZero(Number(fecha_cita.getMonth()) + 1)}/${addZero(fecha_cita.getFullYear())}`;
@@ -119,7 +120,12 @@ const ModalCuracion = (props) => {
     pagos: curacion.pagos,
   });
 
-  const dataComplete = values.pagado;
+  console.log("KAOZ", values);
+
+  const isDataComplete = (data) => {
+    const validBiopsia = data.hasBiopsia ? !!(data.patologo && data.cantidad_biopsias > 0 && data.costo_biopsias > 0) : true;
+    setDataComplete(!!(validBiopsia));
+  }
 
   const handleChangeMateriales = async (items) => {
     setIsLoading(true);
@@ -178,7 +184,7 @@ const ModalCuracion = (props) => {
       }
     }
     if (data.status === reagendoStatusId) {
-      await updateCuracion(data._id, data, empleado.access_token);
+      await updateCuracion(data._id, data, token);
       data.quien_agenda = empleado._id;
       data.sucursal = sucursal;
       data.status = pendienteStatusId;
@@ -187,7 +193,7 @@ const ModalCuracion = (props) => {
       data.fecha_hora = data.nueva_fecha_hora;
       data._id = undefined;
       const fecha_hora = new Date(data.fecha_hora);
-      const response = await createCuracion(data, empleado.access_token);
+      const response = await createCuracion(data, token);
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
         setOpenAlert(true);
         setMessage('CURACIÓN REAGENDADA CORRECTAMENTE');
@@ -235,13 +241,13 @@ const ModalCuracion = (props) => {
             if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
               || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
               material.salidaId = material.salidaId ? material.salidaId : response.data._id;
-              await updateCuracion(data._id, data, empleado.access_token)
+              await updateCuracion(data._id, data, token)
               await loadCuraciones(fecha_hora);
             }
           }
         });
       } else {
-        await updateCuracion(data._id, data, empleado.access_token)
+        await updateCuracion(data._id, data, token)
         await loadCuraciones(fecha_hora);
       }
     }
@@ -321,6 +327,23 @@ const ModalCuracion = (props) => {
   const handleChangePagado = (e) => {
     //setValues({ ...values, pagado: !values.pagado });
     setOpenModalPagos(!values.pagado);
+  }
+
+  const handleEliminarBiopsias = async (e) => {
+    values.total_aplicacion = Number(values.total_aplicacion) + Number(values.costo_biopsias);
+
+    const newCuracion = {
+      ...values,
+      biopsias: [],
+      cantidad_biopsias: 0,
+      costo_biopsias: 0,
+      patologo: {},
+      hasBiopsia: false,
+    };
+    delete newCuracion.patologo;
+    await updateCuracion(newCuracion._id, newCuracion, token);
+    await loadCuraciones(new Date(newCuracion.fecha_hora));
+    onClose();
   }
 
   const handleChangeBiopsia = (e) => {
@@ -498,7 +521,7 @@ const ModalCuracion = (props) => {
   }
 
   const loadDermatologos = async () => {
-    const response = await findEmployeesByRolIdAvailable(dermatologoRolId, empleado.access_token);
+    const response = await findEmployeesByRolIdAvailable(dermatologoRolId, token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setDermatologos(response.data);
     }
@@ -506,7 +529,7 @@ const ModalCuracion = (props) => {
 
 
   const loadPatologos = async () => {
-    const response = await findEmployeesByRolIdAvailable(patologoRolId, empleado.access_token);
+    const response = await findEmployeesByRolIdAvailable(patologoRolId, token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setPatologos(response.data);
     }
@@ -566,6 +589,7 @@ const ModalCuracion = (props) => {
             colorBase={colorBase}
             onChangePagado={(e) => handleChangePagado(e)}
             onChangeBiopsia={(e) => handleChangeBiopsia(e)}
+            onEliminarBiopsias={(e) => handleEliminarBiopsias(e)}
             onChangeCostoBiopsias={handleChangeCostoBiopsias}
             onChangeFrecuencia={(e) => handleChangeFrecuencia(e)}
             frecuencias={frecuencias}
@@ -586,6 +610,8 @@ const ModalCuracion = (props) => {
             onChangeMotivos={handleChangeMotivos}
             onChangeHora={(e) => handleChangeHora(e)}
             onChangeMinutos={(e) => handleChangeMinutos(e)}
+            isDataComplete={isDataComplete}
+            eliminarBiopsias={curacion.hasBiopsia}
             curacion={curacion} />
           :
           <Backdrop className={classes.backdrop} open={isLoading} >

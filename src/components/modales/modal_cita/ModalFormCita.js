@@ -108,8 +108,12 @@ const ModalFormCita = (props) => {
     setSeverity,
     setOpenAlert,
     selectedAreas,
+    dataComplete,
     colorBase,
+    isDataComplete,
   } = props;
+
+  isDataComplete(values);
 
   const classes = myStyles(colorBase)();
 
@@ -423,7 +427,7 @@ const ModalFormCita = (props) => {
                   className={classes.button}
                   color="primary"
                   variant="contained"
-                  disabled={!selectedAreas}
+                  disabled={!dataComplete}
                   onClick={(e) => onClickActualizarCita(e, values)}
                   text='GUARDAR' />
               </Grid>
