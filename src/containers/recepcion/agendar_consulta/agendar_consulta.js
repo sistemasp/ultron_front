@@ -118,7 +118,7 @@ export const AgendarConsultaContainer = (props) => {
             tratamientos={tratamientos}
             horarios={horarios}
             empleado={empleado}
-            sucursal={sucursal._id}
+            sucursal={sucursal}
             loadConsultas={loadConsultas}
             setOpenAlert={setOpenAlert}
             setMessage={setMessage}

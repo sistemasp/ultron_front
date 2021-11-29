@@ -23,6 +23,7 @@ import { showAllStatusVisibles } from '../../../services/status';
 import { findProductoByServicio } from '../../../services/productos';
 import { findEmployeesByRolIdAvailable } from '../../../services/empleados';
 import { deletePago, updatePago } from '../../../services/pagos';
+import { formaPagoEfectivoId, formaPagoNoPagaId } from '../../../utils/constants';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -49,6 +50,8 @@ const ModalConsulta = (props) => {
     colorBase,
   } = props;
 
+  const sucursalId = sucursal._id;
+
   const [isLoading, setIsLoading] = useState(true);
   const [frecuencias, setFrecuencias] = useState([]);
   const [productos, setProductos] = useState([]);
@@ -67,6 +70,14 @@ const ModalConsulta = (props) => {
   const fecha_cita = new Date(consulta.fecha_hora);
   const fecha = `${addZero(fecha_cita.getDate())}/${addZero(Number(fecha_cita.getMonth() + 1))}/${addZero(fecha_cita.getFullYear())}`;
   const hora = `${addZero(Number(fecha_cita.getHours()))}:${addZero(fecha_cita.getMinutes())}`;
+
+  const date = new Date();
+
+  const getPrecio = () => {
+    const precio = date.getDay() === 6 ? (date.getHours() >= 13 ? sucursal.precio_sabado_vespertino : sucursal.precio_sabado_matutino) // SABADO
+    : (date.getHours() >= 14 ? sucursal.precio_vespertino : sucursal.precio_matutino); // L-V
+    return precio;
+  }
 
   const [values, setValues] = useState({
     fecha_show: fecha_cita,
@@ -178,7 +189,7 @@ const ModalConsulta = (props) => {
     const dia = date ? date.getDate() : values.fecha_show.getDate();
     const mes = Number(date ? date.getMonth() : values.fecha_show.getMonth()) + 1;
     const anio = date ? date.getFullYear() : values.fecha_show.getFullYear();
-    const response = await findScheduleInConsultByDateAndSucursal(consultaServicioId, dia, mes, anio, sucursal);
+    const response = await findScheduleInConsultByDateAndSucursal(consultaServicioId, dia, mes, anio, sucursalId);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setHorarios(response.data);
     }
@@ -312,7 +323,7 @@ const ModalConsulta = (props) => {
     if (rowData.status === reagendoStatusId) {
       await updateConsult(consulta._id, rowData, empleado.access_token);
       rowData.quien_agenda = empleado._id;
-      rowData.sucursal = sucursal;
+      rowData.sucursal = sucursalId;
       rowData.status = pendienteStatusId;
       rowData.hora_llegada = '--:--';
       rowData.observaciones = `CONSULTA REAGENDADA ${values.fecha_actual} - ${values.hora_actual} HRS`;
@@ -404,7 +415,15 @@ const ModalConsulta = (props) => {
   }
 
   const handleChangeProductos = (e) => {
-    setValues({ ...values, producto: e.target.value });
+    const productoValue = e.target.value;
+    setValues({
+      ...values,
+      producto: productoValue,
+      forma_pago: productoValue === productoConsultaId ? formaPagoEfectivoId : formaPagoNoPagaId,
+      precio: productoValue === productoConsultaId ? getPrecio() : '0',
+      porcentaje_descuento_clinica: productoValue === productoConsultaId ? '0' : '100',
+      descuento_clinica: productoValue === productoConsultaId ? 0 : getPrecio(),
+    });
   }
 
   useEffect(() => {
@@ -458,7 +477,6 @@ const ModalConsulta = (props) => {
             setOpenAlert={setOpenAlert}
             setMessage={setMessage}
             setSeverity={setSeverity}
-            sucursal={sucursal}
             tipoServicioId={consultaServicioId}
             colorBase={colorBase}
             frecuenciaReconsultaId={frecuenciaReconsultaId} /> :

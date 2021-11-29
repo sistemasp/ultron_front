@@ -120,8 +120,6 @@ const ModalCuracion = (props) => {
     pagos: curacion.pagos,
   });
 
-  console.log("KAOZ", values);
-
   const isDataComplete = (data) => {
     const validBiopsia = data.hasBiopsia ? !!(data.patologo && data.cantidad_biopsias > 0 && data.costo_biopsias > 0) : true;
     setDataComplete(!!(validBiopsia));

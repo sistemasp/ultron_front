@@ -25,7 +25,7 @@ export const ComboCustom = (props) => {
         <Autocomplete
             className={className}
             disablePortal
-            id="combo-box-demo"
+            id="combo-box-autocomplete"
             options={options}
             value={newValue}
             onChange={onChange}
