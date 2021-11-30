@@ -331,7 +331,7 @@ const FormImprimirPagoDermatologo = (props) => {
               <Grid item xs={2} className={classes.label}>
                 <p className={classes.label_cells_totales}>OBSERVACIONES</p>
               </Grid>
-              <Grid item xs={true} className={classes.label}>
+              <Grid item xs={12} className={classes.label}>
                 <hr className={classes.label} />
               </Grid>
 
@@ -344,7 +344,7 @@ const FormImprimirPagoDermatologo = (props) => {
                         totalPagos += Number(pago.total);
                       });
                     }
-                    const pagoDermatologo = Number(totalPagos) * Number(dermatologo.esquema.porcentaje_consulta_privada) / 100;
+                    const pagoDermatologo = Number(consulta.precio) * Number(dermatologo.esquema.porcentaje_consulta_privada) / 100;
                     pagoTotal += Number(pagoDermatologo);
 
                     return <Grid container>

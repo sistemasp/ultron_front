@@ -20,7 +20,7 @@ import { createPagoDermatologo, showTodayPagoDermatologoBySucursalTurno, updateP
 import { findSesionesAnticipadasByPayOfDoctorFechaPago, updateSesionAnticipada } from '../../../services/sesiones_anticipadas';
 import { findPagosAnticipadssByPayOfDoctorFechaPago } from '../../../services/pagos_anticipados';
 import { comisionAreaBySucursalAndTipo, precioAreaBySucursal } from '../../../utils/utils';
-import { esquemaNominalId, laserTratamientoId } from '../../../utils/constants';
+import { esquemaNominalId, laserTratamientoId, productoRevisionId } from '../../../utils/constants';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -316,7 +316,7 @@ const ImprimirPagoDermatologo = (props) => {
     // TOTAL DE LAS CONSULTAS 
     consultas.forEach(async (consulta) => {
       let totalPagos = 0;
-      if (isSesionAnticipada(consulta)) {
+      if (isSesionAnticipada(consulta) || consulta.producto === productoRevisionId) {
         consulta.pago_dermatologo = 0;
         updateConsult(consulta._id, consulta, token);
       } else {
@@ -335,7 +335,6 @@ const ImprimirPagoDermatologo = (props) => {
         total += Number(pagoDermatologo);
       }
     });
-
 
     // TOTAL DE LAS CURACION
     curaciones.forEach(async (curacion) => {

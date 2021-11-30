@@ -1,5 +1,10 @@
 const frecuenciaPrimeraVezId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
-const productoConsultaId = process.env.REACT_APP_PRODUCTO_CONSULTA_ID;
+
+export const productoConsultaId = process.env.REACT_APP_PRODUCTO_CONSULTA_ID
+export const productoCuracionId = process.env.REACT_APP_PRODUCTO_CURACION_ID
+export const productoMicropuncionId = process.env.REACT_APP_PRODUCTO_MICROPUNCION_ID
+export const productoRevisionId = process.env.REACT_APP_PRODUCTO_REVISION_ID
+export const productoAplicacionToxina = process.env.REACT_APP_PRO_APL_TOX_BOT_DIT_ID
 
 export const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
 export const sucursalOccidentalId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
