@@ -30,6 +30,8 @@ export const tipoSalidaFacialesId = process.env.REACT_APP_TIPO_SALIDA_FACIALES_I
 export const tipoSalidaGastosAdministrativosId = process.env.REACT_APP_TIPO_SALIDA_GASTOS_ADMINISTRATIVOS_ID;
 export const tipoSalidaPagoPatologoId = process.env.REACT_APP_TIPO_SALIDA_PAGO_PATOLOGO_ID;
 
+export const tratamientoLuzpulzadaId = process.env.REACT_APP_LUZ_PULZADA_TRATAMIENTO_ID;
+
 export const formaPagoEfectivoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
 export const formaPagoTarjetaId = process.env.REACT_APP_FORMA_PAGO_TARJETA;
 export const formaPagoTransferenciaId = process.env.REACT_APP_FORMA_PAGO_TRANSFERENCIA;

@@ -5,8 +5,9 @@ import { Button, Grid } from '@material-ui/core';
 import { ButtonCustom } from '../../../basic/ButtonCustom';
 import bannerMePiel from './../../../../bannerMePiel.PNG';
 import bannerDermastetic from './../../../../bannerDermastetic.jpeg';
-import { addZero, dateToString, precioAreaBySucursal, toFormatterCurrency } from '../../../../utils/utils';
+import { addZero, comisionAreaBySucursalAndTipo, dateToString, precioAreaBySucursal, toFormatterCurrency } from '../../../../utils/utils';
 import myStyles from '../../../../css';
+import { tratamientoLuzpulzadaId } from '../../../../utils/constants';
 
 function getModalStyle() {
   return {
@@ -263,6 +264,36 @@ const FormReporteImprimirPagoDermatologo = (props) => {
                       onClick={onClickImprimir}
                       text='IMPRIMIR' />
                   </Grid>
+                  <Grid item xs={12}>
+                    <ButtonCustom
+                      className={classes.button}
+                      color="primary"
+                      variant="contained"
+                      onClick={onClickPagar}
+                      text='PAGAR' />
+                  </Grid>
+                  {
+                    corte.hora_cierre || corte.turno === 'v' ?
+                      <Fragment>
+                        <Grid item xs={12} sm={6}>
+                          <ButtonCustom
+                            className={classes.button}
+                            color="primary"
+                            variant="contained"
+                            onClick={() => onCambioTurno()}
+                            text='CAMBIO TURNO' />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                          <ButtonCustom
+                            className={classes.button}
+                            color="primary"
+                            variant="contained"
+                            onClick={() => findCorte(turno)}
+                            text='TRAER INFORMACIÓN' />
+                        </Grid>
+                      </Fragment>
+                      : ''
+                  }
 
                   <br />
                   <Grid item xs={12}>
@@ -382,8 +413,7 @@ const FormReporteImprimirPagoDermatologo = (props) => {
                             totalPagos += Number(pago.total);
                           });
                         }
-
-                        const pagoDermatologo = Number(totalPagos) * Number(dermatologo.esquema.porcentaje_consulta) / 100;
+                        const pagoDermatologo = Number(consulta.precio) * Number(dermatologo.esquema.porcentaje_consulta) / 100;
                         pagoTotal += Number(pagoDermatologo);
 
                         return <Grid container>
@@ -692,9 +722,13 @@ const FormReporteImprimirPagoDermatologo = (props) => {
                     <Grid item xs={true} className={classes.label}>
                       <p className={classes.label_cells_totales}>SERVICIO</p>
                     </Grid>
-                    <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>DERMATOLÓGO</p>
-                    </Grid>
+                    {
+                      dermatologo._id !== dermatologoDirectoId
+                        ? <Grid item xs={true} className={classes.label}>
+                          <p className={classes.label_cells_totales}>DERMATOLÓGO</p>
+                        </Grid>
+                        : ''
+                    }
                     <Grid item xs={12} className={classes.label}>
                       <hr className={classes.label} />
                     </Grid>
@@ -720,9 +754,13 @@ const FormReporteImprimirPagoDermatologo = (props) => {
                             <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells_total}> {`${toFormatterCurrency(estetica.total_aplicacion)}`} </p>
                             </Grid>
-                            <Grid item xs={true} className={classes.label}>
-                              <p className={classes.label_cells_total}> {`${toFormatterCurrency(pagoDermatologo)}`} </p>
-                            </Grid>
+                            {
+                              dermatologo._id !== dermatologoDirectoId
+                                ? <Grid item xs={true} className={classes.label}>
+                                  <p className={classes.label_cells_total}> {`${toFormatterCurrency(pagoDermatologo)}`} </p>
+                                </Grid>
+                                : ''
+                            }
                           </Grid>
                         })
                         : ''
@@ -801,9 +839,13 @@ const FormReporteImprimirPagoDermatologo = (props) => {
                     <Grid item xs={true} className={classes.label}>
                       <p className={classes.label_cells_totales}>SERVICIO</p>
                     </Grid>
-                    <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>DERMATOLÓGO</p>
-                    </Grid>
+                    {
+                      dermatologo._id !== dermatologoDirectoId
+                        ? <Grid item xs={true} className={classes.label}>
+                          <p className={classes.label_cells_totales}>DERMATOLÓGO</p>
+                        </Grid>
+                        : ''
+                    }
                     <Grid item xs={12} className={classes.label}>
                       <hr className={classes.label} />
                     </Grid>
@@ -851,7 +893,7 @@ const FormReporteImprimirPagoDermatologo = (props) => {
                               });
                             });
                             pagoDermatologo = comisionDermatologo - ((comisionDermatologo * (facial.porcentaje_descuento_clinica ? facial.porcentaje_descuento_clinica : 0)) / 100);
-                            
+
                             pagoTotal += Number(pagoDermatologo);
                           }
                           return <Grid container>
@@ -873,9 +915,13 @@ const FormReporteImprimirPagoDermatologo = (props) => {
                             <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells_total}> {`${toFormatterCurrency(facial.total)}`} </p>
                             </Grid>
-                            <Grid item xs={true} >
-                              <p className={classes.label_cells_total}> {`${toFormatterCurrency(pagoDermatologo)}`} </p>
-                            </Grid>
+                            {
+                              dermatologo._id !== dermatologoDirectoId
+                                ? <Grid item xs={true} className={classes.label}>
+                                  <p className={classes.label_cells_total}> {`${toFormatterCurrency(pagoDermatologo)}`} </p>
+                                </Grid>
+                                : ''
+                            }
                           </Grid>
                         })
                         : ''
@@ -1088,9 +1134,13 @@ const FormReporteImprimirPagoDermatologo = (props) => {
                     <Grid item xs={true} className={classes.label}>
                       <p className={classes.label_cells_totales}>SERVICIO</p>
                     </Grid>
-                    <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>DERMATOLÓGO</p>
-                    </Grid>
+                    {
+                      dermatologo._id !== dermatologoDirectoId
+                        ? <Grid item xs={true} className={classes.label}>
+                          <p className={classes.label_cells_totales}>DERMATOLÓGO</p>
+                        </Grid>
+                        : ''
+                    }
                     <Grid item xs={12} className={classes.label}>
                       <hr className={classes.label} />
                     </Grid>
@@ -1102,13 +1152,12 @@ const FormReporteImprimirPagoDermatologo = (props) => {
                             aparatologia.tratamientos.forEach(tratamiento => {
 
                               tratamiento.areasSeleccionadas.map(area => {
-                                const itemPrecio =
-                                  sucursal._id === sucursalManuelAcunaId ? area.precio_ma // PRECIO MANUEL ACUÑA
-                                    : (sucursal._id === sucursalOcciId ? area.precio_oc // PRECIO OCCIDENTAL
-                                      : (sucursal._id === sucursalFedeId ? area.precio_fe // PRECIO FEDERALISMO
-                                        : (sucursal._id === sucursalRubenDarioId ? area.precio_rd // PRECIO RUBEN DARIO
-                                          : 0))); // ERROR
-                                comisionDermatologo += (Number(itemPrecio) * Number(aparatologia.frecuencia === frecuenciaPrimeraVezId ? dermatologo.esquema.porcentaje_laser : (aparatologia.dermatologo === dermatologoDirectoId ? 100 : 0)) / 100);
+                                const itemPrecio = precioAreaBySucursal(sucursal._id, area);
+                                if (tratamiento._id === tratamientoLuzpulzadaId) {
+                                  comisionDermatologo = comisionAreaBySucursalAndTipo(sucursal._id, aparatologia.tipo_cita._id, area);
+                                } else {
+                                  comisionDermatologo += (Number(itemPrecio) * Number(aparatologia.frecuencia === frecuenciaPrimeraVezId ? dermatologo.esquema.porcentaje_laser : (aparatologia.dermatologo === dermatologoDirectoId ? 100 : 0)) / 100);
+                                }
                               });
                             });
                           }
@@ -1136,9 +1185,13 @@ const FormReporteImprimirPagoDermatologo = (props) => {
                             <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells_total}> {`${toFormatterCurrency(aparatologia.total)}`} </p>
                             </Grid>
-                            <Grid item xs={true} >
-                              <p className={classes.label_cells_total}> {`${toFormatterCurrency(pagoDermatologo)}`} </p>
-                            </Grid>
+                            {
+                              dermatologo._id !== dermatologoDirectoId
+                                ? <Grid item xs={true} className={classes.label}>
+                                  <p className={classes.label_cells_total}> {`${toFormatterCurrency(pagoDermatologo)}`} </p>
+                                </Grid>
+                                : ''
+                            }
                           </Grid>
                         })
                         : ''
@@ -1237,9 +1290,13 @@ const FormReporteImprimirPagoDermatologo = (props) => {
                     <Grid item xs={true} className={classes.label}>
                       <p className={classes.label_cells_totales}>SERVICIO</p>
                     </Grid>
-                    <Grid item xs={true} className={classes.label}>
-                      <p className={classes.label_cells_totales}>DERMATOLÓGO</p>
-                    </Grid>
+                    {
+                      dermatologo._id !== dermatologoDirectoId
+                        ? <Grid item xs={true} className={classes.label}>
+                          <p className={classes.label_cells_totales}>DERMATOLÓGO</p>
+                        </Grid>
+                        : ''
+                    }
                     <Grid item xs={12} className={classes.label}>
                       <hr className={classes.label} />
                     </Grid>
@@ -1321,9 +1378,13 @@ const FormReporteImprimirPagoDermatologo = (props) => {
                             <Grid item xs={true} className={classes.label}>
                               <p className={classes.label_cells_total}> {`${toFormatterCurrency(sesionAnticipada.total)}`} </p>
                             </Grid>
-                            <Grid item xs={true} >
-                              <p className={classes.label_cells_total}> {`${toFormatterCurrency(pagoDermatologo)}`} </p>
-                            </Grid>
+                            {
+                              dermatologo._id !== dermatologoDirectoId
+                                ? <Grid item xs={true} className={classes.label}>
+                                  <p className={classes.label_cells_total}> {`${toFormatterCurrency(pagoDermatologo)}`} </p>
+                                </Grid>
+                                : ''
+                            }
                           </Grid>
                         })
                         : ''

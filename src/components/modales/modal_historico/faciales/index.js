@@ -32,6 +32,7 @@ const TabFaciales = (props) => {
     { title: 'FECHA', field: 'fecha_show' },
     { title: 'HORA', field: 'hora' },
     { title: 'COSMETÓLOGA', field: 'cosmetologa.nombre' },
+    { title: 'QUIEN REALIZA', field: 'quien_realiza.nombre' },
     { title: 'PRODUCTO (ÁREAS)', field: 'show_tratamientos' },
     { title: 'TIPO CITA', field: 'tipo_cita.nombre' },
     { title: 'ESTADO', field: 'status.nombre' },
