@@ -41,6 +41,19 @@ export const formaPagoSesionAnticipadaId = process.env.REACT_APP_FORMA_PAGO_SESI
 
 export const esquemaNominalId = process.env.REACT_APP_ESQUEMA_NOMINAL_ID;
 
+export const rolDermatologoId = process.env.REACT_APP_DERMATOLOGO_ROL_ID;
+export const rolPromovendedorId = process.env.REACT_APP_PROMOVENDEDOR_ROL_ID;
+export const rolCosmetologaId = process.env.REACT_APP_COSMETOLOGA_ROL_ID;
+export const rolRecepcionistaId = process.env.REACT_APP_RECEPCIONISTA_ROL_ID;
+export const rolDirectorId = process.env.REACT_APP_DIRECTOR_ROL_ID;
+export const rolEncargadoSucursalId = process.env.REACT_APP_ENCARGADO_SUCURSAL_ROL_ID;
+export const rolEncargadoCosmetologasId = process.env.REACT_APP_ENCARGADO_COSMETOLOGAS_ROL_ID;
+export const rolAdministracionId = process.env.REACT_APP_ADMINISTRACION_ROL_ID;
+export const rolDiosSupremoId = process.env.REACT_APP_DIOS_SUPREMO_ROL_ID;
+export const rolMasterId = process.env.REACT_APP_MASTER_ROL_ID;
+export const rolSistemasId = process.env.REACT_APP_SISTEMAS_ROL_ID;
+export const rolSupervisorId = process.env.REACT_APP_SUPERVISOR_ROL_ID;
+
 export const frecuenciaPrimeraVezObj = {
     _id: frecuenciaPrimeraVezId,
     nombre: "PRIMERA VEZ",

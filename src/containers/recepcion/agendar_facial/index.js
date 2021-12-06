@@ -45,6 +45,7 @@ import {
   micropeelingResorcinaTratamientoId,
   tipoSalidaFacialesId,
   formaPagoEfectivoId,
+  rolRecepcionistaId,
 } from "../../../utils/constants";
 import { createSalida } from "../../../services/salidas";
 
@@ -127,6 +128,7 @@ const AgendarFacial = (props) => {
   const [horarios, setHorarios] = useState([]);
   const [dermatologos, setDermatologos] = useState([]);
   const [formasPago, setFormasPago] = useState([]);
+  const [recepcionistas, setRecepcionistas] = useState([]);
   const [promovendedores, setPromovendedores] = useState([]);
   const [cosmetologas, setCosmetologas] = useState([]);
   const [tipoCitas, setTipoCitas] = useState([]);
@@ -840,6 +842,13 @@ const AgendarFacial = (props) => {
     }
   }
 
+  const loadRecepcionistas = async () => {
+		const response = await findEmployeesByRolIdAvailable(rolRecepcionistaId, token);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setRecepcionistas(response.data);
+		}
+	}
+
   const loadPromovendedores = async () => {
     const response = await findEmployeesByRolIdAvailable(promovendedorRolId, token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
@@ -925,6 +934,7 @@ const AgendarFacial = (props) => {
                 paciente={paciente}
                 disableDate={disableDate}
                 promovendedores={promovendedores}
+                recepcionistas={recepcionistas}
                 cosmetologas={cosmetologas}
                 onClickAgendar={handleClickAgendar}
                 onChangeTiempo={(e) => handleChangeTiempo(e)}

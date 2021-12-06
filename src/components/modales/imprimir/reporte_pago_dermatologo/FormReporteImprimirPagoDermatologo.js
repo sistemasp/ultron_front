@@ -264,37 +264,6 @@ const FormReporteImprimirPagoDermatologo = (props) => {
                       onClick={onClickImprimir}
                       text='IMPRIMIR' />
                   </Grid>
-                  <Grid item xs={12}>
-                    <ButtonCustom
-                      className={classes.button}
-                      color="primary"
-                      variant="contained"
-                      onClick={onClickPagar}
-                      text='PAGAR' />
-                  </Grid>
-                  {
-                    corte.hora_cierre || corte.turno === 'v' ?
-                      <Fragment>
-                        <Grid item xs={12} sm={6}>
-                          <ButtonCustom
-                            className={classes.button}
-                            color="primary"
-                            variant="contained"
-                            onClick={() => onCambioTurno()}
-                            text='CAMBIO TURNO' />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                          <ButtonCustom
-                            className={classes.button}
-                            color="primary"
-                            variant="contained"
-                            onClick={() => findCorte(turno)}
-                            text='TRAER INFORMACIÓN' />
-                        </Grid>
-                      </Fragment>
-                      : ''
-                  }
-
                   <br />
                   <Grid item xs={12}>
                     <Button

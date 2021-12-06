@@ -49,6 +49,7 @@ export const AgendarConsultaContainer = (props) => {
     formasPago,
     medios,
     promovendedores,
+    recepcionistas,
     onChangeDermatologos,
     onChangePromovendedor,
     onChangeObservaciones,
@@ -97,6 +98,11 @@ export const AgendarConsultaContainer = (props) => {
   } = props;
 
   const classes = myStyles(colorBase)();
+
+  const showPromovendedores = [
+		...promovendedores,
+		...recepcionistas,
+	];
 
   return (
     <Fragment>
@@ -301,7 +307,7 @@ export const AgendarConsultaContainer = (props) => {
                     value={values.promovendedor}
                     onChange={onChangePromovendedor}
                     label="PROMOVENDEDOR (A)" >
-                    {promovendedores.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                    {showPromovendedores.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
                   </Select>
                 </FormControl>
               </Grid>

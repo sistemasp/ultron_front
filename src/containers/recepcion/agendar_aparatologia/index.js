@@ -35,6 +35,7 @@ import {
 	createConsecutivo,
 } from "../../../services/consecutivos";
 import { updateSesionAnticipada } from "../../../services/sesiones_anticipadas";
+import { rolCosmetologaId, rolDermatologoId, rolPromovendedorId, rolRecepcionistaId } from "../../../utils/constants";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -73,9 +74,6 @@ const AgendarAparatologia = (props) => {
 	const token = empleado.access_token;
 	const paciente = info.paciente ? info.paciente : info;
 
-	const dermatologoRolId = process.env.REACT_APP_DERMATOLOGO_ROL_ID;
-	const promovendedorRolId = process.env.REACT_APP_PROMOVENDEDOR_ROL_ID;
-	const cosmetologaRolId = process.env.REACT_APP_COSMETOLOGA_ROL_ID;
 	const pendienteStatusId = process.env.REACT_APP_PENDIENTE_STATUS_ID;
 	const atendidoStatusId = process.env.REACT_APP_ATENDIDO_STATUS_ID;
 	const confirmadoStatusId = process.env.REACT_APP_CONFIRMADO_STATUS_ID;
@@ -106,6 +104,7 @@ const AgendarAparatologia = (props) => {
 	const [horarios, setHorarios] = useState([]);
 	const [dermatologos, setDermatologos] = useState([]);
 	const [promovendedores, setPromovendedores] = useState([]);
+	const [recepcionistas, setRecepcionistas] = useState([]);
 	const [cosmetologas, setCosmetologas] = useState([]);
 	const [tipoCitas, setTipoCitas] = useState([]);
 	const [medios, setMedios] = useState([]);
@@ -703,22 +702,29 @@ const AgendarAparatologia = (props) => {
 		}
 	}
 
+	const loadRecepcionistas = async () => {
+		const response = await findEmployeesByRolIdAvailable(rolRecepcionistaId, token);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setRecepcionistas(response.data);
+		}
+	}
+
 	const loadPromovendedores = async () => {
-		const response = await findEmployeesByRolIdAvailable(promovendedorRolId, token);
+		const response = await findEmployeesByRolIdAvailable(rolPromovendedorId, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setPromovendedores(response.data);
 		}
 	}
 
 	const loadCosmetologas = async () => {
-		const response = await findEmployeesByRolIdAvailable(cosmetologaRolId, token);
+		const response = await findEmployeesByRolIdAvailable(rolCosmetologaId, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setCosmetologas(response.data);
 		}
 	}
 
 	const loadDermatologos = async () => {
-		const response = await findEmployeesByRolIdAvailable(dermatologoRolId, token);
+		const response = await findEmployeesByRolIdAvailable(rolDermatologoId, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setDermatologos(response.data);
 		}
@@ -756,6 +762,7 @@ const AgendarAparatologia = (props) => {
 		setIsLoading(true);
 		await loadTratamientos();
 		await loadAparatologias(new Date());
+		await loadRecepcionistas();
 		await loadPromovendedores();
 		await loadCosmetologas();
 		await loadDermatologos();
@@ -793,6 +800,7 @@ const AgendarAparatologia = (props) => {
 								paciente={paciente}
 								disableDate={disableDate}
 								promovendedores={promovendedores}
+								recepcionistas={recepcionistas}
 								cosmetologas={cosmetologas}
 								onClickAgendar={handleClickAgendar}
 								titulo={`APARATOLOGIAS (${dateToString(filterDate.fecha_show)}) (${aparatologias.length})`}

@@ -51,6 +51,7 @@ export const AgendarAparatologiaContainer = (props) => {
 		disableDate,
 		dermatologos,
 		promovendedores,
+		recepcionistas,
 		cosmetologas,
 		onChangeDoctors,
 		onChangeTipoCita,
@@ -97,6 +98,11 @@ export const AgendarAparatologiaContainer = (props) => {
 
 	const classes = myStyles(colorBase)();
 
+	const showPromovendedores = [
+		...promovendedores,
+		...recepcionistas,
+	];
+	
 	return (
 		<Fragment>
 			{
@@ -319,7 +325,7 @@ export const AgendarAparatologiaContainer = (props) => {
 								error={Boolean(errors.promovendedor)}
 								onChange={onChangePromovendedor}
 								label="PROMOVENDEDOR (A)" >
-								{promovendedores.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+								{showPromovendedores.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
 							</Select>
 						</FormControl>
 					</Grid>

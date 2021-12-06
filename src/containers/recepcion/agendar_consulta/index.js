@@ -41,7 +41,8 @@ import { createPago } from "../../../services/pagos";
 import { findTurnoActualBySucursal } from "../../../services/corte";
 import {
 	frecuenciaPrimeraVezObj,
-	productoConsultaObj
+	productoConsultaObj,
+	rolRecepcionistaId
 } from "../../../utils/constants";
 
 function Alert(props) {
@@ -129,6 +130,7 @@ const AgendarConsulta = (props) => {
 	const [message, setMessage] = useState('');
 	const [severity, setSeverity] = useState('success');
 	const [horarios, setHorarios] = useState([]);
+	const [recepcionistas, setRecepcionistas] = useState([]);
 	const [dermatologos, setDermatologos] = useState([]);
 	const [frecuencias, setFrecuencias] = useState([]);
 	const [productos, setProductos] = useState([]);
@@ -817,6 +819,13 @@ const AgendarConsulta = (props) => {
 		}
 	}
 
+	const loadRecepcionistas = async () => {
+		const response = await findEmployeesByRolIdAvailable(rolRecepcionistaId, token);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setRecepcionistas(response.data);
+		}
+	}
+
 	const loadPromovendedores = async () => {
 		const response = await findEmployeesByRolIdAvailable(promovendedorRolId, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
@@ -911,6 +920,7 @@ const AgendarConsulta = (props) => {
 						onChangeProductos={handleChangeProductos}
 						dermatologos={dermatologos}
 						promovendedores={promovendedores}
+						recepcionistas={recepcionistas}
 						onChangeDermatologos={(e) => handleChangeDermatologos(e)}
 						onChangePromovendedor={(e) => handleChangePromovendedor(e)}
 						onChangeHoliDay={(e) => handleChangeHoliDay(e)}
