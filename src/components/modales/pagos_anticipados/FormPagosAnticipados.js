@@ -11,6 +11,7 @@ import { ButtonCustom } from '../../basic/ButtonCustom';
 import TabSesionesAnticipadas from './sesiones_anticipadas';
 import myStyles from '../../../css';
 import TableComponent from '../../table/TableComponent';
+import AgregarPagosAnticipados from '../agregar_pagos_anticipados';
 
 function getModalStyle() {
 	const top = 50;
@@ -81,6 +82,10 @@ export const PagosAnticipadosContainer = props => {
 		options,
 		detailPanel,
 		actions,
+		openModalAgregarSesionesAnticipadas,
+		onCerrarAgregarSesionesAnticipadas,
+		onClickAgregarPagosAnticipados,
+		onClickAgregarSesionesAnticipadas,
 	} = props;
 
 	const classes = myStyles(colorBase)();
@@ -92,6 +97,19 @@ export const PagosAnticipadosContainer = props => {
 				aria-describedby="simple-modal-description"
 				open={open} >
 				<div style={modalStyle} className={classes.paper_95}>
+					{
+						openModalAgregarSesionesAnticipadas ?
+							<AgregarPagosAnticipados
+								open={openModalAgregarSesionesAnticipadas}
+								sucursal={sucursal}
+								paciente={paciente}
+								empleado={empleado}
+								onClose={onCerrarAgregarSesionesAnticipadas}
+								onClickGuardar={onClickAgregarPagosAnticipados}
+								colorBase={colorBase}
+								token={token} />
+							: ''
+					}
 					<h1> PAGOS ANTICIPADOS: {`${paciente.nombres} ${paciente.apellidos}`} </h1>
 					{/* <AppBar className={classes.bar} position="static">
 						<Tabs
@@ -118,7 +136,7 @@ export const PagosAnticipadosContainer = props => {
 							className={classes.button}
 							color="primary"
 							variant="contained"
-							onClick={null}
+							onClick={onClickAgregarSesionesAnticipadas}
 							text='AGREGAR PAGOS ANTICIPADOS' />
 					</Grid>
 					<TableComponent

@@ -132,7 +132,6 @@ const FormAgregarPagosAnticipados = (props) => {
                 </FormControl>
               </Grid>
 
-
               <Grid item xs={12} sm={3}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO (A)</InputLabel>

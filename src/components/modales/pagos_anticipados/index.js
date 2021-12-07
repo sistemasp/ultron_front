@@ -14,6 +14,7 @@ import { deleteSesionAnticipada } from "../../../services/sesiones_anticipadas";
 const PagosAnticipados = (props) => {
 
     const [value, setValue] = useState(0);
+    const [openModalAgregarSesionesAnticipadas, setOpenModalAgregarSesionesAnticipadas] = useState(false);
     const [pagosAnticipados, setPagosAnticipados] = useState([]);
     const {
         sucursal,
@@ -187,7 +188,23 @@ const PagosAnticipados = (props) => {
                 del = false;
             }
         });
+        if (empleado.super_admin) {
+            del = true;
+        }
         return del;
+    }
+
+    const handleClickAgregarSesionesAnticipadas = (event, rowData) => {
+        setOpenModalAgregarSesionesAnticipadas(true);
+    }
+
+    const handleCerrarAgregarSesionesAnticipadas = (event, rowData) => {
+        setOpenModalAgregarSesionesAnticipadas(false);
+    }
+
+    const handleClickAgregarPagosAnticipados = (event, rowData) => {
+        setOpenModalAgregarSesionesAnticipadas(false);
+        loadAll();
     }
 
     useEffect(() => {
@@ -211,6 +228,10 @@ const PagosAnticipados = (props) => {
                 options={options}
                 pagosAnticipados={pagosAnticipados}
                 actions={actions}
+                onClickAgregarSesionesAnticipadas={handleClickAgregarSesionesAnticipadas}
+                openModalAgregarSesionesAnticipadas={openModalAgregarSesionesAnticipadas}
+                onCerrarAgregarSesionesAnticipadas={handleCerrarAgregarSesionesAnticipadas}
+                onClickAgregarPagosAnticipados={handleClickAgregarPagosAnticipados}
                 detailPanel={detailPanel} />
         </Fragment>
     );
