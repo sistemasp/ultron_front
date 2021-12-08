@@ -388,7 +388,6 @@ const AgregarPagosAnticipados = (props) => {
         item.descuento_moneda = toFormatterCurrency(item.descuento_clinica);
         item.total_moneda = toFormatterCurrency(item.total);
         item.producto = item.tratamientos.map(tratamiento => {
-          console.log("KAOZ", tratamiento);
           const show_areas = tratamiento.areasSeleccionadas ? tratamiento.areasSeleccionadas.map(area => {
             return `${area.nombre}`;
           }) : '';
