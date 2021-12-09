@@ -32,6 +32,7 @@ const ImprimirCorte = (props) => {
     sucursal,
   } = props.location.state;
 
+  console.log("KAOZ", props.location.state);
   const [show, setShow] = useState(true);
   const [tipoEntradas, setTipoEntradas] = useState([]);
   const [tipoSalidas, setTipoSalidas] = useState([]);

@@ -62,6 +62,7 @@ const MenuReports = (props) => {
                 onOpen={handleOpen}
                 onClose={handleClose}
                 value={value}
+                history={history}
                 setMessage={setMessage}
                 setSeverity={setSeverity}
                 setOpenAlert={setOpenAlert}/>

@@ -9,6 +9,7 @@ import { ButtonCustom } from '../../../../../components/basic/ButtonCustom';
 import myStyles from '../../../../../css';
 import ModalImprimirPagoDermatologo from '../../../../../components/modales/imprimir/pago_dermatologo';
 import ReporteImprimirPagoDermatologo from '../../../../../components/modales/imprimir/reporte_pago_dermatologo';
+import ImprimirCorte from '../../../../imprimir/corte';
 
 export const ReportesCortesContainer = (props) => {
 
@@ -38,7 +39,7 @@ export const ReportesCortesContainer = (props) => {
 		<Fragment>
 			{
 				openModalImprimirPago ?
-					<ReporteImprimirPagoDermatologo
+					<ImprimirCorte
 						open={openModalImprimirPago}
 						onClose={handleClose}
 						datosImpresion={datosImpresion}

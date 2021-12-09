@@ -403,12 +403,15 @@ const ImprimirPagoDermatologo = (props) => {
               const precioReal = (itemPrecio - (itemPrecio * (facial.porcentaje_descuento_clinica ? facial.porcentaje_descuento_clinica : 0) / 100));
               areaSeleccionada.comision_real = !facial.has_descuento_dermatologo ? comisionReal : 0;
               areaSeleccionada.precio_real = precioReal;
+
               comisionDermatologo += Number(comisionReal);
+
             });
             tratamiento.importe1 = importe1;
           });
         }
-        const pagoDermatologo = comisionDermatologo - ((comisionDermatologo * facial.porcentaje_descuento_clinica ? facial.porcentaje_descuento_clinica : 0) / 100);
+        const pagoDermatologo = comisionDermatologo - ((comisionDermatologo * (facial.porcentaje_descuento_clinica ? facial.porcentaje_descuento_clinica : 0)) / 100);
+        
         facial.pago_dermatologo = pagoDermatologo;
         updateFacial(facial._id, facial, token);
         total += Number(pagoDermatologo);

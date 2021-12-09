@@ -21,6 +21,7 @@ const ReporteCortes = (props) => {
 		empleado,
 		sucursal,
 		colorBase,
+		history,
 	} = props;
 
 	const iva = process.env.REACT_APP_IVA;
@@ -50,7 +51,7 @@ const ReporteCortes = (props) => {
 	const columnsGeneral = [
 		{ title: 'FECHA', field: 'fecha_show' },
 		{ title: 'TURNO', field: 'turno_show' },
-		{ title: 'RECEPCIONISTA', field: 'recepcionista.nombre'},	
+		{ title: 'RECEPCIONISTA', field: 'recepcionista.nombre' },
 		{ title: 'TOTAL ENTRADAS', field: 'total_entradas' },
 		{ title: 'TOTAL SALIDAS', field: 'total_salidas' },
 	];
@@ -80,13 +81,28 @@ const ReporteCortes = (props) => {
 	const handlePrint = async (event, rowData) => {
 		setDatosImpresion(rowData);
 		setOpenModalImprimirPago(true);
+
+	}
+
+	const handleOpenImprimir = (event, rowData) => {
+
+		history.push('/imprimir/corte',
+			{
+				empleado: empleado,
+				sucursal: rowData.sucursal,
+				colorBase: colorBase,
+				corte: rowData,
+				dataEntradas: rowData.entradas,
+				dataPagosAnticipados: rowData.pagos_anticipados,
+				dataSalidas: rowData.salidas,
+			});
 	}
 
 	const actions = [
 		{
 			icon: VisibilityIcon,
 			tooltip: 'DETALLES',
-			onClick: handlePrint
+			onClick: handleOpenImprimir
 		}
 	];
 

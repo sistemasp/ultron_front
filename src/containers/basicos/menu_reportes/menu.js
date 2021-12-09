@@ -79,6 +79,7 @@ export const MenuContainer = props => {
 		sucursal,
 		empleado,
 		colorBase,
+		history,
 	} = props;
 
 	const classes = myStyles(colorBase)();
@@ -145,7 +146,8 @@ export const MenuContainer = props => {
 				<ReporteCortes
 					empleado={empleado}
 					colorBase={colorBase}
-					sucursal={sucursal} />
+					sucursal={sucursal}
+					history={history} />
 			</TabPanel>
 		</div>
 	);
