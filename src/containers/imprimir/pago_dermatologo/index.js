@@ -411,7 +411,7 @@ const ImprimirPagoDermatologo = (props) => {
           });
         }
         const pagoDermatologo = comisionDermatologo - ((comisionDermatologo * (facial.porcentaje_descuento_clinica ? facial.porcentaje_descuento_clinica : 0)) / 100);
-        
+
         facial.pago_dermatologo = pagoDermatologo;
         updateFacial(facial._id, facial, token);
         total += Number(pagoDermatologo);
@@ -448,7 +448,8 @@ const ImprimirPagoDermatologo = (props) => {
             tratamiento.importe1 = importe1;
           });
         }
-        let pagoDermatologo = aparatologia.has_descuento_dermatologo ? 0 : comisionDermatologo;
+        let pagoDermatologo = comisionDermatologo - ((comisionDermatologo * (aparatologia.porcentaje_descuento_clinica ? aparatologia.porcentaje_descuento_clinica : 0)) / 100);
+        pagoDermatologo = aparatologia.has_descuento_dermatologo ? 0 : pagoDermatologo;
         aparatologia.pago_dermatologo = pagoDermatologo;
         updateAparatologia(aparatologia._id, aparatologia, token);
         total += Number(pagoDermatologo);

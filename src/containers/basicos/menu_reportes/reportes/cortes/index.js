@@ -85,17 +85,17 @@ const ReporteCortes = (props) => {
 	}
 
 	const handleOpenImprimir = (event, rowData) => {
-
-		history.push('/imprimir/corte',
-			{
-				empleado: empleado,
-				sucursal: rowData.sucursal,
-				colorBase: colorBase,
-				corte: rowData,
-				dataEntradas: rowData.entradas,
-				dataPagosAnticipados: rowData.pagos_anticipados,
-				dataSalidas: rowData.salidas,
-			});
+		console.log("KAOZ", rowData);
+		// history.push('/imprimir/corte',
+		// 	{
+		// 		empleado: empleado,
+		// 		sucursal: rowData.sucursal,
+		// 		colorBase: colorBase,
+		// 		corte: rowData,
+		// 		dataEntradas: rowData.entradas,
+		// 		dataPagosAnticipados: rowData.pagos_anticipados,
+		// 		dataSalidas: rowData.salidas,
+		// 	});
 	}
 
 	const actions = [

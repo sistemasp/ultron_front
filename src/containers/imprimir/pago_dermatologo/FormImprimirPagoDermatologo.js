@@ -710,7 +710,7 @@ const FormImprimirPagoDermatologo = (props) => {
                     faciales.map(facial => {
                       let comisionDermatologo = 0;
                       let pagoDermatologo = 0;
-                      if (!facial.has_descuento_dermatologo && facial.forma_pago._id !== formaPagoSesionAnticipadaId 
+                      if (!facial.has_descuento_dermatologo && facial.forma_pago._id !== formaPagoSesionAnticipadaId
                         && dermatologo.esquema._id !== esquemaNominalId) {
                         facial.tratamientos.map(tratamiento => {
                           tratamiento.areasSeleccionadas.map(areaSeleccionada => {
@@ -920,7 +920,7 @@ const FormImprimirPagoDermatologo = (props) => {
                         });
                       }
                       let pagoDermatologo = comisionDermatologo - ((comisionDermatologo * (aparatologia.porcentaje_descuento_clinica ? aparatologia.porcentaje_descuento_clinica : 0)) / 100);
-
+                      
 
                       pagoDermatologo = aparatologia.has_descuento_dermatologo ? 0 : pagoDermatologo;
                       pagoTotal += Number(pagoDermatologo);

@@ -380,6 +380,7 @@ const FormImprimirCorte = (props) => {
 
         {
           dataSalidas.map(dataSalida => {
+            console.log("KAOZ", dataSalida);
             {
               switch (dataSalida.tipo_salida) {
                 case 'PAGO DERMATÓLOGOS':

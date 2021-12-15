@@ -74,6 +74,8 @@ const Corte = (props) => {
   const [turno, setTurno] = useState('m');
   const [corte, setCorte] = useState({});
 
+  console.log("KAOZ", dataSalidas);
+
   const {
     sucursal,
     empleado,
