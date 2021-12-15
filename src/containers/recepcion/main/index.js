@@ -3,12 +3,16 @@ import { MainContainer } from "./main";
 import { Snackbar } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
 import { findTurnoActualBySucursal } from "../../../services/corte";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Alert = (props) => {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const MenuMainRecepcion = (props) => {
+
+	const navigate = useNavigate();
+	const location = useLocation();
 
 	const [pacienteAgendado, setPacienteAgendado] = useState({});
 	const [value, setValue] = useState(0);
@@ -21,7 +25,7 @@ const MenuMainRecepcion = (props) => {
 	const {
 		empleado,
 		sucursal,
-	} = props.location.state;
+	} = location.state;
 
 	const { permisos } = empleado.rol;
 
@@ -40,7 +44,12 @@ const MenuMainRecepcion = (props) => {
 	}
 
 	const handleLogout = () => {
-		history.push('/', { empleado: {}, sucursal: {} });
+		navigate('/', {
+            state: {
+                empleado: {},
+                sucursal: {},
+            }
+        });
 	}
 
 	const handleClickCambioPassword = () => {

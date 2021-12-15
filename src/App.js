@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LoginForm from "./containers/basicos/login/index";
 import MenuMainRecepcion from "./containers/recepcion/main/index";
 import './App.css';
@@ -15,30 +15,33 @@ const App = () => {
   return (
     <Router>
       <div className="App">
-        <Route
-          exact path="/"
-          component={LoginForm} />
-        <Route
-          exact path="/administracion"
-          component={MenuMainAdministracion} />
-        <Route
-          exact path="/cabinas"
-          component={MenuMainCosmetologas} />
-        <Route
-          exact path="/dermatologos"
-          component={MenuMainDermatologos} />
-        <Route
-          exact path="/recepcion"
-          component={MenuMainRecepcion} />
-        <Route
-          exact path="/imprimir/pagodermatologo"
-          component={ImprimirPagoDermatologo} />
-        <Route
-          exact path="/imprimir/pagopatologo"
-          component={ImprimirPagoPatologo} />
-        <Route
-          exact path="/imprimir/corte"
-          component={ImprimirCorte} />
+        <Routes>
+          <Route
+            exact path="/"
+            element={<LoginForm />} />
+          <Route
+            exact path="/administracion"
+            element={<MenuMainAdministracion />} />
+          <Route
+            exact path="/cabinas"
+            element={<MenuMainCosmetologas />} />
+          <Route
+            exact path="/dermatologos"
+            element={<MenuMainDermatologos />} />
+          <Route
+            exact path="/recepcion"
+            element={<MenuMainRecepcion />} />
+          <Route
+            exact path="/imprimir/pagodermatologo"
+            element={<ImprimirPagoDermatologo />} />
+          <Route
+            exact path="/imprimir/pagopatologo"
+            element={<ImprimirPagoPatologo />} />
+          <Route
+            exact path="/imprimir/corte"
+            element={<ImprimirCorte />} />
+        </Routes>
+
       </div>
     </Router>
   );

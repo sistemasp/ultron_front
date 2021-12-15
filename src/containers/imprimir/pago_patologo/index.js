@@ -11,8 +11,11 @@ import {
 import { createPagoPatologo, showTodayPagoPatologoBySucursalTurno, updatePagoPatologo } from '../../../services/pago_patologo';
 import myStyles from '../../../css';
 import FormImprimirPagoPatologo from './FormImprimirPagoPatologo';
+import { useLocation } from "react-router-dom";
 
 const ImprimirPagoPatologo = (props) => {
+
+  const location = useLocation();
 
   const {
     setOpenAlert,
@@ -25,7 +28,7 @@ const ImprimirPagoPatologo = (props) => {
 		sucursal,
     patologo,
     colorBase,
-	} = props.location.state;
+	} = location.state;
 
   const token = empleado.access_token;
 

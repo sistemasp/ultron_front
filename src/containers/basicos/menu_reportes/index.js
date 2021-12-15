@@ -2,12 +2,15 @@ import React, { useState, Fragment } from "react";
 import { MenuContainer } from "./menu";
 import { Snackbar } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
+import { useNavigate } from "react-router-dom";
 
 const Alert = (props) => {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const MenuReports = (props) => {
+
+    const navigate = useNavigate();
 
     const [pacienteAgendado, setPacienteAgendado] = useState({});
     const [value, setValue] = useState(0);
@@ -28,7 +31,12 @@ const MenuReports = (props) => {
     };
 
     const handleLogout = () => {
-        history.push('/', { empleado: {}, sucursal: {} });
+        navigate('/', {
+            state: {
+                empleado: {},
+                sucursal: {},
+            }
+        });
     }
 
     const handleClickCambioPassword = () => {

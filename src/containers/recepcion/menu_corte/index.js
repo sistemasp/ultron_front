@@ -28,6 +28,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { deletePagoDermatologo } from "../../../services/pago_dermatologos";
 import { deletePagoPatologo } from "../../../services/pago_patologo";
 import { tipoSalidaPagoDermatologoId, tipoSalidaPagoPatologoId } from "../../../utils/constants";
+import { useNavigate } from "react-router-dom";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -58,6 +59,8 @@ const Corte = (props) => {
 
   const classes = useStyles();
 
+  const navigate = useNavigate();
+
   const [openModalNuevoEntrada, setOpenModalNuevoEntrada] = useState(false);
   const [openModalNuevoSalida, setOpenModalNuevoSalida] = useState(false);
   const [openModalImprimir, setOpenModalInmprimir] = useState(false);
@@ -73,9 +76,7 @@ const Corte = (props) => {
   const [severity, setSeverity] = useState('success');
   const [turno, setTurno] = useState('m');
   const [corte, setCorte] = useState({});
-
-  console.log("KAOZ", dataSalidas);
-
+  
   const {
     sucursal,
     empleado,
@@ -446,15 +447,17 @@ const Corte = (props) => {
   const handleOpenImprimir = () => {
     const newEntradas = [...dataEntradas, ...dataPagosAnticipados];
 
-    history.push('/imprimir/corte',
+    navigate('/imprimir/corte',
       {
-        empleado: empleado,
-        sucursal: sucursal,
-        colorBase: colorBase,
-        corte: corte,
-        dataEntradas: newEntradas,
-        dataPagosAnticipados: dataPagosAnticipados,
-        dataSalidas: dataSalidas,
+        state: {
+          empleado: empleado,
+          sucursal: sucursal,
+          colorBase: colorBase,
+          corte: corte,
+          dataEntradas: newEntradas,
+          dataPagosAnticipados: dataPagosAnticipados,
+          dataSalidas: dataSalidas,
+        }
       });
   }
 

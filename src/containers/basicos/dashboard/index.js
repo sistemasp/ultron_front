@@ -5,7 +5,6 @@ import socketIOClient from "socket.io-client";
 import { showAllOffices } from "../../../services";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { DashboardContainer } from "./dashboard";
-import { withRouter } from 'react-router-dom';
 import * as Yup from "yup";
 import { Snackbar, Grid, Backdrop, CircularProgress } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
@@ -213,4 +212,4 @@ const DashboardForm = (props) => {
   );
 }
 
-export default withRouter(withStyles(styles)(DashboardForm));
+export default withStyles(styles)(DashboardForm);

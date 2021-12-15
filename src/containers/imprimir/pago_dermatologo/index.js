@@ -21,6 +21,7 @@ import { findSesionesAnticipadasByPayOfDoctorFechaPago, updateSesionAnticipada }
 import { findPagosAnticipadssByPayOfDoctorFechaPago } from '../../../services/pagos_anticipados';
 import { comisionAreaBySucursalAndTipo, precioAreaBySucursal } from '../../../utils/utils';
 import { esquemaNominalId, laserTratamientoId, productoRevisionId } from '../../../utils/constants';
+import { useLocation } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -30,6 +31,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ImprimirPagoDermatologo = (props) => {
+
+  const location = useLocation();
 
   const classes = useStyles();
 
@@ -44,7 +47,7 @@ const ImprimirPagoDermatologo = (props) => {
     sucursal,
     dermatologo,
     colorBase,
-  } = props.location.state;
+  } = location.state;
 
   const token = empleado.access_token;
 

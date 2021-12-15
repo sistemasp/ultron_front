@@ -2,12 +2,16 @@ import React, { useState, Fragment, useEffect } from "react";
 import { Snackbar } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
 import { MainDermatologosContainer } from "./main";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Alert = (props) => {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const MenuMainDermatologos = (props) => {
+
+	const location = useLocation();
+	const navigate = useNavigate();
 
 	const [pacienteAgendado, setPacienteAgendado] = useState({});
 	const [value, setValue] = useState(0);
@@ -19,7 +23,7 @@ const MenuMainDermatologos = (props) => {
 	const {
 		dermatologo,
 		sucursal,
-	} = props.location.state;
+	} = location.state;
 
 	const { permisos } = dermatologo.rol;
 
@@ -38,7 +42,12 @@ const MenuMainDermatologos = (props) => {
 	}
 
 	const handleLogout = () => {
-		history.push('/', { dermatologo: {}, sucursal: {} });
+		navigate('/', {
+            state: {
+                dermatologo: {},
+                sucursal: {},
+            }
+        });
 	}
 
 	const handleClickCambioPassword = () => {

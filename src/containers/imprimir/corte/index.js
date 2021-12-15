@@ -6,6 +6,7 @@ import {
   showAllMetodoPago,
 } from '../../../services';
 import { showAllTipoEntradas } from '../../../services/tipo_entradas';
+import { useLocation } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -18,6 +19,7 @@ const ImprimirCorte = (props) => {
 
   const classes = useStyles();
 
+  const location = useLocation();
   
   const {
     history,
@@ -30,9 +32,8 @@ const ImprimirCorte = (props) => {
     corte,
     empleado,
     sucursal,
-  } = props.location.state;
+  } = location.state;
 
-  console.log("KAOZ", props.location.state);
   const [show, setShow] = useState(true);
   const [tipoEntradas, setTipoEntradas] = useState([]);
   const [tipoSalidas, setTipoSalidas] = useState([]);

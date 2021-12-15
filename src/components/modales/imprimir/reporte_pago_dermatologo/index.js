@@ -393,8 +393,6 @@ const ReporteImprimirPagoDermatologo = (props) => {
   };
 
   const findCorte = async () => {
-    console.log("KAOZ", datosImpresion);
-
     const date = new Date(datosImpresion.fecha_pago);
 
     const response = await showCorteByDateSucursalAndTurno(sucursal._id, date.getFullYear(), date.getMonth(), date.getDate(), turno, token);

@@ -7,6 +7,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import PaymentIcon from '@material-ui/icons/Payment';
 import { addZero } from '../../../utils/utils';
 import { findEmployeesByRolIdAvailable } from "../../../services/empleados";
+import { useNavigate } from "react-router-dom";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -37,13 +38,15 @@ const Dermatologos = (props) => {
 
 	const classes = useStyles();
 
+	const navigate = useNavigate();
+
 	const {
 		sucursal,
 		empleado,
 		colorBase,
 		history,
 	} = props;
-	
+
 	const [openPagoDermatologo, setOpenPagoDermatologo] = useState(false);
 	const [openPagoPatologo, setOpenPagoPatologo] = useState(false);
 	const [openHistoric, setOpenHistoric] = useState(false);
@@ -117,24 +120,30 @@ const Dermatologos = (props) => {
 
 	const handleClickGenerarPagoDermatologo = (event, rowData) => {
 		setDermatologo(rowData);
-		history.push('/imprimir/pagodermatologo', 
-		{
-			empleado: empleado,
-			sucursal: sucursal,
-			dermatologo: rowData,
-			colorBase: colorBase,
-		});
+		navigate('/imprimir/pagodermatologo',
+			{
+				state: {
+					empleado: empleado,
+					sucursal: sucursal,
+					dermatologo: rowData,
+					colorBase: colorBase,
+				}
+
+			});
 	}
 
 	const handleClickGenerarPagoPatologo = (event, rowData) => {
 		setPatologo(rowData);
-		history.push('/imprimir/pagopatologo', 
-		{
-			empleado: empleado,
-			sucursal: sucursal,
-			patologo: rowData,
-			colorBase: colorBase,
-		});
+		navigate('/imprimir/pagopatologo',
+			{
+				state: {
+					empleado: empleado,
+					sucursal: sucursal,
+					patologo: rowData,
+					colorBase: colorBase,
+				}
+
+			});
 	}
 
 
@@ -196,7 +205,7 @@ const Dermatologos = (props) => {
 		setIsLoading(false);
 	}
 
-	const loadAll = async() => {
+	const loadAll = async () => {
 		await loadDermatologos();
 		await loadPatologos();
 	}

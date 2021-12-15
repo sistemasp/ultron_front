@@ -5,12 +5,12 @@ import socketIOClient from "socket.io-client";
 import { showAllOffices } from "../../../services";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { LoginContainer } from "./login";
-import { withRouter } from 'react-router-dom';
 import * as Yup from "yup";
 import { Snackbar, Grid } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
 import bannerMePiel from './../../../bannerMePiel.PNG';
 import { login } from "../../../services/empleados";
+import { useNavigate } from "react-router-dom";
 
 const styles = theme => ({
   paper: {
@@ -36,7 +36,6 @@ const validationSchema = Yup.object({
   employee_number: Yup.string("Ingresa tu numero de empleado")
     .required("El numero de empleado es requerido"),
 });
-
 
 const LoginForm = (props) => {
 
@@ -68,6 +67,8 @@ const LoginForm = (props) => {
   const rolAuxiliarAdministrativoId = process.env.REACT_APP_AUXILIAR_ADMINISTRATIVO_ROL_ID;
   const rolCallCenterId = process.env.REACT_APP_CALL_CENTER_ROL_ID;
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const loadSucursales = async () => {
       const response = await showAllOffices();
@@ -80,13 +81,9 @@ const LoginForm = (props) => {
     setIsLoading(false);
   }, []);
 
-  const {
-    history,
-  } = props;
-
   const handleChangeSucursal = (e, newValue) => {
     setIsLoading(true);
-    setValues({ 
+    setValues({
       ...values,
       sucursal: newValue,
     });
@@ -114,11 +111,11 @@ const LoginForm = (props) => {
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED && response.data !== '') {
       const empleado = response.data;
       if (empleado.rol._id === rolCallCenterId) {
-        history.push('/call_center', { empleado: empleado, sucursal: data.sucursal });
+        navigate('/call_center', { empleado: empleado, sucursal: data.sucursal });
       } else if (empleado.rol._id === rolCosmetologaId) {
-        history.push('/cabinas', { empleado: empleado, sucursal: data.sucursal });
+        navigate('/cabinas', { empleado: empleado, sucursal: data.sucursal });
       } else if (empleado.rol._id === rolDermatologoId) {
-        history.push('/dermatologos', { dermatologo: empleado, sucursal: data.sucursal });
+        navigate('/dermatologos', { dermatologo: empleado, sucursal: data.sucursal });
       } else if (empleado.rol._id === rolDirectorId
         || empleado.rol._id === rolEncargadoSucursalId
         || empleado.rol._id === rolRecepcionistaId
@@ -127,10 +124,15 @@ const LoginForm = (props) => {
         || empleado.rol._id === rolSistemasId
         || empleado.rol._id === rolSupervisorId
       ) {
-        history.push('/recepcion', { empleado: empleado, sucursal: data.sucursal });
+        navigate('/recepcion', {
+          state: {
+            empleado: empleado,
+            sucursal: data.sucursal
+          }
+        });
       } else if (empleado.rol._id === rolAdministacionId
         || empleado.rol._id === rolAuxiliarAdministrativoId) {
-        history.push('/administracion', { empleado: empleado, sucursal: data.sucursal });
+        navigate('/administracion', { empleado: empleado, sucursal: data.sucursal });
       }
     } else {
       setOpenAlert(true);
@@ -177,4 +179,4 @@ const LoginForm = (props) => {
   );
 }
 
-export default withRouter(withStyles(styles)(LoginForm));
+export default withStyles(styles)(LoginForm);

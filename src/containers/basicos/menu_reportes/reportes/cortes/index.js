@@ -5,6 +5,7 @@ import { toFormatterCurrency, addZero, getPagoDermatologoByServicio, dateToStrin
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { findCortesByRangeDateAndSucursal } from "../../../../../services/corte";
 import { ReportesCortesContainer } from "./cortes";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
 	backdrop: {
@@ -16,6 +17,8 @@ const useStyles = makeStyles(theme => ({
 const ReporteCortes = (props) => {
 
 	const classes = useStyles();
+
+	const navigate = useNavigate();
 
 	const {
 		empleado,
