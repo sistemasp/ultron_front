@@ -197,7 +197,10 @@ const myStyles = (colorBase) => makeStyles( (theme) => {
 		tabs: {
 			fontSize: 16,
 			height: 65,
-		}
+		},
+        foot: {
+            height: '150px',
+        }
     }
 }
 );

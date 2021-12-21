@@ -46,8 +46,10 @@ import {
   tipoSalidaFacialesId,
   formaPagoEfectivoId,
   rolRecepcionistaId,
+  precioResorcina,
 } from "../../../utils/constants";
 import { createSalida } from "../../../services/salidas";
+import { useNavigate } from "react-router";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -73,6 +75,8 @@ const validationSchema = Yup.object({
 
 const AgendarFacial = (props) => {
   const classes = useStyles();
+
+  const navigate = useNavigate();
 
   const {
     info,
@@ -604,8 +608,15 @@ const AgendarFacial = (props) => {
   }
 
   const handlePrint = async (event, rowData) => {
-    setDatosImpresion(rowData);
-    setOpenModalImprimirCita(true);
+    navigate('/imprimir/ticket/tratamiento',
+			{
+				state: {
+					empleado: empleado,
+					sucursal: sucursal,
+					datos: rowData,
+					colorBase: colorBase,
+				}
+			});
   }
 
   const handleClickTraspaso = (event, rowData) => {
@@ -750,7 +761,7 @@ const AgendarFacial = (props) => {
           recepcionista: empleado._id,
           concepto: tratamiento.nombre,
           descripcion: servicio.paciente_nombre,
-          cantidad: "18.5",
+          cantidad: precioResorcina,
           tipo_salida: tipoSalidaFacialesId,
           sucursal: servicio.sucursal._id,
           forma_pago: formaPagoEfectivoId

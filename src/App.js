@@ -9,6 +9,10 @@ import MenuMainAdministracion from './containers/administracion/main';
 import ImprimirPagoDermatologo from './containers/imprimir/pago_dermatologo';
 import ImprimirPagoPatologo from './containers/imprimir/pago_patologo';
 import ImprimirCorte from './containers/imprimir/corte';
+import ImprimirConsulta from './containers/imprimir/consulta';
+import ImprimirTratamiento from './containers/imprimir/tratamiento';
+import ImprimirCuracion from './containers/imprimir/curacion';
+import ImprimirDermapen from './containers/imprimir/dermapen';
 
 const App = () => {
 
@@ -40,6 +44,21 @@ const App = () => {
           <Route
             exact path="/imprimir/corte"
             element={<ImprimirCorte />} />
+          <Route
+            exact path="/imprimir/ticket/consulta"
+            element={<ImprimirConsulta />} />
+          <Route
+            exact path="/imprimir/ticket/curacion"
+            element={<ImprimirCuracion />} />
+          <Route
+            exact path="/imprimir/ticket/dermapen"
+            element={<ImprimirDermapen />} />
+          <Route
+            exact path="/imprimir/ticket/estetica"
+            element={<ImprimirTratamiento />} />
+          <Route
+            exact path="/imprimir/ticket/tratamiento"
+            element={<ImprimirTratamiento />} />
         </Routes>
 
       </div>

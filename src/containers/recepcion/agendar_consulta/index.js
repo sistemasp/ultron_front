@@ -44,6 +44,7 @@ import {
 	productoConsultaObj,
 	rolRecepcionistaId
 } from "../../../utils/constants";
+import { useNavigate } from "react-router";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -65,6 +66,8 @@ const useStyles = makeStyles(theme => ({
 const AgendarConsulta = (props) => {
 
 	const classes = useStyles();
+
+	const navigate = useNavigate();
 
 	const {
 		paciente,
@@ -548,7 +551,17 @@ const AgendarConsulta = (props) => {
 
 	const handlePrint = async (event, rowData) => {
 		setDatosImpresion(rowData);
-		setOpenModalImprimirConsultas(true);
+		navigate('/imprimir/ticket/consulta',
+			{
+				state: {
+					servicio: "CONSULTA",
+					empleado: empleado,
+					sucursal: sucursal,
+					datos: rowData,
+					colorBase: colorBase,
+				}
+
+			});
 	}
 
 	const handleGuardarModalPagos = async (servicio) => {
