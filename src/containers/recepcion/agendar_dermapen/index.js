@@ -32,6 +32,7 @@ import {
 	createConsecutivo,
 } from "../../../services/consecutivos";
 import { updateSesionAnticipada } from "../../../services/sesiones_anticipadas";
+import { useNavigate } from "react-router";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -57,6 +58,8 @@ const validationSchema = Yup.object({
 
 const AgendarDermapen = (props) => {
 	const classes = useStyles();
+
+	const navigate = useNavigate();
 
 	const {
 		consultaAgendada,
@@ -397,8 +400,15 @@ const AgendarDermapen = (props) => {
 	}
 
 	const handlePrint = async (event, rowData) => {
-		setDatosImpresion(rowData);
-		setOpenModalImprimirCita(true);
+		navigate('/imprimir/ticket/dermapen',
+			{
+				state: {
+					empleado: empleado,
+					sucursal: sucursal,
+					datos: rowData,
+					colorBase: colorBase,
+				}
+			});
 	}
 
 	const handleClickTraspaso = (event, rowData) => {

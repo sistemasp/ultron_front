@@ -4,7 +4,7 @@ import Modal from '@material-ui/core/Modal';
 import { Grid } from '@material-ui/core';
 import bannerMePiel from './../../../bannerMePiel.PNG';
 import bannerDermastetic from './../../../bannerDermastetic.jpeg';
-import { addZero } from '../../../utils/utils';
+import { addZero, toFormatterCurrency } from '../../../utils/utils';
 import myStyles from '../../../css';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 
@@ -19,7 +19,7 @@ function getModalStyle() {
   };
 }
 
-const FormConsulta = (props) => {
+const FormEstetica = (props) => {
 
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
@@ -53,7 +53,7 @@ const FormConsulta = (props) => {
         width="360" />
       <Grid container>
         <Grid item xs={12} className={classes.label}>
-          <h1 className={classes.label}>{datos.sucursal.nombre}</h1>
+          <h2 className={classes.label}>{datos.sucursal.nombre}</h2>
         </Grid>
         <Grid item xs={true} className={classes.label_left}>
           <h2 className={classes.label_left}>FOLIO: {datos.folio}</h2>
@@ -65,8 +65,45 @@ const FormConsulta = (props) => {
           <h4 className={classes.label_left}>PACIENTE: {datos.paciente_nombre}</h4>
         </Grid>
         <br />
-        <Grid item xs={12} className={classes.label_left}>
-          <h3 className={classes.label_left}>1 {`${servicio} ${datos.total_moneda}`}</h3>
+        {
+          datos.producto.map(prod => {
+            const toxinasRellenos = datos.toxinas_rellenos.filter(toxina_relleno => {
+              return prod._id === toxina_relleno.producto._id;
+            });
+            return <Fragment>
+              <Grid item xs={12} className={classes.label_left}>
+                <h3 className={classes.label_left}>{`${prod.nombre}`}</h3>
+              </Grid>
+              {
+                toxinasRellenos.map(toxinaRelleno => {
+                  return <Grid item xs={12} className={classes.label_right}>
+                    <h4 className={classes.label_right}>{`${toxinaRelleno.unidades} UNIDADES ${toxinaRelleno.nombre}`}</h4>
+                  </Grid>
+                })
+              }
+            </Fragment>
+          })
+        }
+        {
+          datos.materiales.length > 0
+            ? datos.materiales.map(material => {
+              return <Grid container>
+                <Grid item xs={8} className={classes.label_left}>
+                  <h3 className={classes.label_left}>{`${material.nombre}`}</h3>
+                </Grid>
+                <Grid item xs={3} className={classes.label_right}>
+                  <h3 className={classes.label_right}>{`${toFormatterCurrency(material.precio)}`}</h3>
+                </Grid>
+              </Grid>
+            }) : ''
+        }
+        <Grid container>
+          <Grid item xs={true} className={classes.label_left}>
+            <h2 className={classes.label_left}>{`TOTAL`}</h2>
+          </Grid>
+          <Grid item xs={true} className={classes.label_right}>
+            <h2 className={classes.label_right}>{`${datos.total_moneda}`}</h2>
+          </Grid>
         </Grid>
         <br />
         <Grid item xs={12}>
@@ -85,7 +122,6 @@ const FormConsulta = (props) => {
 
         {
           show ?
-
             <Fragment>
               <Grid item xs={6}>
                 <ButtonCustom
@@ -95,6 +131,7 @@ const FormConsulta = (props) => {
                   onClick={hadleClickBack}
                   text='CERRAR' />
               </Grid>
+
               <Grid item xs={6}>
                 <ButtonCustom
                   className={classes.button}
@@ -111,4 +148,4 @@ const FormConsulta = (props) => {
   );
 }
 
-export default FormConsulta;
+export default FormEstetica;

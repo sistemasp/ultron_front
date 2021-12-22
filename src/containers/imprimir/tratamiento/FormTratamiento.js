@@ -170,6 +170,16 @@ const FormTratamiento = (props) => {
           <p className={classes.label_foot}>*ESTE TICKET NO REPRESENTA UN COMPROBANTE FISCAL.*</p>
         </Grid>
 
+        <Grid item xs={12}>
+          <h1 className={classes.label}>__________________________________</h1>
+        </Grid>
+        <Grid item xs={12}>
+          <h1 className={classes.label}>__________________________________</h1>
+        </Grid>
+        <Grid item xs={12}>
+          <h1 className={classes.label}>__________________________________</h1>
+        </Grid>
+
         {
           show ?
             <Fragment>

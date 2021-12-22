@@ -1,8 +1,8 @@
 import React, { useState, Fragment } from 'react';
 import { useLocation, useNavigate } from 'react-router';
-import FormConsulta from './FormConsulta';
+import FormEstetica from './FormEstetica';
 
-const ImprimirConsulta = (props) => {
+const ImprimirEstetica = (props) => {
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ const ImprimirConsulta = (props) => {
 
   return (
     <Fragment>
-      <FormConsulta
+      <FormEstetica
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
         datos={datos}
@@ -47,4 +47,4 @@ const ImprimirConsulta = (props) => {
   );
 }
 
-export default ImprimirConsulta;
+export default ImprimirEstetica;
