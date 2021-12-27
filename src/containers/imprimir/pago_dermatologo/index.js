@@ -21,7 +21,7 @@ import { findSesionesAnticipadasByPayOfDoctorFechaPago, updateSesionAnticipada }
 import { findPagosAnticipadssByPayOfDoctorFechaPago } from '../../../services/pagos_anticipados';
 import { comisionAreaBySucursalAndTipo, precioAreaBySucursal } from '../../../utils/utils';
 import { esquemaNominalId, laserTratamientoId, productoRevisionId } from '../../../utils/constants';
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -36,11 +36,7 @@ const ImprimirPagoDermatologo = (props) => {
 
   const classes = useStyles();
 
-  const {
-    setOpenAlert,
-    setMessage,
-    history,
-  } = props;
+  const navigate = useNavigate();
 
   const {
     empleado,
@@ -90,7 +86,7 @@ const ImprimirPagoDermatologo = (props) => {
   const curacionServicioId = process.env.REACT_APP_CURACION_SERVICIO_ID;
 
   const handleReturn = () => {
-    history.goBack();
+    navigate(-1);
   }
 
   const loadConsultas = async (hora_apertura, hora_cierre) => {

@@ -89,7 +89,6 @@ export const MainContainer = props => {
 		setMessage,
 		setSeverity,
 		setOpenAlert,
-		history,
 		turno,
 	} = props;
 
@@ -269,15 +268,13 @@ export const MainContainer = props => {
 							turno={turno}
 							empleado={empleado}
 							sucursal={sucursal}
-							colorBase={colorBase}
-							history={history} />
+							colorBase={colorBase} />
 					</TabPanel>
 					<TabPanel value={value} index={1}>
 						<Dermatologos
 							empleado={empleado}
 							colorBase={colorBase}
-							sucursal={sucursal}
-							history={history} />
+							sucursal={sucursal} />
 					</TabPanel>
 					<TabPanel value={value} index={2}>
 						<Consultorios
@@ -293,8 +290,7 @@ export const MainContainer = props => {
 							setPacienteAgendado={setPacienteAgendado}
 							empleado={empleado}
 							colorBase={colorBase}
-							sucursal={sucursal._id}
-							history={history} />
+							sucursal={sucursal._id} />
 					</TabPanel>
 					<TabPanel value={value} index={4}>
 						<ListaEspera
@@ -318,22 +314,19 @@ export const MainContainer = props => {
 							setPacienteAgendado={setPacienteAgendado}
 							empleado={empleado}
 							colorBase={colorBase}
-							sucursal={sucursal._id}
-							history={history} />
+							sucursal={sucursal._id} />
 					</TabPanel>
 					<TabPanel value={value} index={7}>
 						<MenuSuperAdmin
 							empleado={empleado}
 							sucursal={sucursal}
-							colorBase={colorBase}
-							history={history} />
+							colorBase={colorBase} />
 					</TabPanel>
 					<TabPanel value={value} index={8}>
 						<DashboardForm
 							empleado={empleado}
 							sucursal={sucursal}
-							colorBase={colorBase}
-							history={history} />
+							colorBase={colorBase} />
 					</TabPanel>
 				</Fragment>
 			</main>

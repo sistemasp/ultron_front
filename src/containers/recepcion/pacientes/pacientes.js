@@ -61,7 +61,7 @@ export const PacientesContainer = (props) => {
             onClickGuardar={onClickGuardar}
             onClickcConsulta={onClickcConsulta}
             colorBase={colorBase}
-            empleado={empleado} /> : ''
+            empleadoId={empleado._id} /> : ''
       }
       {
         openHistoric ?

@@ -27,10 +27,6 @@ const MenuMainAdministracion = (props) => {
 
 	const { permisos } = empleado.rol;
 
-	const {
-		history,
-	} = props;
-
 	const handleChangeTab = (event, newValue, close) => {
 		setValue(newValue);
 		close();
@@ -82,8 +78,7 @@ const MenuMainAdministracion = (props) => {
 			value={value}
 			setMessage={setMessage}
 			setSeverity={setSeverity}
-			setOpenAlert={setOpenAlert}
-			history={history} />
+			setOpenAlert={setOpenAlert} />
 	</Fragment>
 
 

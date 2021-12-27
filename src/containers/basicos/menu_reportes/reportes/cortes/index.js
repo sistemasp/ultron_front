@@ -24,7 +24,6 @@ const ReporteCortes = (props) => {
 		empleado,
 		sucursal,
 		colorBase,
-		history,
 	} = props;
 
 	const iva = process.env.REACT_APP_IVA;
@@ -89,7 +88,7 @@ const ReporteCortes = (props) => {
 
 	const handleOpenImprimir = (event, rowData) => {
 		console.log("KAOZ", rowData);
-		// history.push('/imprimir/corte',
+		// navigate.push('/imprimir/corte',
 		// 	{
 		// 		empleado: empleado,
 		// 		sucursal: rowData.sucursal,

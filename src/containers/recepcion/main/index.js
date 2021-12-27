@@ -27,12 +27,6 @@ const MenuMainRecepcion = (props) => {
 		sucursal,
 	} = location.state;
 
-	const { permisos } = empleado.rol;
-
-	const {
-		history,
-	} = props;
-
 	const handleChangeTab = (event, newValue, close) => {
 		setValue(newValue);
 		close();
@@ -97,8 +91,7 @@ const MenuMainRecepcion = (props) => {
 			setMessage={setMessage}
 			setSeverity={setSeverity}
 			setOpenAlert={setOpenAlert}
-			turno={turno}
-			history={history} />
+			turno={turno} />
 	</Fragment>
 
 

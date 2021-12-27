@@ -81,7 +81,6 @@ const Corte = (props) => {
     sucursal,
     empleado,
     colorBase,
-    history,
   } = props;
 
   const token = empleado.access_token;

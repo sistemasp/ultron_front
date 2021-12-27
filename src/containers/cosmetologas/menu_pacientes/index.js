@@ -23,7 +23,6 @@ const MenuPatient = (props) => {
     const {
         sucursal,
         empleado,
-        history,
         colorBase,
     } = props;
 
@@ -116,8 +115,7 @@ const MenuPatient = (props) => {
                 value={value}
                 setMessage={setMessage}
                 setSeverity={setSeverity}
-                setOpenAlert={setOpenAlert}
-                history={history} />
+                setOpenAlert={setOpenAlert} />
             <Snackbar open={openAlert} autoHideDuration={5000} onClose={handleCloseAlert}>
                 <Alert onClose={handleCloseAlert} severity={severity}>
                     {message}

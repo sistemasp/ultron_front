@@ -44,7 +44,6 @@ const Dermatologos = (props) => {
 		sucursal,
 		empleado,
 		colorBase,
-		history,
 	} = props;
 
 	const [openPagoDermatologo, setOpenPagoDermatologo] = useState(false);

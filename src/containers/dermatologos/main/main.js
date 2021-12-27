@@ -61,7 +61,6 @@ export const MainDermatologosContainer = props => {
 		setMessage,
 		setSeverity,
 		setOpenAlert,
-		history,
 		colorBase,
 	} = props;
 

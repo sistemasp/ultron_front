@@ -54,7 +54,6 @@ export const MenuContainer = props => {
 		onClickAgendarAparatologia,
 		empleado,
 		sucursal,
-		history,
 		colorBase,
 	} = props;
 

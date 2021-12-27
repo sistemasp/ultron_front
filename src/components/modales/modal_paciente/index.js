@@ -13,6 +13,7 @@ const ModalPaciente = (props) => {
     onClickGuardar,
     onClickcConsulta,
     colorBase,
+    empleadoId,
   } = props;
 
   const [sexos, setSexos] = useState([]);
@@ -26,6 +27,7 @@ const ModalPaciente = (props) => {
     sexo: paciente.sexo,
     fecha_nacimiento: paciente.fecha_nacimiento ? paciente.fecha_nacimiento : '',
     familiar: false,
+    quien_captura: paciente._id ? paciente.quien_captura : empleadoId,
   });
 
   const handleChange = (e) => {
