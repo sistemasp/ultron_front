@@ -13,7 +13,6 @@ import ImprimirConsulta from './containers/imprimir/consulta';
 import ImprimirTratamiento from './containers/imprimir/tratamiento';
 import ImprimirCuracion from './containers/imprimir/curacion';
 import ImprimirDermapen from './containers/imprimir/dermapen';
-import ImprimirEstetica from './containers/imprimir/estetica';
 
 const App = () => {
 
@@ -56,7 +55,7 @@ const App = () => {
             element={<ImprimirDermapen />} />
           <Route
             exact path="/imprimir/ticket/estetica"
-            element={<ImprimirEstetica />} />
+            element={<ImprimirTratamiento />} />
           <Route
             exact path="/imprimir/ticket/tratamiento"
             element={<ImprimirTratamiento />} />

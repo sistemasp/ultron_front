@@ -7,7 +7,6 @@ import bannerDermastetic from './../../../bannerDermastetic.jpeg';
 import { addZero } from '../../../utils/utils';
 import myStyles from '../../../css';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
-import { dermatologoDirectoId } from '../../../utils/constants';
 
 function getModalStyle() {
   const top = 50;
@@ -54,49 +53,22 @@ const FormDermapen = (props) => {
         width="360" />
       <Grid container>
         <Grid item xs={12} className={classes.label}>
-          <h2 className={classes.label}>{datos.sucursal.nombre}</h2>
+          <h1 className={classes.label}>{datos.sucursal.nombre}</h1>
         </Grid>
-        <Grid item xs={true}>
+        <Grid item xs={true} className={classes.label_left}>
           <h2 className={classes.label_left}>FOLIO: {datos.folio}</h2>
         </Grid>
-        <Grid item xs={true}>
+        <Grid item xs={true} className={classes.label_right}>
           <h3 className={classes.label_right}>{`${addZero(fecha.getDate())}/${addZero(fecha.getMonth() + 1)}/${addZero(fecha.getFullYear())}`}</h3>
         </Grid>
         <Grid item xs={12} className={classes.label_left}>
           <h4 className={classes.label_left}>PACIENTE: {datos.paciente_nombre}</h4>
         </Grid>
-        {
-          dermatologoDirectoId !== datos.dermatologo._id
-            ? <Grid item xs={12} className={classes.label_left}>
-              <h4 className={classes.label_left}>DERMATÓLOGO: {datos.dermatologo_nombre}</h4>
-            </Grid>
-            : ''
-        }
-        <hr />
-        {
-          datos.tratamientos.map(tratamiento => {
-            return <Fragment>
-              <Grid item xs={12}>
-                <h3 className={classes.labelItemLeft}>{`${tratamiento.nombre}:`}</h3>
-              </Grid>
-              <br />
-              {
-                tratamiento.areasSeleccionadas.map(area => {
-                  return <Fragment>
-                    <Grid item xs={9}>
-                      <h4 className={classes.labelSubItemLeft}>{`${area.nombre}`}</h4>
-                    </Grid>
-                  </Fragment>
-                })
-              }
-            </Fragment>
-          })
-        }
         <br />
-        <Grid item xs={12} className={classes.labelItemRight}>
-          <h1 className={classes.labelItemRight}>TOTAL: {datos.total_moneda}</h1>
+        <Grid item xs={12} className={classes.label_left}>
+          <h3 className={classes.label_left}>1 {`${servicio} ${datos.total_moneda}`}</h3>
         </Grid>
-
+        <br />
         <Grid item xs={12}>
           <p className={classes.label_foot}>*ESTE TICKET NO REPRESENTA UN COMPROBANTE FISCAL.*</p>
         </Grid>
@@ -113,6 +85,7 @@ const FormDermapen = (props) => {
 
         {
           show ?
+
             <Fragment>
               <Grid item xs={6}>
                 <ButtonCustom
@@ -122,7 +95,6 @@ const FormDermapen = (props) => {
                   onClick={hadleClickBack}
                   text='CERRAR' />
               </Grid>
-
               <Grid item xs={6}>
                 <ButtonCustom
                   className={classes.button}
@@ -132,6 +104,7 @@ const FormDermapen = (props) => {
                   text='IMPRIMIR' />
               </Grid>
             </Fragment> : ''
+
         }
       </Grid>
     </Fragment>
