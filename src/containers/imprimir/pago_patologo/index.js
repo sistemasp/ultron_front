@@ -11,24 +11,20 @@ import {
 import { createPagoPatologo, showTodayPagoPatologoBySucursalTurno, updatePagoPatologo } from '../../../services/pago_patologo';
 import myStyles from '../../../css';
 import FormImprimirPagoPatologo from './FormImprimirPagoPatologo';
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const ImprimirPagoPatologo = (props) => {
 
   const location = useLocation();
 
-  const {
-    setOpenAlert,
-    setMessage,
-    history,
-  } = props;
+  const navigate = useNavigate();
 
   const {
-		empleado,
-		sucursal,
+    empleado,
+    sucursal,
     patologo,
     colorBase,
-	} = location.state;
+  } = location.state;
 
   const token = empleado.access_token;
 
@@ -46,7 +42,7 @@ const ImprimirPagoPatologo = (props) => {
   const efectivoMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
 
   const handleReturn = () => {
-    history.goBack();
+    navigate(-1);
   }
 
   const loadCuraciones = async (hora_apertura, hora_cierre) => {

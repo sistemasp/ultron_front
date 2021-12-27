@@ -74,7 +74,6 @@ const AgendarConsulta = (props) => {
 		empleado,
 		setPacienteAgendado,
 		sucursal,
-		history,
 		onClickAgendarCuracion,
 		onClickAgendarEstetica,
 		onClickAgendarDermapen,

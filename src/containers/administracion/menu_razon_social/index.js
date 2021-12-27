@@ -22,7 +22,6 @@ const MenuRazonSocial = (props) => {
     const {
         sucursal,
         empleado,
-        history,
     } = props;
 
     const handleChangeTab = (event, newValue) => {

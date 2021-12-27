@@ -25,12 +25,6 @@ const MenuMainDermatologos = (props) => {
 		sucursal,
 	} = location.state;
 
-	const { permisos } = dermatologo.rol;
-
-	const {
-		history,
-	} = props;
-
 	const handleChangeTab = (event, newValue, close) => {
 		setValue(newValue);
 		close();

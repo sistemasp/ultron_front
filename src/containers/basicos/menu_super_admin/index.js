@@ -43,7 +43,6 @@ const MenuSuperAdmin = (props) => {
     const {
         sucursal,
         empleado,
-        history,
         colorBase,
     } = props;
 

@@ -47,7 +47,6 @@ const DashboardForm = (props) => {
   const {
     sucursal,
     empleado,
-    history,
     colorBase,
   } = props;
 

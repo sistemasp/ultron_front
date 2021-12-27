@@ -69,7 +69,6 @@ export const MenuContainer = props => {
 		onClickAgendarEstetica,
 		empleado,
 		sucursal,
-		history,
 		colorBase,
 	} = props;
 
@@ -134,8 +133,7 @@ export const MenuContainer = props => {
 					onClickAgendarDermapen={onClickAgendarDermapen}
 					onClickAgendarFaciales={onClickAgendarFaciales}
 					onClickAgendarAparatologia={onClickAgendarAparatologia}
-					colorBase={colorBase}
-					history={history} />
+					colorBase={colorBase} />
 			</TabPanel>
 			<TabPanel value={value} index={2}>
 				<AgendarFacial

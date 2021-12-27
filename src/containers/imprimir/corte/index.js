@@ -6,7 +6,7 @@ import {
   showAllMetodoPago,
 } from '../../../services';
 import { showAllTipoEntradas } from '../../../services/tipo_entradas';
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -21,9 +21,7 @@ const ImprimirCorte = (props) => {
 
   const location = useLocation();
   
-  const {
-    history,
-  } = props;
+  const navigate = useNavigate();
 
   const {
     dataEntradas,
@@ -48,7 +46,7 @@ const ImprimirCorte = (props) => {
   }
 
   const handleReturn = () => {
-    history.goBack();
+    navigate(-1);
   }
 
   useEffect(() => {

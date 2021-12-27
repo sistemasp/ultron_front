@@ -81,7 +81,6 @@ export const MainContainer = props => {
 		setMessage,
 		setSeverity,
 		setOpenAlert,
-		history,
 	} = props;
 
 	const colorBase = sucursal.color;
@@ -222,8 +221,7 @@ export const MainContainer = props => {
 						<MenuPatient
 							empleado={empleado}
 							sucursal={sucursal}
-							colorBase={colorBase}
-							history={history} />
+							colorBase={colorBase} />
 					</TabPanel>
 					<TabPanel value={value} index={1}>
 						<Dermatologos
@@ -275,8 +273,7 @@ export const MainContainer = props => {
 						<MenuSuperAdmin
 							empleado={empleado}
 							sucursal={sucursal}
-							colorBase={colorBase}
-							history={history} />
+							colorBase={colorBase} />
 					</TabPanel>
 				</Fragment>
 			</main>
