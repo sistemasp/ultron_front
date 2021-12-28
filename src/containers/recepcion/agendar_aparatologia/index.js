@@ -36,7 +36,7 @@ import {
 } from "../../../services/consecutivos";
 import { updateSesionAnticipada } from "../../../services/sesiones_anticipadas";
 import { rolCosmetologaId, rolDermatologoId, rolPromovendedorId, rolRecepcionistaId } from "../../../utils/constants";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;

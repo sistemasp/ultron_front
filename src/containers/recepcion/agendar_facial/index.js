@@ -49,7 +49,7 @@ import {
   precioResorcina,
 } from "../../../utils/constants";
 import { createSalida } from "../../../services/salidas";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;

@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router-dom';
 import FormTratamiento from './FormTratamiento';
 
 const ImprimirTratamiento = (props) => {
