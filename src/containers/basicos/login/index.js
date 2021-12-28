@@ -111,11 +111,26 @@ const LoginForm = (props) => {
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED && response.data !== '') {
       const empleado = response.data;
       if (empleado.rol._id === rolCallCenterId) {
-        navigate('/call_center', { empleado: empleado, sucursal: data.sucursal });
+        navigate('/call_center',{
+          state: {
+            empleado: empleado,
+            sucursal: data.sucursal
+          }
+        });
       } else if (empleado.rol._id === rolCosmetologaId) {
-        navigate('/cabinas', { empleado: empleado, sucursal: data.sucursal });
+        navigate('/cabinas', {
+          state: {
+            empleado: empleado,
+            sucursal: data.sucursal
+          }
+        });
       } else if (empleado.rol._id === rolDermatologoId) {
-        navigate('/dermatologos', { dermatologo: empleado, sucursal: data.sucursal });
+        navigate('/dermatologos', {
+          state: {
+            dermatologo: empleado,
+            sucursal: data.sucursal
+          }
+        });
       } else if (empleado.rol._id === rolDirectorId
         || empleado.rol._id === rolEncargadoSucursalId
         || empleado.rol._id === rolRecepcionistaId
@@ -132,7 +147,12 @@ const LoginForm = (props) => {
         });
       } else if (empleado.rol._id === rolAdministacionId
         || empleado.rol._id === rolAuxiliarAdministrativoId) {
-        navigate('/administracion', { empleado: empleado, sucursal: data.sucursal });
+        navigate('/administracion', {
+          state: {
+            empleado: empleado,
+            sucursal: data.sucursal
+          }
+        });
       }
     } else {
       setOpenAlert(true);
