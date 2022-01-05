@@ -535,21 +535,6 @@ export const showAllUsoCfdis = async () => {
     }
 }
 
-// TRATAMIENTO-PRECIO
-
-export const createTreatmentPrice = async (tratamientoprecio) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/tratamientoprecio`,
-            method: 'POST',
-            data: tratamientoprecio
-        });
-        return response;
-    } catch (error) {
-        console.log('createTreatmentPrice', error);
-    }
-}
-
 // FRECUENCIAS
 
 export const showAllFrecuencias = async () => {
