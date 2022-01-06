@@ -34,6 +34,8 @@ const FormConsulta = (props) => {
     colorBase,
   } = props;
 
+  console.log("KAOZ", datos);
+
   const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
   const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
   const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
@@ -50,7 +52,7 @@ const FormConsulta = (props) => {
       <img
         src={sucursal._id === sucursalManuelAcunaId || sucursal._id === sucursalRubenDarioId ? bannerDermastetic : bannerMePiel}
         alt='banner'
-        width="360" />
+        width="300" />
       <Grid container>
         <Grid item xs={12} className={classes.label}>
           <h1 className={classes.label}>{datos.sucursal.nombre}</h1>
@@ -64,13 +66,17 @@ const FormConsulta = (props) => {
         <Grid item xs={12} className={classes.label_left}>
           <h4 className={classes.label_left}>PACIENTE: {datos.paciente_nombre}</h4>
         </Grid>
+        <Grid item xs={12} className={classes.label_left}>
+          <h4 className={classes.label_left}>MÉDICO: {datos.dermatologo_nombre}</h4>
+        </Grid>
         <br />
         <Grid item xs={12} className={classes.label_left}>
-          <h3 className={classes.label_left}>1 {`${servicio} ${datos.total_moneda}`}</h3>
+          <h3 className={classes.label_left}>{`${servicio}(${datos.frecuencia.nombre}) ${datos.total_moneda}`}</h3>
         </Grid>
         <br />
         <Grid item xs={12}>
           <p className={classes.label_foot}>*ESTE TICKET NO REPRESENTA UN COMPROBANTE FISCAL.*</p>
+          <p className={classes.label_foot}>*FICHA DE CONSULTA, ENTREGUE A SU MÉDICO.*</p>
         </Grid>
 
         <Grid item xs={12}>

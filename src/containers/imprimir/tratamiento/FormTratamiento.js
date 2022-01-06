@@ -102,9 +102,9 @@ const FormTratamiento = (props) => {
       aria-labelledby="simple-modal-title"
       aria-describedby="simple-modal-description" >
       <img
-        src={sucursal._id === sucursalManuelAcunaId || sucursal._id === sucursalRubenDarioId ? bannerDermastetic : bannerMePiel}
+        src={sucursal === sucursalManuelAcunaId || sucursal === sucursalRubenDarioId ? bannerDermastetic : bannerMePiel}
         alt='banner'
-        width="360" />
+        width="300" />
       <Grid container>
         <Grid item xs={12} className={classes.label}>
           <h2 className={classes.label}>{datos.sucursal.nombre}</h2>
@@ -121,7 +121,7 @@ const FormTratamiento = (props) => {
         {
           dermatologoDirectoId !== datos.dermatologo._id
             ? <Grid item xs={12} className={classes.label_left}>
-              <h4 className={classes.label_left}>DERMATÓLOGO: {datos.dermatologo_nombre}</h4>
+              <h4 className={classes.label_left}>MÉDICO: {datos.dermatologo_nombre}</h4>
             </Grid>
             : ''
         }
@@ -168,6 +168,17 @@ const FormTratamiento = (props) => {
 
         <Grid item xs={12}>
           <p className={classes.label_foot}>*ESTE TICKET NO REPRESENTA UN COMPROBANTE FISCAL.*</p>
+          <p className={classes.label_foot}>*FICHA DE CABINA, ENTREGUE A SU COSMETÓLOGA.*</p>
+        </Grid>
+
+        <Grid item xs={12}>
+          <h1 className={classes.label}>__________________________________</h1>
+        </Grid>
+        <Grid item xs={12}>
+          <h1 className={classes.label}>__________________________________</h1>
+        </Grid>
+        <Grid item xs={12}>
+          <h1 className={classes.label}>__________________________________</h1>
         </Grid>
 
         {

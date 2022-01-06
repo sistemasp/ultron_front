@@ -50,7 +50,7 @@ const FormConsulta = (props) => {
       <img
         src={sucursal._id === sucursalManuelAcunaId || sucursal._id === sucursalRubenDarioId ? bannerDermastetic : bannerMePiel}
         alt='banner'
-        width="360" />
+        width="300" />
       <Grid container>
         <Grid item xs={12} className={classes.label}>
           <h1 className={classes.label}>{datos.sucursal.nombre}</h1>
@@ -71,6 +71,7 @@ const FormConsulta = (props) => {
         <br />
         <Grid item xs={12}>
           <p className={classes.label_foot}>*ESTE TICKET NO REPRESENTA UN COMPROBANTE FISCAL.*</p>
+          <p className={classes.label_foot}>*FICHA DE ESTÉTICA, ENTREGAR AL MÉDICO.*</p>
         </Grid>
 
         <Grid item xs={12}>
