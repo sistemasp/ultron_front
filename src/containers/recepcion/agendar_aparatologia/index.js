@@ -6,6 +6,8 @@ import {
 	showAllMedios,
 	showAllFrecuencias,
 	showAllMetodoPago,
+	showAllBanco,
+	showAllTipoTarjeta,
 } from "../../../services";
 import {
 	findTreatmentByServicio,
@@ -35,8 +37,10 @@ import {
 	createConsecutivo,
 } from "../../../services/consecutivos";
 import { updateSesionAnticipada } from "../../../services/sesiones_anticipadas";
-import { rolCosmetologaId, rolDermatologoId, rolPromovendedorId, rolRecepcionistaId } from "../../../utils/constants";
+import { rolCosmetologaId, rolDermatologoId, rolPromovendedorId, rolRecepcionistaId, statusAsistioId, tipoEntradaAparatologiasId } from "../../../utils/constants";
 import { useNavigate } from "react-router-dom";
+import { createEntrada, updateEntrada } from "../../../services/entradas";
+import { createPago } from "../../../services/pagos";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -101,7 +105,7 @@ const AgendarAparatologia = (props) => {
 	const [openAlert, setOpenAlert] = useState(false);
 	const [message, setMessage] = useState('');
 	const [severity, setSeverity] = useState('success');
-	const [servicios, setServicios] = useState([]);
+	const [esHoy, setEsHoy] = useState(false);
 	const [formasPago, setFormasPago] = useState([]);
 	const [tratamientos, setTratamientos] = useState([]);
 	const [horarios, setHorarios] = useState([]);
@@ -147,6 +151,8 @@ const AgendarAparatologia = (props) => {
 	const [openModalImprimirCita, setOpenModalImprimirCita] = useState(false);
 	const [openModalTraspaso, setOpenModalTraspaso] = useState(false);
 	const [datosImpresion, setDatosImpresion] = useState();
+	const [bancos, setBancos] = useState([]);
+	const [tiposTarjeta, setTiposTarjeta] = useState([]);
 
 	const date = new Date();
 	const dia = addZero(date.getDate());
@@ -334,6 +340,10 @@ const AgendarAparatologia = (props) => {
 		setIsLoading(false);
 	};
 
+	const handleChangeEsHoy = (e) => {
+		setEsHoy(!esHoy);
+	}
+
 	const handleChangeHora = e => {
 		setIsLoading(true);
 		const hora = (e.target.value).split(':');
@@ -399,6 +409,62 @@ const AgendarAparatologia = (props) => {
 		data.tipo_cita = data.dermatologo._id === dermatologoDirectoId ? directoTipoCitaId : data.tipo_cita;
 		const response = await createAparatologia(data, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+			if (esHoy) {
+				const resAparatologia = response.data;
+				const create_date = new Date();
+				resAparatologia.hora_llegada = `${addZero(create_date.getHours())}:${addZero(create_date.getMinutes())}`;
+				resAparatologia.status = statusAsistioId;
+				resAparatologia.hora_aplicacion = create_date;
+				await updateAparatologia(resAparatologia._id, resAparatologia, token);
+				const entrada = {
+					create_date: create_date,
+					hora_aplicacion: create_date,
+					recepcionista: empleado._id,
+					concepto: `PACIENTE: ${paciente.nombres} ${paciente.apellidos}`,
+					cantidad: resAparatologia.precio,
+					tipo_entrada: tipoEntradaAparatologiasId,
+					sucursal: sucursal,
+					forma_pago: data.forma_pago,
+					pago_anticipado: false,
+				};
+				const entradaResponse = await createEntrada(entrada, token);
+				if (`${entradaResponse.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+					const resEntrada = entradaResponse.data;
+					const pago = {
+						create_date: create_date,
+						fecha_pago: create_date,
+						hora_aplicacion: create_date,
+						paciente: resAparatologia.paciente,
+						dermatologo: resAparatologia.dermatologo,
+						tratamientos: resAparatologia.tratamientos,
+						quien_recibe_pago: resAparatologia.quien_agenda,
+						cantidad: resAparatologia.precio,
+						total: resAparatologia.precio,
+						forma_pago: data.forma_pago,
+						digitos: data.digitos,
+						banco: data.banco,
+						tipo_tarjeta: data.tipo_tarjeta,
+						sucursal: sucursal._id,
+						observaciones: resAparatologia.observaciones,
+						porcentaje_descuento_clinica: '0',
+						descuento_clinica: 0,
+						descuento_dermatologo: 0,
+						tipo_servicio: servicioAparatologiaId,
+						servicio: resAparatologia._id,
+						pago_anticipado: false,
+						entrada: resEntrada._id,
+						turno: turno,
+					};
+					const pagoResponse = await createPago(pago, token);
+					if (`${pagoResponse.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+						const resPago = pagoResponse.data;
+						resEntrada.pago = resPago._id;
+						await updateEntrada(resEntrada._id, resEntrada, token);
+						resAparatologia.pagos = [resPago];
+						handleGuardarModalPagos(resAparatologia);
+					}
+				}
+			}
 			setOpenAlert(true);
 			setSeverity('success');
 			setMessage('APARATOLOGIA AGREGADA CORRECTAMENTE');
@@ -455,6 +521,18 @@ const AgendarAparatologia = (props) => {
 
 	const handleChangeMedio = (e) => {
 		setValues({ ...values, medio: e.target.value });
+	}
+
+	const handleChangeBank = (event) => {
+		setValues({ ...values, banco: event.target.value });
+	}
+
+	const handleChangeCardType = (event) => {
+		setValues({ ...values, tipo_tarjeta: event.target.value });
+	}
+
+	const handleChangeDigitos = (event) => {
+		setValues({ ...values, digitos: event.target.value });
 	}
 
 	const handleChangeTiempo = (e) => {
@@ -761,11 +839,18 @@ const AgendarAparatologia = (props) => {
 		}
 	}
 
-	const loadProductos = async () => {
-		/*const response = await findProductoByServicio(consultaServicioId);
+	const loadBancos = async () => {
+		const response = await showAllBanco();
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			setProductos(response.data);
-		}*/
+			setBancos(response.data);
+		}
+	}
+
+	const loadTipoTarjeta = async () => {
+		const response = await showAllTipoTarjeta();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setTiposTarjeta(response.data);
+		}
 	}
 
 	const loadAll = async () => {
@@ -776,6 +861,8 @@ const AgendarAparatologia = (props) => {
 		await loadPromovendedores();
 		await loadCosmetologas();
 		await loadDermatologos();
+		await loadBancos();
+		await loadTipoTarjeta();
 		await loadTipoCitas();
 		await loadFrecuencias();
 		await loadFormasPago();
@@ -828,16 +915,23 @@ const AgendarAparatologia = (props) => {
 								dermatologos={dermatologos}
 								tipoCitas={tipoCitas}
 								medios={medios}
+								bancos={bancos}
+								tiposTarjeta={tiposTarjeta}
 								frecuencias={frecuencias}
 								productos={productos}
 								formasPago={formasPago}
 								colorBase={colorBase}
+								esHoy={esHoy}
+								onChangeEsHoy={(e) => handleChangeEsHoy(e)}
 								onChangeFrecuencia={(e) => handleChangeFrecuencia(e)}
 								onChangeTipoCita={(e) => handleChangeTipoCita(e)}
 								onChangeMedio={(e) => handleChangeMedio(e)}
 								onChangePaymentMethod={(e) => handleChangePaymentMethod(e)}
 								onChangeDoctors={(e) => handleChangeDoctors(e)}
 								onChangePromovendedor={(e) => handleChangePromovendedor(e)}
+								onChangeBank={(e) => handleChangeBank(e)}
+								onChangeCardType={(e) => handleChangeCardType(e)}
+								onChangeDigitos={(e) => handleChangeDigitos(e)}
 								onChangeCosmetologa={(e) => handleChangeCosmetologa(e)}
 								onChangeTiempo={(e) => handleChangeTiempo(e)}
 								onCloseVerPagos={handleCloseVerPagos}

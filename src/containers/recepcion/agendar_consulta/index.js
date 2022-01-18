@@ -7,6 +7,8 @@ import {
 	showAllFrecuencias,
 	findScheduleByDateAndSucursalAndService,
 	showAllMetodoPago,
+	showAllTipoTarjeta,
+	showAllBanco,
 } from "../../../services";
 import {
 	createConsult,
@@ -161,6 +163,8 @@ const AgendarConsulta = (props) => {
 
 	const [consultas, setConsultas] = useState([]);
 	const [formasPago, setFormasPago] = useState([]);
+	const [bancos, setBancos] = useState([]);
+	const [tiposTarjeta, setTiposTarjeta] = useState([]);
 	const [openModal, setOpenModal] = useState(false);
 	const [openModalProxima, setOpenModalProxima] = useState(false);
 	const [openModalPagos, setOpenModalPagos] = useState(false);
@@ -360,7 +364,7 @@ const AgendarConsulta = (props) => {
 		const response = await createConsult(data, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			const resConsult = response.data;
-			if (sucursal._id === sucursalOccidentalId || sucursal._id === sucursalFederalismoId && data.forma_pago !== tarjetaFormaPagoId) {
+			if (sucursal._id === sucursalOccidentalId || sucursal._id === sucursalFederalismoId) {
 				const entrada = {
 					create_date: create_date,
 					hora_aplicacion: create_date,
@@ -393,6 +397,9 @@ const AgendarConsulta = (props) => {
 						descuento_clinica: values.descuento_clinica,
 						descuento_dermatologo: 0,
 						tipo_servicio: servicioConsultaId,
+						digitos: values.digitos,
+						banco: values.banco,
+						tipo_tarjeta: values.tipo_tarjeta,
 						servicio: resConsult._id,
 						pago_anticipado: false,
 						entrada: resEntrada._id,
@@ -430,6 +437,18 @@ const AgendarConsulta = (props) => {
 		}
 		setIsLoading(false);
 	};
+
+	const handleChangeBank = (event) => {
+		setValues({ ...values, banco: event.target.value });
+	}
+
+	const handleChangeCardType = (event) => {
+		setValues({ ...values, tipo_tarjeta: event.target.value });
+	}
+
+	const handleChangeDigitos = (event) => {
+		setValues({ ...values, digitos: event.target.value });
+	}
 
 	const handleChangePrecio = (e) => {
 		setValues({ ...values, precio: e.target.value });
@@ -873,12 +892,28 @@ const AgendarConsulta = (props) => {
 		}
 	}
 
+	const loadBancos = async () => {
+		const response = await showAllBanco();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setBancos(response.data);
+		}
+	}
+
+	const loadTipoTarjeta = async () => {
+		const response = await showAllTipoTarjeta();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setTiposTarjeta(response.data);
+		}
+	}
+
 	const loadAll = async () => {
 		setIsLoading(true);
 		await loadConsultas(new Date());
 		await loadProductos();
 		await loadDermatologos();
 		await loadPromovendedores();
+		await loadBancos();
+		await loadTipoTarjeta();
 		await loadTipoCitas();
 		await loadFrecuencias();
 		await loadMedios();
@@ -927,6 +962,8 @@ const AgendarConsulta = (props) => {
 						loadConsultas={loadConsultas}
 						tipoCitas={tipoCitas}
 						medios={medios}
+						bancos={bancos}
+						tiposTarjeta={tiposTarjeta}
 						onChangeTipoCita={(e) => handleChangeTipoCita(e)}
 						onChangeMedio={(e) => handleChangeMedio(e)}
 						onChangeProductos={handleChangeProductos}
@@ -961,6 +998,9 @@ const AgendarConsulta = (props) => {
 						tipoServicioId={consultaServicioId}
 						frecuenciaPrimeraVezId={frecuenciaPrimeraVezId}
 						frecuenciaReconsultaId={frecuenciaReconsultaId}
+						onChangeBank={(e) => handleChangeBank(e)}
+						onChangeCardType={(e) => handleChangeCardType(e)}
+						onChangeDigitos={(e) => handleChangeDigitos(e)}
 						onGuardarModalPagos={handleGuardarModalPagos} /> :
 					<Backdrop className={classes.backdrop} open={isLoading} >
 						<CircularProgress color="inherit" />

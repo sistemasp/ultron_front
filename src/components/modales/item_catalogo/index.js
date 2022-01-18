@@ -10,7 +10,7 @@ import myStyles from '../../../css';
 import { createProductoComercial, updateProductoComercial } from '../../../services/productos_comerciales';
 import { createOcupacion, updateOcupacion } from '../../../services/ocupacion';
 import { createEspecialidad, updateEspecialidad } from '../../../services/especialidades';
-import { esquemassCatalogoId } from '../../../utils/constants';
+import { esquemasCatalogoId } from '../../../utils/constants';
 import { createEsquema, showAllEsquemas, updateEsquema } from '../../../services/esquemas';
 import { getToken } from '../../../utils/utils';
 import { createEmployee, updateEmployee } from '../../../services/empleados';
@@ -134,7 +134,7 @@ const ModalItemCatalogo = (props) => {
       case especialidadCatalogoId:
         response = item._id ? await updateEspecialidad(item._id, newItem) : await createEspecialidad(newItem);
         break;
-      case esquemassCatalogoId:
+      case esquemasCatalogoId:
         response = item._id ? await updateEsquema(item._id, newItem, token) : await createEsquema(newItem, token);
         break;
       case dermatologosCatalogoId:

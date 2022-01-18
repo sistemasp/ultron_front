@@ -19,6 +19,8 @@ import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import ModalProximaCita from '../../../components/modales/modal_proxima_cita';
 import myStyles from '../../../css';
 import ModalTraspasoServicio from '../../../components/modales/traspaso_servicio';
+import { formaPagoTarjetaId, sucursalFederalismoId, sucursalOccidentalId } from '../../../utils/constants';
+import { CheckCustom } from '../../../components/basic/CheckCustom';
 
 export const AgendarAparatologiaContainer = (props) => {
 
@@ -28,7 +30,8 @@ export const AgendarAparatologiaContainer = (props) => {
 		errors,
 		servicios,
 		tratamientos,
-		areas,
+		esHoy,
+		onChangeEsHoy,
 		horarios,
 		tipoCitas,
 		formasPago,
@@ -62,6 +65,11 @@ export const AgendarAparatologiaContainer = (props) => {
 		dermatologoDirectoId,
 		selectedAreas,
 		colorBase,
+		onChangeBank,
+		bancos,
+		onChangeCardType,
+		tiposTarjeta,
+		onChangeDigitos,
 		// TABLE DATES PROPERTIES
 		titulo,
 		columns,
@@ -102,7 +110,7 @@ export const AgendarAparatologiaContainer = (props) => {
 		...promovendedores,
 		...recepcionistas,
 	];
-	
+
 	return (
 		<Fragment>
 			{
@@ -202,10 +210,22 @@ export const AgendarAparatologiaContainer = (props) => {
 					<Grid item xs={12} sm={8} className={classes.grid_center}>
 						<h1>{paciente.nombres ? `${paciente.nombres} ${paciente.apellidos}` : 'SELECCIONA UN PACIENTE'}</h1>
 					</Grid>
-					<Grid item xs={12} sm={2} className={classes.grid_center}>
+					<Grid item xs={12} sm={true} className={classes.grid_center}>
 						<h1>{toFormatterCurrency(values.precio)}</h1>
 					</Grid>
-					<Grid item xs={12} sm={2} className={classes.grid_center}>
+					{
+						sucursal === sucursalOccidentalId || sucursal === sucursalFederalismoId ?
+							<Grid item xs={12} sm={true} className={classes.grid_center}>
+								<CheckCustom
+									checked={esHoy}
+									onChange={onChangeEsHoy}
+									name="checkedH"
+									label="HOY"
+								/>
+							</Grid>
+							: ''
+					}
+					<Grid item xs={12} sm={true} className={classes.grid_center}>
 						<ButtonCustom
 							className={classes.button}
 							color="primary"
@@ -356,6 +376,55 @@ export const AgendarAparatologiaContainer = (props) => {
 							</Select>
 						</FormControl>
 					</Grid>
+
+					{
+						values.forma_pago === formaPagoTarjetaId && esHoy ?
+							<Fragment>
+
+								<Grid item xs={12} sm={2}>
+									<FormControl variant="outlined" className={classes.formControl}>
+										<InputLabel id="simple-select-outlined-banks">BANCOS</InputLabel>
+										<Select
+											labelId="simple-select-outlined-banks"
+											id="simple-select-outlined-banks"
+											value={values.banco}
+											onChange={onChangeBank}
+											label="BANCOS" >
+											{bancos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+										</Select>
+									</FormControl>
+								</Grid>
+
+								<Grid item xs={12} sm={2}>
+									<FormControl variant="outlined" className={classes.formControl}>
+										<InputLabel id="simple-select-outlined-card-type">TIPO TARJETA</InputLabel>
+										<Select
+											labelId="simple-select-outlined-card-type"
+											id="simple-select-outlined-card-type"
+											value={values.tipoTarjeta}
+											onChange={onChangeCardType}
+											label="TIPO TARJETA" >
+											{tiposTarjeta.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+										</Select>
+									</FormControl>
+								</Grid>
+
+								<Grid item xs={12} sm={2}>
+									<TextField
+										className={classes.textField}
+										name="digitos"
+										//helperText={touched.numero_sesion ? errors.numero_sesion : ""}
+										label="DÍGITOS"
+										value={values.digitos}
+										onInput={(e) => {
+											e.target.value = (e.target.value).toString().slice(0, 4)
+										}}
+										onChange={onChangeDigitos}
+										variant="outlined" />
+								</Grid>
+							</Fragment> : ''
+					}
+
 					<Grid item xs={12} sm={2}>
 						<TextField
 							className={classes.formControl}

@@ -9,10 +9,9 @@ import {
   showAllFrecuencias,
 } from '../../../services';
 import {
-  createEntrada, /*findEntradaByPago,*/ updateEntrada,
+  createEntrada,
 } from '../../../services/entradas';
-import { generateFolio, toFormatterCurrency } from '../../../utils/utils';
-import { findEsquemaById } from '../../../services/esquemas';
+import { toFormatterCurrency } from '../../../utils/utils';
 import { Backdrop, CircularProgress, TablePagination } from '@material-ui/core';
 import myStyles from '../../../css';
 import { Fragment } from 'react';
@@ -22,15 +21,17 @@ import { getAllServices } from '../../../services/servicios';
 import { findTreatmentByServicio } from '../../../services/tratamientos';
 import { findAreasByTreatmentServicio } from '../../../services/areas';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
-import { useSelect } from 'react-select-search';
-import { createSesionAnticipada, deleteSesionAnticipada, showAllSesionesAnticipadasByPaciente, showAllSesionesAnticipadasByPacienteToday, updateSesionAnticipada } from '../../../services/sesiones_anticipadas';
+import { 
+  createSesionAnticipada,
+  deleteSesionAnticipada,
+  showAllSesionesAnticipadasByPacienteToday,
+  updateSesionAnticipada
+} from '../../../services/sesiones_anticipadas';
 import { findEmployeesByRolIdAvailable } from '../../../services/empleados';
-import SesionesAnticipadas from '../pagos_anticipados/sesiones_anticipadas/SesionesAnticipadas';
 import { createPagoAnticipado, deletePagoAnticipado, updatePagoAnticipado } from '../../../services/pagos_anticipados';
 import { createFactura } from '../../../services/facturas';
 import { createPago } from '../../../services/pagos';
-import { curacionServicioId } from '../../../utils/constants';
+import { servicioCuracionId } from '../../../utils/constants';
 
 const AgregarPagosAnticipados = (props) => {
 
@@ -74,13 +75,9 @@ const AgregarPagosAnticipados = (props) => {
   const servicioLaserId = process.env.REACT_APP_LASER_SERVICIO_ID;
   const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
   const servicioConsultaId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
-  const servicioCuracionId = process.env.REACT_APP_CURACION_SERVICIO_ID;
   const servicioBiopsiaId = process.env.REACT_APP_BIOPSIA_SERVICIO_ID;
   const servicioEsteticaId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
   const dermatologoDirectoId = process.env.REACT_APP_DERMATOLOGO_DIRECTO_ID;
-  const tipoCitaRevisadoId = process.env.REACT_APP_TIPO_CITA_REVISADO_ID;
-  const tipoCitaDerivadoId = process.env.REACT_APP_TIPO_CITA_DERIVADO_ID;
-  const tipoCitaRealizadoId = process.env.REACT_APP_TIPO_CITA_REALIZADO_ID;
   const servicioPagoAnticipado = process.env.REACT_APP_PAGO_ANTICIPADO_SERVICIO_ID;
   const frecuenciaPrimeraVezId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
   const frecuenciaReconsultaId = process.env.REACT_APP_FRECUENCIA_RECONSULTA_ID;
@@ -253,7 +250,7 @@ const AgregarPagosAnticipados = (props) => {
 
   const handleClickAgregarSesion = async (event, value) => {
     setIsLoading(true);
-    if (value.servicio._id === curacionServicioId) {
+    if (value.servicio._id === servicioCuracionId) {
       value.materiales = [];
       value.biopsias = [];
     }
