@@ -6,6 +6,8 @@ import {
   showAllMedios,
   showAllFrecuencias,
   showAllMetodoPago,
+  showAllBanco,
+  showAllTipoTarjeta,
 } from "../../../services";
 import {
   findTreatmentByServicio,
@@ -172,6 +174,8 @@ const AgendarFacial = (props) => {
   const [esHoy, setEsHoy] = useState(false);
   const [openModalImprimirCita, setOpenModalImprimirCita] = useState(false);
   const [datosImpresion, setDatosImpresion] = useState();
+  const [bancos, setBancos] = useState([]);
+  const [tiposTarjeta, setTiposTarjeta] = useState([]);
 
   const date = new Date();
   const dia = addZero(date.getDate());
@@ -414,51 +418,52 @@ const AgendarFacial = (props) => {
         resFacial.status = asistioStatusId;
         resFacial.hora_aplicacion = create_date;
         await updateFacial(resFacial._id, resFacial, token);
-        if (resFacial.forma_pago === efectivoFormaPagoId) {
-          const entrada = {
+        const entrada = {
+          create_date: create_date,
+          hora_aplicacion: create_date,
+          recepcionista: empleado._id,
+          concepto: `PACIENTE: ${paciente.nombres} ${paciente.apellidos}`,
+          cantidad: resFacial.precio,
+          tipo_entrada: tipoEntradaFacialesId,
+          sucursal: sucursal,
+          forma_pago: data.forma_pago,
+          pago_anticipado: false,
+        };
+        const entradaResponse = await createEntrada(entrada, token);
+        if (`${entradaResponse.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+          const resEntrada = entradaResponse.data;
+          const pago = {
             create_date: create_date,
+            fecha_pago: create_date,
             hora_aplicacion: create_date,
-            recepcionista: empleado._id,
-            concepto: `FOLIO: ${generateFolio({})}`,
+            paciente: resFacial.paciente,
+            dermatologo: resFacial.dermatologo,
+            tratamientos: resFacial.tratamientos,
+            quien_recibe_pago: resFacial.quien_agenda,
             cantidad: resFacial.precio,
-            tipo_entrada: tipoEntradaFacialesId,
-            sucursal: sucursal,
-            forma_pago: efectivoFormaPagoId,
+            total: resFacial.precio,
+            forma_pago: data.forma_pago,
+            digitos: data.digitos,
+            banco: data.banco,
+            tipo_tarjeta: data.tipo_tarjeta,
+            sucursal: sucursal._id,
+            observaciones: resFacial.observaciones,
+            porcentaje_descuento_clinica: '0',
+            descuento_clinica: 0,
+            descuento_dermatologo: 0,
+            tipo_servicio: servicioFacialId,
+            servicio: resFacial._id,
             pago_anticipado: false,
+            entrada: resEntrada._id,
+            turno: turno,
           };
-          const entradaResponse = await createEntrada(entrada, token);
-          if (`${entradaResponse.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-            const resEntrada = entradaResponse.data;
-            const pago = {
-              create_date: create_date,
-              fecha_pago: create_date,
-              hora_aplicacion: create_date,
-              paciente: resFacial.paciente,
-              dermatologo: resFacial.dermatologo,
-              tratamientos: resFacial.tratamientos,
-              quien_recibe_pago: resFacial.quien_agenda,
-              cantidad: resFacial.precio,
-              total: resFacial.precio,
-              forma_pago: efectivoFormaPagoId,
-              sucursal: sucursal._id,
-              observaciones: resFacial.observaciones,
-              porcentaje_descuento_clinica: '0',
-              descuento_clinica: 0,
-              descuento_dermatologo: 0,
-              tipo_servicio: servicioFacialId,
-              servicio: resFacial._id,
-              pago_anticipado: false,
-              entrada: resEntrada._id,
-              turno: turno,
-            };
-            const pagoResponse = await createPago(pago, token);
-            if (`${pagoResponse.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-              const resPago = pagoResponse.data;
-              resEntrada.pago = resPago._id;
-              await updateEntrada(resEntrada._id, resEntrada, token);
-              resFacial.pagos = [resPago];
-              handleGuardarModalPagos(resFacial);
-            }
+          const pagoResponse = await createPago(pago, token);
+          if (`${pagoResponse.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+            const resPago = pagoResponse.data;
+            resEntrada.pago = resPago._id;
+            await updateEntrada(resEntrada._id, resEntrada, token);
+            resFacial.pagos = [resPago];
+            handleGuardarModalPagos(resFacial);
           }
         }
       }
@@ -523,6 +528,18 @@ const AgendarFacial = (props) => {
 
   const handleChangeMedio = (e) => {
     setValues({ ...values, medio: e.target.value });
+  }
+
+  const handleChangeBank = (event) => {
+    setValues({ ...values, banco: event.target.value });
+  }
+
+  const handleChangeCardType = (event) => {
+    setValues({ ...values, tipo_tarjeta: event.target.value });
+  }
+
+  const handleChangeDigitos = (event) => {
+    setValues({ ...values, digitos: event.target.value });
   }
 
   const handleCloseAlert = () => {
@@ -609,14 +626,14 @@ const AgendarFacial = (props) => {
 
   const handlePrint = async (event, rowData) => {
     navigate('/imprimir/ticket/tratamiento',
-			{
-				state: {
-					empleado: empleado,
-					sucursal: sucursal,
-					datos: rowData,
-					colorBase: colorBase,
-				}
-			});
+      {
+        state: {
+          empleado: empleado,
+          sucursal: sucursal,
+          datos: rowData,
+          colorBase: colorBase,
+        }
+      });
   }
 
   const handleClickTraspaso = (event, rowData) => {
@@ -769,7 +786,7 @@ const AgendarFacial = (props) => {
         await createSalida(salida, token);
       }
     });
-    
+
     if (!servicio.consecutivo) {
       const response = await findConsecutivoBySucursal(sucursal, token);
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
@@ -853,13 +870,6 @@ const AgendarFacial = (props) => {
     }
   }
 
-  const loadRecepcionistas = async () => {
-		const response = await findEmployeesByRolIdAvailable(rolRecepcionistaId, token);
-		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			setRecepcionistas(response.data);
-		}
-	}
-
   const loadPromovendedores = async () => {
     const response = await findEmployeesByRolIdAvailable(promovendedorRolId, token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
@@ -902,6 +912,20 @@ const AgendarFacial = (props) => {
     }
   }
 
+  const loadBancos = async () => {
+    const response = await showAllBanco();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setBancos(response.data);
+    }
+  }
+
+  const loadTipoTarjeta = async () => {
+    const response = await showAllTipoTarjeta();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setTiposTarjeta(response.data);
+    }
+  }
+
   const loadAll = async () => {
     setIsLoading(true);
     await loadTratamientos();
@@ -909,6 +933,8 @@ const AgendarFacial = (props) => {
     await loadPromovendedores();
     await loadCosmetologas();
     await loadDermatologos();
+    await loadBancos();
+    await loadTipoTarjeta();
     await loadTipoCitas();
     await loadFrecuencias();
     await loadFormasPago();
@@ -954,6 +980,8 @@ const AgendarFacial = (props) => {
                 options={options}
                 citas={faciales}
                 actions={actions}
+                bancos={bancos}
+                tiposTarjeta={tiposTarjeta}
                 components={components}
                 facial={facial}
                 frecuencias={frecuencias}
@@ -967,6 +995,9 @@ const AgendarFacial = (props) => {
                 tipoCitas={tipoCitas}
                 medios={medios}
                 colorBase={colorBase}
+                onChangeBank={(e) => handleChangeBank(e)}
+                onChangeCardType={(e) => handleChangeCardType(e)}
+                onChangeDigitos={(e) => handleChangeDigitos(e)}
                 onChangeTipoCita={(e) => handleChangeTipoCita(e)}
                 onChangeMedio={(e) => handleChangeMedio(e)}
                 onChangeDoctors={(e) => handleChangeDoctors(e)}

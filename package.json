@@ -1,6 +1,6 @@
 {
   "name": "ultron",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "private": true,
   "dependencies": {
     "@emotion/styled": "^11.3.0",

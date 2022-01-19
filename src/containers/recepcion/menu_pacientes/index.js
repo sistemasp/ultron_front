@@ -36,11 +36,6 @@ const MenuPatient = (props) => {
         setValue(Number(process.env.REACT_APP_PAGE_AGENDAR_FACIALES));
     }
 
-    const handleAgendarLaser = (event, rowData) => {
-        setPacienteAgendado(rowData);
-        setValue(Number(process.env.REACT_APP_PAGE_AGENDAR_LASER));
-    }
-
     const handleAgendarAparatologia = (event, rowData) => {
         setPacienteAgendado(rowData);
         setValue(Number(process.env.REACT_APP_PAGE_AGENDAR_APARATOLOGIA));
