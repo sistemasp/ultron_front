@@ -22,7 +22,8 @@ import People from '@material-ui/icons/People';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import AirlineSeatReclineNormalIcon from '@material-ui/icons/AirlineSeatReclineNormal';
-import { Button, Grid } from '@material-ui/core';
+import AndroidIcon from '@material-ui/icons/Android';
+import { Button, Grid, makeStyles } from '@material-ui/core';
 import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
 import ModalPassword from '../../../components/modales/modal_password';
 import Dermatologos from '../menu_dermatologos';
@@ -30,7 +31,7 @@ import Consultorios from '../consultorios';
 import Corte from '../menu_corte';
 import ListaEspera from '../lista_espera';
 import AssignmentIcon from '@material-ui/icons/Assignment';
-import MenuReports from '../menu_reportes';
+import MenuReports from '../../basicos/menu_reportes';
 import Description from '@material-ui/icons/Description';
 import MenuRazonSocial from '../menu_razon_social';
 import {
@@ -38,9 +39,14 @@ import {
 	showCorteTodayBySucursalAndTurno
 } from '../../../services/corte';
 import myStyles from '../../../css';
+import MenuSuperAdmin from '../../basicos/menu_super_admin';
+import DashboardForm from '../../basicos/dashboard';
+import { ButtonCustom } from '../../../components/basic/ButtonCustom';
+import PieChartIcon from '@material-ui/icons/PieChart';
 
 const TabPanel = (props) => {
 	const { children, value, index, ...other } = props;
+
 
 	return (
 		<Typography
@@ -64,6 +70,11 @@ TabPanel.propTypes = {
 
 export const MainContainer = props => {
 
+	const rolRecepcionistaId = process.env.REACT_APP_RECEPCIONISTA_ROL_ID;
+	const rolDiosSupremoId = process.env.REACT_APP_DIOS_SUPREMO_ROL_ID;
+	const rolMasterId = process.env.REACT_APP_MASTER_ROL_ID;
+	const rolSupervisorId = process.env.REACT_APP_SUPERVISOR_ROL_ID;
+
 	const {
 		pacienteAgendado,
 		setPacienteAgendado,
@@ -78,10 +89,12 @@ export const MainContainer = props => {
 		setMessage,
 		setSeverity,
 		setOpenAlert,
-		history,
+		turno,
 	} = props;
 
-	const classes = myStyles();
+	const colorBase = sucursal.color;
+
+	const classes = myStyles(colorBase)();
 	const theme = useTheme();
 	const [openDrawer, setOpenDrawer] = useState(false);
 
@@ -109,17 +122,17 @@ export const MainContainer = props => {
 		}
 	}
 
-	useEffect(() => {
-		const findCorte = async () => {
-			const response = await showCorteTodayBySucursalAndTurno(sucursal._id, 'm');
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				const corte = response.data;
-				if (!corte) {
-					generateCorteMatutino();
-				}
+	const findCorte = async () => {
+		const response = await showCorteTodayBySucursalAndTurno(sucursal._id, 'm');
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			const corte = response.data;
+			if (!corte) {
+				generateCorteMatutino();
 			}
 		}
+	}
 
+	useEffect(() => {
 		findCorte();
 	}, []);
 
@@ -159,14 +172,16 @@ export const MainContainer = props => {
 					<Typography variant="h6" className={classes.title}>
 						{`SUCURSAL: ${sucursal.nombre} - ${empleado.numero_empleado} : ${empleado.nombre ? empleado.nombre : ''} ( ${empleado.rol ? empleado.rol.nombre : ''} )`}
 					</Typography>
-					<Button
+					<ButtonCustom
 						color="default"
 						variant="contained"
-						onClick={onClickCambioPassword}>CAMBIAR CONTRASEÑA</Button>
-					<Button
+						onClick={onClickCambioPassword}
+						text="CAMBIAR CONTRASEÑA" />
+					<ButtonCustom
 						color="secondary"
 						variant="contained"
-						onClick={onClickLogout}>CERRAR SESION</Button>
+						onClick={onClickLogout}
+						text="CERRAR SESIÓN" />
 				</Toolbar>
 			</AppBar>
 			<Drawer
@@ -185,34 +200,60 @@ export const MainContainer = props => {
 				</div>
 				<Divider />
 				<List>
+
 					<ListItem button key={'PACIENTES'} onClick={(e) => onChangeTab(e, 0, handleDrawerClose)}>
 						<ListItemIcon> <AccessibilityNewIcon /> </ListItemIcon>
 						<ListItemText primary={'PACIENTES'} />
 					</ListItem>
-					<ListItem button key={'DERMATOLÓGOS'} onClick={(e) => onChangeTab(e, 1, handleDrawerClose)}>
-						<ListItemIcon> <People /> </ListItemIcon>
-						<ListItemText primary={'DERMATOLÓGOS'} />
-					</ListItem>
-					<ListItem button key={'CONSULTORIOS / CABINAS'} onClick={(e) => onChangeTab(e, 2, handleDrawerClose)}>
-						<ListItemIcon> <AirlineSeatReclineNormalIcon /> </ListItemIcon>
-						<ListItemText primary={'CONSULTORIOS / CABINAS'} />
-					</ListItem>
-					<ListItem button key={'CORTE'} onClick={(e) => onChangeTab(e, 3, handleDrawerClose)}>
-						<ListItemIcon> <AttachMoneyIcon /> </ListItemIcon>
-						<ListItemText primary={'CORTE'} />
-					</ListItem>
-					<ListItem button key={'LISTA DE ESPERA'} onClick={(e) => onChangeTab(e, 4, handleDrawerClose)}>
-						<ListItemIcon> <ListAltIcon /> </ListItemIcon>
-						<ListItemText primary={'LISTA DE ESPERA'} />
-					</ListItem>
-					<ListItem button key={'RAZON SOCIAL'} onClick={(e) => onChangeTab(e, 5, handleDrawerClose)}>
-						<ListItemIcon> <Description /> </ListItemIcon>
-						<ListItemText primary={'RAZON SOCIAL'} />
-					</ListItem>
-					<ListItem button key={'REPORTES'} onClick={(e) => onChangeTab(e, 6, handleDrawerClose)}>
-						<ListItemIcon> <AssignmentIcon /> </ListItemIcon>
-						<ListItemText primary={'REPORTES'} />
-					</ListItem>
+
+					<Fragment>
+						<ListItem button key={'DERMATOLÓGOS'} onClick={(e) => onChangeTab(e, 1, handleDrawerClose)}>
+							<ListItemIcon> <People /> </ListItemIcon>
+							<ListItemText primary={'DERMATOLÓGOS'} />
+						</ListItem>
+						<ListItem button key={'CONSULTORIOS / CABINAS'} onClick={(e) => onChangeTab(e, 2, handleDrawerClose)}>
+							<ListItemIcon> <AirlineSeatReclineNormalIcon /> </ListItemIcon>
+							<ListItemText primary={'CONSULTORIOS / CABINAS'} />
+						</ListItem>
+						<ListItem button key={'CORTE'} onClick={(e) => onChangeTab(e, 3, handleDrawerClose)}>
+							<ListItemIcon> <AttachMoneyIcon /> </ListItemIcon>
+							<ListItemText primary={'CORTE'} />
+						</ListItem>
+						<ListItem button key={'LISTA DE ESPERA'} onClick={(e) => onChangeTab(e, 4, handleDrawerClose)}>
+							<ListItemIcon> <ListAltIcon /> </ListItemIcon>
+							<ListItemText primary={'LISTA DE ESPERA'} />
+						</ListItem>
+						<ListItem button key={'RAZÓN SOCIAL'} onClick={(e) => onChangeTab(e, 5, handleDrawerClose)}>
+							<ListItemIcon> <Description /> </ListItemIcon>
+							<ListItemText primary={'RAZÓN SOCIAL'} />
+						</ListItem>
+					</Fragment>
+
+					{
+						empleado.rol._id !== rolRecepcionistaId ?
+							<ListItem button key={'REPORTES'} onClick={(e) => onChangeTab(e, 6, handleDrawerClose)}>
+								<ListItemIcon> <AssignmentIcon /> </ListItemIcon>
+								<ListItemText primary={'REPORTES'} />
+							</ListItem>
+							: ''
+					}
+					{
+						empleado.super_admin
+							? <ListItem button key={'SUPER ADMINISTRADOR'} onClick={(e) => onChangeTab(e, 7, handleDrawerClose)}>
+								<ListItemIcon> <AndroidIcon /> </ListItemIcon>
+								<ListItemText primary={'SUPER ADMINISTRADOR'} />
+							</ListItem>
+							: ''
+					}
+
+					{
+						empleado.rol._id === rolDiosSupremoId || empleado.rol._id === rolMasterId || empleado.rol._id === rolSupervisorId ?
+							<ListItem button key={'DASHBOARD'} onClick={(e) => onChangeTab(e, 8, handleDrawerClose)}>
+								<ListItemIcon> <PieChartIcon /> </ListItemIcon>
+								<ListItemText primary={'DASHBOARD'} />
+							</ListItem>
+							: ''
+					}
 				</List>
 			</Drawer>
 			<main
@@ -224,13 +265,15 @@ export const MainContainer = props => {
 				<Fragment className={classes.fragment}>
 					<TabPanel value={value} index={0}>
 						<MenuPatient
+							turno={turno}
 							empleado={empleado}
 							sucursal={sucursal}
-							history={history} />
+							colorBase={colorBase} />
 					</TabPanel>
 					<TabPanel value={value} index={1}>
 						<Dermatologos
 							empleado={empleado}
+							colorBase={colorBase}
 							sucursal={sucursal} />
 					</TabPanel>
 					<TabPanel value={value} index={2}>
@@ -238,6 +281,7 @@ export const MainContainer = props => {
 							paciente={pacienteAgendado}
 							setPacienteAgendado={setPacienteAgendado}
 							empleado={empleado}
+							colorBase={colorBase}
 							sucursal={sucursal._id} />
 					</TabPanel>
 					<TabPanel value={value} index={3}>
@@ -245,6 +289,7 @@ export const MainContainer = props => {
 							paciente={pacienteAgendado}
 							setPacienteAgendado={setPacienteAgendado}
 							empleado={empleado}
+							colorBase={colorBase}
 							sucursal={sucursal._id} />
 					</TabPanel>
 					<TabPanel value={value} index={4}>
@@ -252,6 +297,7 @@ export const MainContainer = props => {
 							paciente={pacienteAgendado}
 							setPacienteAgendado={setPacienteAgendado}
 							empleado={empleado}
+							colorBase={colorBase}
 							sucursal={sucursal._id} />
 					</TabPanel>
 					<TabPanel value={value} index={5}>
@@ -259,6 +305,7 @@ export const MainContainer = props => {
 							paciente={pacienteAgendado}
 							setPacienteAgendado={setPacienteAgendado}
 							empleado={empleado}
+							colorBase={colorBase}
 							sucursal={sucursal._id} />
 					</TabPanel>
 					<TabPanel value={value} index={6}>
@@ -266,7 +313,20 @@ export const MainContainer = props => {
 							paciente={pacienteAgendado}
 							setPacienteAgendado={setPacienteAgendado}
 							empleado={empleado}
+							colorBase={colorBase}
 							sucursal={sucursal._id} />
+					</TabPanel>
+					<TabPanel value={value} index={7}>
+						<MenuSuperAdmin
+							empleado={empleado}
+							sucursal={sucursal}
+							colorBase={colorBase} />
+					</TabPanel>
+					<TabPanel value={value} index={8}>
+						<DashboardForm
+							empleado={empleado}
+							sucursal={sucursal}
+							colorBase={colorBase} />
 					</TabPanel>
 				</Fragment>
 			</main>

@@ -5,22 +5,22 @@ import {
   showAllBanco,
   showAllMetodoPago,
   showAllTipoTarjeta,
-  createPago,
-  updatePago,
 } from '../../../services';
 import {
-  createIngreso, /*findIngresoByPago,*/ updateIngreso,
-} from '../../../services/ingresos';
-import { generateFolio } from '../../../utils/utils';
+  createEntrada, /*findEntradaByPago,*/ updateEntrada,
+} from '../../../services/entradas';
+import { dateToString, generateFolio } from '../../../utils/utils';
 import ModalFormPago from './ModalFormPago';
 import { findEsquemaById } from '../../../services/esquemas';
-
-const validationSchema = Yup.object({
-  nombre: Yup.string("Ingresa los nombres")
-    .required("Los nombres del pacientes son requeridos")
-});
+import { Backdrop, CircularProgress } from '@material-ui/core';
+import myStyles from '../../../css';
+import { Fragment } from 'react';
+import { findTurnoActualBySucursal } from '../../../services/corte';
+import { showAllSesionesAnticipadasByPaciente, updateSesionAnticipada } from '../../../services/sesiones_anticipadas';
+import { createPago, updatePago } from '../../../services/pagos';
 
 const ModalPago = (props) => {
+
   const {
     open,
     onClose,
@@ -33,39 +33,42 @@ const ModalPago = (props) => {
     pago,
     restante,
     tipoServicioId,
+    colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   const porcetanjeComision = process.env.REACT_APP_COMISION_PAGO_TARJETA;
   const enConsultorioStatusId = process.env.REACT_APP_EN_CONSULTORIO_STATUS_ID;
 
   const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
-  const tipoIngresoConsultaId = process.env.REACT_APP_TIPO_INGRESO_CONSULTA_ID;
-  const tipoIngresoCirugiaId = process.env.REACT_APP_TIPO_INGRESO_CIRUGIA_ID;
-  const tipoIngresoFacialesId = process.env.REACT_APP_TIPO_INGRESO_FACIALES_ID;
-  const tipoIngresoEsteticaId = process.env.REACT_APP_TIPO_INGRESO_ESTETICA_ID;
-  const tipoIngresoAparatologiaId = process.env.REACT_APP_TIPO_INGRESO_APARATOLOGIA_ID;
-  const tipoIngresoLaserId = process.env.REACT_APP_TIPO_INGRESO_LASER_ID;
-  const tipoIngresoDermapenId = process.env.REACT_APP_TIPO_INGRESO_DERMAPEN_ID;
-  const tipoIngresoOtrosId = process.env.REACT_APP_TIPO_INGRESO_OTROS_ID;
+  const tipoEntradaConsultaId = process.env.REACT_APP_TIPO_ENTRADA_CONSULTA_ID;
+  const tipoEntradaCuracionId = process.env.REACT_APP_TIPO_ENTRADA_CURACION_ID;
+  const tipoEntradaFacialesId = process.env.REACT_APP_TIPO_ENTRADA_FACIALES_ID;
+  const tipoEntradaEsteticaId = process.env.REACT_APP_TIPO_ENTRADA_ESTETICA_ID;
+  const tipoEntradaAparatologiaId = process.env.REACT_APP_TIPO_ENTRADA_APARATOLOGIA_ID;
+  const tipoEntradaLaserId = process.env.REACT_APP_TIPO_ENTRADA_LASER_ID;
+  const tipoEntradaDermapenId = process.env.REACT_APP_TIPO_ENTRADA_DERMAPEN_ID;
+  const tipoEntradaOtrosId = process.env.REACT_APP_TIPO_ENTRADA_OTROS_ID;
   const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
   const servicioDermapenlId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID;
   const servicioLaserId = process.env.REACT_APP_LASER_SERVICIO_ID;
   const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
   const servicioConsultaId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
-  const servicioCirugiaId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID;
+  const servicioCuracionId = process.env.REACT_APP_CURACION_SERVICIO_ID;
   const servicioBiopsiaId = process.env.REACT_APP_BIOPSIA_SERVICIO_ID;
   const servicioEsteticaId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
   const dermatologoDirectoId = process.env.REACT_APP_DERMATOLOGO_DIRECTO_ID;
-  const tipoCitaRevisadoId = process.env.REACT_APP_TIPO_CITA_REVISADO_ID;
-  const tipoCitaDerivadoId = process.env.REACT_APP_TIPO_CITA_DERIVADO_ID;
-  const tipoCitaRealizadoId = process.env.REACT_APP_TIPO_CITA_REALIZADO_ID;
   const frecuenciaReconsultaId = process.env.REACT_APP_FRECUENCIA_RECONSULTA_ID;
+  const formaPagoPagoAnticipadoId = process.env.REACT_APP_FORMA_PAGO_SESION_ANTICIPADA;
 
   const [isLoading, setIsLoading] = useState(true);
   const [bancos, setBancos] = useState([]);
-  const [metodosPago, setMetodosPago] = useState([]);
+  const [formasPago, setFormasPago] = useState([]);
   const [tiposTarjeta, setTiposTarjeta] = useState([]);
   const [esquema, setEsquema] = useState({});
+  const [turno, setTurno] = useState({});
+  const [sesionesAnticipadas, setSesionesAnticipadas] = useState([]);
 
   const [values, setValues] = useState({
     forma_pago: pago.forma_pago ? pago.forma_pago._id : '',
@@ -79,17 +82,22 @@ const ModalPago = (props) => {
     descuento_dermatologo: pago.descuento_dermatologo || 0,
   });
 
-
   const tarjetaMetodoPagoId = process.env.REACT_APP_FORMA_PAGO_TARJETA;
   const consultaServicioId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
   const consultaTratamientoId = process.env.REACT_APP_CONSULTA_TRATAMIENTO_ID;
 
   const handleChangePaymentMethod = (event) => {
+    const formaPagoId = event.target.value;
     const datos = {
       ...values,
-      forma_pago: event.target.value,
+      forma_pago: formaPagoId,
     }
     calcularTotal(datos);
+
+  }
+
+  const handleChangeSesionAnticipada = (event) => {
+    setValues({ ...values, sesion_anicipada: event.target.value });
   }
 
   const handleChangeBank = (event) => {
@@ -103,8 +111,8 @@ const ModalPago = (props) => {
   const getMayorDescuento = () => {
     let porcentajeDescuento = 0;
     switch (servicio.servicio._id) {
-      case servicioCirugiaId:
-        porcentajeDescuento = esquema.porcentaje_cirugias;
+      case servicioCuracionId:
+        porcentajeDescuento = esquema.porcentaje_curaciones;
         break;
       case servicioConsultaId:
         porcentajeDescuento = servicio.frecuencia._id === frecuenciaReconsultaId ? esquema.porcentaje_reconsulta : esquema.porcentaje_consulta;
@@ -179,18 +187,12 @@ const ModalPago = (props) => {
     setValues({ ...values, observaciones: event.target.value.toUpperCase() });
   }
 
-  /*const handleClickGuardar = async (event, rowData) => {
-    setIsLoading(true);
-    rowData.fecha_pago = new Date();
-    onGuardarPago(rowData);
-    setIsLoading(false);
-  }*/
-
   const handleChangeDigitos = (event) => {
     setValues({ ...values, digitos: event.target.value });
   }
 
   const handleClickGuardarPago = async (event, rowData) => {
+    setIsLoading(true);
     rowData.fecha_pago = new Date();
     rowData.paciente = servicio.paciente._id;
     rowData.dermatologo = servicio.dermatologo._id;
@@ -200,36 +202,37 @@ const ModalPago = (props) => {
     rowData.servicio = servicio._id;
     rowData.tipo_servicio = tipoServicioId;
     rowData.hora_aplicacion = servicio.hora_aplicacion;
+    rowData.turno = turno;
 
-    let tipoIngreso = '';
+    let tipoEntrada = '';
 
     switch (rowData.tipo_servicio) {
       case servicioFacialId:
-        tipoIngreso = tipoIngresoFacialesId;
+        tipoEntrada = tipoEntradaFacialesId;
         break;
       case servicioDermapenlId:
-        tipoIngreso = tipoIngresoDermapenId;
+        tipoEntrada = tipoEntradaDermapenId;
         break;
       case servicioLaserId:
-        tipoIngreso = tipoIngresoLaserId;
+        tipoEntrada = tipoEntradaLaserId;
         break;
       case servicioAparatologiaId:
-        tipoIngreso = tipoIngresoAparatologiaId;
+        tipoEntrada = tipoEntradaAparatologiaId;
         break;
       case servicioConsultaId:
-        tipoIngreso = tipoIngresoConsultaId;
+        tipoEntrada = tipoEntradaConsultaId;
         break;
-      case servicioCirugiaId:
-        tipoIngreso = tipoIngresoCirugiaId;
+      case servicioCuracionId:
+        tipoEntrada = tipoEntradaCuracionId;
         break;
       case servicioBiopsiaId:
-        tipoIngreso = tipoIngresoOtrosId;
+        tipoEntrada = tipoEntradaOtrosId;
         break;
       case servicioEsteticaId:
-        tipoIngreso = tipoIngresoEsteticaId;
+        tipoEntrada = tipoEntradaEsteticaId;
         break
       default:
-        tipoIngreso = tipoIngresoOtrosId;
+        tipoEntrada = tipoEntradaOtrosId;
         break;
     }
 
@@ -237,47 +240,129 @@ const ModalPago = (props) => {
     create_date.setHours(create_date.getHours());
 
     let response;
-    const ingreso = {
-      create_date: create_date,
-      hora_aplicacion: servicio.hora_aplicacion,
-      recepcionista: empleado._id,
-      concepto: `FOLIO: ${generateFolio(servicio)}`,
-      cantidad: rowData.total,
-      tipo_ingreso: tipoIngreso,
-      sucursal: sucursal,
-      forma_pago: rowData.forma_pago,
-      pago_anticipado: rowData.pago_anticipado,
-    }
-    //TODO: CUIDADO AQUI
-    /*const resExistIngreso = await findIngresoByPago(pago._id);
-    if (`${resExistIngreso.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      const existIngreso = resExistIngreso.data;
 
-      if (existIngreso) {
-        response = await updateIngreso(existIngreso._id, ingreso);
+    servicio.forma_pago._id = rowData.forma_pago;
+    if (rowData.forma_pago === formaPagoPagoAnticipadoId && rowData.sesion_anicipada) {
+
+      const sesionAnticipada = sesionesAnticipadas.find((sesion) => {
+        return sesion._id === rowData.sesion_anicipada;
+      });
+
+      rowData.pago_anticipado = true;
+      rowData.has_descuento_dermatologo = false;
+      rowData.cantidad = sesionAnticipada.total;
+      rowData.total = sesionAnticipada.total;
+
+      servicio.forma_pago._id = formaPagoPagoAnticipadoId;
+      servicio.total = 0;
+
+      const entrada = {
+        create_date: create_date,
+        hora_aplicacion: servicio.hora_aplicacion,
+        recepcionista: empleado._id,
+        concepto: `FOLIO: ${generateFolio(servicio)}`,
+        cantidad: 0,
+        tipo_entrada: tipoEntrada,
+        sucursal: sucursal,
+        forma_pago: rowData.forma_pago,
+        pago_anticipado: true,
+      }
+
+      
+      sesionAnticipada.fecha_asistencia = new Date();
+
+      await updateSesionAnticipada(sesionAnticipada._id, sesionAnticipada, empleado.access_token);
+      servicio.sesion_anticipada = sesionAnticipada;
+      if (pago.entrada) {
+        response = await updateEntrada(pago.entrada, entrada);
       } else {
-        response = await createIngreso(ingreso);
+        response = await createEntrada(entrada);
       }
-    }*/
 
-    if (pago.ingreso) {
-      response = await updateIngreso(pago.ingreso, ingreso);
+      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED
+        || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+        const resEntrada = response.data;
+        rowData.entrada = resEntrada._id;
+        const res = pago._id ? await updatePago(pago._id, rowData) : await createPago(rowData);
+        if (`${res.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
+          || `${res.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+          resEntrada.pago = res.data._id;
+          await updateEntrada(resEntrada._id, resEntrada);
+          setIsLoading(false);
+          onClose();
+          loadPagos();
+        }
+      }
+
     } else {
-      response = await createIngreso(ingreso);
+      const entrada = {
+        create_date: create_date,
+        hora_aplicacion: servicio.hora_aplicacion,
+        recepcionista: empleado._id,
+        concepto: `FOLIO: ${generateFolio(servicio)}`,
+        cantidad: rowData.total,
+        tipo_entrada: tipoEntrada,
+        sucursal: sucursal,
+        forma_pago: rowData.forma_pago,
+        pago_anticipado: false,
+      }
+      //TODO: CUIDADO AQUI
+      /*const resExistEntrada = await findEntradaByPago(pago._id);
+      if (`${resExistEntrada.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+        const existEntrada = resExistEntrada.data;
+  
+        if (existEntrada) {
+          response = await updateEntrada(existEntrada._id, entrada);
+        } else {
+          response = await createEntrada(entrada);
+        }
+      }*/
+
+      if (pago.entrada) {
+        response = await updateEntrada(pago.entrada, entrada);
+      } else {
+        response = await createEntrada(entrada);
+      }
+
+      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED
+        || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+        const resEntrada = response.data;
+        rowData.entrada = resEntrada._id;
+        const res = pago._id ? await updatePago(pago._id, rowData) : await createPago(rowData);
+        if (`${res.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
+          || `${res.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+          resEntrada.pago = res.data._id;
+          await updateEntrada(resEntrada._id, resEntrada);
+          setIsLoading(false);
+          onClose();
+          loadPagos();
+        }
+      }
     }
 
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED
-      || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      const resIngreso = response.data;
-      rowData.ingreso = resIngreso._id;
-      const res = pago._id ? await updatePago(pago._id, rowData) : await createPago(rowData);
-      if (`${res.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
-        || `${res.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-        resIngreso.pago = res.data._id;
-        await updateIngreso(resIngreso._id, resIngreso);
-        onClose();
-        loadPagos();
-      }
+  }
+
+  const findSesion = (sesionesAnticipadas) => {
+    return sesionesAnticipadas.filter((sesionAnticipada) => {
+      return !sesionAnticipada.fecha_asistencia;
+    });
+  }
+
+  const findPagoAnticipado = async () => {
+    const response = await showAllSesionesAnticipadasByPaciente(servicio.paciente._id, empleado.access_token);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      const sesionesAnticipadasResponse = response.data;
+      const sesionesVigenes = findSesion(sesionesAnticipadasResponse);
+      sesionesVigenes.map((sesionAnticipada) => {
+        const producto = sesionAnticipada.tratamientos.map(tratamiento => {
+          const show_areas = tratamiento.areasSeleccionadas.map(area => {
+            return `${area.nombre}`;
+          });
+          return `►${tratamiento.nombre}(${show_areas}) `;
+        });
+        sesionAnticipada.descripcion = `${sesionAnticipada.numero_sesion}: (${dateToString(sesionAnticipada.fecha_pago)}) ${sesionAnticipada.servicio.nombre} - ${producto}`;
+      });
+      setSesionesAnticipadas(sesionesVigenes);
     }
   }
 
@@ -291,7 +376,7 @@ const ModalPago = (props) => {
   const loadMetodosPago = async () => {
     const response = await showAllMetodoPago();
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setMetodosPago(response.data);
+      setFormasPago(response.data);
     }
   }
 
@@ -309,45 +394,63 @@ const ModalPago = (props) => {
     }
   }
 
-  useEffect(() => {
+  const getTurno = async () => {
+    const response = await findTurnoActualBySucursal(sucursal);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      const corte = response.data;
+      setTurno(corte.turno);
+    }
+  }
 
-    loadBancos();
-    loadMetodosPago();
-    loadTipoTarjeta();
-    loadEsquema();
+  const loadAll = async () => {
+    setIsLoading(true);
+    await findPagoAnticipado();
+    await loadBancos();
+    await loadMetodosPago();
+    await loadTipoTarjeta();
+    await loadEsquema();
+    await getTurno();
     setIsLoading(false);
+  }
 
+  useEffect(() => {
+    loadAll();
   }, [sucursal]);
 
   return (
-    <Formik
-      initialValues={values}
-      enableReinitialize
-      validationSchema={validationSchema} >
+    <Fragment>
       {
-        props => <ModalFormPago
-          aria-labelledby="simple-modal-title"
-          aria-describedby="simple-modal-description"
-          open={open}
-          bancos={bancos}
-          metodosPago={metodosPago}
-          tiposTarjeta={tiposTarjeta}
-          onClickCancel={onClose}
-          onClickGuardar={handleClickGuardarPago}
-          isLoading={isLoading}
-          onChangePaymentMethod={(e) => handleChangePaymentMethod(e)}
-          onChangeBank={(e) => handleChangeBank(e)}
-          onChangeCardType={(e) => handleChangeCardType(e)}
-          onChangeCantidad={(e) => handleChangeCantidad(e)}
-          onChangeConfirmado={(e) => handleChangeConfirmado(e)}
-          onChangeObservaciones={(e) => handleChangeObservaciones(e)}
-          onChangeDigitos={(e) => handleChangeDigitos(e)}
-          onChangeDescuento={(e) => handleChangeDescuento(e)}
-          onChangePagoAnticipado={(e) => handleChangePagoAnticipado(e)}
-          onChangDescuentoDermatologo={(e) => handleChangDescuentoDermatologo(e)}
-          {...props} />
+        !isLoading ?
+          <ModalFormPago
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+            values={values}
+            isLoading={isLoading}
+            open={open}
+            bancos={bancos}
+            formasPago={formasPago}
+            tiposTarjeta={tiposTarjeta}
+            onClickCancel={onClose}
+            colorBase={colorBase}
+            sesionesAnticipadas={sesionesAnticipadas}
+            onClickGuardar={handleClickGuardarPago}
+            onChangePaymentMethod={(e) => handleChangePaymentMethod(e)}
+            onChangeSesionAnticipada={(e) => handleChangeSesionAnticipada(e)}
+            onChangeBank={(e) => handleChangeBank(e)}
+            onChangeCardType={(e) => handleChangeCardType(e)}
+            onChangeCantidad={(e) => handleChangeCantidad(e)}
+            onChangeConfirmado={(e) => handleChangeConfirmado(e)}
+            onChangeObservaciones={(e) => handleChangeObservaciones(e)}
+            onChangeDigitos={(e) => handleChangeDigitos(e)}
+            onChangeDescuento={(e) => handleChangeDescuento(e)}
+            onChangePagoAnticipado={(e) => handleChangePagoAnticipado(e)}
+            onChangDescuentoDermatologo={(e) => handleChangDescuentoDermatologo(e)} />
+          : <Backdrop className={classes.backdrop} open={isLoading} >
+            <CircularProgress color="inherit" />
+          </Backdrop>
       }
-    </Formik>
+
+    </Fragment>
   );
 }
 

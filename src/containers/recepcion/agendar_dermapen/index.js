@@ -2,11 +2,10 @@ import React, { useState, useEffect, Fragment } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import {
 	findScheduleByDateAndSucursalAndService,
-	findEmployeesByRolId,
-	createConsecutivo,
 	showAllMedios,
 	showAllMaterials,
 	showAllFrecuencias,
+	showAllMetodoPago,
 } from "../../../services";
 import {
 	createDermapen,
@@ -16,7 +15,7 @@ import {
 import {
 	findAreaById, findAreasByTreatmentServicio,
 } from "../../../services/areas";
-import { Backdrop, CircularProgress, Snackbar } from "@material-ui/core";
+import { Backdrop, CircularProgress, FormControl, InputLabel, MenuItem, Select, Snackbar, TablePagination } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
 import { Formik } from 'formik';
 import EditIcon from '@material-ui/icons/Edit';
@@ -26,6 +25,13 @@ import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import PrintIcon from '@material-ui/icons/Print';
 import { AgendarDermapenContainer } from "./agendar_dermapen";
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
+import { findEmployeesByRolIdAvailable } from "../../../services/empleados";
+import { createFactura } from "../../../services/facturas";
+import {
+	findConsecutivoBySucursal,
+	createConsecutivo,
+} from "../../../services/consecutivos";
+import { updateSesionAnticipada } from "../../../services/sesiones_anticipadas";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -45,7 +51,7 @@ const validationSchema = Yup.object({
 		.required("El tratamiento es requerido"),
 	fecha: Yup.string("Ingresa la fecha de nacimiento")
 		.required("Los nombres del pacientes son requeridos"),
-	hora: Yup.string("Ingresa la direccion")
+	hora: Yup.string("Ingresa la domicilio")
 		.required("Los nombres del pacientes son requeridos")
 });
 
@@ -56,15 +62,24 @@ const AgendarDermapen = (props) => {
 		consultaAgendada,
 		empleado,
 		sucursal,
+		colorBase,
+		turno,
 	} = props;
 
-	const paciente = consultaAgendada.paciente ? consultaAgendada.paciente : {};
+	const token = empleado.access_token;
+
+	const paciente = consultaAgendada.paciente ? consultaAgendada.paciente : consultaAgendada;
 
 	const dermatologoRolId = process.env.REACT_APP_DERMATOLOGO_ROL_ID;
 	const promovendedorRolId = process.env.REACT_APP_PROMOVENDEDOR_ROL_ID;
 	const cosmetologaRolId = process.env.REACT_APP_COSMETOLOGA_ROL_ID;
 	const pendienteStatusId = process.env.REACT_APP_PENDIENTE_STATUS_ID;
 	const atendidoStatusId = process.env.REACT_APP_ATENDIDO_STATUS_ID;
+	const confirmadoStatusId = process.env.REACT_APP_CONFIRMADO_STATUS_ID;
+	const noAsistioStatusId = process.env.REACT_APP_NO_ASISTIO_STATUS_ID;
+	const reagendoStatusId = process.env.REACT_APP_REAGENDO_STATUS_ID;
+	const canceladoCPStatusId = process.env.REACT_APP_CANCELO_CP_STATUS_ID;
+	const canceladoSPStatusId = process.env.REACT_APP_CANCELO_SP_STATUS_ID;
 	const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
 	const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
 	const sucursalFedeId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
@@ -75,8 +90,16 @@ const AgendarDermapen = (props) => {
 	const dermapenTratamientoId = process.env.REACT_APP_DERMAPEN_TRATAMIENTO_ID;
 	const dermapenAreaId = process.env.REACT_APP_DERMAPEN_AREA_ID;
 	const productoMicropuncionId = process.env.REACT_APP_PRODUCTO_MICROPUNCION_ID;
+	const promovendedorSinPromovendedorId = process.env.REACT_APP_PROMOVENDEDOR_SIN_PROMOVENDEDOR_ID;
+	const cosmetologaSinAsignarId = process.env.REACT_APP_COSMETOLOGA_SIN_ASIGNAR_ID;
+	const frecuenciaPrimeraVezId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
+	const efectivoFormaPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
+	const sesionAnticipadaFormaPagoId = process.env.REACT_APP_FORMA_PAGO_SESION_ANTICIPADA;
+	const fisicoMedioId = process.env.REACT_APP_MEDIO_FISICO_ID;
+	const asistioStatusId = process.env.REACT_APP_ASISTIO_STATUS_ID;
 
 	const [openAlert, setOpenAlert] = useState(false);
+	const [openModalTraspaso, setOpenModalTraspaso] = useState(false);
 	const [message, setMessage] = useState('');
 	const [tratamientos, setTratamientos] = useState([]);
 	const [horarios, setHorarios] = useState([]);
@@ -84,6 +107,7 @@ const AgendarDermapen = (props) => {
 	const [promovendedores, setPromovendedores] = useState([]);
 	const [frecuencias, setFrecuencias] = useState([]);
 	const [cosmetologas, setCosmetologas] = useState([]);
+	const [formasPago, setFormasPago] = useState([]);
 	const [tipoCitas, setTipoCitas] = useState([]);
 	const [medios, setMedios] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
@@ -103,6 +127,12 @@ const AgendarDermapen = (props) => {
 		porcentaje_descuento_clinica: 0,
 		descuento_clinica: 0,
 		descuento_dermatologo: 0,
+		dermatologo: dermatologoDirectoId,
+		cosmetologa: cosmetologaSinAsignarId,
+		promovendedor: promovendedorSinPromovendedorId,
+		frecuencia: frecuenciaPrimeraVezId,
+		forma_pago: efectivoFormaPagoId,
+		medio: fisicoMedioId,
 	});
 	const [dermapens, setDermapens] = useState([]);
 	const [areas, setAreas] = useState([]);
@@ -125,23 +155,22 @@ const AgendarDermapen = (props) => {
 	});
 
 	const columns = [
-		{ title: 'FOLIO', field: 'folio' },
+		{ title: 'FOLIO', field: 'consecutivo' },
+		{ title: 'TURNO', field: 'turno' },
 		{ title: 'HORA', field: 'hora' },
-		//{ title: 'FOLIO CONSULTA', field: 'consulta.consecutivo' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
-		{ title: 'TELEFONO', field: 'paciente.telefono' },
-		{ title: 'QUIEN AGENDA', field: 'quien_agenda.nombre' },
-		sucursal._id === sucursalManuelAcunaId ? { title: 'MEDIO', field: 'medio.nombre' } : {},
-		{ title: 'TIPO CONSULTA', field: 'tipo_cita.nombre' },
-		sucursal._id === sucursalManuelAcunaId ? { title: 'QUIEN CONFIRMA LLAMADA', field: 'quien_confirma_llamada.nombre' } : {},
-		sucursal._id === sucursalManuelAcunaId ? { title: 'QUIEN CONFIRMA ASISTENCIA', field: 'quien_confirma_asistencia.nombre' } : {},
-		{ title: 'PROMOVENDEDOR', field: 'promovendedor_nombre' },
-		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
-		{ title: 'ESTADO', field: 'status.nombre' },
+		{ title: 'TELÉFONO', field: 'paciente.telefono' },
+		{ title: 'PRODUCTO (ÁREAS)', field: 'producto_nombre' },
+		{ title: 'OBSERVACIONES', field: 'observaciones' },
+		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
+		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
+		{ title: 'TIPO', field: 'tipo_cita.nombre' },
+		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
+		{ title: 'PROMOVENDEDOR (A)', field: 'promovendedor_nombre' },
+		{ title: 'STATUS', field: 'status.nombre' },
 		{ title: 'PRECIO', field: 'precio_moneda' },
 		{ title: 'TOTAL', field: 'total_moneda' },
-		{ title: 'TIEMPO (MINUTOS)', field: 'tiempo' },
-		{ title: 'OBSERVACIONES', field: 'observaciones' },
+		{ title: 'FORMA DE PAGO', field: 'forma_pago_show' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
 		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
 		{ title: 'HORA SALIDA', field: 'hora_salida' },
@@ -155,10 +184,16 @@ const AgendarDermapen = (props) => {
 			};
 		},
 		headerStyle: {
-			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+			backgroundColor: colorBase,
 			color: '#FFF',
 			fontWeight: 'bolder',
 			fontSize: '18px'
+		},
+		cellStyle: {
+			fontWeight: 'bolder',
+			fontSize: '16px',
+			padding: '5px',
+			textAlign: 'center',
 		},
 		paging: false,
 	}
@@ -173,13 +208,14 @@ const AgendarDermapen = (props) => {
 		}
 	}
 
-	const handleChangeFecha = (date) => {
+	const handleChangeFecha = async (date) => {
 		setIsLoading(true);
 		setValues({
 			...values,
 			fecha_hora: date,
 		});
-		loadHorariosByServicio(date, dermapenServicioId);
+		await loadHorariosByServicio(date, dermapenServicioId);
+		await handleChangeFilterDate(date);
 		setIsLoading(false);
 	};
 
@@ -212,7 +248,7 @@ const AgendarDermapen = (props) => {
 	};
 
 	const loadDermapens = async (filterDate) => {
-		const response = await findDermapenByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal);
+		const response = await findDermapenByDateAndSucursal(filterDate.getDate(), filterDate.getMonth(), filterDate.getFullYear(), sucursal, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			response.data.forEach(item => {
 				item.folio = generateFolio(item);
@@ -223,6 +259,13 @@ const AgendarDermapen = (props) => {
 				item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
 				item.promovendedor_nombre = item.promovendedor ? item.promovendedor.nombre : 'SIN ASIGNAR';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
+				item.producto_nombre = item.tratamientos.map(tratamiento => {
+					const show_areas = tratamiento.areasSeleccionadas.map(area => {
+						return `${area.nombre}`;
+					});
+					return `►${tratamiento.nombre}(${show_areas}) `;
+				});
+				item.forma_pago_show = `${item.forma_pago.nombre}${item.factura ? ' (FACTURA)' : ''}`;
 			});
 			setDermapens(response.data);
 		}
@@ -252,39 +295,36 @@ const AgendarDermapen = (props) => {
 		data.hora_salida = '--:--';
 		data.total = data.precio;
 		// data.tiempo = getTimeToTratamiento(data.tratamientos);
+		if (sucursal._id !== sucursalManuelAcunaId && sucursal._id !== sucursalRubenDarioId) {
+			const dateNow = new Date();
+			data.hora_llegada = `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;
+			dateNow.setMinutes(0);
+			dateNow.setSeconds(0);
+			data.fecha_hora = dateNow;
+			data.status = asistioStatusId;
+			data.hora_aplicacion = new Date();
+			// data.quien_confirma_asistencia = empleado._id;
+		}
 
-		const response = await createDermapen(data);
+		const response = await createDermapen(data, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-			const consecutivo = {
-				consecutivo: response.data.consecutivo,
-				tipo_servicio: response.data.servicio,
-				servicio: response.data._id,
-				sucursal: sucursal,
-				fecha_hora: new Date(),
-				status: response.data.status,
-			}
-			const responseConsecutivo = await createConsecutivo(consecutivo);
-			if (`${responseConsecutivo.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
-				setOpenAlert(true);
-				setMessage('EL DERMAPEN SE AGREGO CORRECTAMENTE');
-				setValues({
-					materiales: [],
-					dermatologo: '',
-					promovendedor: '',
-					cosmetologa: '',
-					paciente: `${paciente._id}`,
-					precio: '',
-					total: '',
-					tipo_cita: {},
-				});
-				setTratamientos([]);
-				setAreas([]);
-				loadDermapens(data.fecha_hora);
-				setFilterDate({
-					fecha_show: data.fecha_hora,
-					fecha: dateToString(data.fecha_hora),
-				});
-			}
+			setOpenAlert(true);
+			setMessage('EL DERMAPEN SE AGREGO CORRECTAMENTE');
+			setValues({
+				materiales: [],
+				dermatologo: '',
+				promovendedor: '',
+				cosmetologa: '',
+				paciente: `${paciente._id}`,
+				precio: 0,
+				total: 0,
+				tipo_cita: {},
+			});
+			loadDermapens(data.fecha_hora);
+			setFilterDate({
+				fecha_show: data.fecha_hora,
+				fecha: dateToString(data.fecha_hora),
+			});
 		}
 
 		setIsLoading(false);
@@ -318,9 +358,12 @@ const AgendarDermapen = (props) => {
 		setOpenAlert(false);
 	};
 
+	const handleCloseTraspasos = (event, rowData) => {
+		setOpenModalTraspaso(false);
+	}
+
 	const handleCloseModal = () => {
 		setOpenModal(false);
-		setTratamientos([]);
 		setOpenModalProxima(false);
 	};
 
@@ -358,38 +401,176 @@ const AgendarDermapen = (props) => {
 		setOpenModalImprimirCita(true);
 	}
 
+	const handleClickTraspaso = (event, rowData) => {
+		setDermapen(rowData);
+		setOpenModalTraspaso(true);
+	}
+
 	const actions = [
+		{
+			icon: AttachMoneyIcon,
+			tooltip: 'PAGOS',
+			onClick: handleClickVerPagos
+		},
 		{
 			icon: PrintIcon,
 			tooltip: 'IMPRIMIR',
 			onClick: handlePrint
 		},
-		//new Date(anio, mes - 1, dia) < filterDate.fecha_hora  ? 
 		{
 			icon: EditIcon,
-			tooltip: 'EDITAR DERMAPEN',
+			tooltip: 'EDITAR',
 			onClick: handleOnClickEditarCita
-		}, //: ''
-		rowData => (
-			rowData.status._id !== pendienteStatusId ? {
-				icon: AttachMoneyIcon,
-				tooltip: rowData.pagado ? 'VER PAGO' : 'PAGAR',
-				onClick: handleClickVerPagos
-			} : ''
-		),
-		rowData => (
-			rowData.status._id === atendidoStatusId ? {
-				icon: EventAvailableIcon,
-				tooltip: 'NUEVO DERMAPEN',
-				onClick: handleOnClickNuevaCita
-			} : ''
-		),
+		},
+		{
+			icon: EventAvailableIcon,
+			tooltip: 'NUEVA CITA',
+			onClick: handleOnClickNuevaCita
+		},
+		// {
+		// 	icon: AttachMoneyIcon,
+		// 	tooltip: 'TRASPASO',
+		// 	onClick: handleClickTraspaso
+		// },
 	];
+
+	const onChangeActions = (e, rowData) => {
+		const action = e.target.value;
+		switch (action) {
+			case 'IMPRIMIR':
+				handlePrint(e, rowData);
+				break;
+			case 'EDITAR':
+				handleOnClickEditarCita(e, rowData);
+				break;
+			case 'NUEVA CITA':
+				handleOnClickNuevaCita(e, rowData);
+				break;
+			case 'PAGOS':
+				handleClickVerPagos(e, rowData);
+				break;
+			case 'TRASPASO':
+				handleClickTraspaso(e, rowData);
+				break;
+		}
+	}
+
+	const components = {
+		Pagination: props => {
+			return <TablePagination
+				{...props}
+				rowsPerPageOptions={[5, 10, 20, 30, dermapens.length]}
+			/>
+		},
+		Actions: props => {
+			return props.actions.length > 0
+				? <Fragment>
+					<FormControl variant="outlined" className={classes.formControl}>
+						<Select
+							labelId="simple-select-outlined-actions"
+							id="simple-select-outlined-actions"
+							onChange={(e) => onChangeActions(e, props.data)}
+							label="ACCIONES">
+							{
+								props.actions.map((item, index) => {
+									let menuItem = <MenuItem
+										key={index}
+										value={item.tooltip}
+									>{item.tooltip}</MenuItem>;
+									switch (item.tooltip) {
+										case 'PAGOS':
+											menuItem = props.data.status._id !== pendienteStatusId && props.data.status._id !== confirmadoStatusId ?
+												<MenuItem
+													key={index}
+													value={item.tooltip}
+												>{item.tooltip}</MenuItem>
+												: '';
+											break;
+										case 'TRASPASO':
+											menuItem = props.data.status._id !== atendidoStatusId && props.data.status._id !== confirmadoStatusId ?
+												<MenuItem
+													key={index}
+													value={item.tooltip}
+												>{item.tooltip}</MenuItem>
+												: '';
+											break;
+										case 'NUEVA CITA':
+											menuItem = props.data.status._id === atendidoStatusId ?
+												<MenuItem
+													key={index}
+													value={item.tooltip}
+												>{item.tooltip}</MenuItem>
+												: '';
+									}
+									if (menuItem !== '' && props.data.status._id !== reagendoStatusId && props.data.status._id !== noAsistioStatusId) {
+										return menuItem;
+									}
+								})
+							}
+						</Select>
+					</FormControl>
+				</Fragment>
+				: ''
+		}
+	}
 
 	const handleGuardarModalPagos = async (servicio) => {
 		servicio.pagado = servicio.pagos.length > 0;
-		await updateDermapen(servicio._id, servicio);
-		await loadDermapens(new Date(servicio.fecha_hora));
+
+		if (!servicio.consecutivo) {
+			const response = await findConsecutivoBySucursal(sucursal, token);
+			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+				const resConsecutivo = response.data;
+				servicio.consecutivo = resConsecutivo;
+
+				if (servicio.forma_pago._id === sesionAnticipadaFormaPagoId) {
+					servicio.sesion_anticipada.consecutivo = servicio.consecutivo;
+					await updateSesionAnticipada(servicio.sesion_anticipada._id, servicio.sesion_anticipada, token);
+				}
+
+				const consecutivo = {
+					consecutivo: servicio.consecutivo,
+					tipo_servicio: servicio.servicio,
+					servicio: servicio._id,
+					sucursal: sucursal,
+					fecha_hora: new Date(),
+					status: servicio.status,
+				}
+				await createConsecutivo(consecutivo, token);
+			}
+		} else {
+			if (servicio.forma_pago._id === sesionAnticipadaFormaPagoId) {
+				servicio.sesion_anticipada.consecutivo = servicio.consecutivo;
+				await updateSesionAnticipada(servicio.sesion_anticipada._id, servicio.sesion_anticipada, token);
+			}
+		}
+
+		servicio.turno = servicio.turno ? servicio.turno : servicio.pagos[0].turno === 'm' ? 'M' : 'V';
+		if (servicio.factura) {
+			if (servicio.factura._id) {
+				await updateDermapen(servicio._id, servicio, token);
+				await loadDermapens(new Date(servicio.fecha_hora));
+			} else {
+				const factura = {
+					fecha_hora: new Date(),
+					paciente: servicio.factura.paciente._id,
+					razon_social: servicio.factura.razon_social._id,
+					servicio: servicio.factura.servicio._id,
+					tipo_servicio: servicio.factura.tipo_servicio._id,
+					sucursal: servicio.factura.sucursal._id,
+					uso_cfdi: servicio.factura.uso_cfdi._id,
+				};
+				const response = await createFactura(factura, token);
+				if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+					servicio.factura = response.data;
+					await updateDermapen(servicio._id, servicio, token);
+					await loadDermapens(new Date(servicio.fecha_hora));
+				}
+			}
+		} else {
+			await updateDermapen(servicio._id, servicio, token);
+			await loadDermapens(new Date(servicio.fecha_hora));
+		}
 		setOpenModalPagos(false);
 	}
 
@@ -418,7 +599,7 @@ const AgendarDermapen = (props) => {
 
 	const handleChangeTotal = (event) => {
 		const precio = event.target.value;
-		let total_aplicacion = precio - values.costo;
+		let total_aplicacion = precio;
 		setValues({
 			...values,
 			precio: event.target.value,
@@ -452,6 +633,7 @@ const AgendarDermapen = (props) => {
 					_id: dermapenTratamientoId,
 					nombre: "DERMAPEN",
 					areasSeleccionadas: items,
+					servicio: dermapenServicioId,
 				}
 			],
 			fecha_hora: '',
@@ -459,97 +641,88 @@ const AgendarDermapen = (props) => {
 		setDisableDate(false);
 		setIsLoading(false);
 	}
+
 	const handleChangeFrecuencia = (e) => {
-		const frecuencia = e.target.value._id;
+		const frecuencia = e.target.value;
 		setValues({
 			...values,
 			frecuencia: frecuencia,
 		});
 	}
 
-	useEffect(() => {
-		const loadDermapens = async () => {
-			const response = await findDermapenByDateAndSucursal(date.getDate(), date.getMonth(), date.getFullYear(), sucursal);
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				await response.data.forEach(item => {
-					item.folio = generateFolio(item);
-					const fecha = new Date(item.fecha_hora);
-					item.hora = `${addZero(fecha.getHours())}:${addZero(fecha.getMinutes())}`;
-					item.precio_moneda = toFormatterCurrency(item.precio);
-					item.total_moneda = toFormatterCurrency(item.total);
-					item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
-					item.promovendedor_nombre = item.promovendedor ? item.promovendedor.nombre : 'SIN ASIGNAR';
-					item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
-				});
-				setDermapens(response.data);
-			}
-			setIsLoading(false);
-		}
+	const handleChangePaymentMethod = (event) => {
+		setValues({
+			...values,
+			forma_pago: event.target.value,
+		});
+	}
 
-		const findDermapen = async () => {
-			const response = await findAreaById(dermapenAreaId);
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				const dermapen = response.data;
-				const precio =
-					sucursal === sucursalManuelAcunaId ? dermapen.precio_ma // Precio Manuel Acuña
-						: (sucursal === sucursalOcciId ? dermapen.precio_oc // Precio Occidental
-							: (sucursal === sucursalFedeId ? dermapen.precio_fe // Precio Federalismo}
-								: (sucursal === sucursalRubenDarioId ? dermapen.precio_rd // PRECIO RUBEN DARIO
-									: 0))); // Error
-				setValues({
-					...values,
-					total: 0,
-					precio: 0 - Number(precio),
-					costo: precio,
-				});
-			}
+	const loadFormasPago = async () => {
+		const response = await showAllMetodoPago();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setFormasPago(response.data);
 		}
+	}
 
-		const loadPromovendedores = async () => {
-			const response = await findEmployeesByRolId(promovendedorRolId);
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				setPromovendedores(response.data);
-			}
+	const loadCosmetologas = async () => {
+		const response = await findEmployeesByRolIdAvailable(cosmetologaRolId, token);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setCosmetologas(response.data);
 		}
+	}
 
-		const loadFrecuencias = async () => {
-			const response = await showAllFrecuencias();
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				setFrecuencias(response.data);
-			}
+	const loadPromovendedores = async () => {
+		const response = await findEmployeesByRolIdAvailable(promovendedorRolId, token);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setPromovendedores(response.data);
 		}
+	}
 
-		const loadDermatologos = async () => {
-			const response = await findEmployeesByRolId(dermatologoRolId);
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				setDermatologos(response.data);
-			}
+	const loadFrecuencias = async () => {
+		const response = await showAllFrecuencias();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setFrecuencias(response.data);
 		}
+	}
 
-		const loadMedios = async () => {
-			const response = await showAllMedios();
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				setMedios(response.data);
-			}
+	const loadDermatologos = async () => {
+		const response = await findEmployeesByRolIdAvailable(dermatologoRolId, token);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setDermatologos(response.data);
 		}
+	}
 
-		const loadMateriales = async () => {
-			const response = await showAllMaterials();
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				setMateriales(response.data);
-			}
+	const loadMedios = async () => {
+		const response = await showAllMedios();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setMedios(response.data);
 		}
+	}
 
+	const loadMateriales = async () => {
+		const response = await showAllMaterials();
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setMateriales(response.data);
+		}
+	}
+
+	const loadAll = async () => {
 		setIsLoading(true);
-		findDermapen();
-		loadDermapens();
-		loadFrecuencias();
-		loadAreas();
-		loadHorariosByServicio(new Date(), dermapenServicioId);
-		loadPromovendedores();
-		loadDermatologos();
-		loadMateriales();
-		loadMedios();
+		await loadDermapens(new Date());
+		await loadFrecuencias();
+		await loadAreas();
+		await loadHorariosByServicio(new Date(), dermapenServicioId);
+		await loadPromovendedores();
+		await loadDermatologos();
+		await loadMateriales();
+		await loadFormasPago();
+		await loadMedios();
+		await loadCosmetologas();
+		setIsLoading(false);
+	}
+
+	useEffect(() => {
+		loadAll();
 	}, [sucursal]);
 
 	return (
@@ -578,11 +751,12 @@ const AgendarDermapen = (props) => {
 								cosmetologas={cosmetologas}
 								onClickAgendar={handleClickAgendar}
 								onChangeTiempo={(e) => handleChangeTiempo(e)}
-								titulo={`DERMAPEN (${dateToString(filterDate.fecha_show)})`}
+								titulo={`DERMAPEN (${dateToString(filterDate.fecha_show)}) (${dermapens.length})`}
 								columns={columns}
 								options={options}
 								dermapens={dermapens}
 								actions={actions}
+								components={components}
 								dermapen={dermapen}
 								openModal={openModal}
 								empleado={empleado}
@@ -591,6 +765,8 @@ const AgendarDermapen = (props) => {
 								dermatologos={dermatologos}
 								tipoCitas={tipoCitas}
 								medios={medios}
+								formasPago={formasPago}
+								colorBase={colorBase}
 								onChangeFrecuencia={(e) => handleChangeFrecuencia(e)}
 								frecuencias={frecuencias}
 								onChangeTipoCita={(e) => handleChangeTipoCita(e)}
@@ -599,19 +775,21 @@ const AgendarDermapen = (props) => {
 								onChangeDoctors={(e) => handleChangeDoctors(e)}
 								onChangePromovendedor={(e) => handleChangePromovendedor(e)}
 								onChangeCosmetologa={(e) => handleChangeCosmetologa(e)}
+								onChangePaymentMethod={(e) => handleChangePaymentMethod(e)}
 								onCloseVerPagos={handleCloseVerPagos}
 								openModalPagos={openModalPagos}
 								openModalProxima={openModalProxima}
 								openModalImprimirCita={openModalImprimirCita}
+								openModalTraspaso={openModalTraspaso}
 								datosImpresion={datosImpresion}
 								onChangeTotal={handleChangeTotal}
 								onChangeCosto={handleChangeCosto}
 								onCloseImprimirConsulta={handleCloseImprimirConsulta}
+								onCloseTraspasos={handleCloseTraspasos}
 								sucursal={sucursal}
 								setOpenAlert={setOpenAlert}
 								setMessage={setMessage}
 								setFilterDate={setFilterDate}
-								dermatologoDirectoId={dermatologoDirectoId}
 								onGuardarModalPagos={handleGuardarModalPagos}
 								materiales={materiales}
 								{...props} />

@@ -2,10 +2,10 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { makeStyles } from '@material-ui/core';
 import ModalFormImprimirCorte from './ModalFormImprimirCorte';
 import {
-  showAllTipoIngresos,
-  showAllTipoEgresos,
+  showAllTipoSalidas,
   showAllMetodoPago,
 } from '../../../../services';
+import { showAllTipoEntradas } from '../../../../services/tipo_entradas';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -21,16 +21,17 @@ const ModalImprimirCorte = (props) => {
   const {
     open,
     onClose,
-    dataIngresos,
+    dataEntradas,
     dataPagosAnticipados,
-    dataEgresos,
+    dataSalidas,
     corte,
     empleado,
+    sucursal,
   } = props;
 
   const [show, setShow] = useState(true);
-  const [tipoIngresos, setTipoIngresos] = useState([]);
-  const [tipoEgresos, setTipoEgresos] = useState([]);
+  const [tipoEntradas, setTipoEntradas] = useState([]);
+  const [tipoSalidas, setTipoSalidas] = useState([]);
   const [formaPagos, setMetodoPagos] = useState([]);
 
   const handleClickImprimir = (e) => {
@@ -42,17 +43,17 @@ const ModalImprimirCorte = (props) => {
 
   useEffect(() => {
 
-    const loadTipoIngreso = async () => {
-      const response = await showAllTipoIngresos();
+    const loadTipoEntrada = async () => {
+      const response = await showAllTipoEntradas();
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-        setTipoIngresos(response.data);
+        setTipoEntradas(response.data);
       }
     }
 
-    const loadTipoEgreso = async () => {
-      const response = await showAllTipoEgresos();
+    const loadTipoSalida = async () => {
+      const response = await showAllTipoSalidas();
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-        setTipoEgresos(response.data);
+        setTipoSalidas(response.data);
       }
     }
 
@@ -63,8 +64,8 @@ const ModalImprimirCorte = (props) => {
       }
     }
 
-    loadTipoIngreso();
-    loadTipoEgreso();
+    loadTipoEntrada();
+    loadTipoSalida();
     loadMetodoPago();
     handleClickImprimir();
   }, []);
@@ -78,14 +79,15 @@ const ModalImprimirCorte = (props) => {
         onClose={onClose}
         corte={corte}
         empleado={empleado}
+        sucursal={sucursal}
         onClickImprimir={handleClickImprimir}
         show={show}
-        tipoIngresos={tipoIngresos}
-        tipoEgresos={tipoEgresos}
+        tipoEntradas={tipoEntradas}
+        tipoSalidas={tipoSalidas}
         formaPagos={formaPagos}
-        dataIngresos={dataIngresos}
+        dataEntradas={dataEntradas}
         dataPagosAnticipados={dataPagosAnticipados}
-        dataEgresos={dataEgresos} />
+        dataSalidas={dataSalidas} />
     </Fragment>
 
   );

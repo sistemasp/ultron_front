@@ -2,7 +2,11 @@ import React, { useState, useEffect, Fragment } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import { Backdrop, CircularProgress } from '@material-ui/core';
 import { RazonSocialContainer } from './razon_social';
-import {  updatePatient, createPatient, findPatientByPhoneNumber } from '../../../services';
+import {
+	updatePatient,
+	createPatient,
+	findPatientByPhoneNumber
+} from '../../../services/pacientes';
 import EditIcon from '@material-ui/icons/Edit';
 import HistoryIcon from '@material-ui/icons/History';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -48,9 +52,11 @@ const RazonSocial = (props) => {
 	const [severity, setSeverity] = useState('success');
 
 	const {
+		empleado,
 		onClickAgendar,
 		onClickAgendarTratamiento,
-		onClickAgendarConsulta
+		onClickAgendarConsulta,
+		colorBase,
 	} = props;
 
 	const columns = [
@@ -68,7 +74,7 @@ const RazonSocial = (props) => {
 
 	const options = {
 		headerStyle: {
-			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+			backgroundColor: colorBase,
 			color: '#FFF',
 			fontWeight: 'bolder',
 			fontSize: '18px'
@@ -96,7 +102,7 @@ const RazonSocial = (props) => {
 		const response = await showAllRazonSocials();
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			await response.data.forEach(item => {
-				item.domicilio_completo = `${item.domicilio} #${item.numero}`;
+				item.domicilio_completo = `${item.domicilio} #${item.numero_exterior} ${item.numero_interior ? '- ' + item.numero_interior : '' }`;
 			});
 			setRazonSociales(response.data);
 		}
@@ -111,14 +117,14 @@ const RazonSocial = (props) => {
 		if (`${existPatient.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			if (existPatient.data.length > 0) {
 				setSeverity('warning');
-				setMessage('YA EXISTE UN REGISTRO CON EL MISMO NUMERO DE TELEFONO');
+				setMessage('YA EXISTE UN REGISTRO CON EL MISMO NUMERO DE TELÉFONO');
 				setIsLoading(false);
 				handleClose();
 				return;
 			}
 		}
 
-		const response = razonSocial._id ? await updatePatient(razonSocial._id, val) : await createPatient(val);
+		const response = razonSocial._id ? await updatePatient(razonSocial._id, val) : await createPatient(val, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
 			|| `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			setSeverity('success');
@@ -138,14 +144,14 @@ const RazonSocial = (props) => {
 		if (`${existPatient.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			if (existPatient.data.length > 0) {
 				setSeverity('warning');
-				setMessage('YA EXISTE UN REGISTRO CON EL MISMO NUMERO DE TELEFONO');
+				setMessage('YA EXISTE UN REGISTRO CON EL MISMO NUMERO DE TELÉFONO');
 				setIsLoading(false);
 				handleClose();
 				return;
 			}
 		}
 
-		const response = razonSocial._id ? await updatePatient(razonSocial._id, val) : await createPatient(val);
+		const response = razonSocial._id ? await updatePatient(razonSocial._id, val) : await createPatient(val, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
 			|| `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			setSeverity('success');
@@ -171,28 +177,22 @@ const RazonSocial = (props) => {
 	const actions = [
 		{
 			icon: EditIcon,
-			tooltip: 'Actualizar registro',
+			tooltip: 'ACTUALIZAR REGISTRO',
 			onClick: handleOnClickEditar
 		},
 		{
 			icon: HistoryIcon,
-			tooltip: 'Ver Historico',
+			tooltip: 'VER HISTORICO',
 			onClick: handleClickHistorico
 		}
 	];
 
+	const loadAll = async () => {
+		await loadRazonSocial();
+	}
+
 	useEffect(() => {
-		const loadRazonSocial = async () => {
-			const response = await showAllRazonSocials();
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				await response.data.forEach(item => {
-					item.domicilio_completo = `${item.domicilio} #${item.numero}`;
-				});
-				setRazonSociales(response.data);
-			}
-			setIsLoading(false);
-		}
-		loadRazonSocial();
+		loadAll();
 	}, []);
 
 	return (
@@ -202,13 +202,14 @@ const RazonSocial = (props) => {
 					<RazonSocialContainer
 						razonSociales={razonSociales}
 						columns={columns}
-						titulo='RAZON SOCIAL'
+						titulo='RAZÓN SOCIAL'
 						actions={actions}
 						options={options}
 						open={open}
 						openHistoric={openHistoric}
 						razonSocial={razonSocial}
 						telefono={razonSocial.telefono}
+						colorBase={colorBase}
 						onClickGuardar={handleOnClickGuardar}
 						onClickGuardarAgendar={handleOnClickGuardarAgendar}
 						handleOpen={handleOpen}

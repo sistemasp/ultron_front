@@ -2,12 +2,15 @@ import React, { useState, Fragment } from "react";
 import { MenuRazonSocialContainer } from "./menu_razon_social";
 import { Snackbar } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
+import { useNavigate } from "react-router-dom";
 
 const Alert = (props) => {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const MenuRazonSocial = (props) => {
+
+    const navigate = useNavigate();
 
     const [pacienteAgendado, setPacienteAgendado] = useState({});
     const [value, setValue] = useState(0);
@@ -19,7 +22,7 @@ const MenuRazonSocial = (props) => {
     const {
         sucursal,
         empleado,
-        history,
+        colorBase,
     } = props;
 
     const handleChangeTab = (event, newValue) => {
@@ -37,7 +40,12 @@ const MenuRazonSocial = (props) => {
     }
 
     const handleLogout = () => {
-        history.push('/', { empleado: {}, sucursal: {} });
+        navigate('/', {
+            state: {
+                empleado: {},
+                sucursal: {},
+            }
+        });
     }
 
     const handleClickCambioPassword = () => {
@@ -72,6 +80,7 @@ const MenuRazonSocial = (props) => {
                 onOpen={handleOpen}
                 onClose={handleClose}
                 value={value}
+                colorBase={colorBase}
                 setMessage={setMessage}
                 setSeverity={setSeverity}
                 setOpenAlert={setOpenAlert}/>

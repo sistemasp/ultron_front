@@ -21,6 +21,8 @@ const TabBiopsias = (props) => {
     paciente,
     sucursal,
     servicio,
+    empleado,
+    colorBase,
   } = props;
 
   const [historial, setHistorial] = useState([]);
@@ -29,38 +31,42 @@ const TabBiopsias = (props) => {
   const columns = [
     { title: 'FECHA', field: 'fecha_show' },
     { title: 'HORA', field: 'hora' },
-    { title: 'DERMATÓLOGO', field: 'dermatologo.nombre' },
+    { title: 'DERMATÓLOGO (A)', field: 'dermatologo.nombre' },
     { title: 'PATÓLOGO', field: 'patoloo.nombre' },
     { title: 'SUCURSAL', field: 'sucursal.nombre' },
     { title: 'FECHA ENTREGA', field: 'precio_moneda' },
-    { title: 'QUIEN ENTREGA', field: 'precio_moneda' },
+    { title: 'QUIÉN ENTREGA', field: 'precio_moneda' },
     { title: 'FECHA RESULTADO', field: 'precio_moneda' },
-    { title: 'QUIEN RECIBE', field: 'precio_moneda' },
+    { title: 'QUIÉN RECIBE', field: 'precio_moneda' },
     { title: 'DIAGNÓSTICO', field: 'precio_moneda' },
-    { title: 'A QUIEN SE ENTREGA', field: 'precio_moneda' },
+    { title: 'A QUIÉN SE ENTREGA', field: 'precio_moneda' },
     { title: 'FECHA ENTREGA', field: 'precio_moneda' },
-    { title: 'QUIEN ENTREGA', field: 'precio_moneda' },
+    { title: 'QUIÉN ENTREGA', field: 'precio_moneda' },
   ];
 
   const options = {
+
     headerStyle: {
-      backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+      backgroundColor: colorBase,
       color: '#FFF',
       fontWeight: 'bolder',
       fontSize: '18px'
-    }
+    },
+    exportAllData: true,
+    exportButton: true,
+    exportDelimiter: ';'
   }
 
   useEffect(() => {
     const loadHistorial = async () => {
       if (servicio) {
-        const response = await findBiopsiasHistoricByPaciente(paciente._id);
+        const response = await findBiopsiasHistoricByPaciente(paciente._id, empleado.access_token);
         if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
           response.data.forEach(item => {
             item.precio_moneda = toFormatterCurrency(item.precio);
             const date = new Date(item.fecha_realizacion);
             const dia = addZero(date.getDate());
-            const mes = addZero(date.getMonth());
+            const mes = addZero(date.getMonth() + 1);
             const anio = date.getFullYear();
             const hora = Number(date.getHours());
             const minutos = date.getMinutes();

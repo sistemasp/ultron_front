@@ -4,7 +4,9 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core';
 import ModalConsultorioAgregarPaciente from '../../../components/modales/modal_consultorio_agregar_paciente';
 import ModalCabinaAgregarPaciente from '../../../components/modales/modal_cabina_agregar_paciente';
-import ModalCirugiaAgregarPaciente from '../../../components/modales/modal_cirugia_agregar_paciente';
+import ModalCuracionAgregarPaciente from '../../../components/modales/modal_curacion_agregar_paciente';
+import { ButtonCustom } from '../../../components/basic/ButtonCustom';
+import myStyles from '../../../css';
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -18,9 +20,8 @@ const useStyles = makeStyles(theme => ({
 
 export const ListaEsperaContainer = (props) => {
 
-  const classes = useStyles();
-
   const {
+    empleado,
     tituloConsultorios,
     tituloCabinas,
     tituloEsperaConsultas,
@@ -36,7 +37,7 @@ export const ListaEsperaContainer = (props) => {
     listaEsperaDermapens,
     listaEsperaLasers,
     listaEsperaAparatologias,
-    listaEsperaCirugias,
+    listaEsperaCuraciones,
     optionsEspera,
     optionsConsultorio,
     actionsEsperaConsultorio,
@@ -45,7 +46,7 @@ export const ListaEsperaContainer = (props) => {
     actionsCabina,
     openModalConsultorioAsignar,
     openModalCabinaAsignar,
-    openModalSalaCirugiaAsignar,
+    openModalSalaCuracionAsignar,
     tipo_servicio,
     servicio,
     handleClose,
@@ -55,18 +56,28 @@ export const ListaEsperaContainer = (props) => {
     sucursal,
     cambio,
     paciente,
-    tituloSalaCirugia,
-    columnsSalaCirugias,
-    salaCirugias,
-    actionsSalaCirugia,
-    tituloEsperaSalaCirugia,
+    tituloSalaCuracion,
+    columnsSalaCuraciones,
+    salaCuraciones,
+    actionsSalaCuracion,
+    tituloEsperaSalaCuracion,
     listaEsperaEstetica,
-    actionsEsperaSalaCirugia,
+    actionsEsperaSalaCuracion,
     componentsConsultorio,
+    colorBase,
+    onClickActualizar,
   } = props;
 
-  const listaEsperaSalaCirugia = [...listaEsperaEstetica, ...listaEsperaCirugias];
+  const classes = myStyles(colorBase)();
+
+  const listaEsperaConsultasAll = [...listaEsperaConsultas, ...listaEsperaEstetica, ...listaEsperaCuraciones]
   const listaEsperaTratamientos = [...listaEsperaFaciales, ...listaEsperaLasers, ...listaEsperaAparatologias, ...listaEsperaDermapens];
+
+  listaEsperaConsultasAll.sort((a, b) => {
+    if (a.create_date < b.create_date) return -1;
+    if (a.create_date > b.create_date) return 1;
+    return 0;
+  });
 
   return (
     <Fragment>
@@ -81,6 +92,8 @@ export const ListaEsperaContainer = (props) => {
             setMessage={setMessage}
             loadAll={loadAll}
             sucursal={sucursal}
+            empleado={empleado}
+            colorBase={colorBase}
             cambio={cambio}
             paciente={paciente} /> : ''
       }
@@ -90,6 +103,7 @@ export const ListaEsperaContainer = (props) => {
           <ModalCabinaAgregarPaciente
             open={openModalCabinaAsignar}
             onClose={handleClose}
+            empleado={empleado}
             tipo_servicio={tipo_servicio}
             servicio={servicio}
             setOpenAlert={setOpenAlert}
@@ -97,15 +111,17 @@ export const ListaEsperaContainer = (props) => {
             loadAll={loadAll}
             sucursal={sucursal}
             cambio={cambio}
+            colorBase={colorBase}
             paciente={paciente} />
           : ''
       }
 
       {
-        openModalSalaCirugiaAsignar ?
-          <ModalCirugiaAgregarPaciente
-            open={openModalSalaCirugiaAsignar}
+        openModalSalaCuracionAsignar ?
+          <ModalCuracionAgregarPaciente
+            open={openModalSalaCuracionAsignar}
             onClose={handleClose}
+            empleado={empleado}
             tipo_servicio={tipo_servicio}
             servicio={servicio}
             setOpenAlert={setOpenAlert}
@@ -113,6 +129,7 @@ export const ListaEsperaContainer = (props) => {
             loadAll={loadAll}
             sucursal={sucursal}
             cambio={cambio}
+            colorBase={colorBase}
             paciente={paciente} />
           : ''
       }
@@ -121,11 +138,20 @@ export const ListaEsperaContainer = (props) => {
 
       <Grid container spacing={3}>
 
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={12} className={classes.grid_center}>
+          <ButtonCustom
+            className={classes.button}
+            color="primary"
+            variant="contained"
+            onClick={() => onClickActualizar()}
+            text='ACTUALIZAR' />
+        </Grid>
+
+        <Grid item xs={12} sm={7}>
           <TableComponent
             titulo={tituloEsperaConsultas}
             columns={columnsEsperaConsultas}
-            data={listaEsperaConsultas}
+            data={listaEsperaConsultasAll}
             actions={actionsEsperaConsultorio}
             options={optionsEspera} />
           <br />
@@ -136,15 +162,9 @@ export const ListaEsperaContainer = (props) => {
             actions={actionsEsperaCabina}
             options={optionsEspera} />
           <br />
-          <TableComponent
-            titulo={tituloEsperaSalaCirugia}
-            columns={columnsEspera}
-            data={listaEsperaSalaCirugia}
-            actions={actionsEsperaSalaCirugia}
-            options={optionsEspera} />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={5}>
           <TableComponent
             titulo={tituloConsultorios}
             columns={columnsConsultorios}
@@ -160,10 +180,10 @@ export const ListaEsperaContainer = (props) => {
             options={optionsConsultorio} />
           <br />
           <TableComponent
-            titulo={tituloSalaCirugia}
-            columns={columnsSalaCirugias}
-            data={salaCirugias}
-            actions={actionsSalaCirugia}
+            titulo={tituloSalaCuracion}
+            columns={columnsSalaCuraciones}
+            data={salaCuraciones}
+            actions={actionsSalaCuracion}
             options={optionsConsultorio} />
         </Grid>
       </Grid>

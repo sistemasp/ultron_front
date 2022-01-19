@@ -2,12 +2,15 @@ import React, { useState, Fragment } from "react";
 import { MenuContainer } from "./menu";
 import { Snackbar } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
+import { useNavigate } from "react-router-dom";
 
 const Alert = (props) => {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const MenuPatient = (props) => {
+
+    const navigate = useNavigate();
 
     const [pacienteAgendado, setPacienteAgendado] = useState({});
     const [consultaAgendada, setConsultaAgendada] = useState({});
@@ -20,7 +23,8 @@ const MenuPatient = (props) => {
     const {
         sucursal,
         empleado,
-        history,
+        colorBase,
+        turno,
     } = props;
 
     const handleChangeTab = (event, newValue) => {
@@ -30,11 +34,6 @@ const MenuPatient = (props) => {
     const handleAgendarFaciales = (event, rowData) => {
         setPacienteAgendado(rowData);
         setValue(Number(process.env.REACT_APP_PAGE_AGENDAR_FACIALES));
-    }
-
-    const handleAgendarLaser = (event, rowData) => {
-        setPacienteAgendado(rowData);
-        setValue(Number(process.env.REACT_APP_PAGE_AGENDAR_LASER));
     }
 
     const handleAgendarAparatologia = (event, rowData) => {
@@ -52,9 +51,9 @@ const MenuPatient = (props) => {
         setValue(Number(process.env.REACT_APP_PAGE_AGENDAR_CONSULTA));
     }
 
-    const handleClickAgendarCirugia = (event, rowData) => {
+    const handleClickAgendarCuracion = (event, rowData) => {
         setConsultaAgendada(rowData);
-        setValue(Number(process.env.REACT_APP_PAGE_AGENDAR_CIRUGIA));
+        setValue(Number(process.env.REACT_APP_PAGE_AGENDAR_CURACION));
     }
 
     const handleClickAgendarEstetica = (event, rowData) => {
@@ -63,7 +62,12 @@ const MenuPatient = (props) => {
     }
 
     const handleLogout = () => {
-        history.push('/', { empleado: {}, sucursal: {} });
+        navigate('/', {
+            state: {
+                empleado: {},
+                sucursal: {},
+            }
+        });
     }
 
     const handleClickCambioPassword = () => {
@@ -92,13 +96,13 @@ const MenuPatient = (props) => {
                 onChangeTab={handleChangeTab}
                 onClickAgendarFaciales={handleAgendarFaciales}
                 onClickAgendarConsulta={handleClickAgendarConsulta}
-                onClickAgendarCirugia={handleClickAgendarCirugia}
+                onClickAgendarCuracion={handleClickAgendarCuracion}
                 onClickAgendarEstetica={handleClickAgendarEstetica}
-                //onClickAgendarLaser={handleAgendarLaser}
                 onClickAgendarAparatologia={handleAgendarAparatologia}
                 onClickAgendarDermapen={handleAgendarDermapen}
                 empleado={empleado}
                 sucursal={sucursal}
+                colorBase={colorBase}
                 open={open}
                 onClickLogout={handleLogout}
                 onClickCambioPassword={handleClickCambioPassword}
@@ -108,7 +112,7 @@ const MenuPatient = (props) => {
                 setMessage={setMessage}
                 setSeverity={setSeverity}
                 setOpenAlert={setOpenAlert}
-                history={history} />
+                turno={turno} />
             <Snackbar open={openAlert} autoHideDuration={5000} onClose={handleCloseAlert}>
                 <Alert onClose={handleCloseAlert} severity={severity}>
                     {message}

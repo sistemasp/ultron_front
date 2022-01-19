@@ -3,7 +3,7 @@ import * as Yup from "yup";
 import { Formik } from 'formik';
 import ModalFormConsultorioAgregarDermatologo from './ModalFormConsultorioAgregarDermatologo';
 import { updateSurgery } from '../../../services/consultorios';
-import { findEmployeesByRolIdAvailable, updateEmployee } from '../../../services';
+import { findEmployeesByRolIdAvailable, updateEmployee } from '../../../services/empleados';
 
 const validationSchema = Yup.object({
   nombre: Yup.string("Ingresa los nombres")
@@ -18,6 +18,8 @@ const ModalConsultorioAgregarDermatologo = (props) => {
     setOpenAlert,
     setMessage,
     loadConsultorios,
+    empleado,
+    colorBase,
   } = props;
 
   const [isLoading, setIsLoading] = useState(true);
@@ -32,7 +34,7 @@ const ModalConsultorioAgregarDermatologo = (props) => {
 
   useEffect(() => {
     const loadDermatologos = async () => {
-      const response = await findEmployeesByRolIdAvailable(dermatologoRolId);
+      const response = await findEmployeesByRolIdAvailable(dermatologoRolId, empleado.access_token);
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
         setDermatologos(response.data);
       }
@@ -44,7 +46,7 @@ const ModalConsultorioAgregarDermatologo = (props) => {
 
   const handleClickGuardar = async (event, rowData) => {
     values.dermatologo.disponible = false;
-    await updateEmployee(values.dermatologo._id, values.dermatologo);
+    await updateEmployee(values.dermatologo._id, values.dermatologo, empleado.access_token);
     values.disponible = true;
     const response = await updateSurgery(values._id, values);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
@@ -74,6 +76,7 @@ const ModalConsultorioAgregarDermatologo = (props) => {
           onClickGuardar={handleClickGuardar}
           isLoading={isLoading}
           dermatologos={dermatologos}
+          colorBase={colorBase}
           onChangeDermatologos={(e) => handleChangeDermatologos(e)}
           {...props} />
       }

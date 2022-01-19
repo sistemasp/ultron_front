@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { TextField, Button, Grid, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 import { ButtonCustom } from "../../basic/ButtonCustom";
+import myStyles from '../../../css';
 
 function getModalStyle() {
   const top = 50;
@@ -45,8 +46,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ModalFormCabinaAgregarPaciente = (props) => {
-  const classes = useStyles();
-
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
 
@@ -62,7 +61,10 @@ const ModalFormCabinaAgregarPaciente = (props) => {
     cabinas,
     cambio,
     paciente,
+    colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   return (
     <div>
@@ -93,6 +95,18 @@ const ModalFormCabinaAgregarPaciente = (props) => {
                   </Select>
                 </FormControl>
               </Grid>
+              {!cambio
+                ? <Grid item xs={12} sm={6}>
+                  <ButtonCustom
+                    className={classes.buttonCancel}
+                    color="secondary"
+                    variant="contained"
+                    onClick={onClickCancel} 
+                    text="CANCELAR" />
+                </Grid>
+                : ''
+              }
+
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
                   className={classes.button}
@@ -100,20 +114,8 @@ const ModalFormCabinaAgregarPaciente = (props) => {
                   variant="contained"
                   onClick={(e) => onClickGuardar(e, values)}
                   disabled={!isValid}
-                  text={cambio ? 'Cambio' : 'Pasar'} />
+                  text={cambio ? 'CAMBIO' : 'PASAR'} />
               </Grid>
-              {!cambio
-                ? <Grid item xs={12} sm={6}>
-                  <Button
-                    className={classes.button}
-                    color="secondary"
-                    variant="contained"
-                    onClick={onClickCancel} >
-                    Cancelar
-                </Button>
-                </Grid>
-                : ''
-              }
             </Grid>
 
           </form>

@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-export const baseUrl = process.env.REACT_APP_BASE_URL_LOCAL;
+export const baseUrl = process.env.REACT_APP_BASE_URL;
 
-// RAZON SOCIAL
+// RAZÓN SOCIAL
 
 export const showAllRazonSocials = async () => {
     try {

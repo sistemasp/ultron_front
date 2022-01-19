@@ -2,6 +2,8 @@ import React, { Fragment } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { TextField, Button, Grid, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
+import { ButtonCustom } from '../../basic/ButtonCustom';
+import myStyles from '../../../css';
 
 function getModalStyle() {
   const top = 50;
@@ -43,7 +45,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ModalFormRazonSocial = (props) => {
-  const classes = useStyles();
 
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
@@ -53,10 +54,11 @@ const ModalFormRazonSocial = (props) => {
     errors,
     touched,
     handleSubmit,
-    handleChange,
+    onChange,
     isValid,
     onClickCancel,
     onClickGuardar,
+    colorBase,
     estados,
     municipios,
     ciudades,
@@ -77,6 +79,8 @@ const ModalFormRazonSocial = (props) => {
     onChangeCiudad,
   } = props;
 
+  const classes = myStyles(colorBase)();
+
   return (
     <div>
       <Modal
@@ -94,7 +98,7 @@ const ModalFormRazonSocial = (props) => {
                   error={Boolean(errors.rfc)}
                   label="RFC"
                   value={values.rfc}
-                  onChange={onChangeRfc}
+                  onChange={onChange}
                   inputProps={{
                     maxLength: "13"
                   }}
@@ -108,7 +112,7 @@ const ModalFormRazonSocial = (props) => {
                   error={Boolean(errors.nombre_completo)}
                   label="NOMBRE COMPLETO"
                   value={values.nombre_completo}
-                  onChange={onChangeNombre}
+                  onChange={onChange}
                   variant="outlined" />
               </Grid>
               <Grid item xs={12}>
@@ -119,7 +123,7 @@ const ModalFormRazonSocial = (props) => {
                   error={Boolean(errors.domicilio)}
                   label="DOMICILIO"
                   value={values.domicilio}
-                  onChange={onChangeDomicilio}
+                  onChange={onChange}
                   variant="outlined" />
               </Grid>
               <Grid item xs={12}>
@@ -130,7 +134,7 @@ const ModalFormRazonSocial = (props) => {
                   error={Boolean(errors.numero_exterior)}
                   label="NUMERO EXTERIOR"
                   value={values.numero_exterior}
-                  onChange={onChangeNumeroExterior}
+                  onChange={onChange}
                   variant="outlined" />
               </Grid>
               <Grid item xs={12}>
@@ -141,10 +145,47 @@ const ModalFormRazonSocial = (props) => {
                   error={Boolean(errors.numero_interior)}
                   label="NUMERO INTERIOR"
                   value={values.numero_interior}
-                  onChange={onChangeNumeroInterior}
+                  onChange={onChange}
                   variant="outlined" />
               </Grid>
-              <Grid item xs={12} sm={6} >
+
+              <Grid item xs={12}>
+                <TextField
+                  className={classes.textField}
+                  name="estado"
+                  helperText={touched.estado ? errors.estado : ""}
+                  error={Boolean(errors.estado)}
+                  label="ESTADO"
+                  value={values.estado}
+                  onChange={onChange}
+                  variant="outlined" />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  className={classes.textField}
+                  name="municipio"
+                  helperText={touched.municipio ? errors.municipio : ""}
+                  error={Boolean(errors.municipio)}
+                  label="MUNICIPIO"
+                  value={values.municipio}
+                  onChange={onChange}
+                  variant="outlined" />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  className={classes.textField}
+                  name="ciudad"
+                  helperText={touched.ciudad ? errors.ciudad : ""}
+                  error={Boolean(errors.ciudad)}
+                  label="CIUDAD"
+                  value={values.ciudad}
+                  onChange={onChange}
+                  variant="outlined" />
+              </Grid>
+
+              <Grid item xs={12} sm={12} >
                 <TextField
                   className={classes.textField}
                   name="codigo_postal"
@@ -155,18 +196,19 @@ const ModalFormRazonSocial = (props) => {
                   onChange={onChangeCP}
                   variant="outlined" />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <Button
-                  className={classes.button}
-                  color="primary"
-                  variant="contained"
-                  onClick={(e) => onClickBuscar(e)}
-                  disabled={!isValid} >
-                  BUSCAR
-                </Button>
-              </Grid>
 
-              {
+              <Grid item xs={12}>
+                <TextField
+                  className={classes.textField}
+                  name="colonia"
+                  helperText={touched.colonia ? errors.colonia : ""}
+                  error={Boolean(errors.colonia)}
+                  label="COLONIA"
+                  value={values.colonia}
+                  onChange={onChange}
+                  variant="outlined" />
+              </Grid>
+              {/*
                 values.codigo_postal ?
                   <Fragment>
                     <Grid item xs={12}>
@@ -197,7 +239,7 @@ const ModalFormRazonSocial = (props) => {
                     </Grid>
                     <Grid item xs={12}>
                       <FormControl variant="outlined" className={classes.formControl}>
-                        <InputLabel id="simple-select-outlined-municipio">MUNNICIPIO</InputLabel>
+                        <InputLabel id="simple-select-outlined-municipio">MUNICIPIO</InputLabel>
                         <Select
                           labelId="simple-select-outlined-municipio"
                           id="simple-select-outlined-municipio"
@@ -236,6 +278,8 @@ const ModalFormRazonSocial = (props) => {
                   </Select>
                 </FormControl>
               </Grid>
+              */}
+
               <Grid item xs={12}>
                 <TextField
                   className={classes.textField}
@@ -244,7 +288,7 @@ const ModalFormRazonSocial = (props) => {
                   error={Boolean(errors.telefono)}
                   label="TELÉFONO"
                   value={values.telefono}
-                  onChange={onChangeTelefono}
+                  onChange={onChange}
                   inputProps={{
                     maxLength: "10",
                   }}
@@ -258,27 +302,25 @@ const ModalFormRazonSocial = (props) => {
                   error={Boolean(errors.email)}
                   label="EMAIL"
                   value={values.email}
-                  onChange={onChangeEmail}
+                  onChange={onChange}
                   variant="outlined" />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Button
+                <ButtonCustom
+                  className={classes.buttonCancel}
+                  color="secondary"
+                  variant="contained"
+                  onClick={onClickCancel}
+                  text="CANCELAR" />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <ButtonCustom
                   className={classes.button}
                   color="primary"
                   variant="contained"
                   onClick={(e) => onClickGuardar(e, values)}
-                  disabled={!isValid} >
-                  GUARDAR
-                </Button>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Button
-                  className={classes.button}
-                  color="secondary"
-                  variant="contained"
-                  onClick={onClickCancel} >
-                  CANCELAR
-                </Button>
+                  disabled={!isValid}
+                  text='GUARDAR' />
               </Grid>
             </Grid>
           </form>

@@ -4,6 +4,7 @@ import { showAllRazonSocials } from '../../../services/razones_sociales';
 import { Backdrop, CircularProgress, makeStyles } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/Check';
 import MuiAlert from '@material-ui/lab/Alert';
+import PrintIcon from '@material-ui/icons/Print';
 
 const Alert = (props) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -39,12 +40,16 @@ const ModalBuscarRazonSocial = (props) => {
   const [factura, setFactura] = useState();
   const [openModalUsoCfdi, setOpenModalUsoCfdi] = useState(false);
   const [openNuevaRazonSocial, setOpenNuevaRazonSocial] = useState(false);
+  const [datosImpresion, setDatosImpresion] = useState();
+  const [openModalImprimirCita, setOpenModalImprimirCita] = useState(false);
 
   const {
     open,
     onClose,
     pago,
     servicio,
+    sucursal,
+    colorBase,
   } = props;
 
   const columns = [
@@ -59,7 +64,7 @@ const ModalBuscarRazonSocial = (props) => {
 
   const options = {
     headerStyle: {
-      backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+      backgroundColor: colorBase,
       color: '#FFF',
       fontWeight: 'bolder',
       fontSize: '18px'
@@ -71,14 +76,23 @@ const ModalBuscarRazonSocial = (props) => {
 
   const hanldeSelectRazonSocial = (event, rowData) => {
     const factura = {
-      paciente: servicio.paciente._id,
-      razon_social: rowData._id,
+      paciente: servicio.paciente,
+      razon_social: rowData,
       sucursal: servicio.sucursal,
-      tipo_servicio: servicio.servicio._id,
-      servicio: servicio._id,
+      tipo_servicio: servicio.servicio,
+      servicio: servicio,
     }
     setFactura(factura);
     setOpenModalUsoCfdi(true);
+  }
+
+  const handleCloseImprimirConsulta = (event, rowData) => {
+    setOpenModalImprimirCita(false);
+  }
+
+  const handlePrint = async (event, rowData) => {
+    setDatosImpresion(rowData);
+    setOpenModalImprimirCita(true);
   }
 
   const actions = [
@@ -86,29 +100,14 @@ const ModalBuscarRazonSocial = (props) => {
       icon: CheckIcon,
       tooltip: 'SELECCIONAR',
       onClick: hanldeSelectRazonSocial
-    }
+    },
   ];
-
-  useEffect(() => {
-    const loadRazonSocial = async () => {
-      const response = await showAllRazonSocials();
-      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-        await response.data.forEach(item => {
-          item.domicilio_completo = `${item.domicilio} #${item.numero}`;
-        });
-        setRazonSociales(response.data);
-      }
-      setIsLoading(false);
-    }
-    setIsLoading(true);
-    loadRazonSocial();
-  }, []);
 
   const loadRazonSocial = async () => {
     const response = await showAllRazonSocials();
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       await response.data.forEach(item => {
-        item.domicilio_completo = `${item.domicilio} #${item.numero}`;
+        item.domicilio_completo = `${item.domicilio} #${item.numero_exterior} ${item.numero_interior ? '- ' + item.numero_interior : ''}`;
       });
       setRazonSociales(response.data);
     }
@@ -127,6 +126,16 @@ const ModalBuscarRazonSocial = (props) => {
     setOpenNuevaRazonSocial(false);
   }
 
+  const loadAll = async () => {
+    setIsLoading(true);
+    await loadRazonSocial();
+    setIsLoading(false);
+  }
+
+  useEffect(() => {
+    loadAll();
+  }, []);
+
   return (
     <Fragment>
       {
@@ -136,17 +145,22 @@ const ModalBuscarRazonSocial = (props) => {
             onClose={onClose}
             razonSociales={razonSociales}
             columns={columns}
-            titulo='RAZON SOCIAL'
+            titulo='RAZÓN SOCIAL'
             actions={actions}
             options={options}
             factura={factura}
             servicio={servicio}
+            sucursal={sucursal}
             openModalUsoCfdi={openModalUsoCfdi}
+            datosImpresion={datosImpresion}
+            openModalImprimirCita={openModalImprimirCita}
             onCloseUsoCfdi={handleCloseUsoCfdi}
             handleOpenNuevaRazonSocial={handleOpenNuevaRazonSocial}
             handleCloseNuevaRazonSocial={handleCloseNuevaRazonSocial}
+            handleCloseImprimirConsulta={handleCloseImprimirConsulta}
             openNuevaRazonSocial={openNuevaRazonSocial}
             pago={pago}
+            colorBase={colorBase}
             loadRazonSocial={loadRazonSocial} /> :
           <Backdrop className={classes.backdrop} open={isLoading} >
             <CircularProgress color="inherit" />

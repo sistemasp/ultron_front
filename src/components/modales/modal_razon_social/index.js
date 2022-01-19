@@ -5,7 +5,7 @@ import {
   sepomexGetMunicipos,
   sepomexGetColonia,
   sepomexGetAllInfoByCP,
-} from '../../../services';
+} from '../../../services/sepomex';
 import { Formik } from 'formik';
 import { Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -21,6 +21,7 @@ const ModalRazonSocial = (props) => {
     onClose,
     razonSocial,
     loadRazonSocial,
+    colorBase,
   } = props;
 
   const [openAlert, setOpenAlert] = useState(false);
@@ -57,7 +58,7 @@ const ModalRazonSocial = (props) => {
         setEstados(response.data.response.estado);
       }
     }
-    loadEstados();
+    // loadEstados();
   }, []);
 
   const loadMunicipios = async (estado) => {
@@ -148,13 +149,20 @@ const ModalRazonSocial = (props) => {
     setValues({ ...values, ciudad: event.target.value.toUpperCase() });
   }
 
+  const handleChange = (event) => {
+    setValues({
+      ...values,
+      [event.target.name]: event.target.value.toUpperCase()
+    });
+  }
+
   const handleClickGuardar = async (e) => {
     const response = razonSocial._id ? await updateRazonSocial(razonSocial._id, values) : await createRazonSocial(values);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
       || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
       setSeverity('success');
       setOpenAlert(true);
-      setMessage(`RAZON SOCIAL ${razonSocial._id ? 'ACTUALIZADA' : 'CREADA'} ORRECTAMENTE`);
+      setMessage(`RAZÓN SOCIAL ${razonSocial._id ? 'ACTUALIZADA' : 'CREADA'} ORRECTAMENTE`);
     }
     loadRazonSocial();
     onClose();
@@ -177,6 +185,7 @@ const ModalRazonSocial = (props) => {
             municipios={municipios}
             ciudades={ciudades}
             colonias={colonias}
+            colorBase={colorBase}
             onChangeEstado={(e) => handleChangeEstado(e)}
             onChangeMunicipio={(e) => handleChangeMunicipio(e)}
             onChangeColonia={(e) => handleChangeColonia(e)}
@@ -191,6 +200,7 @@ const ModalRazonSocial = (props) => {
             onChangeRfc={(e) => handleChangeRfc(e)}
             onChangeCiudad={(e) => handleChangeCiudad(e)}
             onChangeTelefono={(e) => handleChangeTelefono(e)}
+            onChange={handleChange}
             {...props} />
         }
       </Formik>

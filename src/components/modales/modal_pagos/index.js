@@ -1,29 +1,38 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { findPagosByTipoServicioAndServicio } from '../../../services';
 import { addZero, toFormatterCurrency } from '../../../utils/utils';
 import ModalFormPagos from './ModalFormPagos';
 import EditIcon from '@material-ui/icons/Edit';
 import { findEsquemaById } from '../../../services/esquemas';
+import { Backdrop, CircularProgress } from '@material-ui/core';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import myStyles from '../../../css';
+import { deleteEntrada } from '../../../services/entradas';
+import { deletePago, findPagosByTipoServicioAndServicio } from '../../../services/pagos';
+import { deleteFactura } from '../../../services/facturas';
 
 const ModalPagos = (props) => {
+
   const {
     open,
     onClose,
     sucursal,
-    handleClickGuardarPago,
     servicio,
-    setServicio,
     empleado,
     onGuardarModalPagos,
     tipoServicioId,
+    colorBase,
   } = props;
+
+  const token = empleado.access_token;
+
+  const classes = myStyles(colorBase)();
 
   const dermatologoDirectoId = process.env.REACT_APP_DERMATOLOGO_DIRECTO_ID;
   const efectivoFormaPagoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
   const noPagaFormaPagoId = process.env.REACT_APP_FORMA_PAGO_NO_PAGA;
   const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
   const servicioConsultaId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
-  const servicioCirugiaId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID;
+  const servicioCuracionId = process.env.REACT_APP_CURACION_SERVICIO_ID;
   const servicioEsteticaId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
   const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
   const servicioDermapenId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID;
@@ -44,29 +53,42 @@ const ModalPagos = (props) => {
   const [esquema, setEsquema] = useState({});
   const [openModalPago, setOpenModalPago] = useState(false);
   const [openModalFactura, setOpenModalFactura] = useState(false);
+  const [datosImpresion, setDatosImpresion] = useState();
+  const [openModalImprimirDatosFacturacion, setOpenModalImprimirDatosFacturacion] = useState(false);
   const [restante, setRestante] = useState(0);
   const [values, setValues] = useState({
+    ...servicio,
     cantidad: servicio.precio,
     porcentaje_descuento_clinica: servicio.porcentaje_descuento_clinica ? servicio.porcentaje_descuento_clinica : 0,
     descuento_clinica: 0,
     descuento_dermatologo: 0,
     has_descuento_dermatologo: servicio.has_descuento_dermatologo,
     total: servicio.total,
+    isFactura: !!servicio.factura,
+    factura: servicio.factura,
+    paciente: servicio.paciente,
   });
 
-  const handleClickBuscarRazonSocial = (event, rowData) => {
-    setPago(rowData);
-    setOpenModalFactura(true);
-  }
+  servicio.isFactura = !!servicio.factura;
 
-  const handleOnClickEditarPago = (event, rowData) => {
-    setPago(rowData);
-    setOpenModalPago(true);
+  const handleEliminarPago = async (event, rowData) => {
+    setIsLoading(true);
+    await deleteEntrada(rowData.entrada);
+    const response = await deletePago(rowData._id);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      await loadPagos();
+    }
+    setIsLoading(false);
   }
 
   const handleChangeFactura = () => {
-    servicio.factura = !servicio.factura;
-    setOpenModalFactura(true);
+    const isFactura = !values.isFactura;
+    servicio.isFactura = isFactura;
+    setValues({
+      ...values,
+      isFactura: isFactura,
+    });
+    setOpenModalFactura(isFactura);
   }
 
   const columns = [
@@ -77,13 +99,13 @@ const ModalPagos = (props) => {
     { title: 'TOTAL', field: 'total_moneda' },
     { title: 'BANCO', field: 'banco_nombre' },
     { title: 'TIPO TARJETA', field: 'tipo_tarjeta_nombre' },
-    { title: 'DIGITOS', field: 'digitos_show' },
+    { title: 'DÍGITOS', field: 'digitos_show' },
     { title: 'OBSERVACIONES', field: 'observaciones' },
   ];
 
   const options = {
     headerStyle: {
-      backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+      backgroundColor: colorBase,
       color: '#FFF',
       fontWeight: 'bolder',
       fontSize: '18px'
@@ -96,13 +118,14 @@ const ModalPagos = (props) => {
 
   const actions = [
     {
-      icon: EditIcon,
-      tooltip: 'EDITAR PAGO',
-      onClick: handleOnClickEditarPago
-    }
+      icon: DeleteForeverIcon,
+      tooltip: 'ELIMINAR PAGO',
+      onClick: handleEliminarPago
+    },
   ];
 
   const loadPagos = async () => {
+    setIsLoading(true);
     const response = await findPagosByTipoServicioAndServicio(tipoServicioId, servicio._id);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       let acomulado = 0;
@@ -116,12 +139,14 @@ const ModalPagos = (props) => {
         item.banco_nombre = item.banco ? item.banco.nombre : '-';
         item.tipo_tarjeta_nombre = item.tipo_tarjeta ? item.tipo_tarjeta.nombre : '-';
         item.digitos_show = item.digitos ? item.digitos : '-';
-        acomulado = Number(acomulado) + Number(item.cantidad);
+        acomulado += Number(item.cantidad);
       });
-      setRestante(Number(values.total) - Number(acomulado));
+      const restante = (Number(values.total) - Number(acomulado)) < 0 ? 0 : Number(values.total) - Number(acomulado);
+      setRestante(restante);
       servicio.pagos = response.data;
       setPagos(response.data);
     }
+    setIsLoading(false);
   }
 
   /*const handleClickGuardar = async (event, rowData) => {
@@ -139,17 +164,45 @@ const ModalPagos = (props) => {
     setOpenModalPago(false);
   }
 
-  const handleCloseBuscarRazonSocial = (val) => {
-    //servicio.factura = val;
+  const handleCloseImprimirDatosFacturacion = (event, rowData) => {
+    setOpenModalImprimirDatosFacturacion(false);
+  }
+
+  const handlePrint = async (event, rowData) => {
+    setDatosImpresion(rowData);
+    setOpenModalImprimirDatosFacturacion(true);
+  }
+
+  const handleEliminarFactura = async (event, rowData) => {
+    setIsLoading(true);
+    const factura = rowData.factura;
+    const response = await deleteFactura(factura._id, token);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      delete rowData.factura;
+      rowData.isFactura = false;
+      onGuardarModalPagos(rowData);
+    }
+    setIsLoading(false);
+  }
+
+  const handleCloseBuscarRazonSocial = (val, datosFactura) => {
+    servicio.isFactura = val;
+    servicio.factura = datosFactura;
+    setValues({
+      ...values,
+      isFactura: val,
+      factura: datosFactura,
+    });
+    // TODO: CREATE FACTURA
     setOpenModalFactura(false);
   }
 
   const getMayorDescuento = () => {
     let porcentajeDescuento = 0;
     switch (servicio.servicio._id) {
-      case servicioCirugiaId:
-        const descuentoCirugia = (servicio.total_aplicacion * esquema.porcentaje_cirugias / 100);
-        porcentajeDescuento = (descuentoCirugia * 100 / values.total);
+      case servicioCuracionId:
+        const descuentoCuracion = (servicio.total_aplicacion * esquema.porcentaje_curaciones / 100);
+        porcentajeDescuento = (descuentoCuracion * 100 / values.total);
         break;
       case servicioConsultaId:
         porcentajeDescuento = servicio.frecuencia._id === frecuenciaReconsultaId ? esquema.porcentaje_reconsulta : esquema.porcentaje_consulta;
@@ -232,6 +285,7 @@ const ModalPagos = (props) => {
     servicio.total = total;
 
     setValues({
+      ...datos,
       cantidad: cantidad,
       descuento_clinica: descuento_clinica,
       descuento_dermatologo: descuento_dermatologo_final,
@@ -264,45 +318,61 @@ const ModalPagos = (props) => {
     }
   }
 
-  useEffect(() => {
+  const loadAll = async () => {
     setIsLoading(true);
-    loadPagos();
-    loadEsquema();
+    await loadPagos();
+    await loadEsquema();
     setIsLoading(false);
+  }
+
+  useEffect(() => {
+    loadAll();
   }, []);
 
   return (
     <Fragment>
-      <ModalFormPagos
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-        open={open}
-        onClickNewPago={handleClickNewPago}
-        onClickCancelPago={handleClickCancelPago}
-        openModalPago={openModalPago}
-        onClickCancel={onClose}
-        onClickGuardar={handleClickGuardarPago}
-        isLoading={isLoading}
-        pagos={pagos}
-        pago={pago}
-        columns={columns}
-        options={options}
-        actions={actions}
-        localization={localization}
-        servicio={servicio}
-        empleado={empleado}
-        sucursal={sucursal}
-        onGuardarModalPagos={onGuardarModalPagos}
-        titulo={`PAGOS: ${servicio.paciente.nombres} ${servicio.paciente.apellidos}`}
-        openModalFactura={openModalFactura}
-        onCloseBuscarRazonSocial={handleCloseBuscarRazonSocial}
-        onChangeFactura={handleChangeFactura}
-        loadPagos={loadPagos}
-        restante={restante}
-        onChangeDescuento={(e) => handleChangeDescuento(e)}
-        onChangDescuentoDermatologo={(e) => handleChangDescuentoDermatologo(e)}
-        tipoServicioId={tipoServicioId}
-        values={values} />
+      {
+        !isLoading ?
+          <ModalFormPagos
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+            open={open}
+            onClickNewPago={handleClickNewPago}
+            onClickCancelPago={handleClickCancelPago}
+            openModalPago={openModalPago}
+            onClickCancel={onClose}
+            isLoading={isLoading}
+            pagos={pagos}
+            pago={pago}
+            columns={columns}
+            options={options}
+            actions={actions}
+            localization={localization}
+            servicio={servicio}
+            empleado={empleado}
+            datosImpresion={datosImpresion}
+            openModalImprimirDatosFacturacion={openModalImprimirDatosFacturacion}
+            handleCloseImprimirDatosFacturacion={handleCloseImprimirDatosFacturacion}
+            handlePrint={handlePrint}
+            handleEliminarFactura={handleEliminarFactura}
+            sucursal={sucursal}
+            onGuardarModalPagos={onGuardarModalPagos}
+            titulo={`PAGOS: ${servicio.paciente.nombres} ${servicio.paciente.apellidos}`}
+            openModalFactura={openModalFactura}
+            onCloseBuscarRazonSocial={handleCloseBuscarRazonSocial}
+            onChangeFactura={handleChangeFactura}
+            loadPagos={loadPagos}
+            restante={restante}
+            onChangeDescuento={(e) => handleChangeDescuento(e)}
+            onChangDescuentoDermatologo={(e) => handleChangDescuentoDermatologo(e)}
+            tipoServicioId={tipoServicioId}
+            colorBase={colorBase}
+            values={values} />
+
+          : <Backdrop className={classes.backdrop} open={isLoading} >
+            <CircularProgress color="inherit" />
+          </Backdrop>
+      }
     </Fragment>
 
 

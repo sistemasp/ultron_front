@@ -9,20 +9,25 @@ const ModalPaciente = (props) => {
     open,
     onClose,
     paciente,
+    sucursal,
     onClickGuardar,
-    onClickGuardarAgendar
+    onClickcConsulta,
+    colorBase,
+    empleadoId,
   } = props;
 
   const [sexos, setSexos] = useState([]);
-  const [isLoading, setIsLoading] = useState([]);
 
   const [values, setValues] = useState({
     _id: paciente._id,
     nombres: paciente.nombres,
     apellidos: paciente.apellidos,
     telefono: paciente.telefono,
-    sexo: paciente.sexo ? paciente.sexo._id : '',
+    email: paciente.email,
+    sexo: paciente.sexo,
     fecha_nacimiento: paciente.fecha_nacimiento ? paciente.fecha_nacimiento : '',
+    familiar: false,
+    quien_captura: paciente._id ? paciente.quien_captura : empleadoId,
   });
 
   const handleChange = (e) => {
@@ -32,27 +37,38 @@ const ModalPaciente = (props) => {
     });
   }
 
-  const handleChangeSexo = (e) => {
+  const handleChangeSexo = (e, newValue) => {
     setValues({
       ...values,
-      sexo: e.target.value
+      sexo: newValue
+    })
+  }
+
+  const handleChangeEmail = (e) => {
+    setValues({
+      ...values,
+      email: e.target.value
+    })
+  }
+
+  const handleChangeFamiliar = (e) => {
+    setValues({
+      ...values,
+      familiar: !values.familiar
     })
   }
 
   const dataComplete = !values.nombres || !values.apellidos
     || !values.sexo || !values.telefono || !values.fecha_nacimiento || values.fecha_nacimiento.length !== 10;
 
-  useEffect(() => {
-
-    const loadSexos = async () => {
-      const response = await showAllSexos();
-      if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-        setSexos(response.data);
-      }
-      setIsLoading(false);
+  const loadSexos = async () => {
+    const response = await showAllSexos();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setSexos(response.data);
     }
+  }
 
-    setIsLoading(true);
+  useEffect(() => {
     loadSexos();
   }, []);
 
@@ -64,11 +80,15 @@ const ModalPaciente = (props) => {
       values={values}
       onClickCancel={onClose}
       paciente={paciente}
+      sucursal={sucursal}
       onClickGuardar={onClickGuardar}
-      onClickGuardarAgendar={onClickGuardarAgendar}
+      onClickcConsulta={onClickcConsulta}
       dataComplete={dataComplete}
       onChange={handleChange}
       onChangeSexo={handleChangeSexo}
+      onChangeEmail={handleChangeEmail}
+      onChangeFamiliar={handleChangeFamiliar}
+      colorBase={colorBase}
       sexos={sexos} />
 
   );

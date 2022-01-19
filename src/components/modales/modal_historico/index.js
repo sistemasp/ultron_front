@@ -1,6 +1,6 @@
 import React, { useState, Fragment, useEffect } from "react";
 import { MenuHistoricoContainer } from "./menu";
-import { getAllServices } from "../../../services";
+import { getAllServices } from "../../../services/servicios";
 
 const MenuHistoricos = (props) => {
 
@@ -12,6 +12,7 @@ const MenuHistoricos = (props) => {
         paciente,
         open,
         onClose,
+        colorBase,
     } = props;
 
     const handleChangeTab = (event, newValue) => {
@@ -38,6 +39,7 @@ const MenuHistoricos = (props) => {
                 value={value}
                 paciente={paciente}
                 onClickCancel={onClose}
+                colorBase={colorBase}
                 servicios={servicios} />
         </Fragment>
     );

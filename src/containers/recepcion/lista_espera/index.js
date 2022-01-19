@@ -6,9 +6,9 @@ import {
 	findCabinaBySucursalId,
 	updateCabina,
 	breakFreeCabinaByIdPaciente,
-	findSalaCirugiaBySucursalId,
-	updateSalaCirugia,
-	breakFreeSalaCirugiaByIdPaciente,
+	findSalaCuracionBySucursalId,
+	updateSalaCuracion,
+	breakFreeSalaCuracionByIdPaciente,
 } from '../../../services';
 import {
 	waitingListConsulta,
@@ -16,10 +16,10 @@ import {
 	findConsultById
 } from '../../../services/consultas';
 import {
-	waitingListCirugia,
-	findCirugiaById,
-	updateCirugia,
-} from '../../../services/cirugias';
+	waitingListCuracion,
+	findCuracionById,
+	updateCuracion,
+} from '../../../services/curaciones';
 import {
 	waitingListEstetica,
 	findEsteticaById,
@@ -29,6 +29,7 @@ import InputIcon from '@material-ui/icons/Input';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
+import ReplayIcon from '@material-ui/icons/Replay';
 import { addZero, generateFolio } from "../../../utils/utils";
 import {
 	findFacialById,
@@ -45,12 +46,12 @@ import {
 	updateAparatologia,
 	waitingAparatologiaList,
 } from "../../../services/aparatolgia";
-import { 
+import {
 	findDermapenById,
 	updateDermapen,
 	waitingDermapenList
 } from "../../../services/dermapens";
-import { 
+import {
 	breakFreeSurgeryByIdPaciente,
 	findSurgeryBySucursalIdWaitingList,
 	updateSurgery
@@ -89,11 +90,19 @@ const ListaEspera = (props) => {
 
 	const classes = useStyles();
 
+	const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
+	const sucursalFedeId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
+	const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
+	const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
+	const productoRevisionId = process.env.REACT_APP_PRODUCTO_REVISION_ID;
+	const productoConsultaId = process.env.REACT_APP_PRODUCTO_CONSULTA_ID;
+	const servicioConsultaId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
+
 	const [openAlert, setOpenAlert] = useState(false);
 	const [consultorios, setConsultorios] = useState([]);
 	const [cabinas, setCabinas] = useState([]);
-	const [salaCirugias, setSalaCirugias] = useState([]);
-	const [listaEsperaCirugias, setListaEsperaCirugias] = useState([]);
+	const [salaCuraciones, setSalaCuraciones] = useState([]);
+	const [listaEsperaCuraciones, setListaEsperaCuraciones] = useState([]);
 	const [listaEsperaConsultas, setListaEsperaConsultas] = useState([]);
 	const [listaEsperaTratamientos, setListaEsperaTratamientos] = useState([]);
 	const [listaEsperaEstetica, setListaEsperaEstetica] = useState([]);
@@ -107,7 +116,7 @@ const ListaEspera = (props) => {
 	const [severity, setSeverity] = useState('success');
 	const [openModalConsultorioAsignar, setOpenModalConsultorioAsignar] = useState(false);
 	const [openModalCabinaAsignar, setOpenModalCabinaAsignar] = useState(false);
-	const [openModalSalaCirugiaAsignar, setOpenModalSalaCirugiaAsignar] = useState(false);
+	const [openModalSalaCuracionAsignar, setOpenModalSalaCuracionAsignar] = useState(false);
 	const [tipo_servicio, setTipoServicio] = useState('');
 	const [servicio, setServicio] = useState('');
 	const [cambio, setCambio] = useState(false);
@@ -115,25 +124,27 @@ const ListaEspera = (props) => {
 
 	const {
 		sucursal,
+		empleado,
+		colorBase,
 	} = props;
 
 	const columnsConsultorios = [
 		{ title: 'CONSULTORIO', field: 'nombre' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
-		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
+		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
 	];
 
 	const columnsCabinas = [
 		{ title: 'CABINA', field: 'nombre' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'COSMETÓLOGA', field: 'cosmetologa_nombre' },
-		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
+		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
 	];
 
-	const columnsSalaCirugias = [
+	const columnsSalaCuraciones = [
 		{ title: 'SALA', field: 'nombre' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
-		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
+		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
 	];
 
 	const columnsEspera = [
@@ -141,24 +152,28 @@ const ListaEspera = (props) => {
 		{ title: 'SERVICIO', field: 'servicio.nombre' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
 		{ title: 'CONSECUTIVO', field: 'consecutivo' },
-		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
+		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
+		{ title: 'OBSERVACIONES', field: 'observaciones' },
 	];
 
 	const columnsEsperaConsultas = [
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
-		{ title: 'DERMATÓLOGO', field: 'dermatologo_nombre' },
+		{ title: 'PRODUCTO', field: 'producto.show' },
+		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
 		{ title: 'CONSECUTIVO', field: 'consecutivo' },
+		{ title: 'OBSERVACIONES', field: 'observaciones' },
 	];
 
 	const optionsConsultorio = {
 		rowStyle: rowData => {
 			return {
-				backgroundColor: rowData.disponible ? process.env.REACT_APP_LIBRE_COLOR : process.env.REACT_APP_OCUPADO_COLOR
+				fontWeight: 'bolder',
+				color: rowData.disponible ? process.env.REACT_APP_LIBRE_COLOR : process.env.REACT_APP_OCUPADO_COLOR
 			};
 		},
 		headerStyle: {
-			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+			backgroundColor: colorBase,
 			color: '#FFF',
 			fontWeight: 'bolder',
 			fontSize: '18px'
@@ -172,11 +187,12 @@ const ListaEspera = (props) => {
 	const optionsEspera = {
 		rowStyle: rowData => {
 			return {
-				backgroundColor: rowData.servicio.color
+				fontWeight: 'bolder',
+				color: rowData.servicio.color
 			};
 		},
 		headerStyle: {
-			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+			backgroundColor: colorBase,
 			color: '#FFF',
 			fontWeight: 'bolder',
 			fontSize: '18px'
@@ -192,14 +208,15 @@ const ListaEspera = (props) => {
 	const consultaServicioId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
 	const enProcedimientoStatusId = process.env.REACT_APP_EN_PROCEDIMIENTO_STATUS_ID;
 	const enConsultorioStatusId = process.env.REACT_APP_EN_CONSULTORIO_STATUS_ID;
-	const cirugiaServicioId = process.env.REACT_APP_CIRUGIA_SERVICIO_ID;
+	const curacionServicioId = process.env.REACT_APP_CURACION_SERVICIO_ID;
 	const facialServicioId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
 	const dermapenServicioId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID;
 	const laserServicioId = process.env.REACT_APP_LASER_SERVICIO_ID;
 	const aparatologiaServicioId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
+	const primeraVezFrecuenciaId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
 
 	const loadConsultorios = async () => {
-		const response = await findSurgeryBySucursalIdWaitingList(sucursal);
+		const response = await findSurgeryBySucursalIdWaitingList(sucursal, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			response.data.forEach(item => {
 				item.folio = generateFolio(item);
@@ -211,88 +228,113 @@ const ListaEspera = (props) => {
 	}
 
 	const loadListaEsperaConsultas = async () => {
-		const response = await waitingListConsulta(sucursal, asistioStatusId);
+		const response = await waitingListConsulta(sucursal, asistioStatusId, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			response.data.forEach(item => {
+			const filterData = response.data.filter(item => {
+				return (sucursal === sucursalManuelAcunaId || sucursal === sucursalRubenDarioId) ? true : item.pagado;
+			});
+			filterData.forEach(item => {
 				item.folio = generateFolio(item);
 				item.paciente_nombre = item.paciente ? `${item.paciente.nombres} ${item.paciente.apellidos}` : 'ALGUN ERROR ESTA PASANDO';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
+				item.servicio.color = item.producto._id !== productoConsultaId ? '#43CD30' : item.servicio.color;
+				item.producto.show = `(${item.frecuencia === primeraVezFrecuenciaId ? 'PV' : 'R'}) ${item.producto.nombre}`;
 			});
-			setListaEsperaConsultas(response.data);
+			setListaEsperaConsultas(filterData);
 		}
 	}
 
 	const loadListaEsperaFaciales = async () => {
-		const response = await waitingFacialList(sucursal, asistioStatusId);
+		const response = await waitingFacialList(sucursal, asistioStatusId, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			response.data.forEach(item => {
+			const filterData = response.data.filter(item => {
+				return (sucursal === sucursalManuelAcunaId || sucursal === sucursalRubenDarioId) ? true : item.pagado;
+			});
+			filterData.forEach(item => {
 				item.folio = generateFolio(item);
 				item.paciente_nombre = item.paciente ? `${item.paciente.nombres} ${item.paciente.apellidos}` : 'ALGUN ERROR ESTA PASANDO';
 				item.cosmetologa_nombre = item.cosmetologa ? item.cosmetologa.nombre : 'SIN ASIGNAR';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
 			});
-			setListaEsperaFaciales(response.data);
+			setListaEsperaFaciales(filterData);
 		}
 	}
 
 	const loadListaEsperaDermapens = async () => {
-		const response = await waitingDermapenList(sucursal, asistioStatusId);
+		const response = await waitingDermapenList(sucursal, asistioStatusId, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			response.data.forEach(item => {
+			const filterData = response.data.filter(item => {
+				return (sucursal === sucursalManuelAcunaId || sucursal === sucursalRubenDarioId) ? true : item.pagado;
+			});
+			filterData.forEach(item => {
 				item.folio = generateFolio(item);
 				item.paciente_nombre = item.paciente ? `${item.paciente.nombres} ${item.paciente.apellidos}` : 'ALGUN ERROR ESTA PASANDO';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
 			});
-			setListaEsperaDermapens(response.data);
+			setListaEsperaDermapens(filterData);
 		}
 	}
 
 	const loadListaEsperaAparatologias = async () => {
-		const response = await waitingAparatologiaList(sucursal, asistioStatusId);
+		const response = await waitingAparatologiaList(sucursal, asistioStatusId, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			response.data.forEach(item => {
+			const filterData = response.data.filter(item => {
+				return (sucursal === sucursalManuelAcunaId || sucursal === sucursalRubenDarioId) ? true : item.pagado;
+			});
+			filterData.forEach(item => {
 				item.folio = generateFolio(item);
 				item.paciente_nombre = item.paciente ? `${item.paciente.nombres} ${item.paciente.apellidos}` : 'ALGUN ERROR ESTA PASANDO';
 				item.cosmetologa_nombre = item.cosmetologa ? item.cosmetologa.nombre : 'SIN ASIGNAR';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
 			});
-			setListaEsperaAparatologias(response.data);
+			setListaEsperaAparatologias(filterData);
 		}
 	}
 
-	const loadSalaCirugias = async () => {
-		const response = await findSalaCirugiaBySucursalId(sucursal);
+	const loadSalaCuraciones = async () => {
+		const response = await findSalaCuracionBySucursalId(sucursal, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			response.data.forEach(item => {
 				item.folio = generateFolio(item);
 				item.paciente_nombre = item.paciente ? `${item.paciente.nombres} ${item.paciente.apellidos}` : 'LIBRE';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'SIN DERMATÓLOGO';
 			});
-			setSalaCirugias(response.data);
+			setSalaCuraciones(response.data);
 		}
 	}
 
-	const loadListaEsperaCirugias = async () => {
-		const response = await waitingListCirugia(sucursal, asistioStatusId);
+	const loadListaEsperaCuraciones = async () => {
+		const response = await waitingListCuracion(sucursal, asistioStatusId, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			response.data.forEach(item => {
+			const filterData = response.data.filter(item => {
+				return (sucursal === sucursalManuelAcunaId || sucursal === sucursalRubenDarioId) ? true : item.pagado;
+			});
+			filterData.forEach(item => {
 				item.folio = generateFolio(item);
 				item.paciente_nombre = item.paciente ? `${item.paciente.nombres} ${item.paciente.apellidos}` : 'LIBRE';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'SIN DERMATÓLOGO';
+				item.producto.show = `(${item.frecuencia === primeraVezFrecuenciaId ? 'PV' : 'R'}) ${item.producto.nombre}`;
 			});
-			setListaEsperaCirugias(response.data);
+			setListaEsperaCuraciones(filterData);
 		}
 	}
 
 	const loadListaEsperaEstetica = async () => {
-		const response = await waitingListEstetica(sucursal, asistioStatusId);
+		const response = await waitingListEstetica(sucursal, asistioStatusId, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			response.data.forEach(item => {
+			const filterData = response.data.filter(item => {
+				return (sucursal === sucursalManuelAcunaId || sucursal === sucursalRubenDarioId) ? true : item.pagado;
+			});
+			filterData.forEach(item => {
 				item.folio = generateFolio(item);
 				item.paciente_nombre = item.paciente ? `${item.paciente.nombres} ${item.paciente.apellidos}` : 'ALGUN ERROR ESTA PASANDO';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
+				item.producto_descripcion = item.producto.map(prod => {
+					return prod.nombre;
+				});
+				item.producto.show = `(${item.frecuencia === primeraVezFrecuenciaId ? 'PV' : 'R'}) ${item.producto_descripcion}`;
 			});
-			setListaEsperaEstetica(response.data);
+			setListaEsperaEstetica(filterData);
 			setIsLoading(false);
 		}
 	}
@@ -302,7 +344,11 @@ const ListaEspera = (props) => {
 		setServicio(rowData._id);
 		setPaciente(rowData.paciente);
 		setCambio(false);
-		setOpenModalConsultorioAsignar(true);
+		if (rowData.servicio._id === servicioConsultaId) {
+			setOpenModalConsultorioAsignar(true);
+		} else {
+			setOpenModalSalaCuracionAsignar(true);
+		}
 	}
 
 	const handleOnClickCabinaAsignarPaciente = (event, rowData) => {
@@ -313,33 +359,32 @@ const ListaEspera = (props) => {
 		setOpenModalCabinaAsignar(true);
 	}
 
-	const handleOnClickSalaCirugiaAsignarPaciente = (event, rowData) => {
+	const handleOnClickSalaCuracionAsignarPaciente = (event, rowData) => {
 		setTipoServicio(rowData.servicio._id);
 		setServicio(rowData._id);
 		setPaciente(rowData.paciente);
 		setCambio(false);
-		setOpenModalSalaCirugiaAsignar(true);
 	}
 
 	const handleOnConsultorioCambiarPaciente = async (event, rowData) => {
 		setIsLoading(true);
 		rowData.disponible = true;
 
-		const response = await updateSurgery(rowData._id, rowData);
+		const response = await updateSurgery(rowData._id, rowData, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setPaciente(rowData.paciente);
 			setServicio(rowData.servicio);
 			setTipoServicio(rowData.tipo_servicio);
 			setCambio(true);
 			setOpenModalConsultorioAsignar(true);
-			await breakFreeSurgeryByIdPaciente(rowData._id);
+			await breakFreeSurgeryByIdPaciente(rowData._id, empleado.access_token);
 		};
 		setIsLoading(false);
 	}
 
 	const handleOnCabinaCambiarPaciente = async (event, rowData) => {
 		setIsLoading(true);
-		const response = await breakFreeCabinaByIdPaciente(rowData._id);
+		const response = await breakFreeCabinaByIdPaciente(rowData._id, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			rowData.disponible = true;
 			setPaciente(rowData.paciente);
@@ -352,17 +397,17 @@ const ListaEspera = (props) => {
 		setIsLoading(false);
 	}
 
-	const handleOnSalaCirugiaCambiarPaciente = async (event, rowData) => {
+	const handleOnSalaCuracionCambiarPaciente = async (event, rowData) => {
 		setIsLoading(true);
-		const response = await breakFreeSalaCirugiaByIdPaciente(rowData._id);
+		const response = await breakFreeSalaCuracionByIdPaciente(rowData._id, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			//rowData.disponible = true;
 			setPaciente(rowData.paciente);
 			setServicio(rowData.servicio);
 			setTipoServicio(rowData.tipo_servicio);
 			setCambio(true);
-			setOpenModalSalaCirugiaAsignar(true);
-			//await updateSalaCirugia(rowData._id, rowData);
+			setOpenModalSalaCuracionAsignar(true);
+			//await updateSalaCuracion(rowData._id, rowData);
 		}
 		setIsLoading(false);
 	}
@@ -373,16 +418,16 @@ const ListaEspera = (props) => {
 		let responseCita;
 		switch (rowData.tipo_servicio) {
 			case facialServicioId:
-				responseCita = await findFacialById(rowData.servicio);
+				responseCita = await findFacialById(rowData.servicio, empleado.access_token);
 				break;
 			case dermapenServicioId:
-				responseCita = await findDermapenById(rowData.servicio);
+				responseCita = await findDermapenById(rowData.servicio, empleado.access_token);
 				break;
 			case laserServicioId:
-				responseCita = await findLaserById(rowData.servicio);
+				responseCita = await findLaserById(rowData.servicio, empleado.access_token);
 				break;
 			case aparatologiaServicioId:
-				responseCita = await findAparatologiaById(rowData.servicio);
+				responseCita = await findAparatologiaById(rowData.servicio, empleado.access_token);
 				break;
 		}
 
@@ -393,21 +438,21 @@ const ListaEspera = (props) => {
 			updateCita.hora_salida = `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;
 			switch (rowData.tipo_servicio) {
 				case facialServicioId:
-					responseCita = await updateFacial(cita._id, updateCita);
+					responseCita = await updateFacial(cita._id, updateCita, empleado.access_token);
 					break;
 				case dermapenServicioId:
-					responseCita = await updateDermapen(cita._id, updateCita);
+					responseCita = await updateDermapen(cita._id, updateCita, empleado.access_token);
 					break;
 				case laserServicioId:
-					responseCita = await updateLaser(cita._id, updateCita);
+					responseCita = await updateLaser(cita._id, updateCita, empleado.access_token);
 					break;
 				case aparatologiaServicioId:
-					responseCita = await updateAparatologia(cita._id, updateCita);
+					responseCita = await updateAparatologia(cita._id, updateCita, empleado.access_token);
 					break;
 			}
 			rowData.disponible = true;
-			await updateCabina(rowData._id, rowData);
-			const response = await breakFreeCabinaByIdPaciente(rowData._id);
+			await updateCabina(rowData._id, rowData, empleado.access_token);
+			const response = await breakFreeCabinaByIdPaciente(rowData._id, empleado.access_token);
 			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 				setOpenAlert(true);
 				setMessage('SALIO EL PACIENTE');
@@ -418,7 +463,7 @@ const ListaEspera = (props) => {
 
 	const handleOnClickLiberarConsultorio = async (event, rowData) => {
 		const dateNow = new Date();
-		const responseCita = await findConsultById(rowData.servicio);
+		const responseCita = await findConsultById(rowData.servicio, empleado.access_token);
 
 		if (responseCita && `${responseCita.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			const cita = responseCita.data;
@@ -426,11 +471,11 @@ const ListaEspera = (props) => {
 			updateCita.status = atendidoStatusId;
 			updateCita.hora_salida = `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;
 
-			await updateConsult(cita._id, updateCita);
+			await updateConsult(cita._id, updateCita, empleado.access_token);
 
 			rowData.disponible = true;
 			await updateSurgery(rowData._id, rowData);
-			const response = await breakFreeSurgeryByIdPaciente(rowData._id);
+			const response = await breakFreeSurgeryByIdPaciente(rowData._id, empleado.access_token);
 			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 				setOpenAlert(true);
 				setMessage('SALIO EL PACIENTE');
@@ -439,19 +484,42 @@ const ListaEspera = (props) => {
 		}
 	}
 
-	const handleOnClickLiberarSalaCirugia = async (event, rowData) => {
+	const handleOnClickRegresarListaEspera = async (event, rowData) => {
 		const dateNow = new Date();
-		const responseServicio = rowData.tipo_servicio === cirugiaServicioId ? await findCirugiaById(rowData.servicio) : await findEsteticaById(rowData.servicio);
-		//const responseServicio = await findCirugiaById(rowData.servicio);
+		const responseCita = await findConsultById(rowData.servicio, empleado.access_token);
+
+		if (responseCita && `${responseCita.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			const cita = responseCita.data;
+			let updateCita = cita;
+			updateCita.status = asistioStatusId;
+			updateCita.hora_atencion = '--:--';
+
+			await updateConsult(cita._id, updateCita, empleado.access_token);
+
+			rowData.disponible = true;
+			await updateSurgery(rowData._id, rowData);
+			const response = await breakFreeSurgeryByIdPaciente(rowData._id, empleado.access_token);
+			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+				setOpenAlert(true);
+				setMessage('EL PACIENTE REGRESO A LA LISTA DE ESPERA');
+				await loadAll();
+			}
+		}
+	}
+
+	const handleOnClickLiberarSalaCuracion = async (event, rowData) => {
+		const dateNow = new Date();
+		const responseServicio = rowData.tipo_servicio === curacionServicioId ? await findCuracionById(rowData.servicio, empleado.access_token) : await findEsteticaById(rowData.servicio, empleado.access_token);
+		//const responseServicio = await findCuracionById(rowData.servicio);
 		if (`${responseServicio.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			const currentService = responseServicio.data;
 			let updateData = currentService;
 			updateData.status = atendidoStatusId;
 			updateData.hora_salida = `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;
-			rowData.tipo_servicio === cirugiaServicioId ? await updateCirugia(currentService._id, updateData) : await updateEstetica(currentService._id, updateData);
+			rowData.tipo_servicio === curacionServicioId ? await updateCuracion(currentService._id, updateData, empleado.access_token) : await updateEstetica(currentService._id, updateData, empleado.access_token);
 			rowData.disponible = true;
-			await updateSalaCirugia(rowData._id, rowData);
-			const response = await breakFreeSalaCirugiaByIdPaciente(rowData._id);
+			await updateSalaCuracion(rowData._id, rowData, empleado.access_token);
+			const response = await breakFreeSalaCuracionByIdPaciente(rowData._id, empleado.access_token);
 			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 				setOpenAlert(true);
 				setMessage('SALIO EL PACIENTE');
@@ -464,7 +532,7 @@ const ListaEspera = (props) => {
 		//new Date(anio, mes - 1, dia) < filterDate.fecha_show  ? 
 		{
 			icon: InputIcon,
-			tooltip: 'Asiganar a consultorio',
+			tooltip: 'ASIGNAR A CONSULTORIO',
 			onClick: handleOnClickConsultorioAsignarPaciente
 		} //: ''
 	];
@@ -473,44 +541,52 @@ const ListaEspera = (props) => {
 		//new Date(anio, mes - 1, dia) < filterDate.fecha_show  ? 
 		{
 			icon: InputIcon,
-			tooltip: 'Asiganar a cabina',
+			tooltip: 'ASIGNAR A CABINA',
 			onClick: handleOnClickCabinaAsignarPaciente
 		} //: ''
 	];
 
-	const actionsEsperaSalaCirugia = [
+	const actionsEsperaSalaCuracion = [
 		//new Date(anio, mes - 1, dia) < filterDate.fecha_show  ? 
 		{
 			icon: InputIcon,
-			tooltip: 'Asiganar a sala de cirugias',
-			onClick: handleOnClickSalaCirugiaAsignarPaciente
+			tooltip: 'ASIGNAR A SALA DE CURACION',
+			onClick: handleOnClickSalaCuracionAsignarPaciente
 		} //: ''
 	];
 
 	const actionsConsultorio = [
 		//new Date(anio, mes - 1, dia) < filterDate.fecha_show  ? 
 		rowData => {
-			return (!rowData.disponible && rowData.consulta.status !== enProcedimientoStatusId) ? {
+			return (!rowData.disponible && rowData.consultaId) ? {
 				icon: DirectionsWalkIcon,
-				tooltip: 'Salida paciente',
+				tooltip: 'SALIDA PACIENTE',
 				onClick: handleOnClickLiberarConsultorio
 			} : ''
 		},
 		rowData => (
-			(!rowData.disponible && rowData.consulta.status !== enProcedimientoStatusId) ? {
+			(!rowData.disponible && rowData.consultaId) ? {
 				icon: InputIcon,
-				tooltip: 'Cambiar de consultorio',
+				tooltip: 'CAMBIAR DE CONSULTORIO',
 				onClick: handleOnConsultorioCambiarPaciente
-			} : ''),
+			} : ''
+		),
+		rowData => {
+			return (!rowData.disponible && rowData.consultaId) ? {
+				icon: ReplayIcon,
+				tooltip: 'REGRESAR A LA LISTA DE ESPERA',
+				onClick: handleOnClickRegresarListaEspera
+			} : ''
+		},
 	];
 
 	const onChangeActionsConsultorio = (e, rowData) => {
 		const action = e.target.value;
 		switch (action) {
-			case 'Salida paciente':
+			case 'SALIDA PACIENTE':
 				handleOnClickLiberarConsultorio(e, rowData);
 				break;
-			case 'Cambiar de consultorio':
+			case 'CAMBIAR DE CONSULTORIO':
 				handleOnConsultorioCambiarPaciente(e, rowData);
 				break;
 		}
@@ -545,30 +621,30 @@ const ListaEspera = (props) => {
 		rowData => (
 			!rowData.disponible ? {
 				icon: DirectionsWalkIcon,
-				tooltip: 'Salida paciente',
+				tooltip: 'SALIDA PACIENTE',
 				onClick: handleOnClickLiberarCabina
 			} : ''),
 		rowData => (
 			!rowData.disponible ? {
 				icon: InputIcon,
-				tooltip: 'Cambiar de cabina',
+				tooltip: 'CAMBIAR DE CABINA',
 				onClick: handleOnCabinaCambiarPaciente
 			} : ''),
 	];
 
-	const actionsSalaCirugia = [
+	const actionsSalaCuracion = [
 		//new Date(anio, mes - 1, dia) < filterDate.fecha_show  ? 
 		rowData => (
 			!rowData.disponible ? {
 				icon: DirectionsWalkIcon,
-				tooltip: 'Salida paciente',
-				onClick: handleOnClickLiberarSalaCirugia
+				tooltip: 'SALIDA PACIENTE',
+				onClick: handleOnClickLiberarSalaCuracion
 			} : ''),
 		rowData => (
 			!rowData.disponible ? {
 				icon: InputIcon,
-				tooltip: 'Cambiar de sala de cirugia',
-				onClick: handleOnSalaCirugiaCambiarPaciente
+				tooltip: 'CAMBIAR SALA DE CURACIÓN',
+				onClick: handleOnSalaCuracionCambiarPaciente
 			} : ''),
 	];
 
@@ -576,7 +652,7 @@ const ListaEspera = (props) => {
 		setConsultorio({});
 		setOpenModalConsultorioAsignar(false);
 		setOpenModalCabinaAsignar(false);
-		setOpenModalSalaCirugiaAsignar(false);
+		setOpenModalSalaCuracionAsignar(false);
 	};
 
 	const handleCloseAlert = () => {
@@ -603,10 +679,14 @@ const ListaEspera = (props) => {
 		await loadListaEsperaAparatologias();
 		await loadListaEsperaDermapens();
 		await loadCabinas();
-		await loadSalaCirugias();
+		await loadSalaCuraciones();
 		await loadListaEsperaEstetica();
-		await loadListaEsperaCirugias();
+		await loadListaEsperaCuraciones();
 		setIsLoading(false);
+	}
+
+	const handleClickActualizar = (event, rowData) => {
+		loadAll();
 	}
 
 	useEffect(() => {
@@ -618,17 +698,18 @@ const ListaEspera = (props) => {
 			{
 				!isLoading ?
 					<ListaEsperaContainer
+						empleado={empleado}
 						columnsConsultorios={columnsConsultorios}
 						columnsEspera={columnsEspera}
 						columnsCabinas={columnsCabinas}
-						columnsSalaCirugias={columnsSalaCirugias}
+						columnsSalaCuraciones={columnsSalaCuraciones}
 						columnsEsperaConsultas={columnsEsperaConsultas}
 						tituloConsultorios='CONSULTORIOS'
 						tituloCabinas='CABINAS'
-						tituloSalaCirugia='SALA CIRUGIAS'
-						tituloEsperaConsultas='CONSULTAS EN ESPERA'
-						tituloEsperaTratamientos='TRATAMIENTOS EN ESPERA'
-						tituloEsperaSalaCirugia="CIRUGIAS EN ESPERA"
+						tituloSalaCuracion='SALA CURACION'
+						tituloEsperaConsultas={`CONSULTAS EN ESPERA (${listaEsperaConsultas.length + listaEsperaEstetica.length + listaEsperaCuraciones.length})`}
+						tituloEsperaTratamientos={`TRATAMIENTOS EN ESPERA (${listaEsperaFaciales.length + listaEsperaLasers.length + listaEsperaAparatologias.length + listaEsperaDermapens.length})`}
+						tituloEsperaSalaCuracion={`CURACION EN ESPERA (${listaEsperaEstetica.length + listaEsperaCuraciones.length})`}
 						optionsEspera={optionsEspera}
 						optionsConsultorio={optionsConsultorio}
 						consultorio={consultorio}
@@ -639,14 +720,14 @@ const ListaEspera = (props) => {
 						listaEsperaAparatologias={listaEsperaAparatologias}
 						listaEsperaFaciales={listaEsperaFaciales}
 						listaEsperaDermapens={listaEsperaDermapens}
-						listaEsperaCirugias={listaEsperaCirugias}
+						listaEsperaCuraciones={listaEsperaCuraciones}
 						actionsEsperaConsultorio={actionsEsperaConsultorio}
 						actionsEsperaCabina={actionsEsperaCabina}
 						actionsConsultorio={actionsConsultorio}
 						actionsCabina={actionsCabina}
 						openModalConsultorioAsignar={openModalConsultorioAsignar}
 						openModalCabinaAsignar={openModalCabinaAsignar}
-						openModalSalaCirugiaAsignar={openModalSalaCirugiaAsignar}
+						openModalSalaCuracionAsignar={openModalSalaCuracionAsignar}
 						tipo_servicio={tipo_servicio}
 						servicio={servicio}
 						handleClose={handleClose}
@@ -656,11 +737,13 @@ const ListaEspera = (props) => {
 						setOpenAlert={setOpenAlert}
 						setMessage={setMessage}
 						paciente={paciente}
-						salaCirugias={salaCirugias}
-						actionsSalaCirugia={actionsSalaCirugia}
+						salaCuraciones={salaCuraciones}
+						actionsSalaCuracion={actionsSalaCuracion}
 						listaEsperaEstetica={listaEsperaEstetica}
-						actionsEsperaSalaCirugia={actionsEsperaSalaCirugia}
+						actionsEsperaSalaCuracion={actionsEsperaSalaCuracion}
 						componentsConsultorio={componentsConsultorio}
+						colorBase={colorBase}
+						onClickActualizar={handleClickActualizar}
 					/> :
 					<Backdrop className={classes.backdrop} open={isLoading} >
 						<CircularProgress color="inherit" />

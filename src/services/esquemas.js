@@ -1,8 +1,20 @@
 import axios from 'axios';
 
-export const baseUrl = process.env.REACT_APP_BASE_URL_LOCAL;
+export const baseUrl = process.env.REACT_APP_BASE_URL;
 
 // ESQUEMA
+
+export const showAllEsquemas = async () => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/esquema`,
+            method: 'GET'
+        });
+        return response;
+    } catch (error) {
+        console.log('showAllEsquemas', error);
+    }
+}
 
 export const createEsquema = async (esquema) => {
     try {
@@ -14,6 +26,23 @@ export const createEsquema = async (esquema) => {
         return response;
     } catch (error) {
         console.log('createEsquema', error);
+    }
+}
+
+export const updateEsquema = async (updateEsquemaId, esquema, token) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/esquema/${updateEsquemaId}`,
+            method: 'PUT',
+            data: esquema,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response;
+    } catch (error) {
+        console.log('updateEsquema', error);
+        return error;
     }
 }
 

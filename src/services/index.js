@@ -1,76 +1,6 @@
 import axios from 'axios';
 
-export const baseUrl = process.env.REACT_APP_BASE_URL_LOCAL;
-const urlSepomexGetEstados = 'https://api-sepomex.hckdrk.mx/query/get_estados';
-const urlSepomexGetMunicipos = 'https://api-sepomex.hckdrk.mx/query/get_municipio_por_estado/';
-const urlSepomexGetColonia = 'https://api-sepomex.hckdrk.mx/query/get_colonia_por_municipio/';
-const urlSepomexGetAllInfoByCP = 'https://api-sepomex.hckdrk.mx/query/info_cp/';
-
-// PACIENTES
-
-export const getAllPatients = async () => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/paciente`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('getAllPatients', error);
-    }
-}
-
-export const findPatientByPhoneNumber = async (telefono) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/paciente/phonenumber/${telefono}`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('findPatientByPhoneNumber', error);
-    }
-}
-
-export const updatePatient = async (pacienteId, paciente) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/paciente/${pacienteId}`,
-            method: 'PUT',
-            data: paciente
-        });
-        return response;
-    } catch (error) {
-        console.log('updatePatient', error);
-    }
-}
-
-export const createPatient = async (paciente) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/paciente`,
-            method: 'POST',
-            data: paciente
-        });
-        return response;
-    } catch (error) {
-        console.log('createPatient', error);
-    }
-}
-
-// SERVICIOS
-
-export const getAllServices = async () => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/servicio`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('getAllServices', error);
-    }
-}
+export const baseUrl = process.env.REACT_APP_BASE_URL;
 
 // HORARIO
 
@@ -319,69 +249,6 @@ export const findRecepcionistByEmployeeNumber = async (employeeNumber) => {
     }
 }
 
-// EMPLEADOS
-
-export const findEmployeeByEmployeeNumber = async (employeeNumber) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/empleado/number/${employeeNumber}`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('findEmployeeByEmployeeNumber', error);
-    }
-}
-
-export const loginEmployee = async (employeeNumber, password) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/empleado/login/${employeeNumber}/${password}`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('loginEmployee', error);
-    }
-}
-
-export const findEmployeesByRolId = async (rolId) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/empleado/rol/${rolId}`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('findEmployeesByRolId', error);
-    }
-}
-
-export const findEmployeesByRolIdAvailable = async (rolId) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/empleado/rol/${rolId}/available`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('findEmployeesByRolIdAvailable', error);
-    }
-}
-
-export const updateEmployee = async (employeeId, employee) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/empleado/${employeeId}`,
-            method: 'PUT',
-            data: employee
-        });
-        return response;
-    } catch (error) {
-        console.log('updateEmployee', error);
-    }
-}
-
 // SUCURSALES
 
 export const showAllOffices = async () => {
@@ -408,9 +275,9 @@ export const findOfficeById = async (idSucursal) => {
     }
 }
 
-// SALA DE CIRUGIA
+// SALA DE CURACIÓN
 
-export const findSalaCirugiaBySucursalId = async (sucursalId) => {
+export const findSalaCuracionBySucursalId = async (sucursalId) => {
     try {
         const response = await axios({
             url: `${baseUrl}/salacirugia/sucursal/${sucursalId}`,
@@ -418,11 +285,11 @@ export const findSalaCirugiaBySucursalId = async (sucursalId) => {
         });
         return response;
     } catch (error) {
-        console.log('findSalaCirugiaBySucursalId', error);
+        console.log('findSalaCuracionBySucursalId', error);
     }
 }
 
-export const findSalaCirugiaBySucursalIdWaitingList = async (sucursalId) => {
+export const findSalaCuracionBySucursalIdWaitingList = async (sucursalId) => {
     try {
         const response = await axios({
             url: `${baseUrl}/salacirugia/waitinglist/sucursal/${sucursalId}`,
@@ -430,11 +297,11 @@ export const findSalaCirugiaBySucursalIdWaitingList = async (sucursalId) => {
         });
         return response;
     } catch (error) {
-        console.log('findSalaCirugiaBySucursalIdWaitingList', error);
+        console.log('findSalaCuracionBySucursalIdWaitingList', error);
     }
 }
 
-export const findSalaCirugiaBySucursalIdAndFree = async (sucursalId) => {
+export const findSalaCuracionBySucursalIdAndFree = async (sucursalId) => {
     try {
         const response = await axios({
             url: `${baseUrl}/salacirugia/sucursal/${sucursalId}/libre`,
@@ -442,11 +309,11 @@ export const findSalaCirugiaBySucursalIdAndFree = async (sucursalId) => {
         });
         return response;
     } catch (error) {
-        console.log('findSalaCirugiaBySucursalIdAndFree', error);
+        console.log('findSalaCuracionBySucursalIdAndFree', error);
     }
 }
 
-export const createSalaCirugia = async (consultorio) => {
+export const createSalaCuracion = async (consultorio) => {
     try {
         const response = await axios({
             url: `${baseUrl}/salacirugia`,
@@ -455,44 +322,44 @@ export const createSalaCirugia = async (consultorio) => {
         });
         return response;
     } catch (error) {
-        console.log('createSalaCirugia', error);
+        console.log('createSalaCuracion', error);
     }
 }
 
-export const updateSalaCirugia = async (salaCirugiaId, surgery) => {
+export const updateSalaCuracion = async (salaCuracionId, surgery) => {
     try {
         const response = await axios({
-            url: `${baseUrl}/salacirugia/${salaCirugiaId}`,
+            url: `${baseUrl}/salacirugia/${salaCuracionId}`,
             method: 'PUT',
             data: surgery
         });
         return response;
     } catch (error) {
-        console.log('updateSalaCirugia', error);
+        console.log('updateSalaCuracion', error);
     }
 }
 
-export const breakFreeSalaCirugiaByIdPaciente = async (salaCirugiaId) => {
+export const breakFreeSalaCuracionByIdPaciente = async (salaCuracionId) => {
     try {
         const response = await axios({
-            url: `${baseUrl}/salacirugia/liberar/paciente/${salaCirugiaId}`,
+            url: `${baseUrl}/salacirugia/liberar/paciente/${salaCuracionId}`,
             method: 'PUT'
         });
         return response;
     } catch (error) {
-        console.log('breakFreeSalaCirugiaByIdPaciente', error);
+        console.log('breakFreeSalaCuracionByIdPaciente', error);
     }
 }
 
-export const breakFreeSalaCirugiaByIdDermatologo = async (salaCirugiaId) => {
+export const breakFreeSalaCuracionByIdDermatologo = async (salaCuracionId) => {
     try {
         const response = await axios({
-            url: `${baseUrl}/salacirugia/liberar/dermatologo/${salaCirugiaId}`,
+            url: `${baseUrl}/salacirugia/liberar/dermatologo/${salaCuracionId}`,
             method: 'PUT'
         });
         return response;
     } catch (error) {
-        console.log('breakFreeSalaCirugiaByIdDermatologo', error);
+        console.log('breakFreeSalaCuracionByIdDermatologo', error);
     }
 }
 
@@ -626,7 +493,7 @@ export const showAllBanco = async () => {
     }
 }
 
-// MÉTODO PAGO
+// FORMA DE PAGO
 
 export const showAllMetodoPago = async () => {
     try {
@@ -654,160 +521,6 @@ export const showAllTipoTarjeta = async () => {
     }
 }
 
-// PAGOS
-
-export const createPago = async (pago) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/pago`,
-            method: 'POST',
-            data: pago
-        });
-        return response;
-    } catch (error) {
-        console.log('createPago', error);
-    }
-}
-
-export const findPaysByRangeDateAndSucursal = async (diai, mesi, anioi, diaf, mesf, aniof, sucursalId) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/pago/fecha_inicio/${diai}/${mesi}/${anioi}/fecha_fin/${diaf}/${mesf}/${aniof}/sucursal/${sucursalId}`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('findPaysByRangeDateAndSucursal', error);
-    }
-}
-
-export const findPagoByIds = async (pagosIds) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/pago/pagos/${pagosIds}`,
-            method: 'GET',
-        });
-        return response;
-    } catch (error) {
-        console.log('findPagoByIds', error);
-    }
-}
-
-export const findPagosByCita = async (idCita) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/pago/pagos/cita/${idCita}`,
-            method: 'GET',
-        });
-        return response;
-    } catch (error) {
-        console.log('findPagosByCita', error);
-    }
-}
-
-export const findPagosByTipoServicioAndServicio = async (idTipoServicio, idServicio) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/pago/pagos/tipo_servicio/${idTipoServicio}/servicio/${idServicio}`,
-            method: 'GET',
-        });
-        return response;
-    } catch (error) {
-        console.log('findPagosByTipoServicioAndServicio', error);
-    }
-}
-
-export const updatePago = async (pagoId, pago) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/pago/${pagoId}`,
-            method: 'PUT',
-            data: pago
-        });
-        return response;
-    } catch (error) {
-        console.log('updatePago', error);
-    }
-}
-
-export const deletePago = async (pagoId) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/pago/${pagoId}`,
-            method: 'DELETE'
-        });
-        return response;
-    } catch (error) {
-        console.log('deletePago', error);
-    }
-}
-
-// SEPOMEX
-
-export const sepomexGetEstados = async () => {
-    try {
-        const response = await axios({
-            url: urlSepomexGetEstados,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('sepomexGetEstados', error);
-        return {
-            'error': process.env.REACT_APP_RESPONSE_CODE_ERROR,
-            'descripcion': error
-        };
-    }
-}
-
-export const sepomexGetMunicipos = async (estado) => {
-    try {
-        const response = await axios({
-            url: `${urlSepomexGetMunicipos}${estado}`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('sepomexGetMunicipos', error);
-        return {
-            'error': process.env.REACT_APP_RESPONSE_CODE_ERROR,
-            'descripcion': error
-        };
-    }
-}
-
-export const sepomexGetColonia = async (municipio) => {
-    try {
-        const response = await axios({
-            url: `${urlSepomexGetColonia}${municipio}`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('sepomexGetColonia', error);
-        return {
-            'error': process.env.REACT_APP_RESPONSE_CODE_ERROR,
-            'descripcion': error
-        };
-    }
-}
-
-export const sepomexGetAllInfoByCP = async (cp) => {
-    try {
-        const response = await axios({
-            url: `${urlSepomexGetAllInfoByCP}${cp}?type=simplified`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('sepomexGetAllInfoByCP', error);
-        return {
-            'error': process.env.REACT_APP_RESPONSE_CODE_ERROR,
-            'descripcion': error
-        };
-    }
-}
-
 // USO CFDI
 
 export const showAllUsoCfdis = async () => {
@@ -819,21 +532,6 @@ export const showAllUsoCfdis = async () => {
         return response;
     } catch (error) {
         console.log('showAllUsoCfdis', error);
-    }
-}
-
-// TRATAMIENTO-PRECIO
-
-export const createTreatmentPrice = async (tratamientoprecio) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/tratamientoprecio`,
-            method: 'POST',
-            data: tratamientoprecio
-        });
-        return response;
-    } catch (error) {
-        console.log('createTreatmentPrice', error);
     }
 }
 
@@ -865,44 +563,6 @@ export const showAllSexos = async () => {
     }
 }
 
-// DERMATÓLOGOS
-
-export const findCirugiasByPayOfDoctor = async (dia, mes, anio, sucursalId, dermatologoId) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/cirugia/${dia}/${mes}/${anio}/sucursal/${sucursalId}/dermatologo/${dermatologoId}`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('findCirugiasByPayOfDoctor', error);
-    }
-}
-
-export const findCirugiasByPayOfDoctorTurno = async (dia, mes, anio, sucursalId, dermatologoId, turno) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/cirugia/${dia}/${mes}/${anio}/sucursal/${sucursalId}/dermatologo/${dermatologoId}/turno/${turno}`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('findCirugiasByPayOfDoctorTurno', error);
-    }
-}
-
-export const findEsteticasByPayOfDoctorTurno = async (dia, mes, anio, sucursalId, dermatologoId, turno) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/estetica/${dia}/${mes}/${anio}/sucursal/${sucursalId}/dermatologo/${dermatologoId}/turno/${turno}`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('findEsteticasByPayOfDoctorTurno', error);
-    }
-}
-
 // MATERIALES
 
 export const showAllMaterials = async () => {
@@ -917,22 +577,7 @@ export const showAllMaterials = async () => {
     }
 }
 
-// CONSECUTIVOS 
-
-export const createConsecutivo = async (consecutivo) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/consecutivo`,
-            method: 'POST',
-            data: consecutivo
-        });
-        return response;
-    } catch (error) {
-        console.log('createConsecutivo', error);
-    }
-}
-
-// TIPO ESTETICA
+// TIPO ESTÉTICA
 
 export const showAllTipoEsteticas = async () => {
     try {
@@ -946,68 +591,28 @@ export const showAllTipoEsteticas = async () => {
     }
 }
 
-// MATERIALES ESTETICA
+// TIPO SALIDAS
 
-export const showAllMaterialEsteticas = async () => {
+export const showAllTipoSalidas = async () => {
     try {
         const response = await axios({
-            url: `${baseUrl}/materialestetica`,
+            url: `${baseUrl}/tiposalida`,
             method: 'GET'
         });
         return response;
     } catch (error) {
-        console.log('showAllMaterialEsteticas', error);
+        console.log('showAllTipoSalidas', error);
     }
 }
 
-// TIPO INGRESO
-
-export const showAllTipoIngresos = async () => {
+export const findTipoSalidaById = async (tipoSalidaId) => {
     try {
         const response = await axios({
-            url: `${baseUrl}/tipoingreso`,
+            url: `${baseUrl}/tiposalida/${tipoSalidaId}`,
             method: 'GET'
         });
         return response;
     } catch (error) {
-        console.log('showAllTipoIngresos', error);
-    }
-}
-
-export const findTipoIngresoById = async (tipoIngresoId) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/tipoingreso/${tipoIngresoId}`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('findTipoIngresoById', error);
-    }
-}
-
-// TIPO EGRESO
-
-export const showAllTipoEgresos = async () => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/tipoegreso`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('showAllTipoEgresos', error);
-    }
-}
-
-export const findTipoEgresoById = async (tipoEgresoId) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/tipoegreso/${tipoEgresoId}`,
-            method: 'GET'
-        });
-        return response;
-    } catch (error) {
-        console.log('findTipoEgresoById', error);
+        console.log('findTipoSalidaById', error);
     }
 }

@@ -61,12 +61,10 @@ export const MainDermatologosContainer = props => {
 		setMessage,
 		setSeverity,
 		setOpenAlert,
-		history,
+		colorBase,
 	} = props;
 
-	console.log("KAOZ", dermatologo);
-
-	const classes = myStyles();
+	const classes = myStyles(colorBase)();
 	const theme = useTheme();
 	const [openDrawer, setOpenDrawer] = useState(false);
 

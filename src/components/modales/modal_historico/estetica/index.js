@@ -21,6 +21,8 @@ const TabEstetica = (props) => {
     paciente,
     sucursal,
     servicio,
+    empleado,
+    colorBase,
   } = props;
 
   const [historial, setHistorial] = useState([]);
@@ -30,31 +32,40 @@ const TabEstetica = (props) => {
     { title: 'FECHA', field: 'fecha_show' },
     { title: 'HORA', field: 'hora' },
     { title: 'CONSECUTIVO', field: 'consecutivo' },
-    { title: 'DERMATÓLOGO', field: 'dermatologo.nombre' },
+    { title: 'DERMATÓLOGO (A)', field: 'dermatologo.nombre' },
     { title: 'SUCURSAL', field: 'sucursal.nombre' },
     { title: 'PRECIO', field: 'precio_moneda' },
     { title: 'TOTAL', field: 'precio_moneda' },
   ];
 
   const options = {
+    rowStyle: rowData => {
+      return {
+        color: rowData.status.color,
+        backgroundColor: rowData.pagado ? process.env.REACT_APP_PAGADO_COLOR : ''
+      };
+    },
     headerStyle: {
-      backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+      backgroundColor: colorBase,
       color: '#FFF',
       fontWeight: 'bolder',
       fontSize: '18px'
-    }
+    },
+		exportAllData: true,
+		exportButton: true,
+		exportDelimiter: ';'
   }
 
   useEffect(() => {
     const loadHistorial = async () => {
       if (servicio) {
-        const response = await findEsteticasHistoricByPaciente(paciente._id);
+        const response = await findEsteticasHistoricByPaciente(paciente._id, empleado.access_token);
         if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
           response.data.forEach(item => {
             item.precio_moneda = toFormatterCurrency(item.precio);
             const date = new Date(item.fecha_hora);
             const dia = addZero(date.getDate());
-            const mes = addZero(date.getMonth());
+            const mes = addZero(date.getMonth() + 1);
             const anio = date.getFullYear();
             const hora = Number(date.getHours());
             const minutos = date.getMinutes();

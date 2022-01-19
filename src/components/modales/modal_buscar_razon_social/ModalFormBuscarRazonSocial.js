@@ -5,6 +5,7 @@ import { ButtonCustom } from '../../basic/ButtonCustom';
 import ModalUsoCfdi from '../modal_uso_cfdi';
 import ModalRazonSocial from '../modal_razon_social';
 import myStyles from '../../../css';
+import ImprimirDatosFacturacion from '../imprimir/datos_facturacion';
 
 function getModalStyle() {
   const top = 50;
@@ -18,8 +19,6 @@ function getModalStyle() {
 }
 
 const ModalFormBuscarRazonSocial = (props) => {
-  const classes = myStyles();
-
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
 
@@ -32,6 +31,9 @@ const ModalFormBuscarRazonSocial = (props) => {
     actions,
     options,
     factura,
+    datosImpresion,
+    openModalImprimirCita,
+    handleCloseImprimirConsulta,
     openModalUsoCfdi,
     onCloseUsoCfdi,
     pago,
@@ -40,7 +42,11 @@ const ModalFormBuscarRazonSocial = (props) => {
     openNuevaRazonSocial,
     loadRazonSocial,
     handleCloseNuevaRazonSocial,
+    colorBase,
+    sucursal,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   return (
     <div>
@@ -57,6 +63,7 @@ const ModalFormBuscarRazonSocial = (props) => {
                 factura={factura}
                 pago={pago}
                 servicio={servicio}
+                colorBase={colorBase}
                 closeRazonSocial={onClose}
               /> : ''
           }
@@ -66,6 +73,17 @@ const ModalFormBuscarRazonSocial = (props) => {
                 open={openNuevaRazonSocial}
                 onClose={handleCloseNuevaRazonSocial}
                 razonSocial={{}}
+                colorBase={colorBase}
+                loadRazonSocial={loadRazonSocial} /> : ''
+          }
+          {
+            openModalImprimirCita ?
+            <ImprimirDatosFacturacion
+                open={openModalImprimirCita}
+                onClose={handleCloseImprimirConsulta}
+                datos={datosImpresion}
+                colorBase={colorBase}
+                sucursal={sucursal}
                 loadRazonSocial={loadRazonSocial} /> : ''
           }
           <ButtonCustom
@@ -73,7 +91,7 @@ const ModalFormBuscarRazonSocial = (props) => {
             color="primary"
             variant="contained"
             onClick={handleOpenNuevaRazonSocial}
-            text='Nuevo razon social' />
+            text='NUEVA RAZÓN SOCIAL' />
 
           <TableComponent
             titulo={titulo}
@@ -83,11 +101,11 @@ const ModalFormBuscarRazonSocial = (props) => {
             options={options} />
 
           <ButtonCustom
-            className={classes.button}
+            className={classes.buttonCancel}
             color="secondary"
             variant="contained"
             onClick={() => onClose(false)}
-            text='Cancelar' />
+            text='CANCELAR' />
         </div>
       </Modal>
     </div >

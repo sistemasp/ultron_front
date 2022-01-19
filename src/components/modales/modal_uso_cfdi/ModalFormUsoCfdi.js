@@ -16,8 +16,6 @@ function getModalStyle() {
 }
 
 const ModalFormUsoCfdi = (props) => {
-  const classes = myStyles();
-
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
 
@@ -28,7 +26,10 @@ const ModalFormUsoCfdi = (props) => {
     values,
     onChangeUsoCfdi,
     onGenerarFactura,
+    colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   return (
     <div>
@@ -37,7 +38,7 @@ const ModalFormUsoCfdi = (props) => {
         aria-describedby="simple-modal-description"
         open={open} >
         <div style={modalStyle} className={classes.paper}>
-          <h1>Generar factura</h1>
+          <h1>GENERAR FACTURA</h1>
           <Grid item xs={12}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="simple-select-outlined-use">Uso CFDI</InputLabel>
@@ -46,27 +47,27 @@ const ModalFormUsoCfdi = (props) => {
                 id="simple-select-outlined-use"
                 value={values.uso_cfdi}
                 onChange={onChangeUsoCfdi}
-                label="Uso CFDI" >
-                {usoCfdis.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.clave} - {item.descripcion}</MenuItem>)}
+                label="USO CFDI" >
+                {usoCfdis.sort().map((item, index) => <MenuItem key={index} value={item}>{item.clave} - {item.descripcion}</MenuItem>)}
               </Select>
             </FormControl>
           </Grid>
           <Grid container>
             <Grid item xs={6}>
               <ButtonCustom
-                className={classes.button}
-                color="primary"
+                className={classes.buttonCancel}
+                color="secondary"
                 variant="contained"
-                onClick={(e) => onGenerarFactura(e, values)}
-                text='Facturar' />
+                onClick={onClose}
+                text='CANCELAR' />
             </Grid>
             <Grid item xs={6}>
               <ButtonCustom
                 className={classes.button}
-                color="secondary"
+                color="primary"
                 variant="contained"
-                onClick={onClose}
-                text='Cancelar' />
+                onClick={(e) => onGenerarFactura(e, values)}
+                text='FACTURAR' />
             </Grid>
           </Grid>
         </div>

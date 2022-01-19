@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { Grid  } from '@material-ui/core';
 import bannerMePiel from './../../../../bannerMePiel.PNG';
+import bannerDermastetic from './../../../../bannerDermastetic.jpeg';
 import { addZero, toFormatterCurrency } from '../../../../utils/utils';
 import { ButtonCustom } from '../../../basic/ButtonCustom';
 import myStyles from '../../../../css';
@@ -18,50 +19,25 @@ function getModalStyle() {
   };
 }
 
-const useStyles = makeStyles(theme => ({
-  paper: {
-    position: 'absolute',
-    width: 400,
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    paddingLeft: 15,
-    paddingRight: 15
-  },
-  textField: {
-    width: '100%',
-  },
-  formControl: {
-    minWidth: 120,
-    width: '100%',
-  },
-  button: {
-    width: '100%',
-    color: '#FFFFFF',
-  },
-  label: {
-    marginTop: '0px',
-    marginBottom: '0px',
-    textAlign: 'center',
-  }
-}));
-
 const ModalFormImprimirTratamiento = (props) => {
   //const classes = useStyles();
-  const classes = myStyles();
-
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
 
   const {
     datos,
+    sucursal,
     onClose,
     onClickImprimir,
     open,
     show,
+    colorBase,
   } = props;
 
+  const classes = myStyles(colorBase)();
+
   const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
+  const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
   const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
   const sucursalFedeId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
   const dermatologoDirectoId = process.env.REACT_APP_DERMATOLOGO_DIRECTO_ID;
@@ -81,7 +57,11 @@ const ModalFormImprimirTratamiento = (props) => {
         aria-describedby="simple-modal-description"
         open={open} >
         <div style={modalStyle} className={classes.paper}>
-          <img src={bannerMePiel} alt='banner' width="360" height="85" />
+          <img 
+          src={sucursal._id === sucursalManuelAcunaId || sucursal._id === sucursalRubenDarioId ? bannerDermastetic : bannerMePiel}
+          alt='banner'
+          width="360"
+          height="85" />
           <Grid container>
             <Grid item xs={12} className={classes.label}>
               <h2 className={classes.label}>{datos.sucursal.nombre}</h2>
@@ -150,22 +130,22 @@ const ModalFormImprimirTratamiento = (props) => {
             {
               show ?
                 <Fragment>
-                  <Grid item xs={12}>
+                  <Grid item xs={6}>
+                    <ButtonCustom
+                      className={classes.buttonCancel}
+                      color="secondary"
+                      variant="contained"
+                      onClick={onClose}
+                      text='CERRAR' />
+                  </Grid>
+
+                  <Grid item xs={6}>
                     <ButtonCustom
                       className={classes.button}
                       color="primary"
                       variant="contained"
                       onClick={onClickImprimir}
                       text='IMPRIMIR' />
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <ButtonCustom
-                      className={classes.button}
-                      color="secondary"
-                      variant="contained"
-                      onClick={onClose}
-                      text='CERRAR' />
                   </Grid>
                 </Fragment> : ''
             }

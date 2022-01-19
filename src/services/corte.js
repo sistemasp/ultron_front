@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const baseUrl = process.env.REACT_APP_BASE_URL_LOCAL;
+export const baseUrl = process.env.REACT_APP_BASE_URL;
 
 // CORTE 
 
@@ -26,6 +26,30 @@ export const showCorteTodayBySucursalAndTurno = async (sucursalId, turno) => {
         return response;
     } catch (error) {
         console.log('showCorteTodayBySucursalAndTurno', error);
+    }
+}
+
+export const showCorteByDateSucursalAndTurno = async (sucursalId, anio, mes, dia, turno) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/corte/sucursal/${sucursalId}/anio/${anio}/mes/${mes}/dia/${dia}/turno/${turno}`,
+            method: 'GET'
+        });
+        return response;
+    } catch (error) {
+        console.log('showCorteByDateSucursalAndTurno', error);
+    }
+}
+
+export const findTurnoActualBySucursal = async (sucursalId) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/corte/sucursal/${sucursalId}/turnoactual`,
+            method: 'GET'
+        });
+        return response;
+    } catch (error) {
+        console.log('findTurnoActualBySucursal', error);
     }
 }
 

@@ -2,7 +2,8 @@ import React, { useState, Fragment, useEffect } from "react";
 import { MainContainer } from "./main";
 import { Snackbar } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
-import { MainCosmetologasContainer } from "./main_cosmetologas";
+import { findTurnoActualBySucursal } from "../../../services/corte";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Alert = (props) => {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -10,23 +11,21 @@ const Alert = (props) => {
 
 const MenuMainRecepcion = (props) => {
 
+	const navigate = useNavigate();
+	const location = useLocation();
+
 	const [pacienteAgendado, setPacienteAgendado] = useState({});
 	const [value, setValue] = useState(0);
 	const [openModalPassword, setOpenModalPassword] = useState(false);
 	const [openAlert, setOpenAlert] = useState(false);
 	const [message, setMessage] = useState('');
 	const [severity, setSeverity] = useState('success');
+	const [turno, setTurno] = useState({});
 
 	const {
 		empleado,
 		sucursal,
-	} = props.location.state;
-
-	const { permisos } = empleado.rol;
-
-	const {
-		history,
-	} = props;
+	} = location.state;
 
 	const handleChangeTab = (event, newValue, close) => {
 		setValue(newValue);
@@ -39,7 +38,12 @@ const MenuMainRecepcion = (props) => {
 	}
 
 	const handleLogout = () => {
-		history.push('/', { empleado: {}, sucursal: {} });
+		navigate('/', {
+            state: {
+                empleado: {},
+                sucursal: {},
+            }
+        });
 	}
 
 	const handleClickCambioPassword = () => {
@@ -58,6 +62,18 @@ const MenuMainRecepcion = (props) => {
 		setOpenAlert(false);
 	};
 
+	const getTurno = async () => {
+		const response = await findTurnoActualBySucursal(sucursal._id);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			const corte = response.data;
+			setTurno(corte.turno);
+		}
+	}
+
+	useEffect(() => {
+		getTurno();
+	}, []);
+
 	let fragment = <Fragment>
 		<MainContainer
 			pacienteAgendado={pacienteAgendado}
@@ -75,7 +91,7 @@ const MenuMainRecepcion = (props) => {
 			setMessage={setMessage}
 			setSeverity={setSeverity}
 			setOpenAlert={setOpenAlert}
-			history={history} />
+			turno={turno} />
 	</Fragment>
 
 

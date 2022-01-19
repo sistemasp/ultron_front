@@ -5,23 +5,30 @@ import { CorteContainer } from './corte';
 import TableComponent from '../../../components/table/TableComponent';
 import {
   showAllMetodoPago,
-  showAllTipoEgresos,
-  showAllTipoIngresos,
+  showAllTipoSalidas,
 } from '../../../services';
 import {
-  showIngresosTodayBySucursalAndHoraAplicacion, showIngresosTodayBySucursalAndHoraAplicacionPA,
-} from '../../../services/ingresos';
+  showEntradasTodayBySucursalAndHoraAplicacion, showEntradasTodayBySucursalAndHoraAplicacionPA,
+} from '../../../services/entradas';
 import {
-  showEgresosTodayBySucursalAndHoraAplicacion,
-} from '../../../services/egresos';
+  deleteSalida,
+  showSalidasTodayBySucursalAndHoraAplicacion,
+} from '../../../services/salidas';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { addZero, toFormatterCurrency } from "../../../utils/utils";
 import {
   createCorte,
+  findTurnoActualBySucursal,
   showCorteTodayBySucursalAndTurno,
   updateCorte,
 } from "../../../services/corte";
+import { showAllTipoEntradas } from "../../../services/tipo_entradas";
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import { deletePagoDermatologo } from "../../../services/pago_dermatologos";
+import { deletePagoPatologo } from "../../../services/pago_patologo";
+import { tipoSalidaPagoDermatologoId, tipoSalidaPagoPatologoId } from "../../../utils/constants";
+import { useNavigate } from "react-router-dom";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -52,53 +59,59 @@ const Corte = (props) => {
 
   const classes = useStyles();
 
-  const [openModalNuevoIngreso, setOpenModalNuevoIngreso] = useState(false);
-  const [openModalNuevoEgreso, setOpenModalNuevoEgreso] = useState(false);
+  const navigate = useNavigate();
+
+  const [openModalNuevoEntrada, setOpenModalNuevoEntrada] = useState(false);
+  const [openModalNuevoSalida, setOpenModalNuevoSalida] = useState(false);
   const [openModalImprimir, setOpenModalInmprimir] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
-  const [dataIngresos, setDataIngresos] = useState([]);
+  const [dataEntradas, setDataEntradas] = useState([]);
   const [dataPagosAnticipados, setDataPagosAnticipados] = useState([]);
-  const [dataEgresos, setDataEgresos] = useState([]);
-  const [ingresos, setIngresos] = useState([]);
+  const [dataSalidas, setDataSalidas] = useState([]);
+  const [entradas, setEntradas] = useState([]);
   const [pagosAnticipados, setPagosAnticipados] = useState([]);
-  const [egresos, setEgresos] = useState([]);
+  const [salidas, setSalidas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState('');
   const [severity, setSeverity] = useState('success');
   const [turno, setTurno] = useState('m');
   const [corte, setCorte] = useState({});
-
+  
   const {
     sucursal,
     empleado,
+    colorBase,
   } = props;
 
-  const columnsIngreso = [
+  const token = empleado.access_token;
+
+  const columnsEntrada = [
     { title: 'FORMA DE PAGO', field: 'forma_pago' },
     { title: 'TOTAL', field: 'total_moneda' },
   ];
 
-  const columnsIngresoTipo = [
-    { title: 'TIPO DE INGRESO', field: 'tipo_ingreso' },
-    { title: 'CANTIDAD', field: 'cantidad_ingresos' },
+  const columnsEntradaTipo = [
+    { title: 'TIPO DE INGRESO', field: 'tipo_entrada' },
+    { title: 'CANTIDAD', field: 'cantidad_entradas' },
     { title: 'TOTAL', field: 'total_moneda' },
   ];
 
-  const columnsIngresoDetalles = [
+  const columnsEntradaDetalles = [
     { title: 'CONCEPTO', field: 'concepto' },
     { title: 'HORA', field: 'hora' },
     { title: 'RECEPCIONISTA', field: 'recepcionista.nombre' },
     { title: 'CANTIDAD', field: 'cantidad_moneda' },
   ];
 
-  const columnsEgreso = [
-    { title: 'TIPO EGRESO', field: 'tipo_egreso' },
-    { title: 'CANTIDAD', field: 'cantidad_egresos' },
+  const columnsSalida = [
+    { title: 'TIPO EGRESO', field: 'tipo_salida' },
+    { title: 'CANTIDAD', field: 'cantidad_salidas' },
     { title: 'TOTAL', field: 'total_moneda' },
   ];
 
-  const columnsEgresoDetalles = [
+  const columnsSalidaDetalles = [
     { title: 'CONCEPTO', field: 'concepto' },
+    { title: 'DESCRIPCIÓN', field: 'descripcion' },
     { title: 'RECEPCIONISTA', field: 'recepcionista.nombre' },
     { title: 'CANTIDAD', field: 'cantidad_moneda' },
 
@@ -106,7 +119,7 @@ const Corte = (props) => {
 
   const options = {
     headerStyle: {
-      backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+      backgroundColor: colorBase,
       color: '#FFF',
       fontWeight: 'bolder',
       fontSize: '18px'
@@ -144,15 +157,15 @@ const Corte = (props) => {
     draggable: false,
   }
 
-  const detailPanelIngresoDetalle = [
+  const detailPanelEntradaDetalle = [
     {
       tooltip: 'DETALLES',
       render: rowData => {
         return (
           <Fragment>
             <TableComponent
-              columns={columnsIngresoDetalles}
-              data={rowData.ingresos}
+              columns={columnsEntradaDetalles}
+              data={rowData.entradas}
               options={optionsDetail} />
           </Fragment>
         )
@@ -160,32 +173,56 @@ const Corte = (props) => {
     }
   ];
 
-  const detailPanelIngreso = [
+  const detailPanelEntrada = [
     {
       tooltip: 'DETALLES',
       render: rowData => {
         return (
           <Fragment>
             <TableComponent
-              columns={columnsIngresoTipo}
-              data={rowData.tipo_ingresos_detalles}
+              columns={columnsEntradaTipo}
+              data={rowData.tipo_entradas_detalles}
               options={optionsDetail}
-              detailPanel={detailPanelIngresoDetalle} />
+              detailPanel={detailPanelEntradaDetalle} />
           </Fragment>
         )
       },
     }
   ];
 
-  const detailPanelEgreso = [
+  const handleEliminarSalida = async (event, rowData) => {
+    setIsLoading(true);
+    switch (rowData.tipo_salida._id) {
+      case tipoSalidaPagoDermatologoId:
+        await deletePagoDermatologo(rowData.pago_dermatologo, token);
+        break;
+      case tipoSalidaPagoPatologoId:
+        await deletePagoPatologo(rowData.pago_dermatologo, token);
+        break;
+    }
+    await deleteSalida(rowData._id, token);
+    turnoActual();
+    setIsLoading(false);
+  }
+
+  const actions = [
     {
-      tooltip: 'Detalles',
+      icon: DeleteForeverIcon,
+      tooltip: 'ELIMINAR SALIDA',
+      onClick: handleEliminarSalida
+    },
+  ];
+
+  const detailPanelSalida = [
+    {
+      tooltip: 'DETALLES',
       render: rowData => {
         return (
           <Fragment>
             <TableComponent
-              columns={columnsEgresoDetalles}
-              data={rowData.egresos_por_tipo}
+              actions={actions}
+              columns={columnsSalidaDetalles}
+              data={rowData.salidas_por_tipo}
               options={optionsDetail} />
           </Fragment>
         )
@@ -193,224 +230,243 @@ const Corte = (props) => {
     }
   ];
 
-  const loadDataIngresos = async (tipoIngresos, ingresos, formaPagos) => {
+  const loadDataEntradas = async (tipoEntradas, entradas, formaPagos) => {
 
-    const dataIngresosTemp = [];
+    const dataEntradasTemp = [];
     formaPagos.map((formaPago) => {
 
-      const tipoIngresosDetalles = [];
-      tipoIngresos.map((tipoIngreso) => {
+      const tipoEntradasDetalles = [];
+      tipoEntradas.map((tipoEntrada) => {
 
-        const ingresosPorTipo = [];
-        let totalTipoIngreso = 0;
+        const entradasPorTipo = [];
+        let totalTipoEntrada = 0;
 
-        ingresos.forEach(ingreso => {
-          if (ingreso.forma_pago._id === formaPago._id) {
-            if (ingreso.tipo_ingreso._id === tipoIngreso._id) {
-              totalTipoIngreso += Number(ingreso.cantidad);
-              const date = new Date(ingreso.create_date);
-              ingreso.hora = `${addZero(date.getHours())}:${addZero(date.getMinutes())}`;
-              ingresosPorTipo.push(ingreso);
+        entradas.forEach(entrada => {
+          if (entrada.forma_pago._id === formaPago._id) {
+            if (entrada.tipo_entrada._id === tipoEntrada._id) {
+              totalTipoEntrada += Number(entrada.cantidad);
+              const date = new Date(entrada.create_date);
+              entrada.hora = `${addZero(date.getHours())}:${addZero(date.getMinutes())}`;
+              entradasPorTipo.push(entrada);
             }
           }
         });
 
-        if (totalTipoIngreso !== 0) {
-          const tipoIngresoDetalle = {
-            tipo_ingreso: tipoIngreso.nombre,
-            total: totalTipoIngreso,
-            total_moneda: toFormatterCurrency(totalTipoIngreso),
-            cantidad_ingresos: ingresosPorTipo.length,
-            ingresos: ingresosPorTipo,
+        if (totalTipoEntrada !== 0) {
+          const tipoEntradaDetalle = {
+            tipo_entrada: tipoEntrada.nombre,
+            total: totalTipoEntrada,
+            total_moneda: toFormatterCurrency(totalTipoEntrada),
+            cantidad_entradas: entradasPorTipo.length,
+            entradas: entradasPorTipo,
           }
-          if (tipoIngresoDetalle.total > 0) {
-            tipoIngresosDetalles.push(tipoIngresoDetalle);
+          if (tipoEntradaDetalle.total > 0) {
+            tipoEntradasDetalles.push(tipoEntradaDetalle);
           }
         }
       });
 
       let total = 0;
-      tipoIngresosDetalles.forEach(tipoIngresoDetalle => {
-        return total += Number(tipoIngresoDetalle.total);
+      tipoEntradasDetalles.forEach(tipoEntradaDetalle => {
+        return total += Number(tipoEntradaDetalle.total);
       });
 
-      const dataIngreso = {
+      const dataEntrada = {
         forma_pago: formaPago.nombre,
         total: total,
         total_moneda: toFormatterCurrency(total),
-        tipo_ingresos_detalles: tipoIngresosDetalles,
+        tipo_entradas_detalles: tipoEntradasDetalles,
       }
-      if (dataIngreso.total > 0) {
-        dataIngresosTemp.push(dataIngreso);
+      if (dataEntrada.total > 0) {
+        dataEntradasTemp.push(dataEntrada);
       }
     });
-    setDataIngresos(dataIngresosTemp);
+    setDataEntradas(dataEntradasTemp);
   }
 
-  const loadDataPagosAnticipados = async (tipoIngresos, ingresos, formaPagos) => {
+  const loadDataPagosAnticipados = async (tipoEntradas, entradas, formaPagos) => {
 
-    const dataIngresosTemp = [];
+    const dataEntradasTemp = [];
     formaPagos.map((formaPago) => {
 
-      const tipoIngresosDetalles = [];
-      tipoIngresos.map((tipoIngreso) => {
+      const tipoEntradasDetalles = [];
+      tipoEntradas.map((tipoEntrada) => {
 
-        const ingresosPorTipo = [];
-        let totalTipoIngreso = 0;
+        const entradasPorTipo = [];
+        let totalTipoEntrada = 0;
 
-        ingresos.forEach(ingreso => {
-          if (ingreso.forma_pago._id === formaPago._id) {
-            if (ingreso.tipo_ingreso._id === tipoIngreso._id) {
-              totalTipoIngreso += Number(ingreso.cantidad);
-              const date = new Date(ingreso.create_date);
-              ingreso.hora = `${addZero(date.getHours())}:${addZero(date.getMinutes())}`;
-              ingresosPorTipo.push(ingreso);
+        entradas.forEach(entrada => {
+          if (entrada.forma_pago._id === formaPago._id) {
+            if (entrada.tipo_entrada._id === tipoEntrada._id) {
+              totalTipoEntrada += Number(entrada.cantidad);
+              const date = new Date(entrada.create_date);
+              entrada.hora = `${addZero(date.getHours())}:${addZero(date.getMinutes())}`;
+              entradasPorTipo.push(entrada);
             }
           }
         });
 
-        if (totalTipoIngreso !== 0) {
-          const tipoIngresoDetalle = {
-            tipo_ingreso: tipoIngreso.nombre,
-            total: totalTipoIngreso,
-            total_moneda: toFormatterCurrency(totalTipoIngreso),
-            cantidad_ingresos: ingresosPorTipo.length,
-            ingresos: ingresosPorTipo,
+        if (totalTipoEntrada !== 0) {
+          const tipoEntradaDetalle = {
+            tipo_entrada: tipoEntrada.nombre,
+            total: totalTipoEntrada,
+            total_moneda: toFormatterCurrency(totalTipoEntrada),
+            cantidad_entradas: entradasPorTipo.length,
+            entradas: entradasPorTipo,
           }
 
-          if (tipoIngresoDetalle.total > 0) {
-            tipoIngresosDetalles.push(tipoIngresoDetalle);
+          if (tipoEntradaDetalle.total > 0) {
+            tipoEntradasDetalles.push(tipoEntradaDetalle);
           }
         }
       });
 
       let total = 0;
-      tipoIngresosDetalles.forEach(tipoIngresoDetalle => {
-        return total += Number(tipoIngresoDetalle.total);
+      tipoEntradasDetalles.forEach(tipoEntradaDetalle => {
+        return total += Number(tipoEntradaDetalle.total);
       });
 
-      const dataIngreso = {
+      const dataEntrada = {
         forma_pago: formaPago.nombre,
         total: total,
         total_moneda: toFormatterCurrency(total),
-        tipo_ingresos_detalles: tipoIngresosDetalles,
+        tipo_entradas_detalles: tipoEntradasDetalles,
       }
 
-      if (dataIngreso.total > 0) {
-        dataIngresosTemp.push(dataIngreso);
+      if (dataEntrada.total > 0) {
+        dataEntradasTemp.push(dataEntrada);
       }
     });
-    setDataPagosAnticipados(dataIngresosTemp);
+    setDataPagosAnticipados(dataEntradasTemp);
   }
 
-  const loadDataEgresos = async (egresos, tipoEgresos) => {
+  const loadDataSalidas = async (salidas, tipoSalidas) => {
 
-    const dataEgresosTemp = [];
-    tipoEgresos.map((tipoEgreso) => {
-      const egresosPorTipo = [];
-      egresos.forEach(egreso => {
-        if (egreso.tipo_egreso._id === tipoEgreso._id) {
-          egresosPorTipo.push(egreso);
+    const dataSalidasTemp = [];
+    tipoSalidas.map((tipoSalida) => {
+      const salidasPorTipo = [];
+      salidas.forEach(salida => {
+        if (salida.tipo_salida._id === tipoSalida._id) {
+          salidasPorTipo.push(salida);
         }
       });
 
       let total = 0;
-      egresosPorTipo.forEach(egreso => {
-        return total += Number(egreso.cantidad);
+      salidasPorTipo.forEach(salida => {
+
+        return total += Number(salida.cantidad ? salida.cantidad : 0);
       });
-      const dataEgreso = {
-        tipo_egreso: tipoEgreso.nombre,
-        egresos_por_tipo: egresosPorTipo,
-        cantidad_egresos: egresosPorTipo.length,
+
+      const dataSalida = {
+        tipo_salida: tipoSalida.nombre,
+        salidas_por_tipo: salidasPorTipo,
+        cantidad_salidas: salidasPorTipo.length,
         total: total,
         total_moneda: toFormatterCurrency(total),
       }
-      if (dataEgreso.total > 0) {
-        dataEgresosTemp.push(dataEgreso);
+      if (dataSalida.total > 0) {
+        dataSalidasTemp.push(dataSalida);
       }
     });
-    setDataEgresos(dataEgresosTemp);
+    setDataSalidas(dataSalidasTemp);
   }
 
-  const loadIngresos = async (tipoIngresos, formaPagos, hora_apertura, hora_cierre) => {
-    const response = await showIngresosTodayBySucursalAndHoraAplicacion(sucursal, hora_apertura, hora_cierre ? hora_cierre : new Date());
+  const loadEntradas = async (tipoEntradas, formaPagos, hora_apertura, hora_cierre) => {
+    const response = await showEntradasTodayBySucursalAndHoraAplicacion(sucursal, hora_apertura, hora_cierre ? hora_cierre : new Date());
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       const data = response.data;
       data.map((item) => {
         item.cantidad_moneda = toFormatterCurrency(item.cantidad);
       });
-      setIngresos(data);
-      await loadDataIngresos(tipoIngresos, data, formaPagos);
+      setEntradas(data);
+      await loadDataEntradas(tipoEntradas, data, formaPagos);
       setIsLoading(false);
     }
   }
 
-  const loadPagosAnticipados = async (tipoIngresos, formaPagos, hora_apertura, hora_cierre) => {
-    const response = await showIngresosTodayBySucursalAndHoraAplicacionPA(sucursal, hora_apertura, hora_cierre ? hora_cierre : new Date());
+  const loadPagosAnticipados = async (tipoEntradas, formaPagos, hora_apertura, hora_cierre) => {
+    const response = await showEntradasTodayBySucursalAndHoraAplicacionPA(sucursal, hora_apertura, hora_cierre ? hora_cierre : new Date());
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       const data = response.data;
       data.map((item) => {
         item.cantidad_moneda = toFormatterCurrency(item.cantidad);
       });
       setPagosAnticipados(data);
-      await loadDataPagosAnticipados(tipoIngresos, data, formaPagos);
+      await loadDataPagosAnticipados(tipoEntradas, data, formaPagos);
       setIsLoading(false);
     }
   }
 
-  const loadEgresos = async (tipoEgresos, hora_apertura, hora_cierre) => {
-    const response = await showEgresosTodayBySucursalAndHoraAplicacion(sucursal, hora_apertura, hora_cierre ? hora_cierre : new Date());
+  const loadSalidas = async (tipoSalidas, hora_apertura, hora_cierre) => {
+    const response = await showSalidasTodayBySucursalAndHoraAplicacion(sucursal, hora_apertura, hora_cierre ? hora_cierre : new Date());
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       const data = response.data;
       data.map((item) => {
         item.cantidad_moneda = toFormatterCurrency(item.cantidad);
       });
-      setEgresos(data);
-      await loadDataEgresos(data, tipoEgresos);
+      setSalidas(data);
+      await loadDataSalidas(data, tipoSalidas);
       setIsLoading(false);
     }
   }
 
-  const loadMetodoPagos = async (tipoIngresos, hora_apertura, hora_cierre) => {
+  const loadMetodoPagos = async (tipoEntradas, hora_apertura, hora_cierre) => {
     const response = await showAllMetodoPago();
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       const formaPagos = response.data;
-      await loadIngresos(tipoIngresos, formaPagos, hora_apertura, hora_cierre);
-      await loadPagosAnticipados(tipoIngresos, formaPagos, hora_apertura, hora_cierre);
+      await loadEntradas(tipoEntradas, formaPagos, hora_apertura, hora_cierre);
+      //await loadPagosAnticipados(tipoEntradas, formaPagos, hora_apertura, hora_cierre);
     }
   }
 
-  const loadTipoIngresos = async (corte) => {
-    const response = await showAllTipoIngresos();
+  const loadTipoEntradas = async (corte) => {
+    const response = await showAllTipoEntradas();
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      const tipoIngresos = response.data;
-      await loadMetodoPagos(tipoIngresos, corte.hora_apertura, corte.hora_cierre);
+      const tipoEntradas = response.data;
+      await loadMetodoPagos(tipoEntradas, corte.hora_apertura, corte.hora_cierre);
     }
   }
 
-  const loadTipoEgresos = async (corte) => {
-    const response = await showAllTipoEgresos();
+  const loadTipoSalidas = async (corte) => {
+    const response = await showAllTipoSalidas();
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      const tipoEgresos = response.data;
-      await loadEgresos(tipoEgresos, corte.hora_apertura, corte.hora_cierre);
+      const tipoSalidas = response.data;
+      await loadSalidas(tipoSalidas, corte.hora_apertura, corte.hora_cierre);
     }
   }
 
-  const handleOpenNuevoIngreso = () => {
-    setOpenModalNuevoIngreso(true);
+  const handleOpenNuevoEntrada = () => {
+    setOpenModalNuevoEntrada(true);
   };
 
-  const handleOpenNuevoEgreso = () => {
-    setOpenModalNuevoEgreso(true);
+  const handleOpenNuevoSalida = () => {
+    setOpenModalNuevoSalida(true);
   };
 
   const handleOpenImprimir = () => {
-    setOpenModalInmprimir(true);
-  };
+    const newEntradas = [...dataEntradas, ...dataPagosAnticipados];
+
+    navigate('/imprimir/corte',
+      {
+        state: {
+          empleado: empleado,
+          sucursal: sucursal,
+          colorBase: colorBase,
+          corte: corte,
+          dataEntradas: newEntradas,
+          dataPagosAnticipados: dataPagosAnticipados,
+          dataSalidas: dataSalidas,
+        }
+      });
+  }
+
+  // const handleOpenImprimir = () => {
+  //   setOpenModalInmprimir(true);
+  // };
 
   const handleClose = () => {
-    setOpenModalNuevoIngreso(false);
-    setOpenModalNuevoEgreso(false);
+    setOpenModalNuevoEntrada(false);
+    setOpenModalNuevoSalida(false);
     setOpenModalInmprimir(false);
   };
 
@@ -418,23 +474,34 @@ const Corte = (props) => {
     setOpenAlert(false);
   };
 
-  const handleObtenerInformacion = async () => {
-    const response = await showCorteTodayBySucursalAndTurno(sucursal, turno);
+  const handleObtenerInformacion = async (reqTurno) => {
+    setIsLoading(true);
+    const response = await showCorteTodayBySucursalAndTurno(sucursal, reqTurno ? reqTurno : turno);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setCorte(response.data);
-      await loadTipoIngresos(response.data);
-      await loadTipoEgresos(response.data);
+      const resCorte = response.data;
+      setCorte(resCorte);
+      await loadTipoEntradas(resCorte);
+      await loadTipoSalidas(resCorte);
     }
     setIsLoading(false);
 
   };
+
+  const turnoActual = async () => {
+    const response = await findTurnoActualBySucursal(sucursal);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      const corte = response.data;
+      setTurno(corte.turno);
+      handleObtenerInformacion(corte.turno);
+    }
+  }
 
   const handleCambioTurno = () => {
     setTurno(turno === 'm' ? 'v' : 'm');
   };
 
   useEffect(() => {
-    handleObtenerInformacion();
+    turnoActual();
   }, []);
 
   const handleGuardarCorte = async () => {
@@ -443,9 +510,9 @@ const Corte = (props) => {
     const newCorte = {
       create_date: create_date,
       turno: turno,
-      ingresos: ingresos,
+      entradas: entradas,
       pagos_anticipados: pagosAnticipados,
-      egresos: egresos,
+      salidas: salidas,
       recepcionista: empleado._id,
       sucursal: sucursal._id,
     }
@@ -454,16 +521,16 @@ const Corte = (props) => {
       setSeverity('success');
       setMessage("CORTE GUARDADO CORRECTAMENTE.");
       setOpenAlert(true);
-      handleObtenerInformacion();
+      turnoActual();
     }
   }
 
   const handleGenerarCorte = async () => {
-    corte.egresos = egresos.map((egreso) => {
-      return egreso._id;
+    corte.salidas = salidas.map((salida) => {
+      return salida._id;
     });
-    corte.ingresos = ingresos.map((ingreso) => {
-      return ingreso._id;
+    corte.entradas = entradas.map((entrada) => {
+      return entrada._id;
     });
     corte.pagos_anticipados = pagosAnticipados.map((pagoAnticipado) => {
       return pagoAnticipado._id;
@@ -475,7 +542,7 @@ const Corte = (props) => {
       setSeverity('success');
       setMessage("EL CORTE SE GENERO.");
       setOpenAlert(true);
-      handleObtenerInformacion();
+      turnoActual();
     }
   }
 
@@ -488,7 +555,7 @@ const Corte = (props) => {
       setSeverity('success');
       setMessage("CORTE CERRADO.");
       setOpenAlert(true);
-      handleObtenerInformacion();
+      turnoActual();
       if (corte.turno === 'm') {
         const newCorte = {
           create_date: date,
@@ -507,32 +574,35 @@ const Corte = (props) => {
       {
         !isLoading ?
           <CorteContainer
-            columnsIngreso={columnsIngreso}
-            columnsEgreso={columnsEgreso}
-            tituloIngreso='INGRESOS BRUTOS'
+            actions={actions}
+            columnsEntrada={columnsEntrada}
+            columnsSalida={columnsSalida}
+            tituloEntrada='ENTRADAS'
             tituloPagoAnticipado='PAGOS ANTICIPADOS'
-            tituloEgreso='EGRESOS'
+            tituloSalida='SALIDAS'
             options={options}
-            openModalNuevoIngreso={openModalNuevoIngreso}
-            openModalNuevoEgreso={openModalNuevoEgreso}
+            openModalNuevoEntrada={openModalNuevoEntrada}
+            openModalNuevoSalida={openModalNuevoSalida}
             openModalImprimir={openModalImprimir}
-            dataIngresos={dataIngresos}
-            dataEgresos={dataEgresos}
+            dataEntradas={dataEntradas}
+            dataSalidas={dataSalidas}
             dataPagosAnticipados={dataPagosAnticipados}
-            handleOpenNuevoIngreso={handleOpenNuevoIngreso}
-            handleOpenNuevoEgreso={handleOpenNuevoEgreso}
+            handleOpenNuevoEntrada={handleOpenNuevoEntrada}
+            handleOpenNuevoSalida={handleOpenNuevoSalida}
             handleOpenImprimir={handleOpenImprimir}
             handleClose={handleClose}
             turno={turno}
             onCambioTurno={() => handleCambioTurno()}
             onObtenerInformacion={() => handleObtenerInformacion()}
+            turnoActual={() => turnoActual()}
             sucursal={sucursal}
             empleado={empleado}
+            colorBase={colorBase}
             setOpenAlert={setOpenAlert}
             setMessage={setMessage}
             setSeverity={setSeverity}
-            detailPanelIngreso={detailPanelIngreso}
-            detailPanelEgreso={detailPanelEgreso}
+            detailPanelEntrada={detailPanelEntrada}
+            detailPanelSalida={detailPanelSalida}
             handleGuardarCorte={() => handleGuardarCorte()}
             handleCerrarCorte={() => handleCerrarCorte()}
             onGenerarCorte={() => handleGenerarCorte()}

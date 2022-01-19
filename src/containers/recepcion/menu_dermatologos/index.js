@@ -2,11 +2,12 @@ import React, { useState, useEffect, Fragment } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import { Backdrop, CircularProgress } from '@material-ui/core';
 import { DermatologosContainer } from './dermatologos';
-import { findEmployeesByRolId } from '../../../services';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import PaymentIcon from '@material-ui/icons/Payment';
 import { addZero } from '../../../utils/utils';
+import { findEmployeesByRolIdAvailable } from "../../../services/empleados";
+import { useNavigate } from "react-router-dom";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -37,9 +38,12 @@ const Dermatologos = (props) => {
 
 	const classes = useStyles();
 
+	const navigate = useNavigate();
+
 	const {
 		sucursal,
 		empleado,
+		colorBase,
 	} = props;
 
 	const [openPagoDermatologo, setOpenPagoDermatologo] = useState(false);
@@ -57,20 +61,20 @@ const Dermatologos = (props) => {
 	const columnsDermatologos = [
 		{ title: 'NOMBRE', field: 'nombre' },
 		{ title: 'CÉDULA PROFESIONAL', field: 'cedula' },
-		{ title: 'FECHA INGRESO', field: 'fecha_ingreso_show' },
+		{ title: 'FECHA INGRESO', field: 'fecha_entrada_show' },
 		{ title: 'FECHA BAJA', field: 'fecha_baja_show' },
 	];
 
 	const columnsPatologos = [
 		{ title: 'NOMBRE', field: 'nombre' },
 		{ title: 'CÉDULA PROFESIONAL', field: 'cedula' },
-		{ title: 'FECHA INGRESO', field: 'fecha_ingreso_show' },
+		{ title: 'FECHA INGRESO', field: 'fecha_entrada_show' },
 		{ title: 'FECHA BAJA', field: 'fecha_baja_show' },
 	];
 
 	const optionsDermatologos = {
 		headerStyle: {
-			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+			backgroundColor: colorBase,
 			color: '#FFF',
 			fontWeight: 'bolder',
 			fontSize: '18px'
@@ -82,7 +86,7 @@ const Dermatologos = (props) => {
 
 	const optionsPatologos = {
 		headerStyle: {
-			backgroundColor: process.env.REACT_APP_TOP_BAR_COLOR,
+			backgroundColor: colorBase,
 			color: '#FFF',
 			fontWeight: 'bolder',
 			fontSize: '18px'
@@ -115,12 +119,30 @@ const Dermatologos = (props) => {
 
 	const handleClickGenerarPagoDermatologo = (event, rowData) => {
 		setDermatologo(rowData);
-		setOpenPagoDermatologo(true);
+		navigate('/imprimir/pagodermatologo',
+			{
+				state: {
+					empleado: empleado,
+					sucursal: sucursal,
+					dermatologo: rowData,
+					colorBase: colorBase,
+				}
+
+			});
 	}
 
 	const handleClickGenerarPagoPatologo = (event, rowData) => {
 		setPatologo(rowData);
-		setOpenPagoPatologo(true);
+		navigate('/imprimir/pagopatologo',
+			{
+				state: {
+					empleado: empleado,
+					sucursal: sucursal,
+					patologo: rowData,
+					colorBase: colorBase,
+				}
+
+			});
 	}
 
 
@@ -151,14 +173,14 @@ const Dermatologos = (props) => {
 	];
 
 	const loadDermatologos = async () => {
-		const response = await findEmployeesByRolId(dermatologoRolId);
+		const response = await findEmployeesByRolIdAvailable(dermatologoRolId, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			response.data.forEach(item => {
-				const fecha_ingreso = new Date(item.fecha_ingreso);
-				const fecha_ingreso_show = `${addZero(fecha_ingreso.getDate())}/${addZero(Number(fecha_ingreso.getMonth() + 1))}/${fecha_ingreso.getFullYear()}`;
+				const fecha_entrada = new Date(item.fecha_entrada);
+				const fecha_entrada_show = `${addZero(fecha_entrada.getDate())}/${addZero(Number(fecha_entrada.getMonth() + 1))}/${fecha_entrada.getFullYear()}`;
 				const fecha_baja = new Date(item.fecha_baja);
 				const fecha_baja_show = `${addZero(fecha_baja.getDate())}/${addZero(Number(fecha_baja.getMonth() + 1))}/${fecha_baja.getFullYear()}`;
-				item.fecha_ingreso_show = fecha_ingreso_show;
+				item.fecha_entrada_show = fecha_entrada_show;
 				item.fecha_baja_show = item.fecha_baja ? fecha_baja_show : 'VIGENTE';
 			});
 			setDermatologos(response.data);
@@ -167,14 +189,14 @@ const Dermatologos = (props) => {
 	}
 
 	const loadPatologos = async () => {
-		const response = await findEmployeesByRolId(patologoRolId);
+		const response = await findEmployeesByRolIdAvailable(patologoRolId, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			response.data.forEach(item => {
-				const fecha_ingreso = new Date(item.fecha_ingreso);
-				const fecha_ingreso_show = `${addZero(fecha_ingreso.getDate())}/${addZero(Number(fecha_ingreso.getMonth() + 1))}/${fecha_ingreso.getFullYear()}`;
+				const fecha_entrada = new Date(item.fecha_entrada);
+				const fecha_entrada_show = `${addZero(fecha_entrada.getDate())}/${addZero(Number(fecha_entrada.getMonth() + 1))}/${fecha_entrada.getFullYear()}`;
 				const fecha_baja = new Date(item.fecha_baja);
 				const fecha_baja_show = `${addZero(fecha_baja.getDate())}/${addZero(Number(fecha_baja.getMonth() + 1))}/${fecha_baja.getFullYear()}`;
-				item.fecha_ingreso_show = fecha_ingreso_show;
+				item.fecha_entrada_show = fecha_entrada_show;
 				item.fecha_baja_show = item.fecha_baja ? fecha_baja_show : 'VIGENTE';
 			});
 			setPatologos(response.data);
@@ -182,9 +204,13 @@ const Dermatologos = (props) => {
 		setIsLoading(false);
 	}
 
+	const loadAll = async () => {
+		await loadDermatologos();
+		await loadPatologos();
+	}
+
 	useEffect(() => {
-		loadDermatologos();
-		loadPatologos();
+		loadAll();
 	}, []);
 
 	return (
@@ -209,6 +235,7 @@ const Dermatologos = (props) => {
 						empleado={empleado}
 						openPagoPatologo={openPagoPatologo}
 						patologo={patologo}
+						colorBase={colorBase}
 						handleClose={handleClose} /> :
 					<Backdrop className={classes.backdrop} open={isLoading} >
 						<CircularProgress color="inherit" />

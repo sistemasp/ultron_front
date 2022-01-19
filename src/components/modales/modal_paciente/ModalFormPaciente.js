@@ -3,6 +3,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { TextField, Button, Grid, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 import { ButtonCustom } from '../../basic/ButtonCustom';
+import myStyles from '../../../css';
+import { CheckCustom } from '../../basic/CheckCustom';
+import { ComboCustom } from '../../basic/ComboCustom';
 
 function getModalStyle() {
   const top = 50;
@@ -15,30 +18,7 @@ function getModalStyle() {
   };
 }
 
-const useStyles = makeStyles(theme => ({
-  paper: {
-    position: 'absolute',
-    width: 400,
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-  },
-  textField: {
-    width: '100%',
-  },
-  button: {
-    width: '100%',
-    color: '#FFFFFF',
-  },
-  formControl: {
-    minWidth: 120,
-    width: '100%',
-  },
-}));
-
 const ModalFormPaciente = (props) => {
-  const classes = useStyles();
 
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
@@ -48,13 +28,20 @@ const ModalFormPaciente = (props) => {
     handleSubmit,
     onChange,
     onChangeSexo,
+    onChangeEmail,
+    onChangeFamiliar,
     dataComplete,
     onClickCancel,
     onClickGuardar,
+    onClickcConsulta,
     open,
     sexos,
+    colorBase,
+    sucursal,
   } = props;
-  
+
+  const classes = myStyles(colorBase)();
+
   return (
     <div>
       <Modal
@@ -64,6 +51,14 @@ const ModalFormPaciente = (props) => {
         <div style={modalStyle} className={classes.paper}>
           <form onSubmit={handleSubmit}>
             <Grid container spacing={3}>
+              <Grid item xs={12} sm={12} className={classes.grid_center}>
+                <CheckCustom
+                  checked={values.familiar}
+                  onChange={onChangeFamiliar}
+                  name="checkedF"
+                  label="ES FAMILIAR"
+                />
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   className={classes.textField}
@@ -86,11 +81,11 @@ const ModalFormPaciente = (props) => {
               <Grid item xs={12}>
                 <TextField
                 className={classes.textField}
-                name="direccion"
-                helperText={touched.direccion ? errors.direccion : ""}
-                error={Boolean(errors.direccion)}
+                name="domicilio"
+                helperText={touched.domicilio ? errors.domicilio : ""}
+                error={Boolean(errors.domicilio)}
                 label="Direccion"
-                value={values.direccion}
+                value={values.domicilio}
                 onChange={handleChange}
                 variant="outlined" />
               </Grid>
@@ -99,12 +94,22 @@ const ModalFormPaciente = (props) => {
                 <TextField
                   className={classes.textField}
                   name="telefono"
-                  label="TELEFONO"
+                  label="TELÉFONO"
                   value={values.telefono}
                   onChange={onChange}
                   inputProps={{
                     maxLength: "10",
                   }}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  className={classes.textField}
+                  name="email"
+                  label="EMAIL"
+                  value={values.email}
+                  onChange={onChangeEmail}
                   variant="outlined"
                 />
               </Grid>
@@ -123,17 +128,20 @@ const ModalFormPaciente = (props) => {
               </Grid>
               <Grid item xs={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-hora">SEXO</InputLabel>
-                  <Select
-                    labelId="simple-select-outlined-dermatologo"
-                    id="simple-select-outlined-dermatologo"
+                  <ComboCustom
+                    label='SEXO'
                     value={values.sexo}
                     onChange={onChangeSexo}
-                    name="sexo"
-                    label="SEXO" >
-                    {sexos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                  </Select>
+                    options={sexos} />
                 </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <ButtonCustom
+                  className={classes.buttonCancel}
+                  color="secondary"
+                  variant="contained"
+                  onClick={onClickCancel}
+                  text='CANCELAR' />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
@@ -144,17 +152,21 @@ const ModalFormPaciente = (props) => {
                   onClick={(e) => onClickGuardar(e, values)}
                   text='GUARDAR' />
               </Grid>
+              {sucursal._id === process.env.REACT_APP_SUCURSAL_OCCI_ID ||
+                sucursal._id === process.env.REACT_APP_SUCURSAL_FEDE_ID ?
+                <Grid item xs={12} sm={6}>
+                  <ButtonCustom
+                    className={classes.button}
+                    color="primary"
+                    variant="contained"
+                    disabled={dataComplete}
+                    onClick={(e) => onClickcConsulta(e, values)}
+                    text='CONSULTA' />
+                </Grid>
+                : ''
+              }
 
-              <Grid item xs={12} sm={6}>
-                <ButtonCustom
-                  className={classes.button}
-                  color="secondary"
-                  variant="contained"
-                  onClick={onClickCancel}
-                  text='CANCELAR' />
-              </Grid>
             </Grid>
-
           </form>
         </div>
       </Modal>

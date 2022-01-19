@@ -6,6 +6,9 @@ import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import { CheckCustom } from '../../basic/CheckCustom';
 import ModalPagos from '../modal_pagos';
+import myStyles from '../../../css';
+import { toFormatterCurrency } from '../../../utils/utils';
+import { ButtonCustom } from '../../basic/ButtonCustom';
 
 function getModalStyle() {
   const top = 50;
@@ -47,8 +50,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ModalFormProximaConsulta = (props) => {
-  const classes = useStyles();
-
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
 
@@ -62,7 +63,18 @@ const ModalFormProximaConsulta = (props) => {
     open,
     horarios,
     onChangeObservaciones,
+    onChangeDermatologo,
+    onChangeProductos,
+    productos,
+    onChangePaymentMethod,
+    formasPago,
+    onChangeSucursal,
+    sucursales,
+    dermatologos,
+    colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   return (
     <div>
@@ -74,12 +86,22 @@ const ModalFormProximaConsulta = (props) => {
           <form onSubmit={handleSubmit}>
             <Grid container spacing={1}>
               <Grid item xs={12}>
-                <h2 className={classes.label}>{values.paciente_nombre} ({values.telefono})</h2>
-              </Grid>
-              <Grid item xs={12}>
-                <h3 className={classes.label}>DERMATÓLOGO: {values.dermatologo.nombre}</h3>
+                <h1 className={classes.label}>{`CONSULTA ${toFormatterCurrency(values.precio)}`}</h1>
               </Grid>
 
+              <Grid item xs={12}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-hora">SUCURSAL</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-hora"
+                    id="simple-select-outlined-hora"
+                    value={values.sucursal}
+                    onChange={onChangeSucursal}
+                    label="SUCURSAL" >
+                    {sucursales.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
               <Grid item xs={12} sm={6}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDatePicker
@@ -102,7 +124,7 @@ const ModalFormProximaConsulta = (props) => {
 
               <Grid item xs={12} sm={6}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-hora">Hora</InputLabel>
+                  <InputLabel id="simple-select-outlined-hora">HORA</InputLabel>
                   <Select
                     labelId="simple-select-outlined-hora"
                     id="simple-select-outlined-hora"
@@ -113,9 +135,48 @@ const ModalFormProximaConsulta = (props) => {
                   </Select>
                 </FormControl>
               </Grid>
+              <Grid item xs={12}>
+                <h2 className={classes.label_left}>{values.paciente_nombre}</h2>
+              </Grid>
+              <Grid item sm={12}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-hora">PRODUCTO</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-producto"
+                    id="simple-select-outlined-producto"
+                    value={values.producto}
+                    onChange={onChangeProductos}
+                    label="PRODUCTO" >
+                    {productos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO (A)</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-dermatologo"
+                    id="simple-select-outlined-dermatologo"
+                    value={values.dermatologo}
+                    onChange={onChangeDermatologo}
+                    label="DERMATÓLOGO (A)" >
+                    {dermatologos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
 
               <Grid item xs={12}>
-                <h3 className={classes.label}>PRECIO: {values.precio}</h3>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-payment">FORMA DE PAGO</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-payment"
+                    id="simple-select-outlined-payment"
+                    value={values.forma_pago}
+                    onChange={onChangePaymentMethod}
+                    label="FORMA DE PAGO" >
+                    {formasPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
               </Grid>
 
               <Grid item xs={12}>
@@ -129,23 +190,21 @@ const ModalFormProximaConsulta = (props) => {
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                <Button
-                  className={classes.button}
-                  color="primary"
+                <ButtonCustom
+                  className={classes.buttonCancel}
+                  color="secondary"
                   variant="contained"
-                  onClick={() => onClickProximarCita(values)} >
-                  REAGENDAR
-                </Button>
+                  onClick={onClose}
+                  text="CANCELAR" />
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                <Button
+                <ButtonCustom
                   className={classes.button}
-                  color="secondary"
+                  color="primary"
                   variant="contained"
-                  onClick={onClose} >
-                  Cancelar
-              </Button>
+                  onClick={() => onClickProximarCita(values)}
+                  text="REAGENDAR" />
               </Grid>
             </Grid>
           </form>

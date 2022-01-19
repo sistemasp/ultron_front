@@ -11,11 +11,11 @@ import { Modal, Grid } from '@material-ui/core';
 import { ButtonCustom } from '../../basic/ButtonCustom';
 import TabAparatologia from './aparatologia';
 import TabFaciales from './faciales';
-import TabLaser from './laser';
 import TabBiopsias from './biopsias';
-import TabCirugias from './cirugias';
+import TabCuraciones from './curaciones';
 import TabEstetica from './estetica';
 import TabDermapen from './dermapen';
+import myStyles from '../../../css';
 
 function getModalStyle() {
 	const top = 50;
@@ -59,34 +59,13 @@ function a11yProps(index) {
 }
 
 const useStyles = makeStyles(theme => ({
-	paper: {
-		position: 'absolute',
-		width: '95%',
-		backgroundColor: theme.palette.background.paper,
-		border: '2px solid #000',
-		boxShadow: theme.shadows[5],
-		padding: theme.spacing(2, 4, 3),
-	},
 	root: {
 		flexGrow: 1,
 		backgroundColor: theme.palette.background.paper,
-	},
-	menuButton: {
-		marginRight: theme.spacing(2),
-	},
-	title: {
-		flexGrow: 1,
-	},
-	bar: {
-		backgroundColor: "#2BA6C6",
-	},
-	button: {
-		width: '100%',
 	}
 }));
 
 export const MenuHistoricoContainer = props => {
-	const classes = useStyles();
 
 	// getModalStyle is not a pure function, we roll the style only on the first render
 	const [modalStyle] = React.useState(getModalStyle);
@@ -99,7 +78,11 @@ export const MenuHistoricoContainer = props => {
 		sucursal,
 		onClickCancel,
 		servicios,
+		empleado,
+		colorBase,
 	} = props;
+
+	const classes = myStyles(colorBase)();
 
 	return (
 		<div>
@@ -107,75 +90,81 @@ export const MenuHistoricoContainer = props => {
 				aria-labelledby="simple-modal-title"
 				aria-describedby="simple-modal-description"
 				open={open} >
-				<div style={modalStyle} className={classes.paper}>
-					<div className={classes.root}>
-						<h1> HISTORIAL: {`${paciente.nombres} ${paciente.apellidos}`} </h1>
-						<AppBar className={classes.bar} position="static">
-							<Tabs
-								value={value}
-								onChange={onChangeTab}
-								aria-label="simple tabs"
-								variant="scrollable"
-								scrollButtons="on" >
-								{
-									servicios.map((item, index) => {
-										return <Tab label={item.nombre} {...a11yProps(index)} />
-									})
-								}
-							</Tabs>
-						</AppBar>
-						<TabPanel value={value} index={0}>
-							<TabAparatologia
-								paciente={paciente}
-								sucursal={sucursal}
-								servicio={servicios[0]} />
-						</TabPanel>
-						<TabPanel value={value} index={1}>
-							<TabBiopsias
-								paciente={paciente}
-								sucursal={sucursal}
-								servicio={servicios[1]} />
-						</TabPanel>
-						<TabPanel value={value} index={2}>
-							<TabCirugias
-								paciente={paciente}
-								sucursal={sucursal}
-								servicio={servicios[2]} />
-						</TabPanel>
-						<TabPanel value={value} index={3}>
-							<TabConsultas
-								paciente={paciente}
-								sucursal={sucursal}
-								servicio={servicios[3]} />
-						</TabPanel>
-						<TabPanel value={value} index={4}>
-							<TabDermapen
-								paciente={paciente}
-								sucursal={sucursal}
-								servicio={servicios[4]} />
-						</TabPanel>
-						<TabPanel value={value} index={5}>
-							<TabEstetica
-								paciente={paciente}
-								sucursal={sucursal}
-								servicio={servicios[5]} />
-						</TabPanel>
-						<TabPanel value={value} index={6}>
-							<TabFaciales
-								paciente={paciente}
-								sucursal={sucursal}
-								servicio={servicios[6]} />
-						</TabPanel>
-						<TabPanel value={value} index={7}>
-							<TabLaser
-								paciente={paciente}
-								sucursal={sucursal}
-								servicio={servicios[7]} />
-						</TabPanel>
-					</div>
+				<div style={modalStyle} className={classes.paper_95}>
+					<h1> HISTORIAL: {`${paciente.nombres} ${paciente.apellidos}`} </h1>
+					<AppBar className={classes.bar} position="static">
+						<Tabs
+							value={value}
+							onChange={onChangeTab}
+							aria-label="simple tabs"
+							variant="scrollable"
+							scrollButtons="on" >
+							{
+								servicios.map((item, index) => {
+									return <Tab label={item.nombre} {...a11yProps(index)} />
+								})
+							}
+						</Tabs>
+					</AppBar>
+					<TabPanel value={value} index={0}>
+						<TabAparatologia
+							paciente={paciente}
+							sucursal={sucursal}
+							servicio={servicios[0]}
+							colorBase={colorBase}
+							empleado={empleado} />
+					</TabPanel>
+					<TabPanel value={value} index={1}>
+						<TabBiopsias
+							paciente={paciente}
+							sucursal={sucursal}
+							servicio={servicios[1]}
+							colorBase={colorBase}
+							empleado={empleado} />
+					</TabPanel>
+					<TabPanel value={value} index={2}>
+						<TabConsultas
+							paciente={paciente}
+							sucursal={sucursal}
+							servicio={servicios[2]}
+							colorBase={colorBase}
+							empleado={empleado} />
+					</TabPanel>
+					<TabPanel value={value} index={3}>
+						<TabCuraciones
+							paciente={paciente}
+							sucursal={sucursal}
+							servicio={servicios[3]}
+							colorBase={colorBase}
+							empleado={empleado} />
+					</TabPanel>
+					<TabPanel value={value} index={4}>
+						<TabDermapen
+							paciente={paciente}
+							sucursal={sucursal}
+							servicio={servicios[4]}
+							colorBase={colorBase}
+							empleado={empleado} />
+					</TabPanel>
+					<TabPanel value={value} index={5}>
+						<TabEstetica
+							paciente={paciente}
+							sucursal={sucursal}
+							servicio={servicios[5]}
+							colorBase={colorBase}
+							empleado={empleado} />
+					</TabPanel>
+					<TabPanel value={value} index={6}>
+						<TabFaciales
+							paciente={paciente}
+							sucursal={sucursal}
+							servicio={servicios[6]}
+							colorBase={colorBase}
+							empleado={empleado} />
+					</TabPanel>
 					<Grid item xs={12} sm={12}>
 						<ButtonCustom
-							className={classes.button}
+							className={classes.buttonCancel}
 							color="secondary"
 							variant="contained"
 							onClick={onClickCancel}

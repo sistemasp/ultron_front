@@ -61,7 +61,7 @@ const ModalFormConsultorio = (props) => {
           <form onSubmit={handleSubmit}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <h2>Consultorio</h2>
+                <h2>CONSULTORIO</h2>
                 </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -84,13 +84,12 @@ const ModalFormConsultorio = (props) => {
                   text='GUARDAR' />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Button
+                <ButtonCustom
                   className={classes.button}
                   color="secondary"
                   variant="contained"
-                  onClick={onClickCancel} >
-                    CANCELAR
-                </Button>
+                  onClick={onClickCancel}
+                  text="CANCELAR" />
               </Grid>
             </Grid>
             

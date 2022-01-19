@@ -8,6 +8,7 @@ import { Multiselect } from 'multiselect-react-dropdown';
 import ModalConfirmacion from '../modal_confirmacion';
 import { ButtonCustom } from '../../basic/ButtonCustom';
 import { toFormatterCurrency } from '../../../utils/utils';
+import myStyles from '../../../css';
 
 function getModalStyle() {
   const top = 50;
@@ -53,8 +54,6 @@ const noAsistioStatusId = process.env.REACT_APP_NO_ASISTIO_STATUS_ID;
 const reagendoStatusId = process.env.REACT_APP_REAGENDO_STATUS_ID;
 
 const ModalFormDermapen = (props) => {
-  const classes = useStyles();
-
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
 
@@ -66,18 +65,31 @@ const ModalFormDermapen = (props) => {
     onChangeTiempo,
     onChangeTipoCita,
     onChangeStatus,
+    onChangeFrecuencia,
+    onChangeAreas,
+    onChangeTotal,
+    frecuencias,
+    areas,
     isValid,
     onClickCancel,
     materiales,
     onClickActualizarDermapen,
     open,
     horarios,
-    doctores,
+    dermatologos,
     tipoCitas,
     statements,
     onChangeMotivos,
     onChangeObservaciones,
     onChangeDermatologo,
+    onChangeMedio,
+    onChangePromovendedor,
+    onChangePaymentMethod,
+    formasPago,
+    promovendedores,
+    onChangeCosmetologa,
+    cosmetologas,
+    medios,
     empleado,
     sucursal,
     openModalConfirmacion,
@@ -85,7 +97,10 @@ const ModalFormDermapen = (props) => {
     onConfirmModalConfirmacion,
     onChangeMateriales,
     onChangeItemPrecio,
+    colorBase,
   } = props;
+
+  const classes = myStyles(colorBase)();
 
   return (
     <div>
@@ -101,28 +116,29 @@ const ModalFormDermapen = (props) => {
                   open={openModalConfirmacion}
                   onClose={onCloseModalConfirmacion}
                   onConfirm={onConfirmModalConfirmacion}
+                  colorBase={colorBase}
                   empleado={empleado} />
                 : ''
             }
             <Grid container spacing={1}>
               <Grid item xs={12}>
-                <h2 className={classes.label}>{values.paciente_nombre} ({values.telefono})</h2>
+                <h1 className={classes.label}> {values.servicio.nombre} {toFormatterCurrency(values.total)}</h1>
               </Grid>
               <Grid item xs={12}>
-                <h3 className={classes.label}>Servicio: {values.servicio.nombre}</h3>
+                <h2 className={classes.label}>{values.fecha_actual} - {values.hora_actual} HRS</h2>
               </Grid>
-              <Grid item xs={12} className={classes.label}>
-                <h1 className={classes.label}>Total: {toFormatterCurrency(values.total)}</h1>
+              <Grid item xs={12}>
+                <h2 className={classes.label}>{values.paciente_nombre}</h2>
               </Grid>
               <Grid item xs={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-statements">ESTADO</InputLabel>
+                  <InputLabel id="simple-select-outlined-statements">STATUS</InputLabel>
                   <Select
                     labelId="simple-select-outlined-statements"
                     id="simple-select-outlined-statements"
                     value={values.status}
                     onChange={onChangeStatus}
-                    label="ESTADO" >
+                    label="STATUS" >
                     {statements.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
                   </Select>
                 </FormControl>
@@ -166,32 +182,6 @@ const ModalFormDermapen = (props) => {
                   </Fragment>
                   : ''
               }
-
-              <Grid item xs={12} >
-                <Multiselect
-                  options={materiales} // Options to display in the dropdown
-                  displayValue="nombre" // Property name to display in the dropdown options
-                  onSelect={(e) => onChangeMateriales(e)} // Function will trigger on select event
-                  onRemove={(e) => onChangeMateriales(e)} // Function will trigger on remove event
-                  placeholder="SELECCIONA MATERIALES"
-                  selectedValues={values.materiales} // Preselected value to persist in dropdown
-                />
-              </Grid>
-
-              {
-                values.materiales.map((item, index) =>
-                  <Grid item xs={12}>
-                    <TextField
-                      className={classes.button}
-                      name={item.precio}
-                      label={`PRECIO: ${item.nombre}`}
-                      value={item.precio}
-                      type='Number'
-                      onChange={(e) => onChangeItemPrecio(e, index)}
-                      variant="outlined" />
-                  </Grid>)
-              }
-
               {
                 values.status === canceloStatusId || values.status === noAsistioStatusId || values.status === reagendoStatusId ?
                   <Grid item xs={12}>
@@ -207,24 +197,118 @@ const ModalFormDermapen = (props) => {
               }
 
               <Grid item xs={12}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-frecuencia">FRECUENCIA</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-frecuencia"
+                    id="simple-select-outlined-frecuencia"
+                    value={values.frecuencia}
+                    onChange={onChangeFrecuencia}
+                    label="FRECUENCIA" >
+                    {frecuencias.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <h2 className={classes.label}>{`TIPO: ${values.tipo_cita.nombre}`}</h2>
+              </Grid>
+
+              <Grid item xs={12}>
+                <h2 className={classes.label}>{`PRODUCTO: ${values.producto.nombre}`}</h2>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Multiselect
+                  options={areas} // Options to display in the dropdown
+                  displayValue="nombre" // Property name to display in the dropdown options
+                  onSelect={(e) => onChangeAreas(e)} // Function will trigger on select event
+                  onRemove={(e) => onChangeAreas(e)} // Function will trigger on remove event
+                  placeholder={`ÁREAS`}
+                  selectedValues={values.areas} // Preselected value to persist in dropdown
+                />
+              </Grid>
+
+              <Grid item xs={12}>
                 {
                   /* values.dermatologo*/ false ?
-                    <h3 className={classes.label}>DERMATÓLOGO: {values.dermatologo.nombre}</h3> :
+                    <h3 className={classes.label}>DERMATÓLOGO (A): {values.dermatologo.nombre}</h3> :
                     <FormControl variant="outlined" className={classes.formControl}>
-                      <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO</InputLabel>
+                      <InputLabel id="simple-select-outlined-hora">DERMATÓLOGO (A)</InputLabel>
                       <Select
                         labelId="simple-select-outlined-dermatologo"
                         id="simple-select-outlined-dermatologo"
                         value={values.dermatologo}
                         onChange={onChangeDermatologo}
-                        label="DERMATÓLOGO" >
-                        {doctores.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                        label="DERMATÓLOGO (A)" >
+                        {dermatologos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
                       </Select>
                     </FormControl>
                 }
               </Grid>
+
               <Grid item xs={12}>
-                <h2 className={classes.label}>{values.fecha_actual} - {values.hora_actual} HRS</h2>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-tipo-dermapen">MEDIO</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-tipo-dermapen"
+                    id="simple-select-outlined-tipo-dermapen"
+                    value={values.medio}
+                    onChange={onChangeMedio}
+                    label="MEDIO" >
+                    {medios.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-promovendedor">PROMOVENDEDOR (A)</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-promovendedor"
+                    id="simple-select-outlined-promovendedor"
+                    value={values.promovendedor}
+                    onChange={onChangePromovendedor}
+                    label="PROMOVENDEDOR (A)" >
+                    {promovendedores.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-cosmetologa">COSMETÓLOGA</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-cosmetologa"
+                    id="simple-select-outlined-cosmetologa"
+                    value={values.cosmetologa}
+                    onChange={onChangeCosmetologa}
+                    label="COSMETÓLOGA" >
+                    {cosmetologas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12} >
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-payment">FORMA DE PAGO</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-payment"
+                    id="simple-select-outlined-payment"
+                    value={values.forma_pago}
+                    onChange={onChangePaymentMethod}
+                    label="FORMA DE PAGO" >
+                    {formasPago.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  className={classes.textField}
+                  name="observaciones"
+                  //helperText={touched.observaciones ? errors.observaciones : ""}
+                  label="OBSERVACIONES"
+                  value={values.observaciones}
+                  onChange={onChangeObservaciones}
+                  variant="outlined" />
               </Grid>
 
               <Grid item xs={12}>
@@ -243,34 +327,53 @@ const ModalFormDermapen = (props) => {
               </Grid>
 
               <Grid item xs={12}>
-                {
-                  /* values.tipo_cita */ false ?
-                    <h3 className={classes.label}>TIPO CITA: {values.tipo_cita.nombre}</h3> :
-                    <FormControl variant="outlined" className={classes.formControl}>
-                      <InputLabel id="simple-select-outlined-tipo-cita">TIPO CITA</InputLabel>
-                      <Select
-                        labelId="simple-select-outlined-tipo-cita"
-                        id="simple-select-outlined-tipo-cita"
-                        value={values.tipo_cita}
-                        onChange={onChangeTipoCita}
-                        label="TIPO CITA" >
-                        {tipoCitas.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                      </Select>
-                    </FormControl>
-                }
-              </Grid>
-
-              <Grid item xs={12}>
                 <TextField
                   className={classes.textField}
-                  name="observaciones"
-                  //helperText={touched.observaciones ? errors.observaciones : ""}
-                  label="OBSERVACIONES"
-                  value={values.observaciones}
-                  onChange={onChangeObservaciones}
+                  name="total"
+                  label="PRECIO"
+                  value={values.precio}
+                  type='Number'
+                  onChange={onChangeTotal}
+                  onInput={(e) => {
+                    e.target.value = e.target.value < 0 ? 0 : e.target.value;
+                    e.target.value = Math.max(0, parseFloat(e.target.value)).toString().slice(0, 6)
+                  }}
                   variant="outlined" />
               </Grid>
 
+              <Grid item xs={12} >
+                <Multiselect
+                  options={materiales} // Options to display in the dropdown
+                  displayValue="nombre" // Property name to display in the dropdown options
+                  onSelect={(e) => onChangeMateriales(e)} // Function will trigger on select event
+                  onRemove={(e) => onChangeMateriales(e)} // Function will trigger on remove event
+                  placeholder="SELECCIONA MATERIALES"
+                  selectedValues={values.materiales} // Preselected value to persist in dropdown
+                />
+              </Grid>
+
+              {
+                values.materiales.map((item, index) =>
+                  <Grid item xs={12}>
+                    <TextField
+                      className={classes.textField}
+                      name={item.precio}
+                      label={`PRECIO: ${item.nombre}`}
+                      value={item.precio}
+                      type='Number'
+                      onChange={(e) => onChangeItemPrecio(e, index)}
+                      variant="outlined" />
+                  </Grid>)
+              }
+
+              <Grid item xs={12} sm={6}>
+                <ButtonCustom
+                  className={classes.buttonCancel}
+                  color="secondary"
+                  variant="contained"
+                  onClick={onClickCancel}
+                  text='CANCELAR' />
+              </Grid>
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
                   className={classes.button}
@@ -278,14 +381,6 @@ const ModalFormDermapen = (props) => {
                   variant="contained"
                   onClick={(e) => onClickActualizarDermapen(e, values)}
                   text='GUARDAR' />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <ButtonCustom
-                  className={classes.button}
-                  color="secondary"
-                  variant="contained"
-                  onClick={onClickCancel}
-                  text='CANCELAR' />
               </Grid>
             </Grid>
           </form>
