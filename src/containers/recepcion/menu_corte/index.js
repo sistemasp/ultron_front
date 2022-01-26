@@ -22,6 +22,7 @@ import {
   findTurnoActualBySucursal,
   showCorteTodayBySucursalAndTurno,
   updateCorte,
+  openCorte,
 } from "../../../services/corte";
 import { showAllTipoEntradas } from "../../../services/tipo_entradas";
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
@@ -487,6 +488,13 @@ const Corte = (props) => {
 
   };
 
+  const handleAbrirCorte = async (corte) => {
+    setIsLoading(true);
+    await openCorte(corte._id);
+    handleObtenerInformacion(corte.turno);
+    setIsLoading(false);
+  }
+
   const turnoActual = async () => {
     const response = await findTurnoActualBySucursal(sucursal);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
@@ -594,6 +602,7 @@ const Corte = (props) => {
             turno={turno}
             onCambioTurno={() => handleCambioTurno()}
             onObtenerInformacion={() => handleObtenerInformacion()}
+            onClickAbrirCorte={handleAbrirCorte}
             turnoActual={() => turnoActual()}
             sucursal={sucursal}
             empleado={empleado}

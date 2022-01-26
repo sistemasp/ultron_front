@@ -17,6 +17,7 @@ export const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICI
 export const esquemasCatalogoId = process.env.REACT_APP_ESQUEMAS_CATALOGO_ID;
 
 export const laserTratamientoId = process.env.REACT_APP_LASER_TRATAMIENTO_ID;
+export const tratamientoLuzpulzadaId = process.env.REACT_APP_LUZ_PULZADA_TRATAMIENTO_ID;
 export const peelingResorcinaTratamientoId = process.env.REACT_APP_PEELING_RESORCINA_TRATAMIENTO_ID;
 export const micropeelingResorcinaTratamientoId = process.env.REACT_APP_MICROPEELING_RESORCINA_TRATAMIENTO_ID;
 
@@ -35,8 +36,6 @@ export const tipoSalidaCuracionesId = process.env.REACT_APP_TIPO_SALIDA_CURACION
 export const tipoSalidaFacialesId = process.env.REACT_APP_TIPO_SALIDA_FACIALES_ID;
 export const tipoSalidaGastosAdministrativosId = process.env.REACT_APP_TIPO_SALIDA_GASTOS_ADMINISTRATIVOS_ID;
 export const tipoSalidaPagoPatologoId = process.env.REACT_APP_TIPO_SALIDA_PAGO_PATOLOGO_ID;
-
-export const tratamientoLuzpulzadaId = process.env.REACT_APP_LUZ_PULZADA_TRATAMIENTO_ID;
 
 export const formaPagoEfectivoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
 export const formaPagoTarjetaId = process.env.REACT_APP_FORMA_PAGO_TARJETA;
