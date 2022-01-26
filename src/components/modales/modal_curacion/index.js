@@ -228,6 +228,7 @@ const ModalCuracion = (props) => {
               tipo_salida: tipoSalidaCuracionesId,
               recepcionista: empleado,
               turno: turno === 'm' ? 'MATUTINO' : 'VESPERTINO',
+              descripcion: "CURACIÓN",
               concepto: material.nombre,
               cantidad: material.precio,
               retencion: 0,

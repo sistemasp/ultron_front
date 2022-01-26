@@ -8,6 +8,7 @@ import ModalNuevoEntrada from '../../../components/modales/modal_nuevo_entrada';
 import ModalNuevoSalida from '../../../components/modales/modal_nuevo_salida';
 import ModalImprimirCorte from '../../../components/modales/imprimir/corte';
 import { toFormatterCurrency } from '../../../utils/utils';
+import { rolPromovendedorId, rolRecepcionistaId } from '../../../utils/constants';
 
 export const CorteContainer = (props) => {
 
@@ -28,6 +29,7 @@ export const CorteContainer = (props) => {
     turno,
     onCambioTurno,
     onObtenerInformacion,
+    onClickAbrirCorte,
     onGenerarCorte,
     openModalNuevoEntrada,
     openModalNuevoSalida,
@@ -136,51 +138,67 @@ export const CorteContainer = (props) => {
       }
 
       <Grid container spacing={2}>
-        <Grid item xs={12} className={classes.label}>
-          <h2 className={classes.labelItemCenter}>CORTE DEL TURNO: {turno === 'm' ? 'MATUTINO' : 'VESPERTINO'}</h2>
-        </Grid>
-        <Grid item xs={4} className={classes.label}>
-          <ButtonCustom
-            className={classes.button}
-            color="primary"
-            variant="contained"
-            onClick={onCambioTurno}
-            text='CAMBIO TURNO' />
-        </Grid>
-        <Grid item xs={4} className={classes.label}>
-          <ButtonCustom
-            className={classes.button}
-            color="primary"
-            variant="contained"
-            onClick={() => onObtenerInformacion(turno)}
-            text='TRAER INFORMACIÓN' />
-        </Grid>
-        <Grid item xs={4} className={classes.label}>
-          {
-            corte.hora_cierre ?
-              corte.generado ?
-                <ButtonCustom
-                  className={classes.button}
-                  color="primary"
-                  variant="contained"
-                  onClick={handleOpenImprimir}
-                  text='IMPRIMIR' />
+        <Grid container spacing={2}>
+          <Grid item xs={12} className={classes.label}>
+            <h2 className={classes.labelItemCenter}>CORTE DEL TURNO: {turno === 'm' ? 'MATUTINO' : 'VESPERTINO'}</h2>
+          </Grid>
+          <Grid item xs={true} className={classes.label}>
+            <ButtonCustom
+              className={classes.button}
+              color="primary"
+              variant="contained"
+              onClick={onCambioTurno}
+              text='CAMBIO TURNO' />
+          </Grid>
+          <Grid item xs={true} className={classes.label}>
+            <ButtonCustom
+              className={classes.button}
+              color="primary"
+              variant="contained"
+              onClick={() => onObtenerInformacion(turno)}
+              text='TRAER INFORMACIÓN' />
+          </Grid>
+          <Grid item xs={true} className={classes.label}>
+            {
+              corte.hora_cierre ?
+                corte.generado ?
+                  <ButtonCustom
+                    className={classes.button}
+                    color="primary"
+                    variant="contained"
+                    onClick={handleOpenImprimir}
+                    text='IMPRIMIR' />
+                  :
+                  <ButtonCustom
+                    className={classes.button}
+                    color="primary"
+                    variant="contained"
+                    onClick={onGenerarCorte}
+                    text='GENERAR' />
                 :
                 <ButtonCustom
                   className={classes.button}
                   color="primary"
                   variant="contained"
-                  onClick={onGenerarCorte}
-                  text='GENERAR' />
-              :
-              <ButtonCustom
-                className={classes.button}
-                color="primary"
-                variant="contained"
-                onClick={handleCerrarCorte}
-                text='CERRAR CORTE' />
+                  onClick={handleCerrarCorte}
+                  text='CERRAR CORTE' />
+            }
+          </Grid>
+          {
+            empleado.rol._id !== rolRecepcionistaId && empleado.rol._id !== rolPromovendedorId
+              && corte.hora_cierre && corte.turno === 'v' ?
+              <Grid item xs={true} className={classes.label}>
+
+                <ButtonCustom
+                  className={classes.button}
+                  color="primary"
+                  variant="contained"
+                  onClick={() => onClickAbrirCorte(corte, corte)}
+                  text='ABRIR CORTE' />
+              </Grid> : ''
           }
         </Grid>
+
         <Grid item xs={12} sm={8}>
           <TableComponent
             titulo={tituloEntrada}
