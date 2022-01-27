@@ -22,6 +22,8 @@ import { showAllStatusVisibles } from '../../../services/status';
 import { findAreasByTreatmentServicio } from '../../../services/areas';
 import { findEmployeesByRolIdAvailable } from '../../../services/empleados';
 import { deletePago, updatePago } from '../../../services/pagos';
+import { createSalida, findSalidaById, updateSalida } from '../../../services/salidas';
+import { formaPagoEfectivoId, tipoSalidaCuracionesId } from '../../../utils/constants';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -46,6 +48,8 @@ const ModalDermapen = (props) => {
     setFilterDate,
     colorBase,
   } = props;
+
+  const token = empleado.access_token;
 
   const promovendedorRolId = process.env.REACT_APP_PROMOVENDEDOR_ROL_ID;
   const cosmetologaRolId = process.env.REACT_APP_COSMETOLOGA_ROL_ID;
@@ -211,7 +215,7 @@ const ModalDermapen = (props) => {
     }
 
     if (rowData.status === reagendoStatusId) {
-      await updateDermapen(dermapen._id, rowData, empleado.access_token);
+      await updateDermapen(dermapen._id, rowData, token);
       rowData.quien_agenda = empleado._id;
       rowData.sucursal = sucursal;
       rowData.status = pendienteStatusId;
@@ -220,7 +224,7 @@ const ModalDermapen = (props) => {
       rowData.hora_salida = '--:--';
       rowData.observaciones = `DERMAPEN REAGENDADO ${values.fecha_actual} - ${values.hora_actual} HRS`;
       rowData.fecha_hora = rowData.nueva_fecha_hora;
-      const response = await createDermapen(rowData, empleado.access_token);
+      const response = await createDermapen(rowData, token);
 
       if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
         setOpenAlert(true);
@@ -243,8 +247,43 @@ const ModalDermapen = (props) => {
         fecha_show: rowData.fecha_show,
         fecha: `${dia}/${mes}/${anio}`
       });
-      await updateDermapen(dermapen._id, rowData, empleado.access_token);
-      await loadDermapens(rowData.fecha_show);
+      if (rowData.materiales.length > 0) {
+        rowData.materiales.forEach(async (material) => {
+          const responseSalida = await (material.salidaId ? findSalidaById(material.salidaId) : '0');
+
+          if (responseSalida === '0' || `${responseSalida.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
+            || `${responseSalida.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+            const resSalida = responseSalida.data;
+
+            const salida = {
+              ...resSalida,
+              create_date: new Date(),
+              hora_aplicacion: rowData.hora_aplicacion ? rowData.hora_aplicacion : new Date(),
+              tipo_salida: tipoSalidaCuracionesId,
+              recepcionista: empleado,
+              turno: rowData.turno === 'M' ? 'MATUTINO' : 'VESPERTINO',
+              descripcion: "DERMAPEN",
+              concepto: material.nombre,
+              cantidad: material.precio,
+              retencion: 0,
+              sucursal: sucursal,
+              forma_pago: formaPagoEfectivoId,
+            }
+
+            const response = await (salida._id ? updateSalida(salida._id, salida, token) : createSalida(salida, token));
+            if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
+              || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+              material.salidaId = material.salidaId ? material.salidaId : response.data._id;
+              await updateDermapen(dermapen._id, rowData, token)
+              await loadDermapens(rowData.fecha_show);
+            }
+          }
+        });
+      } else {
+        await updateDermapen(dermapen._id, rowData, token);
+        await loadDermapens(rowData.fecha_show);
+      }
+
       setOpenAlert(true);
       setMessage('DERMAPEN ACTUALIZADO');
     }
@@ -388,21 +427,21 @@ const ModalDermapen = (props) => {
   }
 
   const loadPromovendedores = async () => {
-    const response = await findEmployeesByRolIdAvailable(promovendedorRolId, empleado.access_token);
+    const response = await findEmployeesByRolIdAvailable(promovendedorRolId, token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setPromovendedores(response.data);
     }
   }
 
   const loadCosmetologas = async () => {
-    const response = await findEmployeesByRolIdAvailable(cosmetologaRolId, empleado.access_token);
+    const response = await findEmployeesByRolIdAvailable(cosmetologaRolId, token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setCosmetologas(response.data);
     }
   }
 
   const loadDermatologos = async () => {
-    const response = await findEmployeesByRolIdAvailable(dermatologoRolId, empleado.access_token);
+    const response = await findEmployeesByRolIdAvailable(dermatologoRolId, token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setDermatologos(response.data);
     }

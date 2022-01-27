@@ -315,7 +315,7 @@ const ImprimirPagoDermatologo = (props) => {
     // TOTAL DE LAS CONSULTAS 
     consultas.forEach(async (consulta) => {
       let totalPagos = 0;
-      if (isSesionAnticipada(consulta) || consulta.producto === productoRevisionId) {
+      if (isSesionAnticipada(consulta) || consulta.producto === productoRevisionId || consulta.has_descuento_dermatologo) {
         consulta.pago_dermatologo = 0;
         updateConsult(consulta._id, consulta, token);
       } else {

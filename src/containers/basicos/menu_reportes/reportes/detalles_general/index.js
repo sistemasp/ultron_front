@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { ReportesDetalleGeneralContainer } from "./reportes_detalle_general";
 import { findConsultsByRangeDateAndSucursal } from "../../../../../services/consultas";
 import { Backdrop, CircularProgress } from "@material-ui/core";
-import { toFormatterCurrency, addZero, getPagoDermatologoByServicio, redondearDecimales, precioAreaBySucursal } from "../../../../../utils/utils";
+import { toFormatterCurrency, addZero, getPagoDermatologoByServicio, redondearDecimales, precioAreaBySucursal, comisionAreaBySucursalAndTipo } from "../../../../../utils/utils";
 import { findFacialByRangeDateAndSucursal, findFacialByRangeDateAndSucursalAndService } from "../../../../../services/faciales";
 import { findAparatologiaByRangeDateAndSucursal, findAparatologiaByRangeDateAndSucursalAndService } from "../../../../../services/aparatolgia";
 import { findEsteticasByRangeDateAndSucursal } from "../../../../../services/esteticas";
@@ -15,7 +15,7 @@ import { ControlCamera } from "@material-ui/icons";
 import { findEmployeeById } from "../../../../../services/empleados";
 import { findSesionAnticipadaByRangeDateAndSucursal } from "../../../../../services/sesiones_anticipadas";
 import { findPagoAnticipadoByRangeDateAndSucursal } from "../../../../../services/pagos_anticipados";
-import { statusCanceloSPId } from "../../../../../utils/constants";
+import { statusCanceloSPId, tratamientoLuzpulzadaId } from "../../../../../utils/constants";
 
 const useStyles = makeStyles(theme => ({
 	backdrop: {
@@ -206,7 +206,7 @@ const ReportesDetallesGeneral = (props) => {
 			const impuesto = importe2 * (impuestoPorcentaje / 100);
 			const descuentoPorcentaje = 100 - (pago.total * 100 / consulta.precio);
 			const descuentoCantidad = (consulta.precio * descuentoPorcentaje / 100);
-			const pagoDermatologo = pago.total * consulta.pago_dermatologo / (Number(consulta.total === "0" ? pago.total : consulta.total) === 0 ? 1 : (consulta.total === "0" ? pago.total : consulta.total));
+			const pagoDermatologo = consulta.pago_dermatologo;
 			const pagoClinica = pago.total - pagoDermatologo;
 			const descuentoClinicaPorcentaje = consulta.porcentaje_descuento_clinica ? consulta.porcentaje_descuento_clinica : 0;
 			const descuentoDermatologoPorcentaje = consulta.descuento_dermatologo ? consulta.descuento_dermatologo : 0;
@@ -466,9 +466,17 @@ const ReportesDetallesGeneral = (props) => {
 								const impuesto = importe2 * (impuestoPorcentaje / 100);
 								const descuentoPorcentaje = 100 - (total * 100 / importe1);
 								const descuentoCantidad = (importe1 * descuentoPorcentaje / 100);
-								const pagoDermatologo = aparatologia.dermatologo._id !== dermatologoDirectoId
+								let pagoDermatologo = 0;
+								if (tratamiento._id === tratamientoLuzpulzadaId)  {
+									pagoDermatologo = aparatologia.dermatologo._id !== dermatologoDirectoId
+									? comisionAreaBySucursalAndTipo(sucursal._id, aparatologia.tipo_cita._id, areaSeleccionada)
+									: 0;
+								} else {
+									pagoDermatologo = aparatologia.dermatologo._id !== dermatologoDirectoId
 									? (total * areaSeleccionada.comision_real / areaSeleccionada.precio_real)
 									: 0;
+								}
+
 								const pagoClinica = total - pagoDermatologo;
 								const descuentoClinicaPorcentaje = aparatologia.porcentaje_descuento_clinica ? aparatologia.porcentaje_descuento_clinica : 0;
 								const descuentoDermatologoPorcentaje = aparatologia.descuento_dermatologo ? aparatologia.descuento_dermatologo : 0;
