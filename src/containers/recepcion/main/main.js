@@ -41,8 +41,10 @@ import {
 import myStyles from '../../../css';
 import MenuSuperAdmin from '../../basicos/menu_super_admin';
 import DashboardForm from '../../basicos/dashboard';
+import InventariosForm from '../../basicos/inventarios';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import PieChartIcon from '@material-ui/icons/PieChart';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 const TabPanel = (props) => {
 	const { children, value, index, ...other } = props;
@@ -254,6 +256,15 @@ export const MainContainer = props => {
 							</ListItem>
 							: ''
 					}
+
+					{
+						empleado.rol._id === rolDiosSupremoId || empleado.rol._id === rolMasterId || empleado.rol._id === rolSupervisorId ?
+							<ListItem button key={'INVENTARIOS'} onClick={(e) => onChangeTab(e, 9, handleDrawerClose)}>
+								<ListItemIcon> <AddShoppingCartIcon /> </ListItemIcon>
+								<ListItemText primary={'INVENTARIOS'} />
+							</ListItem>
+							: ''
+					}
 				</List>
 			</Drawer>
 			<main
@@ -324,6 +335,12 @@ export const MainContainer = props => {
 					</TabPanel>
 					<TabPanel value={value} index={8}>
 						<DashboardForm
+							empleado={empleado}
+							sucursal={sucursal}
+							colorBase={colorBase} />
+					</TabPanel>
+					<TabPanel value={value} index={9}>
+						<InventariosForm
 							empleado={empleado}
 							sucursal={sucursal}
 							colorBase={colorBase} />

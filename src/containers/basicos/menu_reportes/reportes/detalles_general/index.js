@@ -766,7 +766,7 @@ const ReportesDetallesGeneral = (props) => {
 					totalPago = 0;
 				}
 
-				const impuestoPorcentaje = dermapen.iva ? iva : 0;
+				const impuestoPorcentaje = iva;
 				const importe2 = total / (1 + (impuestoPorcentaje / 100));
 				const impuesto = importe2 * (impuestoPorcentaje / 100);
 				const descuentoPorcentaje = 100 - (total * 100 / dermapen.total_aplicacion);
