@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import { ReportesGeneralCitasContainer } from "./general_citas";
+import { ReportesSubsecuenciasContainer } from "./subsecuencias";
 import { findConsultsByRangeDateAndSucursal } from "../../../../../services/consultas";
 import { Backdrop, CircularProgress } from "@material-ui/core";
 import { toFormatterCurrency, addZero, getPagoDermatologoByServicio } from "../../../../../utils/utils";
@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-const ReporteGeneralCitas = (props) => {
+const ReporteSubsecuencias = (props) => {
 
 	const classes = useStyles();
 
@@ -29,16 +29,6 @@ const ReporteGeneralCitas = (props) => {
 		sucursal,
 		colorBase,
 	} = props;
-
-	const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
-	const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
-	const servicioConsultaId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
-	const servicioCuracionId = process.env.REACT_APP_CURACION_SERVICIO_ID;
-	const servicioEsteticaId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
-	const servicioDermapenId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID;
-	const formaPagoTarjetaId = process.env.REACT_APP_FORMA_PAGO_TARJETA;
-	const dermatologoDirectoId = process.env.REACT_APP_DERMATOLOGO_DIRECTO_ID;
-	const iva = process.env.REACT_APP_IVA;
 
 	const [isLoading, setIsLoading] = useState(true);
 	const [consultas, setConsultas] = useState([]);
@@ -65,30 +55,15 @@ const ReporteGeneralCitas = (props) => {
 	});
 
 	const columns = [
-		{ title: 'FOLIO', field: 'consecutivo' },
-		{ title: 'FECHA', field: 'fecha_show' },
-		{ title: 'HORA', field: 'hora' },
+		{ title: 'FECHA ASISTIO', field: 'fecha_asistio' },
+		{ title: 'FECHA CITA', field: 'fecha_cita' },
+		{ title: 'HORA CITA', field: 'hora_cita' },
+		{ title: 'SUCURSAL', field: 'sucursal.nombre' },
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'TELÉFONO', field: 'paciente.telefono' },
-		{ title: 'FECHA NACIMIENTO', field: 'paciente.fecha_nacimiento' },
-		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
-		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
-		{ title: 'HORA SALIDA', field: 'hora_salida' },
-		{ title: 'SERVICIO', field: 'servicio.nombre' },
-		{ title: 'PRODUCTO (ÁREAS)', field: 'show_tratamientos' },
-		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
-		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
-		{ title: 'MEDIO', field: 'medio.nombre' },
-		{ title: 'TIPO', field: 'tipo_cita.nombre' },
 		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
-		{ title: 'COSMETÓLOGA', field: 'cosmetologa_nombre' },
-		{ title: 'QUIEN REALIZA', field: 'quien_realiza_nombre' },
-		{ title: 'PROMOVENDEDOR (A)', field: 'promovendedor_nombre' },
-		{ title: 'STATUS', field: 'status.nombre' },
+		{ title: 'QUIÉN AGENDA', field: 'quien_agenda.nombre' },
 		{ title: 'PRECIO', field: 'precio_moneda' },
-		{ title: 'TIEMPO', field: 'tiempo' },
-		{ title: 'OBSERVACIONES', field: 'observaciones' },
-		{ title: 'DISPAROS', field: 'disparos' },
 	];
 
 	const options = {
@@ -124,27 +99,23 @@ const ReporteGeneralCitas = (props) => {
 	const processResponse = (data) => {
 		data.forEach(item => {
 			//item.folio = generateFolio(item);
+			const createDate = new Date(item.create_date);
+			const createDia = addZero(createDate.getDate());
+            const createMes = addZero(createDate.getMonth() + 1);
+            const createAnio = createDate.getFullYear();
 			const date = new Date(item.fecha_hora);
             const dia = addZero(date.getDate());
             const mes = addZero(date.getMonth() + 1);
             const anio = date.getFullYear();
             const hora = Number(date.getHours());
             const minutos = date.getMinutes();
-            item.fecha_show = `${dia}/${mes}/${anio}`;
-            item.hora = `${addZero(hora)}:${addZero(minutos)}`;
+            item.fecha_asistio = `${createDia}/${createMes}/${createAnio}`;
+            item.fecha_cita = `${dia}/${mes}/${anio}`;
+            item.hora_cita = `${addZero(hora)}:${addZero(minutos)}`;
 			item.precio_moneda = toFormatterCurrency(item.precio);
-			item.total_moneda = toFormatterCurrency(item.total);
 			item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
-			item.promovendedor_nombre = item.promovendedor ? item.promovendedor.nombre : 'SIN ASIGNAR';
-			item.cosmetologa_nombre = item.cosmetologa ? item.cosmetologa.nombre : 'SIN ASIGNAR';
-			item.quien_realiza_nombre = item.quien_realiza ? item.quien_realiza.nombre : 'SIN ASIGNAR';
 			item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
-			item.show_tratamientos = item.tratamientos ? item.tratamientos.map(tratamiento => {
-				const show_areas = tratamiento.areasSeleccionadas ? tratamiento.areasSeleccionadas.map(area => {
-					return `${area.nombre}`;
-				}) : '';
-				return `►${tratamiento.nombre}(${show_areas}) `;
-			}) : 'NO APLICA';
+			
 		});
 		return data;
 	}
@@ -154,61 +125,6 @@ const ReporteGeneralCitas = (props) => {
 			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, empleado.access_token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			setConsultas(processResponse(response.data));
-			procesarDatos();
-		}
-	}
-
-	const loadFaciales = async (startDate, endDate) => {
-		const response = await findFacialByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
-			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, empleado.access_token);
-		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			setFaciales(processResponse(response.data));
-			await loadConsultas(startDate, endDate);
-		}
-	}
-
-	const loadAparatologias = async (startDate, endDate) => {
-		const response = await findAparatologiaByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
-			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, empleado.access_token);
-		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			setAparatologias(processResponse(response.data));
-			await loadFaciales(startDate, endDate);
-		}
-	}
-
-	const loadEsteticas = async (startDate, endDate) => {
-		const response = await findEsteticasByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
-			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, empleado.access_token);
-		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			setEsteticas(processResponse(response.data));
-			await loadAparatologias(startDate, endDate);
-		}
-	}
-
-	const loadCuraciones = async (startDate, endDate) => {
-		const response = await findCuracionesByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
-			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, empleado.access_token);
-		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			setCuraciones(processResponse(response.data));
-			await loadEsteticas(startDate, endDate);
-		}
-	}
-
-	const loadDermapens = async (startDate, endDate) => {
-		const response = await findDermapenByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
-			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, empleado.access_token);
-		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {				
-			setDermapens(processResponse(response.data));
-			await loadCuraciones(startDate, endDate);
-		}
-	}
-
-	
-	const loadCitas = async (startDate, endDate) => {
-		const response = await findDatesByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
-			endDate.getDate(), endDate.getMonth(), endDate.getFullYear(), sucursal, empleado.access_token);
-		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {				
-			setDermapens(processResponse(response.data));
 			procesarDatos();
 		}
 	}
@@ -240,7 +156,7 @@ const ReporteGeneralCitas = (props) => {
 
 	const loadInfo = async (startDate, endDate) => {
 		setIsLoading(true);
-		await loadDermapens(startDate, endDate);
+		await loadConsultas(startDate, endDate);
 	}
 
 	const handleReportes = async () => {
@@ -258,12 +174,12 @@ const ReporteGeneralCitas = (props) => {
 		<Fragment>
 			{
 				!isLoading ?
-					<ReportesGeneralCitasContainer
+					<ReportesSubsecuenciasContainer
 						onChangeStartDate={(e) => handleChangeStartDate(e)}
 						onChangeEndDate={(e) => handleChangeEndDate(e)}
 						startDate={startDate.fecha_show}
 						endDate={endDate.fecha_show}
-						titulo={`REPORTES CITAS GENERAL(${startDate.fecha} - ${endDate.fecha})`}
+						titulo={`SUBSECUENCIAS(${startDate.fecha} - ${endDate.fecha})`}
 						columns={columns}
 						options={options}
 						datos={datos}
@@ -278,4 +194,4 @@ const ReporteGeneralCitas = (props) => {
 	);
 }
 
-export default ReporteGeneralCitas;
+export default ReporteSubsecuencias;
