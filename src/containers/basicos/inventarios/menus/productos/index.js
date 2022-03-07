@@ -13,8 +13,6 @@ function Alert(props) {
 
 const Productos = (props) => {
 
-	const classes = myStyles();
-
 	const [productos, setProductos] = useState([]);
 	const [producto, setProducto] = useState({});
 	const [open, setOpen] = useState(false);
@@ -29,9 +27,13 @@ const Productos = (props) => {
 		sucursal,
 	} = props;
 
+	const classes = myStyles(colorBase)();
+
 	const columns = [
 		{ title: 'CÓDIGO', field: 'codigo' },
 		{ title: 'DESCRIPCION', field: 'descripcion' },
+		{ title: 'MAXIMO', field: 'maximo' },
+		{ title: 'MINIMO', field: 'minimo' },
 	];
 
 	const options = {
@@ -71,6 +73,11 @@ const Productos = (props) => {
 		{
 			icon: EditIcon,
 			tooltip: 'ELIMINAR',
+			onClick: handleOnClickEliminar
+		},
+		{
+			icon: EditIcon,
+			tooltip: 'KARDEX',
 			onClick: handleOnClickEliminar
 		},
 	];

@@ -67,6 +67,26 @@ const FormProductos = (props) => {
                   variant="outlined"
                 />
               </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  className={classes.textField}
+                  name="maximo"
+                  label="MAXIMO"
+                  value={values.maximo}
+                  onChange={onChange}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  className={classes.textField}
+                  name="minimo"
+                  label="MINIMO"
+                  value={values.minimo}
+                  onChange={onChange}
+                  variant="outlined"
+                />
+              </Grid>
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
                   className={classes.buttonCancel}

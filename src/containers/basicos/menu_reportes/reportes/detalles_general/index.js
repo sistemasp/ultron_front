@@ -147,35 +147,6 @@ const ReportesDetallesGeneral = (props) => {
 		exportDelimiter: ';'
 	}
 
-	const servicioCancelado = (servicio, datos) => {
-		const dato = {
-			...servicio,
-			metodo_pago_nombre: "NO APLICA",
-			tipo_tarjeta: "NO APLICA",
-			banco_nombre: "NO APLICA",
-			digitos: "NO APLICA",
-			importe_1: toFormatterCurrency(0),
-			area: "NO APLICA",
-			descuento_porcentaje_clinica: `${redondearDecimales(0)}%`,
-			descuento_cantidad_clinica: toFormatterCurrency(0),
-			descuento_porcentaje_dermatologo: `${redondearDecimales(0)}%`,
-			descuento_cantidad_dermatologo: toFormatterCurrency(0),
-			descuento_porcentaje: `${redondearDecimales(0)}%`,
-			descuento_cantidad: toFormatterCurrency(0),
-			impuesto_porcentaje: `${0}%`,
-			importe_2: toFormatterCurrency(0),
-			impuesto_cantidad: toFormatterCurrency(0),
-			cantidad_servicios: 0,
-			total_moneda: toFormatterCurrency(0),
-			total_doctor: toFormatterCurrency(0),
-			doctor_efectivo: toFormatterCurrency(0),
-			doctor_retencion: toFormatterCurrency(0),
-			total_clinica: toFormatterCurrency(0),
-			turno: servicio.turno ? (servicio.turno === 'M' ? 'MATUTINO' : 'VESPERTINO') : "SIN TURNO",
-		}
-		datos.push(dato);
-	}
-
 	const procesarConsulta = (consulta, datos) => {
 		consulta.iva = false;
 		if (consulta.status && consulta.status._id === statusCanceloSPId) {
@@ -569,14 +540,8 @@ const ReportesDetallesGeneral = (props) => {
 				const impuestoPorcentaje = curacion.iva ? iva : 0;
 				const importe2 = total / (1 + (impuestoPorcentaje / 100));
 				const impuesto = importe2 * (impuestoPorcentaje / 100);
-				const descuentoPorcentaje = 100 - (total * 100 / curacion.total);
-				const descuentoCantidad = (curacion.total * descuentoPorcentaje / 100);
 				const pagoDermatologo = total * curacion.pago_dermatologo / curacion.total_aplicacion;
 				const pagoClinica = total - pagoDermatologo;
-				const descuentoClinicaPorcentaje = curacion.porcentaje_descuento_clinica ? curacion.porcentaje_descuento_clinica : 0;
-				const descuentoDermatologoPorcentaje = curacion.descuento_dermatologo ? curacion.descuento_dermatologo : 0;
-				const descuentoClinica = descuentoClinicaPorcentaje * curacion.total_aplicacion / 100;
-				const descuentoDermatologo = descuentoDermatologoPorcentaje * (curacion.total_aplicacion - descuentoClinica) / 100;
 
 				const dato = {
 					...curacion,
@@ -626,8 +591,6 @@ const ReportesDetallesGeneral = (props) => {
 					}
 
 					const impuestoPorcentaje = iva;
-					const descuentoPorcentaje = 100 - (total * 100 / curacion.total);
-					const descuentoCantidad = (curacion.total * descuentoPorcentaje / 100);
 					const importe2 = total / (1 + (impuestoPorcentaje / 100));
 					const impuesto = importe2 * (impuestoPorcentaje / 100);
 
@@ -683,8 +646,6 @@ const ReportesDetallesGeneral = (props) => {
 					}
 
 					const impuestoPorcentaje = 0;
-					const descuentoPorcentaje = 100 - (total * 100 / curacion.total);
-					const descuentoCantidad = (curacion.total * descuentoPorcentaje / 100);
 					const importe2 = total / (1 + (impuestoPorcentaje / 100));
 					const impuesto = importe2 * (impuestoPorcentaje / 100);
 
@@ -724,6 +685,7 @@ const ReportesDetallesGeneral = (props) => {
 	}
 
 	const procesarDermapen = (dermapen, datos) => {
+		console.log("KAOZ", dermapen);
 		if (dermapen.status && dermapen.status._id === statusCanceloSPId) {
 			// servicioCancelado(dermapen, datos);
 		}
@@ -786,7 +748,7 @@ const ReportesDetallesGeneral = (props) => {
 					banco_nombre: pago.banco_nombre,
 					digitos: pago.digitos,
 					importe_1: toFormatterCurrency(dermapen.total_aplicacion),
-					area: "NO APLICA",
+					area: dermapen.tratamientos[0].areasSeleccionadas[0].nombre,
 					descuento_porcentaje_clinica: `${redondearDecimales(descuentoClinicaPorcentaje)}%`,
 					descuento_cantidad_clinica: toFormatterCurrency(descuentoClinica),
 					descuento_porcentaje_dermatologo: `${redondearDecimales(descuentoDermatologoPorcentaje)}%`,

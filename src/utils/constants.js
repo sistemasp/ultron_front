@@ -27,6 +27,11 @@ export const statusAsistioId = process.env.REACT_APP_ASISTIO_STATUS_ID;
 export const tipoEntradaFacialesId = process.env.REACT_APP_TIPO_ENTRADA_FACIALES_ID;
 export const tipoEntradaAparatologiasId = process.env.REACT_APP_TIPO_ENTRADA_APARATOLOGIA_ID;
 
+export const tipoCitaRevisado = process.env.REACT_APP_TIPO_CITA_REVISADO_ID;
+export const tipoCitaDerivado = process.env.REACT_APP_TIPO_CITA_DERIVADO_ID;
+export const tipoCitaRealizado = process.env.REACT_APP_TIPO_CITA_REALIZADO_ID;
+export const tipoCitaDirecto = process.env.REACT_APP_TIPO_CITA_DIRECTO_ID;
+
 export const tipoSalidaPagoDermatologoId = process.env.REACT_APP_TIPO_SALIDA_PAGO_DERMATOLOGO_ID;
 export const tipoSalidaRetiroParcialId = process.env.REACT_APP_TIPO_SALIDA_RETIRO_PARCIAL_ID;
 export const tipoSalidaOtrasSalidasId = process.env.REACT_APP_TIPO_SALIDA_OTRAS_SALIDAS_ID;

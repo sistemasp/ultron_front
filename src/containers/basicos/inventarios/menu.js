@@ -6,6 +6,7 @@ import {
   AppBar,
   Tabs,
   Tab,
+  makeStyles,
 } from "@material-ui/core";
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
@@ -56,13 +57,21 @@ export const MenuContainer = (props) => {
     colorBase,
   } = props;
 
+  const useStyles = makeStyles(theme => ({
+		root: {
+			flexGrow: 1,
+			backgroundColor: theme.palette.background.paper,
+		}
+	}));
+
   const classes = myStyles(colorBase)();
+  const classess = useStyles();
 
   return (
-    <div className={classes.subRoot}>
+    <div className={classess.root}>
       <AppBar
-        className={classes.bar}
-        position="static" >
+				className={classes.bar}
+				position="sticky" />
         <Tabs
           value={value}
           onChange={onChangeTab}
@@ -100,7 +109,6 @@ export const MenuContainer = (props) => {
             empleado={empleado}
             colorBase={colorBase} />
         </TabPanel>
-      </AppBar>
     </div>
   );
 };

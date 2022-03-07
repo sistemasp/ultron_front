@@ -1,10 +1,9 @@
+import { tipoCitaDerivado, tipoCitaDirecto, tipoCitaRealizado, tipoCitaRevisado } from "./constants";
+
 const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
 const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
 const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
 const sucursalFedeId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
-const tipoCitaRevisado = process.env.REACT_APP_TIPO_CITA_REVISADO_ID
-const tipoCitaDerivado = process.env.REACT_APP_TIPO_CITA_DERIVADO_ID
-const tipoCitaRealizado = process.env.REACT_APP_TIPO_CITA_REALIZADO_ID
 
 export const toFormatterCurrency = (value) => {
   const formatterDolar = new Intl.NumberFormat('en-US', {
@@ -154,6 +153,13 @@ export const comisionAreaBySucursalAndTipo = (sucursalId, tipoId, area) => {
         : (sucursalId === sucursalRubenDarioId ? area.comision_realizado_rd
           : (
             area.comision_realizado
+          ));
+      break;
+    case tipoCitaDirecto:
+      comision = sucursalId === sucursalManuelAcunaId ? area.precio_ma
+        : (sucursalId === sucursalRubenDarioId ? area.precio_rd
+          : (
+            area.precio_oc
           ));
       break;
   }
