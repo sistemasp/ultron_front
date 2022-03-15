@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { Backdrop, CircularProgress, makeStyles } from "@material-ui/core";
-import { showAllAparatologiasBySucursalPendiente, showAllFacialBySucursalAsistio } from "../../../../services/aparatolgia";
+import { showAllAparatologiasBySucursalPendiente } from "../../../../services/aparatolgia";
 import { AparatologiaContainer } from "./aparatologia";
 
 const useStyles = makeStyles(theme => ({

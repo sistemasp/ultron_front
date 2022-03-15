@@ -916,7 +916,6 @@ const FormImprimirPagoDermatologo = (props) => {
                         });
                       }
                       let pagoDermatologo = comisionDermatologo - ((comisionDermatologo * (aparatologia.porcentaje_descuento_clinica ? aparatologia.porcentaje_descuento_clinica : 0)) / 100);
-
                       pagoDermatologo = aparatologia.has_descuento_dermatologo ? 0 : pagoDermatologo;
                       pagoTotal += Number(pagoDermatologo);
                       return <Grid container>

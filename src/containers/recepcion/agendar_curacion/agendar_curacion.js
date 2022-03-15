@@ -189,7 +189,6 @@ export const AgendarCuracionContainer = (props) => {
 						servicio={curacion}
 						sucursal={sucursal}
 						empleado={empleado}
-						sucursal={sucursal._id}
 						setMessage={setMessage}
 						setOpenAlert={setOpenAlert}
 						colorBase={colorBase}

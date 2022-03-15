@@ -41,12 +41,17 @@ import {
 import myStyles from '../../../css';
 import MenuSuperAdmin from '../../basicos/menu_super_admin';
 import DashboardForm from '../../basicos/dashboard';
+import InventariosForm from '../../basicos/inventarios';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import PieChartIcon from '@material-ui/icons/PieChart';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import {
+	rolRecepcionistaId,
+	rolJulioId,
+} from '../../../utils/constants';
 
 const TabPanel = (props) => {
 	const { children, value, index, ...other } = props;
-
 
 	return (
 		<Typography
@@ -69,11 +74,6 @@ TabPanel.propTypes = {
 };
 
 export const MainContainer = props => {
-
-	const rolRecepcionistaId = process.env.REACT_APP_RECEPCIONISTA_ROL_ID;
-	const rolDiosSupremoId = process.env.REACT_APP_DIOS_SUPREMO_ROL_ID;
-	const rolMasterId = process.env.REACT_APP_MASTER_ROL_ID;
-	const rolSupervisorId = process.env.REACT_APP_SUPERVISOR_ROL_ID;
 
 	const {
 		pacienteAgendado,
@@ -135,6 +135,13 @@ export const MainContainer = props => {
 	useEffect(() => {
 		findCorte();
 	}, []);
+
+	const getInventarios = () => {
+		const permiso = empleado.rol.permisos.find(item => {
+			return item === "INVENTARIOS";
+		});
+		return permiso;
+	}
 
 	return (
 		<div className={classes.root}>
@@ -247,10 +254,19 @@ export const MainContainer = props => {
 					}
 
 					{
-						empleado.rol._id === rolDiosSupremoId || empleado.rol._id === rolMasterId || empleado.rol._id === rolSupervisorId ?
+						empleado.rol._id === rolJulioId ?
 							<ListItem button key={'DASHBOARD'} onClick={(e) => onChangeTab(e, 8, handleDrawerClose)}>
 								<ListItemIcon> <PieChartIcon /> </ListItemIcon>
 								<ListItemText primary={'DASHBOARD'} />
+							</ListItem>
+							: ''
+					}
+
+					{
+						empleado.rol._id === rolJulioId || getInventarios() ?
+							<ListItem button key={'INVENTARIOS'} onClick={(e) => onChangeTab(e, 9, handleDrawerClose)}>
+								<ListItemIcon> <AddShoppingCartIcon /> </ListItemIcon>
+								<ListItemText primary={'INVENTARIOS'} />
 							</ListItem>
 							: ''
 					}
@@ -324,6 +340,12 @@ export const MainContainer = props => {
 					</TabPanel>
 					<TabPanel value={value} index={8}>
 						<DashboardForm
+							empleado={empleado}
+							sucursal={sucursal}
+							colorBase={colorBase} />
+					</TabPanel>
+					<TabPanel value={value} index={9}>
+						<InventariosForm
 							empleado={empleado}
 							sucursal={sucursal}
 							colorBase={colorBase} />
