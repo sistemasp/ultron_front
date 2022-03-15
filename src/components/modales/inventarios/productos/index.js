@@ -42,7 +42,7 @@ const ModalProductos = (props) => {
 
   const handleClickGuardar = async (values) => {
     setIsLoading(true);
-    const response = values.id ? await createProducto(values) : await updateProducto(values.id, values);
+    const response = !values.id ? await createProducto(values) : await updateProducto(values.id, values);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK
       || `${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
       loadProductos();

@@ -11,6 +11,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import bannerMePiel from './../../../bannerMePiel.PNG';
 import { login } from "../../../services/empleados";
 import { useNavigate } from "react-router-dom";
+import { rolJulioId, rolSuperEnfermeroId } from "../../../utils/constants";
 
 const styles = theme => ({
   paper: {
@@ -111,7 +112,7 @@ const LoginForm = (props) => {
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED && response.data !== '') {
       const empleado = response.data;
       if (empleado.rol._id === rolCallCenterId) {
-        navigate('/call_center',{
+        navigate('/call_center', {
           state: {
             empleado: empleado,
             sucursal: data.sucursal
@@ -138,10 +139,19 @@ const LoginForm = (props) => {
         || empleado.rol._id === rolMasterId
         || empleado.rol._id === rolSistemasId
         || empleado.rol._id === rolSupervisorId
+        || empleado.rol._id === rolJulioId
       ) {
         navigate('/recepcion', {
           state: {
             empleado: empleado,
+            sucursal: data.sucursal
+          }
+        });
+      } else if (empleado.rol._id === rolSuperEnfermeroId
+        || empleado.rol._id === rolEnfermeraId ) {
+        navigate('/enfermeria', {
+          state: {
+            enfermera: empleado,
             sucursal: data.sucursal
           }
         });

@@ -1,5 +1,7 @@
 const frecuenciaPrimeraVezId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
 
+export const responseCodeOK = process.env.REACT_APP_RESPONSE_CODE_OK;
+
 export const productoConsultaId = process.env.REACT_APP_PRODUCTO_CONSULTA_ID
 export const productoCuracionId = process.env.REACT_APP_PRODUCTO_CURACION_ID
 export const productoMicropuncionId = process.env.REACT_APP_PRODUCTO_MICROPUNCION_ID
@@ -65,6 +67,8 @@ export const rolDiosSupremoId = process.env.REACT_APP_DIOS_SUPREMO_ROL_ID;
 export const rolMasterId = process.env.REACT_APP_MASTER_ROL_ID;
 export const rolSistemasId = process.env.REACT_APP_SISTEMAS_ROL_ID;
 export const rolSupervisorId = process.env.REACT_APP_SUPERVISOR_ROL_ID;
+export const rolJulioId = process.env.REACT_APP_JULIO_ROL_ID;
+export const rolSuperEnfermeroId = process.env.REACT_APP_SUPER_ENFERMERO_ROL_ID;
 
 export const dermatologoDirectoId = process.env.REACT_APP_DERMATOLOGO_DIRECTO_ID;
 

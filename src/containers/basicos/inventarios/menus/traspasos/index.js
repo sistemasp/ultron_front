@@ -3,18 +3,21 @@ import { Backdrop, CircularProgress, FormControl, MenuItem, Select } from '@mate
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import myStyles from "../../../../../css";
-import { ProductosContainer } from "./productos";
-import { showAllProductos } from "../../../../../services/centinela/productos";
+import { TraspasosContainer } from "./traspasos";
+import { showAllFacturas } from "../../../../../services/centinela/facturas";
+import { dateToString } from "../../../../../utils/utils";
 import EditIcon from '@material-ui/icons/Edit';
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-const Productos = (props) => {
+const Traspasos = (props) => {
 
-	const [productos, setProductos] = useState([]);
-	const [producto, setProducto] = useState({});
+	const classes = myStyles();
+
+	const [facturas, setFacturas] = useState([]);
+	const [factura, setFactura] = useState({});
 	const [open, setOpen] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [message, setMessage] = useState('');
@@ -27,13 +30,11 @@ const Productos = (props) => {
 		sucursal,
 	} = props;
 
-	const classes = myStyles(colorBase)();
-
 	const columns = [
-		{ title: 'CÓDIGO', field: 'codigo' },
-		{ title: 'DESCRIPCION', field: 'descripcion' },
-		{ title: 'MAXIMO', field: 'maximo' },
-		{ title: 'MINIMO', field: 'minimo' },
+		{ title: 'FACTURA', field: 'factura' },
+		{ title: 'FECHA', field: 'fecha_show' },
+		{ title: 'ALMACEN', field: 'almacen.descripcion' },
+		{ title: 'PROVEEDOR', field: 'proveedor.nombre' },
 	];
 
 	const options = {
@@ -56,12 +57,12 @@ const Productos = (props) => {
 	}
 
 	const handleOnClickEditar = (event, rowData) => {
-		setProducto(rowData);
+		setFactura(rowData);
 		setOpen(true);
 	}
 
-	const handleOnClickShowKardex = (event, rowData) => {
-		console.log("KAOZ", event, rowData);
+	const handleOnClickEliminar = (event, rowData) => {
+	
 	}
 
 	const actions = [
@@ -72,8 +73,8 @@ const Productos = (props) => {
 		},
 		{
 			icon: EditIcon,
-			tooltip: 'KARDEX',
-			onClick: handleOnClickShowKardex
+			tooltip: 'ELIMINAR',
+			onClick: handleOnClickEliminar
 		},
 	];
 
@@ -83,8 +84,8 @@ const Productos = (props) => {
 			case 'EDITAR':
 				handleOnClickEditar(e, rowData);
 				break;
-			case 'KARDEX':
-				handleOnClickShowKardex(e, rowData);
+			case 'ELIMINAR':
+				handleOnClickEliminar(e, rowData);
 				break;
 		}
 	}
@@ -126,16 +127,19 @@ const Productos = (props) => {
 		setOpenAlert(false);
 	};
 
-	const loadProductos = async () => {
-		const response = await showAllProductos();
+	const loadFacturas = async () => {
+		const response = await showAllFacturas();
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			setProductos(response.data);
+			const resFacturas = response.data.forEach(item => {
+				item.fecha_show = dateToString(item.fecha);
+			});
+			setFacturas(response.data);
 		}
 	};
 
 	const loadAll = async () => {
 		setIsLoading(true);
-		await loadProductos();
+		await loadFacturas();
 		setIsLoading(false);
 	}
 
@@ -147,19 +151,19 @@ const Productos = (props) => {
 		<Fragment>
 			{
 				!isLoading ?
-					<ProductosContainer
+					<TraspasosContainer
 						empleado={empleado}
 						columns={columns}
-						titulo='PRODUCTOS'
-						productos={productos}
-						producto={producto}
+						titulo='FACTURAS'
+						facturas={facturas}
+						factura={factura}
 						options={options}
-						open={open}
 						actions={actions}
 						components={components}
 						handleOpen={handleOpen}
 						handleClose={handleClose}
-						loadProductos={loadProductos}
+						loadFacturas={loadFacturas}
+						open={open}
 						sucursal={sucursal}
 						colorBase={colorBase} /> :
 					<Backdrop className={classes.backdrop} open={isLoading} >
@@ -175,4 +179,4 @@ const Productos = (props) => {
 	);
 }
 
-export default Productos;
+export default Traspasos;

@@ -17,6 +17,7 @@ import Existencias from "./menus/existencias";
 import Facturas from "./menus/facturas";
 import Entradas from "./menus/entradas";
 import Salidas from "./menus/salidas";
+import Traspasos from "./menus/traspasos";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -81,8 +82,9 @@ export const MenuContainer = (props) => {
           <Tab label="PRODUCTOS" {...a11yProps(0)} />
           <Tab label="EXISTENCIAS" {...a11yProps(1)} />
           <Tab label="FACTURAS" {...a11yProps(2)} />
-          <Tab label="ENTRADAS" {...a11yProps(3)} />
-          <Tab label="SALIDAS" {...a11yProps(4)} />
+          <Tab label="TRASPASOS" {...a11yProps(3)} />
+          <Tab label="ENTRADAS" {...a11yProps(4)} />
+          <Tab label="SALIDAS" {...a11yProps(5)} />
         </Tabs>
         <TabPanel value={value} index={0}>
           <Productos
@@ -100,11 +102,16 @@ export const MenuContainer = (props) => {
             colorBase={colorBase} />
         </TabPanel>
         <TabPanel value={value} index={3}>
-          <Entradas
+          <Traspasos
             empleado={empleado}
             colorBase={colorBase} />
         </TabPanel>
         <TabPanel value={value} index={4}>
+          <Entradas
+            empleado={empleado}
+            colorBase={colorBase} />
+        </TabPanel>
+        <TabPanel value={value} index={5}>
           <Salidas
             empleado={empleado}
             colorBase={colorBase} />

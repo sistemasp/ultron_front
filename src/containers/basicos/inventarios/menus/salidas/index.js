@@ -35,7 +35,6 @@ const Salidas = (props) => {
 		{ title: 'UNIDAD', field: 'unidad.descripcion' },
 		{ title: 'CANTIDAD', field: 'cantidad' },
 		{ title: 'IMPORTE', field: 'importe_moneda' },
-		{ title: 'IVA', field: 'iva' },
 		{ title: 'DESCUENTO', field: 'descuento_moneda' },
 		{ title: 'SUBTOTAL', field: 'subtotal_moneda' },
 		{ title: 'TOTAL', field: 'total_moneda' },
