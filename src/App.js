@@ -13,6 +13,7 @@ import ImprimirConsulta from './containers/imprimir/consulta';
 import ImprimirTratamiento from './containers/imprimir/tratamiento';
 import ImprimirCuracion from './containers/imprimir/curacion';
 import ImprimirDermapen from './containers/imprimir/dermapen';
+import MenuMainEnfermeria from './containers/enfermeria';
 
 const App = () => {
 
@@ -35,6 +36,9 @@ const App = () => {
           <Route
             exact path="/recepcion"
             element={<MenuMainRecepcion />} />
+          <Route
+            exact path="/enfermeria"
+            element={<MenuMainEnfermeria />} />
           <Route
             exact path="/imprimir/pagodermatologo"
             element={<ImprimirPagoDermatologo />} />

@@ -2,22 +2,6 @@ import axios from 'axios';
 
 export const baseUrl = process.env.REACT_APP_BASE_URL;
 
-export const showAllFacial = async (token) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/facial`,
-            method: 'GET',
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        return response;
-    } catch (error) {
-        console.log('showAllFacial', error);
-        return error;
-    }
-}
-
 export const showAllFacialBySucursal = async (sucursalId, token) => {
     try {
         const response = await axios({
@@ -30,22 +14,6 @@ export const showAllFacialBySucursal = async (sucursalId, token) => {
         return response;
     } catch (error) {
         console.log('showAllFacialBySucursal', error);
-        return error;
-    }
-}
-
-export const showAllFacialBySucursalAsistio = async (sucursalId, token) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/facial/sucursal/${sucursalId}/asistio`,
-            method: 'GET',
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        return response;
-    } catch (error) {
-        console.log('showAllFacialBySucursalAsistio', error);
         return error;
     }
 }
