@@ -3,7 +3,7 @@ import { MenuCuracionesContainer } from "./menu_curaciones";
 import { Snackbar, Grid, Backdrop, CircularProgress, TablePagination, FormControl, InputLabel, Select, MenuItem } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
 import { findCuracionByDateAndSucursal } from "../../../services/curaciones";
-import { addZero, generateFolio } from "../../../utils/utils";
+import { addZero, generateFolio, toFormatterCurrency } from "../../../utils/utils";
 
 const Alert = (props) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -41,6 +41,7 @@ const MenuCuraciones = (props) => {
     { title: 'NOMBRE CURACIÓN', field: 'curacion_nombre.nombre' },
     { title: 'TIPO CURACIÓN', field: 'curacion_tipo.nombre' },
     { title: 'AREA', field: 'curacion_area.nombre' },
+    { title: 'PRECIO', field: 'precio_moneda' },
     { title: 'OBSERVACIONES', field: 'observaciones' },
   ];
 
@@ -126,6 +127,7 @@ const MenuCuraciones = (props) => {
         const fecha = new Date(item.fecha_hora);
         item.hora = `${addZero(fecha.getHours())}:${addZero(fecha.getMinutes())}`;
         item.paciente.nombre_completo = `${item.paciente.nombres} ${item.paciente.apellidos}`;
+        item.precio_moneda = toFormatterCurrency(item.precio);
       });
       setCuraciones(response.data);
     }

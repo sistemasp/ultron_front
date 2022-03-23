@@ -1,8 +1,14 @@
 import React, { Fragment } from 'react';
 import Modal from '@material-ui/core/Modal';
-import { Grid, TextField } from '@material-ui/core';
+import { FormControl, Grid, TextField } from '@material-ui/core';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import { ButtonCustom } from "../../../basic/ButtonCustom";
+import { ComboCustomProductos } from "../../../basic/ComboCustomProductos";
 import myStyles from '../../../../css';
+import TableComponent from '../../../table/TableComponent';
+import { ComboCustom } from '../../../basic/ComboCustom';
+import { ComboCustomDescripcion } from '../../../basic/ComboCustomDescripcion';
 
 function getModalStyle() {
   const top = 50;
@@ -26,10 +32,29 @@ const FormFacturas = (props) => {
     values,
     isLoading,
     onClickCancel,
+    onChangeFecha,
+    onChangeFechaCaducidad,
+    producto,
+    onClickAgregar,
     onChange,
+    onChangeRegistro,
     open,
     colorBase,
     onClickGuardar,
+    onChangeProveedor,
+    onChangeUnidadEntrada,
+    onChangeUnidadSalida,
+    proveedores,
+    onChangeProducto,
+    productos,
+    unidades,
+    titulo,
+    columns,
+    registros,
+    registro,
+    actions,
+    options,
+    components,
   } = props;
 
   const classes = myStyles(colorBase)();
@@ -42,60 +67,12 @@ const FormFacturas = (props) => {
         open={open} >
         <div style={modalStyle} className={classes.paper_95}>
           <form>
-
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
                 <h1>FACTURA</h1>
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  className={classes.textField}
-                  name="factura"
-                  label="FACTURA"
-                  value={values.factura}
-                  onChange={onChange}
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  className={classes.textField}
-                  name="fecha"
-                  label="FECHA"
-                  value={values.fecha}
-                  onChange={onChange}
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  className={classes.textField}
-                  name="almacen"
-                  label="ALMACEN"
-                  value={values.almacen}
-                  onChange={onChange}
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  className={classes.textField}
-                  name="proveedor"
-                  label="PROVEEDOR"
-                  value={values.proveedor}
-                  onChange={onChange}
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <ButtonCustom
-                  className={classes.buttonCancel}
-                  color="secondary"
-                  variant="contained"
-                  onClick={onClickCancel}
-                  text='CANCELAR' />
-              </Grid>
-              <Grid item xs={12} sm={6}>
+
+              <Grid item xs={6}>
                 <ButtonCustom
                   className={classes.button}
                   color="primary"
@@ -104,12 +81,167 @@ const FormFacturas = (props) => {
                   disabled={isLoading}
                   text='GUARDAR' />
               </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  className={classes.textField}
+                  name="factura"
+                  label="FACTURA"
+                  value={values.factura}
+                  onChange={onChange}
+                  variant="outlined" />
+              </Grid>
+              <Grid item xs={3}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    autoOk
+                    variant="inline"
+                    format="dd/MM/yyyy"
+                    margin="normal"
+                    id="date-picker-inline"
+                    label="FECHA FACTURA"
+                    value={values.fecha}
+                    onChange={onChangeFecha}
+                    KeyboardButtonProps={{
+                      'aria-label': 'change date',
+                    }}
+                    invalidDateMessage='SELECCIONA UNA FECHA' />
+                </MuiPickersUtilsProvider>
+              </Grid>
+              <Grid item xs={5} >
+                <FormControl variant="outlined" className={classes.textField}>
+                  <ComboCustom
+                    label='PROVEEDOR'
+                    value={values.proveedor}
+                    onChange={onChangeProveedor}
+                    options={proveedores} />
+                </FormControl>
+              </Grid>
+
+              {
+                values.factura && values.factura.length > 3 ?
+                  <Fragment>
+                    <Grid item xs={2}>
+                      <TextField
+                        className={classes.formControl}
+                        name="piezas"
+                        label="PIEZAS"
+                        value={registro.piezas}
+                        onChange={onChangeRegistro}
+                        type='Number'
+                        variant="outlined" />
+                    </Grid>
+
+                    <Grid item xs={4} >
+                      <FormControl variant="outlined" className={classes.textField}>
+                        <ComboCustomProductos
+                          label='PRODUCTO'
+                          name="producto"
+                          value={registro.producto}
+                          onChange={onChangeProducto}
+                          options={productos} />
+                      </FormControl>
+                    </Grid>
+
+                    <Grid item xs={2}>
+                      <TextField
+                        className={classes.formControl}
+                        name="costo"
+                        label="COSTO"
+                        value={registro.costo}
+                        onChange={onChangeRegistro}
+                        type='Number'
+                        variant="outlined" />
+                    </Grid>
+
+                    <Grid item xs={2} >
+                      <FormControl variant="outlined" className={classes.textField}>
+                        <ComboCustomDescripcion
+                          label='UNIDAD ENTRADA'
+                          value={registro.unidad_entrada}
+                          onChange={onChangeUnidadEntrada}
+                          options={unidades} />
+                      </FormControl>
+                    </Grid>
+
+                    <Grid item xs={2}>
+                      <TextField
+                        className={classes.formControl}
+                        name="contenido"
+                        label="CONTENIDO"
+                        value={registro.contenido}
+                        onChange={onChangeRegistro}
+                        type='Number'
+                        variant="outlined" />
+                    </Grid>
+
+                    <Grid item xs={2} >
+                      <FormControl variant="outlined" className={classes.textField}>
+                        <ComboCustomDescripcion
+                          label='UNIDAD SALIDA'
+                          value={registro.unidad_salida}
+                          onChange={onChangeUnidadSalida}
+                          options={unidades} />
+                      </FormControl>
+                    </Grid>
+
+                    <Grid item xs={2}>
+                      <TextField
+                        className={classes.formControl}
+                        name="lote"
+                        label="LOTE"
+                        value={registro.lote}
+                        onChange={onChangeRegistro}
+                        variant="outlined" />
+                    </Grid>
+
+                    <Grid item xs={2}>
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                          autoOk
+                          variant="inline"
+                          format="dd/MM/yyyy"
+                          margin="normal"
+                          id="date-picker-inline"
+                          label="FECHA CADUCIDAD"
+                          value={registro.caducidad}
+                          onChange={onChangeFechaCaducidad}
+                          KeyboardButtonProps={{
+                            'aria-label': 'change date',
+                          }}
+                          invalidDateMessage='SELECCIONA UNA FECHA' />
+                      </MuiPickersUtilsProvider>
+                    </Grid>
+
+                    <Grid item xs={2}>
+                      <ButtonCustom
+                        className={classes.button}
+                        color="primary"
+                        variant="contained"
+                        onClick={() => onClickAgregar(registro)}
+                        disabled={isLoading || !registro.piezas || !registro.producto
+                          || !registro.costo || !registro.unidad_entrada || !registro.contenido
+                          || !registro.unidad_salida || !registro.lote || !registro.caducidad}
+                        text='AGREGAR' />
+                    </Grid>
+                  </Fragment> : ''
+              }
+
+              <Grid item xs={12}>
+                <TableComponent
+                  titulo={titulo}
+                  columns={columns}
+                  data={registros}
+                  actions={actions}
+                  options={options}
+                  components={components} />
+              </Grid>
+
             </Grid>
 
           </form>
         </div>
-      </Modal>
-    </div>
+      </Modal >
+    </div >
   );
 }
 

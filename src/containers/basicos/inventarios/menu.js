@@ -56,6 +56,7 @@ export const MenuContainer = (props) => {
     empleado,
     onChangeTab,
     colorBase,
+    sucursal,
   } = props;
 
   const useStyles = makeStyles(theme => ({
@@ -83,12 +84,13 @@ export const MenuContainer = (props) => {
           <Tab label="EXISTENCIAS" {...a11yProps(1)} />
           <Tab label="FACTURAS" {...a11yProps(2)} />
           <Tab label="TRASPASOS" {...a11yProps(3)} />
-          <Tab label="ENTRADAS" {...a11yProps(4)} />
-          <Tab label="SALIDAS" {...a11yProps(5)} />
+          {/* <Tab label="ENTRADAS" {...a11yProps(4)} />
+          <Tab label="SALIDAS" {...a11yProps(5)} /> */}
         </Tabs>
         <TabPanel value={value} index={0}>
           <Productos
             empleado={empleado}
+            sucursal={sucursal}
             colorBase={colorBase} />
         </TabPanel>
         <TabPanel value={value} index={1}>

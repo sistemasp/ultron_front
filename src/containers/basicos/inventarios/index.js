@@ -37,7 +37,8 @@ const InventariosForm = (props) => {
             value={value}
             empleado={empleado}
             onChangeTab={handleChangeTab}
-            colorBase={colorBase} />
+            colorBase={colorBase}
+            sucursal={sucursal} />
           : <Backdrop className={classes.backdrop} open={isLoading} >
             <CircularProgress color="inherit" />
           </Backdrop>

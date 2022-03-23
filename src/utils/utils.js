@@ -1,4 +1,4 @@
-import { tipoCitaDerivado, tipoCitaDirecto, tipoCitaRealizado, tipoCitaRevisado } from "./constants";
+import { sucursalFederalismoId, sucursalOccidentalId, tipoCitaDerivado, tipoCitaDirecto, tipoCitaRealizado, tipoCitaRevisado } from "./constants";
 
 const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
 const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
@@ -165,4 +165,42 @@ export const comisionAreaBySucursalAndTipo = (sucursalId, tipoId, area) => {
   }
 
   return comision;
+}
+
+export const productoMaximoSucursal = (producto, sucursalId) => {
+  let maximo = 0;
+  switch (sucursalId) {
+    case sucursalOccidentalId:
+      maximo = producto.maximo_oc;
+      break;
+    case sucursalFederalismoId:
+      maximo = producto.maximo_fe;
+      break;
+    case sucursalManuelAcunaId:
+      maximo = producto.maximo_ma;
+      break;
+    case sucursalRubenDarioId:
+      maximo = producto.maximo_rd;
+      break;
+  }
+  return maximo;
+}
+
+export const productoMinimoSucursal = (producto, sucursalId) => {
+  let minimo = 0;
+  switch (sucursalId) {
+    case sucursalOccidentalId:
+      minimo = producto.minimo_oc;
+      break;
+    case sucursalFederalismoId:
+      minimo = producto.minimo_fe;
+      break;
+    case sucursalManuelAcunaId:
+      minimo = producto.minimo_ma;
+      break;
+    case sucursalRubenDarioId:
+      minimo = producto.minimo_rd;
+      break;
+  }
+  return minimo;
 }

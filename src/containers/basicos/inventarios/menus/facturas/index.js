@@ -4,9 +4,13 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import myStyles from "../../../../../css";
 import { FacturasContainer } from "./facturas";
-import { showAllFacturas } from "../../../../../services/centinela/facturas";
+import {
+	showAllFacturas,
+	createFactura,
+} from "../../../../../services/centinela/facturas";
 import { dateToString } from "../../../../../utils/utils";
 import EditIcon from '@material-ui/icons/Edit';
+import { centinelaAlmacenOcciId, centinelaProveedorOtroId, responseCodeCreate } from "../../../../../utils/constants";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -30,11 +34,13 @@ const Facturas = (props) => {
 		sucursal,
 	} = props;
 
+	const token = empleado.access_token;
+
 	const columns = [
 		{ title: 'FACTURA', field: 'factura' },
 		{ title: 'FECHA', field: 'fecha_show' },
-		{ title: 'ALMACEN', field: 'almacen.descripcion' },
 		{ title: 'PROVEEDOR', field: 'proveedor.nombre' },
+		{ title: 'CANTIDAD REGISTROS', field: 'cantidad_registros' },
 	];
 
 	const options = {
@@ -61,20 +67,11 @@ const Facturas = (props) => {
 		setOpen(true);
 	}
 
-	const handleOnClickEliminar = (event, rowData) => {
-	
-	}
-
 	const actions = [
 		{
 			icon: EditIcon,
 			tooltip: 'EDITAR',
 			onClick: handleOnClickEditar
-		},
-		{
-			icon: EditIcon,
-			tooltip: 'ELIMINAR',
-			onClick: handleOnClickEliminar
 		},
 	];
 
@@ -83,9 +80,6 @@ const Facturas = (props) => {
 		switch (action) {
 			case 'EDITAR':
 				handleOnClickEditar(e, rowData);
-				break;
-			case 'ELIMINAR':
-				handleOnClickEliminar(e, rowData);
 				break;
 		}
 	}
@@ -115,8 +109,20 @@ const Facturas = (props) => {
 		}
 	};
 
-	const handleOpen = () => {
-		setOpen(true);
+	const handleOpen = async () => {
+		setIsLoading(true);
+		const factura = {
+			proveedor: centinelaProveedorOtroId,
+			almacen: centinelaAlmacenOcciId,
+			factura: '',
+			fecha: new Date(),
+		}
+		const response = await createFactura(factura);
+		if (`${response.status}` === responseCodeCreate) {
+			setOpen(true);
+			setIsLoading(false);
+		}
+
 	}
 
 	const handleClose = () => {
@@ -125,17 +131,18 @@ const Facturas = (props) => {
 
 	const handleCloseAlert = () => {
 		setOpenAlert(false);
-	};
+	}
 
 	const loadFacturas = async () => {
 		const response = await showAllFacturas();
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			const resFacturas = response.data.forEach(item => {
+			response.data.forEach(item => {
 				item.fecha_show = dateToString(item.fecha);
+				item.cantidad_registros = item.registros ? item.registros.length : 0;
 			});
 			setFacturas(response.data);
 		}
-	};
+	}
 
 	const loadAll = async () => {
 		setIsLoading(true);
