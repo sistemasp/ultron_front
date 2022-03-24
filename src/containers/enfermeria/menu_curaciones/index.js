@@ -19,6 +19,16 @@ const MenuCuraciones = (props) => {
   const [severity, setSeverity] = useState('success');
   const [openModal, setOpenModal] = useState(false);
 
+  const date = new Date();
+	const dia = addZero(date.getDate());
+	const mes = addZero(date.getMonth() + 1);
+	const anio = date.getFullYear();
+  
+  const [filterDate, setFilterDate] = useState({
+		fecha_show: date,
+		fecha: `${dia}/${mes}/${anio}`
+	});
+
   const {
     enfermera,
     sucursal,
@@ -37,11 +47,10 @@ const MenuCuraciones = (props) => {
     { title: 'PACIENTE', field: 'paciente.nombre_completo' },
     { title: 'TELÉFONO', field: 'paciente.telefono' },
     { title: 'DERMATÓLOGO (A)', field: 'dermatologo.nombre' },
-    { title: 'MOTIVO', field: 'curacion_motivo.nombre' },
+    { title: 'PRECIO', field: 'precio_moneda' },
     { title: 'NOMBRE CURACIÓN', field: 'curacion_nombre.nombre' },
     { title: 'TIPO CURACIÓN', field: 'curacion_tipo.nombre' },
     { title: 'AREA', field: 'curacion_area.nombre' },
-    { title: 'PRECIO', field: 'precio_moneda' },
     { title: 'OBSERVACIONES', field: 'observaciones' },
   ];
 
@@ -138,6 +147,18 @@ const MenuCuraciones = (props) => {
     await loadCuraciones(new Date());
   };
 
+  const handleChangeFilterDate = async (date) => {
+		setIsLoading(true);
+		const dia = addZero(date.getDate());
+		const mes = addZero(date.getMonth() + 1);
+		const anio = date.getFullYear();
+		setFilterDate({
+			fecha_show: date,
+			fecha: `${dia}/${mes}/${anio}`
+		});
+		await loadCuraciones(date);
+		setIsLoading(false);
+	};
 
   const loadAll = async () => {
     setIsLoading(true);
@@ -159,6 +180,8 @@ const MenuCuraciones = (props) => {
               sucursal={sucursal}
               curacion={curacion}
               colorBase={colorBase}
+              onChangeFilterDate={(e) => handleChangeFilterDate(e)}
+              filterDate={filterDate.fecha_show}
               setMessage={setMessage}
               setSeverity={setSeverity}
               setOpenAlert={setOpenAlert}

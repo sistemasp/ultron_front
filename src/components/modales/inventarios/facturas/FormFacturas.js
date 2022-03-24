@@ -230,7 +230,7 @@ const FormFacturas = (props) => {
                 <TableComponent
                   titulo={titulo}
                   columns={columns}
-                  data={registros}
+                  data={values.registros}
                   actions={actions}
                   options={options}
                   components={components} />

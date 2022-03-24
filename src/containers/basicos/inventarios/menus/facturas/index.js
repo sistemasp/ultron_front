@@ -11,6 +11,7 @@ import {
 import { dateToString } from "../../../../../utils/utils";
 import EditIcon from '@material-ui/icons/Edit';
 import { centinelaAlmacenOcciId, centinelaProveedorOtroId, responseCodeCreate } from "../../../../../utils/constants";
+import { toFormatterCurrency } from '../../../../../utils/utils';
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -139,6 +140,10 @@ const Facturas = (props) => {
 			response.data.forEach(item => {
 				item.fecha_show = dateToString(item.fecha);
 				item.cantidad_registros = item.registros ? item.registros.length : 0;
+				item.registros.forEach(registro => {
+					registro.costo_moneda = toFormatterCurrency(registro.costo);
+					registro.costo_unitario_moneda = toFormatterCurrency(registro.costo / registro.piezas);
+				});
 			});
 			setFacturas(response.data);
 		}

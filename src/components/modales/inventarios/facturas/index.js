@@ -39,11 +39,11 @@ const ModalFacturas = (props) => {
   const classes = myStyles(colorBase)();
 
   const columns = [
-    { title: 'CÓDIGO', field: 'codigo' },
-    { title: 'DESCRIPCIÓN', field: 'descripcion' },
+    { title: 'CÓDIGO', field: 'producto.codigo' },
+    { title: 'DESCRIPCIÓN', field: 'producto.descripcion' },
     { title: 'PIEZAS', field: 'piezas' },
-    { title: 'COSTO UNITARIO', field: 'costo_unitario' },
-    { title: 'COSTO', field: 'costo' },
+    { title: 'COSTO', field: 'costo_moneda' },
+    { title: 'COSTO UNITARIO', field: 'costo_unitario_moneda' },
   ];
 
   const options = {
@@ -223,7 +223,6 @@ const ModalFacturas = (props) => {
     const resRegistro = await createRegistro(registro);
     if (`${resRegistro.status}` === responseCodeCreate) {
       const newRegistro = resRegistro.data;
-      console.log("KAOZ", newRegistro, values);
     }
     setRegistros(registros);
   }
