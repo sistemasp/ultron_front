@@ -60,16 +60,6 @@ const FormCuracion = (props) => {
             <Grid item xs={12} >
               <FormControl variant="outlined" className={classes.formControl}>
                 <ComboCustom
-                  label='MOTIVO'
-                  value={values.curacion_motivo}
-                  onChange={onChangeMotivos}
-                  options={motivos} />
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={12} >
-              <FormControl variant="outlined" className={classes.formControl}>
-                <ComboCustom
                   label='NOMBRE DE LA CURACIÓN'
                   value={values.curacion_nombre}
                   onChange={onChangeNombre}

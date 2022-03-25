@@ -23,8 +23,6 @@ const ModalProductos = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [values, setValues] = useState(producto);
 
-  console.log("KAOZ", values);
-
   const classes = myStyles(colorBase)();
 
   const handleChange = (e) => {

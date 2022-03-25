@@ -35,7 +35,7 @@ export const FacturasContainer = (props) => {
             onClose={handleClose}
             sucursal={sucursal}
             colorBase={colorBase}
-            loadProductos={loadFacturas}
+            loadFacturas={loadFacturas}
             factura={factura}
             empleado={empleado} /> : ''
       }
