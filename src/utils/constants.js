@@ -16,6 +16,7 @@ export const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_I
 
 export const servicioCuracionId = process.env.REACT_APP_CURACION_SERVICIO_ID;
 export const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
+export const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
 
 export const esquemasCatalogoId = process.env.REACT_APP_ESQUEMAS_CATALOGO_ID;
 

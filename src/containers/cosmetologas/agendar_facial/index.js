@@ -159,7 +159,7 @@ const AgendarFacial = (props) => {
 		{ title: 'FRECUENCIA', field: 'frecuencia.nombre' },
 		{ title: 'TIPO', field: 'tipo_cita.nombre' },
 		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
-		{ title: 'COSMETÓLOGA', field: 'cosmetologa_nombre' },
+		{ title: 'QUIEN REALIZA', field: 'quien_realiza_nombre' },
 		{ title: 'PROMOVENDEDOR (A)', field: 'promovendedor_nombre' },
 		{ title: 'STATUS', field: 'status.nombre' },
 		{ title: 'PRECIO', field: 'precio_moneda' },
@@ -324,7 +324,7 @@ const AgendarFacial = (props) => {
 				item.total_moneda = toFormatterCurrency(item.total);
 				item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
 				item.promovendedor_nombre = item.promovendedor ? item.promovendedor.nombre : 'SIN ASIGNAR';
-				item.cosmetologa_nombre = item.cosmetologa ? item.cosmetologa.nombre : 'SIN ASIGNAR';
+				item.quien_realiza_nombre = item.quien_realiza ? item.quien_realiza.nombre : 'SIN ASIGNAR';
 				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
 
 				item.show_tratamientos = item.tratamientos ? item.tratamientos.map(tratamiento => {
@@ -448,19 +448,6 @@ const AgendarFacial = (props) => {
 		setIsLoading(false);
 	}
 
-	const handleOnClickNuevaCita = async (event, rowData) => {
-		setIsLoading(true);
-		setFacial(rowData);
-		await loadHorariosByServicio(new Date(rowData.fecha_hora), rowData.servicio._id);
-		setOpenModalProxima(true);
-		setIsLoading(false);
-	}
-
-	const handleClickVerPagos = (event, rowData) => {
-		setFacial(rowData);
-		setOpenModalPagos(true);
-	}
-
 	const handleCloseVerPagos = (event, rowData) => {
 		setOpenModalPagos(false);
 	}
@@ -473,62 +460,19 @@ const AgendarFacial = (props) => {
 		setOpenModalImprimirCita(false);
 	}
 
-	const handlePrint = async (event, rowData) => {
-		setDatosImpresion(rowData);
-		setOpenModalImprimirCita(true);
-	}
-
-	const handleClickTraspaso = (event, rowData) => {
-		setFacial(rowData);
-		setOpenModalTraspaso(true);
-	}
-
 	const actions = [
-		{
-			icon: PrintIcon,
-			tooltip: 'IMPRIMIR',
-			onClick: handlePrint
-		},
-		//new Date(anio, mes - 1, dia) < filterDate.fecha_hora  ? 
 		{
 			icon: EditIcon,
 			tooltip: 'EDITAR',
 			onClick: handleOnClickEditarCita
-		}, //: ''
-		{
-			icon: AttachMoneyIcon,
-			tooltip: 'PAGOS',
-			onClick: handleClickVerPagos
-		},
-		{
-			icon: EventAvailableIcon,
-			tooltip: 'NUEVA CITA',
-			onClick: handleOnClickNuevaCita
-		},
-		{
-			icon: AttachMoneyIcon,
-			tooltip: 'TRASPASO',
-			onClick: handleClickTraspaso
 		},
 	];
 
 	const onChangeActions = (e, rowData) => {
 		const action = e.target.value;
 		switch (action) {
-			case 'IMPRIMIR':
-				handlePrint(e, rowData);
-				break;
 			case 'EDITAR':
 				handleOnClickEditarCita(e, rowData);
-				break;
-			case 'NUEVA CITA':
-				handleOnClickNuevaCita(e, rowData);
-				break;
-			case 'PAGOS':
-				handleClickVerPagos(e, rowData);
-				break;
-			case 'TRASPASO':
-				handleClickTraspaso(e, rowData);
 				break;
 		}
 	}
@@ -565,29 +509,6 @@ const AgendarFacial = (props) => {
 												>{item.tooltip}</MenuItem>
 												: '';
 											break;
-										case 'PAGOS':
-											menuItem = props.data.status._id !== pendienteStatusId && props.data.status._id !== confirmadoStatusId ?
-												<MenuItem
-													key={index}
-													value={item.tooltip}
-												>{item.tooltip}</MenuItem>
-												: '';
-											break;
-										case 'TRASPASO':
-											menuItem = props.data.status._id !== atendidoStatusId ?
-												<MenuItem
-													key={index}
-													value={item.tooltip}
-												>{item.tooltip}</MenuItem>
-												: '';
-											break;
-										case 'NUEVA CITA':
-											menuItem = props.data.status._id === atendidoStatusId ?
-												<MenuItem
-													key={index}
-													value={item.tooltip}
-												>{item.tooltip}</MenuItem>
-												: '';
 									}
 									if (menuItem !== '' && props.data.status._id !== reagendoStatusId && props.data.status._id !== noAsistioStatusId) {
 										return menuItem;
