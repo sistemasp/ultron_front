@@ -87,7 +87,6 @@ const ReporteCortes = (props) => {
 	}
 
 	const handleOpenImprimir = (event, rowData) => {
-		console.log("KAOZ", rowData);
 		// navigate.push('/imprimir/corte',
 		// 	{
 		// 		empleado: empleado,

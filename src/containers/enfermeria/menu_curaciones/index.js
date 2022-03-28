@@ -23,7 +23,7 @@ const MenuCuraciones = (props) => {
 	const dia = addZero(date.getDate());
 	const mes = addZero(date.getMonth() + 1);
 	const anio = date.getFullYear();
-  
+
   const [filterDate, setFilterDate] = useState({
 		fecha_show: date,
 		fecha: `${dia}/${mes}/${anio}`
@@ -142,9 +142,9 @@ const MenuCuraciones = (props) => {
     }
   }
 
-  const handleCloseModal = async () => {
+  const handleCloseModal = async (date) => {
     setOpenModal(false);
-    await loadCuraciones(new Date());
+    await loadCuraciones(date);
   };
 
   const handleChangeFilterDate = async (date) => {
