@@ -60,16 +60,6 @@ const FormCuracion = (props) => {
             <Grid item xs={12} >
               <FormControl variant="outlined" className={classes.formControl}>
                 <ComboCustom
-                  label='MOTIVO'
-                  value={values.curacion_motivo}
-                  onChange={onChangeMotivos}
-                  options={motivos} />
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={12} >
-              <FormControl variant="outlined" className={classes.formControl}>
-                <ComboCustom
                   label='NOMBRE DE LA CURACIÓN'
                   value={values.curacion_nombre}
                   onChange={onChangeNombre}
@@ -115,7 +105,7 @@ const FormCuracion = (props) => {
                 className={classes.buttonCancel}
                 color="secondary"
                 variant="contained"
-                onClick={onClose}
+                onClick={() => onClose(curacion.create_date)}
                 text="CANCELAR" />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -123,8 +113,7 @@ const FormCuracion = (props) => {
                 className={classes.button}
                 color="primary"
                 variant="contained"
-                disabled={!values.curacion_motivo || !values.curacion_nombre
-                  || !values.curacion_tipo|| !values.curacion_area }
+                disabled={!values.curacion_nombre || !values.curacion_tipo || !values.curacion_area}
                 onClick={() => onClickGurardar(values)}
                 text="GUARDAR" />
             </Grid>

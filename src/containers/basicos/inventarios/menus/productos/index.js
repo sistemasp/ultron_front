@@ -6,6 +6,7 @@ import myStyles from "../../../../../css";
 import { ProductosContainer } from "./productos";
 import { showAllProductos } from "../../../../../services/centinela/productos";
 import EditIcon from '@material-ui/icons/Edit';
+import { productoMaximoSucursal, productoMinimoSucursal } from "../../../../../utils/utils";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -32,8 +33,8 @@ const Productos = (props) => {
 	const columns = [
 		{ title: 'CÓDIGO', field: 'codigo' },
 		{ title: 'DESCRIPCION', field: 'descripcion' },
-		{ title: 'MAXIMO', field: 'maximo' },
-		{ title: 'MINIMO', field: 'minimo' },
+		{ title: 'MAXIMO', field: 'maximo_sucursal' },
+		{ title: 'MINIMO', field: 'minimo_sucursal' },
 	];
 
 	const options = {
@@ -129,7 +130,12 @@ const Productos = (props) => {
 	const loadProductos = async () => {
 		const response = await showAllProductos();
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			setProductos(response.data);
+			const resProductos = response.data;
+			response.data.forEach(resProducto => {
+				resProducto.maximo_sucursal = productoMaximoSucursal(resProducto, sucursal._id);
+				resProducto.minimo_sucursal = productoMinimoSucursal(resProducto, sucursal._id);
+			});
+			setProductos(resProductos);
 		}
 	};
 

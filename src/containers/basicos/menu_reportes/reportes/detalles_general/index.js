@@ -685,7 +685,6 @@ const ReportesDetallesGeneral = (props) => {
 	}
 
 	const procesarDermapen = (dermapen, datos) => {
-		console.log("KAOZ", dermapen);
 		if (dermapen.status && dermapen.status._id === statusCanceloSPId) {
 			// servicioCancelado(dermapen, datos);
 		}

@@ -37,13 +37,8 @@ const ModalCuracion = (props) => {
   const [curacionTipos, setCuracionTipos] = useState([]);
   const [areas, setAreas] = useState([]);
 
-  const [values, setValues] = useState({
-    curacion_motivo: curacion.curacion_motivo,
-    curacion_nombre: curacion.curacion_nombre,
-    curacion_tipo: curacion.curacion_tipo,
-    curacion_area: curacion.curacion_area,
-  });
-
+  const [values, setValues] = useState({});
+  
   const handleChange = (event) => {
     setValues({
       ...values,

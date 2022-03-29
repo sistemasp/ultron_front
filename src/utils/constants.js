@@ -1,6 +1,7 @@
 const frecuenciaPrimeraVezId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
 
 export const responseCodeOK = process.env.REACT_APP_RESPONSE_CODE_OK;
+export const responseCodeCreate = process.env.REACT_APP_RESPONSE_CODE_CREATED;
 
 export const productoConsultaId = process.env.REACT_APP_PRODUCTO_CONSULTA_ID
 export const productoCuracionId = process.env.REACT_APP_PRODUCTO_CURACION_ID
@@ -15,6 +16,7 @@ export const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_I
 
 export const servicioCuracionId = process.env.REACT_APP_CURACION_SERVICIO_ID;
 export const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
+export const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
 
 export const esquemasCatalogoId = process.env.REACT_APP_ESQUEMAS_CATALOGO_ID;
 
@@ -81,3 +83,9 @@ export const productoConsultaObj = {
     _id: productoConsultaId,
     nombre: "CONSULTAS",
 }
+
+
+//////////////////////////////// CENTINELA ///////////////////
+
+export const centinelaProveedorOtroId = process.env.REACT_APP_CENTINELA_PROVEEDOR_OTRO_ID;
+export const centinelaAlmacenOcciId = process.env.REACT_APP_CENTINELA_ALMACEN_OCCI_ID;
