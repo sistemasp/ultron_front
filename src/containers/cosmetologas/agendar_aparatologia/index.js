@@ -4,11 +4,14 @@ import { Backdrop, CircularProgress, FormControl, MenuItem, Select, Snackbar, Ta
 import MuiAlert from '@material-ui/lab/Alert';
 import { Formik } from 'formik';
 import EditIcon from '@material-ui/icons/Edit';
+import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import { toFormatterCurrency, addZero, generateFolio, dateToString } from "../../../utils/utils";
 import { AgendarAparatologiaContainer } from "./agendar_aparatologia";
 import {
 	findAparatologiaByDateAndSucursal,
 } from "../../../services/aparatolgia";
+import { findScheduleByDateAndSucursalAndService } from "../../../services";
+import { statusAtendidoId } from "../../../utils/constants";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -73,7 +76,9 @@ const AgendarAparatologia = (props) => {
 	});
 	const [aparatologias, setAparatologias] = useState([]);
 	const [openModal, setOpenModal] = useState(false);
+	const [openModalProxima, setOpenModalProxima] = useState(false);
 	const [aparatologia, setAparatologia] = useState();
+	const [horarios, setHorarios] = useState([]);
 
 	const date = new Date();
 	const dia = addZero(date.getDate());
@@ -167,12 +172,23 @@ const AgendarAparatologia = (props) => {
 		}
 	}
 
+	const loadHorariosByServicio = async (date, servicio) => {
+		const dia = date ? date.getDate() : values.fecha_hora.getDate();
+		const mes = Number(date ? date.getMonth() : values.fecha_hora.getMonth());
+		const anio = date ? date.getFullYear() : values.fecha_hora.getFullYear();
+		const response = await findScheduleByDateAndSucursalAndService(dia, mes, anio, sucursal, servicio);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setHorarios(response.data);
+		}
+	}
+
 	const handleCloseAlert = () => {
 		setOpenAlert(false);
 	};
 
 	const handleCloseModal = () => {
 		setOpenModal(false);
+		setOpenModalProxima(false);
 	};
 
 
@@ -183,12 +199,25 @@ const AgendarAparatologia = (props) => {
 		setIsLoading(false);
 	}
 
+	const handleOnClickNuevaCita = async (event, rowData) => {
+		setIsLoading(true);
+		setAparatologia(rowData);
+		await loadHorariosByServicio(new Date(rowData.fecha_hora), rowData.servicio._id);
+		setOpenModalProxima(true);
+		setIsLoading(false);
+	}
+
 	const actions = [
 		{
 			icon: EditIcon,
 			tooltip: 'EDITAR',
 			onClick: handleOnClickEditarCita
-		}
+		},
+		{
+			icon: EventAvailableIcon,
+			tooltip: 'NUEVA CITA',
+			onClick: handleOnClickNuevaCita
+		},
 	];
 
 	const onChangeActions = (e, rowData) => {
@@ -196,6 +225,9 @@ const AgendarAparatologia = (props) => {
 		switch (action) {
 			case 'EDITAR':
 				handleOnClickEditarCita(e, rowData);
+				break;
+			case 'NUEVA CITA':
+				handleOnClickNuevaCita(e, rowData);
 				break;
 		}
 	}
@@ -232,6 +264,13 @@ const AgendarAparatologia = (props) => {
 												>{item.tooltip}</MenuItem>
 												: '';
 											break;
+										case 'NUEVA CITA':
+											menuItem = props.data.status._id === statusAtendidoId ?
+												<MenuItem
+													key={index}
+													value={item.tooltip}
+												>{item.tooltip}</MenuItem>
+												: '';
 									}
 									if (menuItem !== '' && props.data.status._id !== reagendoStatusId && props.data.status._id !== noAsistioStatusId) {
 										return menuItem;
@@ -274,12 +313,14 @@ const AgendarAparatologia = (props) => {
 								actions={actions}
 								components={components}
 								aparatologia={aparatologia}
+								openModalProxima={openModalProxima}
 								openModal={openModal}
 								empleado={empleado}
 								onClickCancel={handleCloseModal}
 								loadAparatologias={loadAparatologias}
 								colorBase={colorBase}
 								sucursal={sucursal}
+								horarios={horarios}
 								setOpenAlert={setOpenAlert}
 								setMessage={setMessage}
 								setSeverity={setSeverity}

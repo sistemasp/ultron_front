@@ -222,7 +222,7 @@ export const AgendarConsultaContainer = (props) => {
               label="ES FESTIVO"
             />
           </Grid>
-          {
+          {/* {
             sucursal._id === process.env.REACT_APP_SUCURSAL_OCCI_ID ||
               sucursal._id === process.env.REACT_APP_SUCURSAL_FEDE_ID ?
               <Grid item xs={12} sm={true} className={classes.grid_center}>
@@ -234,7 +234,7 @@ export const AgendarConsultaContainer = (props) => {
                 />
               </Grid>
               : ''
-          }
+          } */}
 
           <Grid item xs={12} sm={true} className={classes.grid_center}>
             <ButtonCustom

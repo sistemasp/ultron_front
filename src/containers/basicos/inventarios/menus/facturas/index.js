@@ -10,7 +10,7 @@ import {
 } from "../../../../../services/centinela/facturas";
 import { dateToString } from "../../../../../utils/utils";
 import EditIcon from '@material-ui/icons/Edit';
-import { centinelaAlmacenOcciId, centinelaProveedorOtroId, responseCodeCreate } from "../../../../../utils/constants";
+import { centinelaAlmacenOcciId, centinelaProveedorOtroId, responseCodeCreate, responseCodeOK } from "../../../../../utils/constants";
 import { toFormatterCurrency } from '../../../../../utils/utils';
 
 function Alert(props) {
@@ -42,6 +42,7 @@ const Facturas = (props) => {
 		{ title: 'FECHA', field: 'fecha_show' },
 		{ title: 'PROVEEDOR', field: 'proveedor.nombre' },
 		{ title: 'CANTIDAD REGISTROS', field: 'cantidad_registros' },
+		{ title: 'TOTAL', field: 'total_show' },
 	];
 
 	const options = {
@@ -120,6 +121,7 @@ const Facturas = (props) => {
 		}
 		const response = await createFactura(factura);
 		if (`${response.status}` === responseCodeCreate) {
+			setFactura(response.data);
 			setOpen(true);
 			setIsLoading(false);
 		}
@@ -136,14 +138,11 @@ const Facturas = (props) => {
 
 	const loadFacturas = async () => {
 		const response = await showAllFacturas();
-		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+		if (`${response.status}` === responseCodeOK) {
 			response.data.forEach(item => {
 				item.fecha_show = dateToString(item.fecha);
 				item.cantidad_registros = item.registros ? item.registros.length : 0;
-				item.registros.forEach(registro => {
-					registro.costo_moneda = toFormatterCurrency(registro.costo);
-					registro.costo_unitario_moneda = toFormatterCurrency(registro.costo / registro.piezas);
-				});
+				item.total_show = toFormatterCurrency(item.total);
 			});
 			setFacturas(response.data);
 		}

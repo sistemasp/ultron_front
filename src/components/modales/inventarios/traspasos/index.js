@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Backdrop, CircularProgress, FormControl, MenuItem, Select } from '@material-ui/core';
 import { Fragment } from 'react';
-import FormFacturas from './FormFacturas';
+import FormTraspasos from './FormTraspasos';
 import myStyles from '../../../../css';
 import { createFactura, deleteFactura, findFacturaById, updateFactura } from '../../../../services/centinela/facturas';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -12,7 +12,7 @@ import { createRegistro } from '../../../../services/centinela/registros';
 import { responseCodeCreate, responseCodeOK } from '../../../../utils/constants';
 import { toFormatterCurrency } from '../../../../utils/utils';
 
-const ModalFacturas = (props) => {
+const ModalTraspasos = (props) => {
 
   const {
     open,
@@ -36,9 +36,9 @@ const ModalFacturas = (props) => {
   const columns = [
     { title: 'CÓDIGO', field: 'producto.codigo' },
     { title: 'DESCRIPCIÓN', field: 'producto.descripcion' },
-    { title: 'CANTIDAD', field: 'cantidad_show' },
-    { title: 'COSTO UNITARIO', field: 'costo_unitario_moneda' },
+    { title: 'PIEZAS', field: 'piezas' },
     { title: 'COSTO', field: 'costo_moneda' },
+    { title: 'COSTO UNITARIO', field: 'costo_unitario_moneda' },
   ];
 
   const options = {
@@ -170,14 +170,10 @@ const ModalFacturas = (props) => {
     const response = await findFacturaById(factura.id);
     if (`${response.status}` === responseCodeOK) {
       const resFactura = response.data;
-      let total = 0;
       resFactura.registros.map(item => {
-        total += item.costo;
         item.costo_moneda = toFormatterCurrency(item.costo);
-        item.costo_unitario_moneda = toFormatterCurrency(item.costo / item.cantidad);
-        item.cantidad_show = `${item.cantidad} (${item.unidad_entrada.descripcion})`;
+        item.costo_unitario_moneda = toFormatterCurrency(item.costo / item.piezas);
       });
-      resFactura.total = total;
       setValues(resFactura);
       setIsLoading(false);
     }
@@ -262,7 +258,7 @@ const ModalFacturas = (props) => {
     <Fragment>
       {
         !isLoading ?
-          <FormFacturas
+          <FormTraspasos
             aria-labelledby="simple-modal-title"
             aria-describedby="simple-modal-description"
             values={values}
@@ -298,4 +294,4 @@ const ModalFacturas = (props) => {
   );
 }
 
-export default ModalFacturas;
+export default ModalTraspasos;
