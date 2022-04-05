@@ -191,7 +191,7 @@ const FormAgregarPagosAnticipados = (props) => {
                         label="ES FESTIVO"
                       />
                     </Grid>
-                    {
+                    {/* {
                       sucursal === process.env.REACT_APP_SUCURSAL_OCCI_ID ||
                         sucursal === process.env.REACT_APP_SUCURSAL_FEDE_ID ?
                         <Grid item xs={12} sm={true} className={classes.grid_center}>
@@ -203,7 +203,7 @@ const FormAgregarPagosAnticipados = (props) => {
                           />
                         </Grid>
                         : ''
-                    }
+                    } */}
                   </Fragment>
                   :
                   <Fragment>

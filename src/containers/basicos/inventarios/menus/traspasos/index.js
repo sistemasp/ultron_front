@@ -31,10 +31,9 @@ const Traspasos = (props) => {
 	} = props;
 
 	const columns = [
-		{ title: 'FACTURA', field: 'factura' },
 		{ title: 'FECHA', field: 'fecha_show' },
 		{ title: 'ALMACEN', field: 'almacen.descripcion' },
-		{ title: 'PROVEEDOR', field: 'proveedor.nombre' },
+		{ title: 'STATUS', field: 'proveedor.nombre' },
 	];
 
 	const options = {
@@ -154,7 +153,8 @@ const Traspasos = (props) => {
 					<TraspasosContainer
 						empleado={empleado}
 						columns={columns}
-						titulo='FACTURAS'
+						tituloEnviados='TRASPASOS ENVIADOS'
+						tituloRecibidos='TRASPASOS RECIBIDOS'
 						facturas={facturas}
 						factura={factura}
 						options={options}

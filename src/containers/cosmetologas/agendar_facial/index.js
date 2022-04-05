@@ -30,6 +30,7 @@ import PrintIcon from '@material-ui/icons/Print';
 import { AgendarFacialContainer } from "./agendar_facial";
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import { findEmployeesByRolIdAvailable } from "../../../services/empleados";
+import { statusAtendidoId } from "../../../utils/constants";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -216,16 +217,6 @@ const AgendarFacial = (props) => {
 		}
 	}
 
-	const loadHorariosByServicio = async (date, servicio) => {
-		const dia = date ? date.getDate() : values.fecha_hora.getDate();
-		const mes = Number(date ? date.getMonth() : values.fecha_hora.getMonth());
-		const anio = date ? date.getFullYear() : values.fecha_hora.getFullYear();
-		const response = await findScheduleByDateAndSucursalAndService(dia, mes, anio, sucursal, servicio);
-		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			setHorarios(response.data);
-		}
-	}
-
 	const handleChangeTratamientos = (e) => {
 		setSelectedAreas(false);
 		e.map(async (tratamiento) => {
@@ -335,6 +326,16 @@ const AgendarFacial = (props) => {
 				}) : '';
 			});
 			setFaciales(response.data);
+		}
+	}
+
+	const loadHorariosByServicio = async (date, servicio) => {
+		const dia = date ? date.getDate() : values.fecha_hora.getDate();
+		const mes = Number(date ? date.getMonth() : values.fecha_hora.getMonth());
+		const anio = date ? date.getFullYear() : values.fecha_hora.getFullYear();
+		const response = await findScheduleByDateAndSucursalAndService(dia, mes, anio, sucursal, servicio);
+		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+			setHorarios(response.data);
 		}
 	}
 
@@ -460,11 +461,24 @@ const AgendarFacial = (props) => {
 		setOpenModalImprimirCita(false);
 	}
 
+	const handleOnClickNuevaCita = async (event, rowData) => {
+		setIsLoading(true);
+		setFacial(rowData);
+		await loadHorariosByServicio(new Date(rowData.fecha_hora), rowData.servicio._id);
+		setOpenModalProxima(true);
+		setIsLoading(false);
+	}
+
 	const actions = [
 		{
 			icon: EditIcon,
 			tooltip: 'EDITAR',
 			onClick: handleOnClickEditarCita
+		},
+		{
+			icon: EventAvailableIcon,
+			tooltip: 'NUEVA CITA',
+			onClick: handleOnClickNuevaCita
 		},
 	];
 
@@ -473,6 +487,9 @@ const AgendarFacial = (props) => {
 		switch (action) {
 			case 'EDITAR':
 				handleOnClickEditarCita(e, rowData);
+				break;
+			case 'NUEVA CITA':
+				handleOnClickNuevaCita(e, rowData);
 				break;
 		}
 	}
@@ -509,6 +526,13 @@ const AgendarFacial = (props) => {
 												>{item.tooltip}</MenuItem>
 												: '';
 											break;
+										case 'NUEVA CITA':
+											menuItem = props.data.status._id === statusAtendidoId ?
+												<MenuItem
+													key={index}
+													value={item.tooltip}
+												>{item.tooltip}</MenuItem>
+												: '';
 									}
 									if (menuItem !== '' && props.data.status._id !== reagendoStatusId && props.data.status._id !== noAsistioStatusId) {
 										return menuItem;
