@@ -1,6 +1,4 @@
 import React, { Fragment } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Modal from '@material-ui/core/Modal';
 import { Grid } from '@material-ui/core';
 import bannerMePiel from './../../../bannerMePiel.PNG';
 import bannerDermastetic from './../../../bannerDermastetic.jpeg';
@@ -34,12 +32,8 @@ const FormConsulta = (props) => {
     colorBase,
   } = props;
 
-  console.log("KAOZ", datos);
-
   const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
   const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
-  const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
-  const sucursalFedeId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
 
   const classes = myStyles(colorBase)();
 

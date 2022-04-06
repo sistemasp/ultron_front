@@ -1,10 +1,9 @@
+import { sucursalFederalismoId, sucursalOccidentalId, tipoCitaDerivado, tipoCitaDirecto, tipoCitaRealizado, tipoCitaRevisado } from "./constants";
+
 const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
 const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
 const sucursalOcciId = process.env.REACT_APP_SUCURSAL_OCCI_ID;
 const sucursalFedeId = process.env.REACT_APP_SUCURSAL_FEDE_ID;
-const tipoCitaRevisado = process.env.REACT_APP_TIPO_CITA_REVISADO_ID
-const tipoCitaDerivado = process.env.REACT_APP_TIPO_CITA_DERIVADO_ID
-const tipoCitaRealizado = process.env.REACT_APP_TIPO_CITA_REALIZADO_ID
 
 export const toFormatterCurrency = (value) => {
   const formatterDolar = new Intl.NumberFormat('en-US', {
@@ -156,7 +155,52 @@ export const comisionAreaBySucursalAndTipo = (sucursalId, tipoId, area) => {
             area.comision_realizado
           ));
       break;
+    case tipoCitaDirecto:
+      comision = sucursalId === sucursalManuelAcunaId ? area.precio_ma
+        : (sucursalId === sucursalRubenDarioId ? area.precio_rd
+          : (
+            area.precio_oc
+          ));
+      break;
   }
 
   return comision;
+}
+
+export const productoMaximoSucursal = (producto, sucursalId) => {
+  let maximo = 0;
+  switch (sucursalId) {
+    case sucursalOccidentalId:
+      maximo = producto.maximo_oc;
+      break;
+    case sucursalFederalismoId:
+      maximo = producto.maximo_fe;
+      break;
+    case sucursalManuelAcunaId:
+      maximo = producto.maximo_ma;
+      break;
+    case sucursalRubenDarioId:
+      maximo = producto.maximo_rd;
+      break;
+  }
+  return maximo;
+}
+
+export const productoMinimoSucursal = (producto, sucursalId) => {
+  let minimo = 0;
+  switch (sucursalId) {
+    case sucursalOccidentalId:
+      minimo = producto.minimo_oc;
+      break;
+    case sucursalFederalismoId:
+      minimo = producto.minimo_fe;
+      break;
+    case sucursalManuelAcunaId:
+      minimo = producto.minimo_ma;
+      break;
+    case sucursalRubenDarioId:
+      minimo = producto.minimo_rd;
+      break;
+  }
+  return minimo;
 }

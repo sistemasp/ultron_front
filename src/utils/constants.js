@@ -1,5 +1,8 @@
 const frecuenciaPrimeraVezId = process.env.REACT_APP_FRECUENCIA_PRIMERA_VEZ_ID;
 
+export const responseCodeOK = process.env.REACT_APP_RESPONSE_CODE_OK;
+export const responseCodeCreate = process.env.REACT_APP_RESPONSE_CODE_CREATED;
+
 export const productoConsultaId = process.env.REACT_APP_PRODUCTO_CONSULTA_ID
 export const productoCuracionId = process.env.REACT_APP_PRODUCTO_CURACION_ID
 export const productoMicropuncionId = process.env.REACT_APP_PRODUCTO_MICROPUNCION_ID
@@ -13,18 +16,37 @@ export const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_I
 
 export const servicioCuracionId = process.env.REACT_APP_CURACION_SERVICIO_ID;
 export const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
+export const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
 
 export const esquemasCatalogoId = process.env.REACT_APP_ESQUEMAS_CATALOGO_ID;
 
 export const laserTratamientoId = process.env.REACT_APP_LASER_TRATAMIENTO_ID;
+export const tratamientoLuzpulzadaId = process.env.REACT_APP_LUZ_PULZADA_TRATAMIENTO_ID;
 export const peelingResorcinaTratamientoId = process.env.REACT_APP_PEELING_RESORCINA_TRATAMIENTO_ID;
 export const micropeelingResorcinaTratamientoId = process.env.REACT_APP_MICROPEELING_RESORCINA_TRATAMIENTO_ID;
 
-export const statusCanceloSPId = process.env.REACT_APP_CANCELO_SP_STATUS_ID;
 export const statusAsistioId = process.env.REACT_APP_ASISTIO_STATUS_ID;
+export const statusCanceloId = process.env.REACT_APP_CANCELO_STATUS_ID
+export const statusNoAsistioId = process.env.REACT_APP_NO_ASISTIO_STATUS_ID
+export const statusPendienteId = process.env.REACT_APP_PENDIENTE_STATUS_ID
+export const statusReagendoId = process.env.REACT_APP_REAGENDO_STATUS_ID
+export const statusEnConsultorioId = process.env.REACT_APP_EN_CONSULTORIO_STATUS_ID
+export const statusEnCabinaId = process.env.REACT_APP_EN_CABINA_STATUS_ID
+export const statusAtendidoId = process.env.REACT_APP_ATENDIDO_STATUS_ID
+export const statusEnProcedimientoId = process.env.REACT_APP_EN_PROCEDIMIENTO_STATUS_ID
+export const statusEnSalaDeCuracionId = process.env.REACT_APP_EN_SALA_CURACION_STATUS_ID
+export const statusCanceloCPId = process.env.REACT_APP_CANCELO_CP_STATUS_ID
+export const statusCanceloSPId = process.env.REACT_APP_CANCELO_SP_STATUS_ID
+export const statusConfirmadoId = process.env.REACT_APP_CONFIRMADO_STATUS_ID
+export const statusCanceladoId = process.env.REACT_APP_CANCELADO_STATUS_ID
 
 export const tipoEntradaFacialesId = process.env.REACT_APP_TIPO_ENTRADA_FACIALES_ID;
 export const tipoEntradaAparatologiasId = process.env.REACT_APP_TIPO_ENTRADA_APARATOLOGIA_ID;
+
+export const tipoCitaRevisado = process.env.REACT_APP_TIPO_CITA_REVISADO_ID;
+export const tipoCitaDerivado = process.env.REACT_APP_TIPO_CITA_DERIVADO_ID;
+export const tipoCitaRealizado = process.env.REACT_APP_TIPO_CITA_REALIZADO_ID;
+export const tipoCitaDirecto = process.env.REACT_APP_TIPO_CITA_DIRECTO_ID;
 
 export const tipoSalidaPagoDermatologoId = process.env.REACT_APP_TIPO_SALIDA_PAGO_DERMATOLOGO_ID;
 export const tipoSalidaRetiroParcialId = process.env.REACT_APP_TIPO_SALIDA_RETIRO_PARCIAL_ID;
@@ -35,8 +57,6 @@ export const tipoSalidaCuracionesId = process.env.REACT_APP_TIPO_SALIDA_CURACION
 export const tipoSalidaFacialesId = process.env.REACT_APP_TIPO_SALIDA_FACIALES_ID;
 export const tipoSalidaGastosAdministrativosId = process.env.REACT_APP_TIPO_SALIDA_GASTOS_ADMINISTRATIVOS_ID;
 export const tipoSalidaPagoPatologoId = process.env.REACT_APP_TIPO_SALIDA_PAGO_PATOLOGO_ID;
-
-export const tratamientoLuzpulzadaId = process.env.REACT_APP_LUZ_PULZADA_TRATAMIENTO_ID;
 
 export const formaPagoEfectivoId = process.env.REACT_APP_FORMA_PAGO_EFECTIVO;
 export const formaPagoTarjetaId = process.env.REACT_APP_FORMA_PAGO_TARJETA;
@@ -61,6 +81,8 @@ export const rolDiosSupremoId = process.env.REACT_APP_DIOS_SUPREMO_ROL_ID;
 export const rolMasterId = process.env.REACT_APP_MASTER_ROL_ID;
 export const rolSistemasId = process.env.REACT_APP_SISTEMAS_ROL_ID;
 export const rolSupervisorId = process.env.REACT_APP_SUPERVISOR_ROL_ID;
+export const rolJulioId = process.env.REACT_APP_JULIO_ROL_ID;
+export const rolSuperEnfermeroId = process.env.REACT_APP_SUPER_ENFERMERO_ROL_ID;
 
 export const dermatologoDirectoId = process.env.REACT_APP_DERMATOLOGO_DIRECTO_ID;
 
@@ -73,3 +95,9 @@ export const productoConsultaObj = {
     _id: productoConsultaId,
     nombre: "CONSULTAS",
 }
+
+
+//////////////////////////////// CENTINELA ///////////////////
+
+export const centinelaProveedorOtroId = process.env.REACT_APP_CENTINELA_PROVEEDOR_OTRO_ID;
+export const centinelaAlmacenOcciId = process.env.REACT_APP_CENTINELA_ALMACEN_OCCI_ID;

@@ -412,12 +412,10 @@ const FormImprimirPagoDermatologo = (props) => {
                 consultasPrimeraVez ?
                   consultasPrimeraVez.map(consulta => {
                     let totalPagos = 0;
-                    if (!consulta.has_descuento_dermatologo) {
-                      consulta.pagos.map(pago => {
-                        totalPagos += Number(pago.total);
-                      });
-                    }
-                    const pagoDermatologo = Number(consulta.precio) * Number(dermatologo.esquema.porcentaje_consulta) / 100;
+                    consulta.pagos.map(pago => {
+                      totalPagos += Number(pago.total);
+                    });
+                    const pagoDermatologo = consulta.has_descuento_dermatologo ? 0 : (Number(consulta.precio) * Number(dermatologo.esquema.porcentaje_consulta) / 100);
                     pagoTotal += Number(pagoDermatologo);
 
                     return <Grid container>
@@ -484,12 +482,10 @@ const FormImprimirPagoDermatologo = (props) => {
                 consultasReconsultas ?
                   consultasReconsultas.map(consulta => {
                     let totalPagos = 0;
-                    if (!consulta.has_descuento_dermatologo) {
-                      consulta.pagos.map(pago => {
-                        totalPagos += Number(pago.total);
-                      });
-                    }
-                    const pagoDermatologo = Number(consulta.precio) * Number(dermatologo.esquema.porcentaje_reconsulta) / 100;
+                    consulta.pagos.map(pago => {
+                      totalPagos += Number(pago.total);
+                    });
+                    const pagoDermatologo = consulta.has_descuento_dermatologo ? 0 : Number(consulta.precio) * Number(dermatologo.esquema.porcentaje_reconsulta) / 100;
 
                     pagoTotal += Number(pagoDermatologo);
                     return <Grid container>
@@ -920,8 +916,6 @@ const FormImprimirPagoDermatologo = (props) => {
                         });
                       }
                       let pagoDermatologo = comisionDermatologo - ((comisionDermatologo * (aparatologia.porcentaje_descuento_clinica ? aparatologia.porcentaje_descuento_clinica : 0)) / 100);
-                      
-
                       pagoDermatologo = aparatologia.has_descuento_dermatologo ? 0 : pagoDermatologo;
                       pagoTotal += Number(pagoDermatologo);
                       return <Grid container>

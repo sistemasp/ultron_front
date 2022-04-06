@@ -89,3 +89,15 @@ export const findCortesByRangeDateAndSucursal = async (diai, mesi, anioi, diaf, 
         console.log('findCortesByRangeDateAndSucursal', error);
     }
 }
+
+export const openCorte = async (corteId) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/corte/abrircorte/${corteId}`,
+            method: 'PUT',
+        });
+        return response;
+    } catch (error) {
+        console.log('openCorte', error);
+    }
+}
