@@ -2,9 +2,10 @@ import React, { useState, useEffect, Fragment } from 'react';
 import ModalFormCita from './ModalFormCita';
 import { Backdrop, CircularProgress, makeStyles } from '@material-ui/core';
 import { findEmployeesByRolIdAvailable } from '../../../../services/empleados';
-import { responseCodeOK, rolCosmetologaId, servicioAparatologiaId, servicioFacialId } from '../../../../utils/constants';
+import { responseCodeOK, rolCosmetologaId, servicioAparatologiaId, servicioFacialId, statusAsistioId, statusAtendidoId, statusConfirmadoId, sucursalManuelAcunaId, sucursalRubenDarioId } from '../../../../utils/constants';
 import { findAparatologiaById, updateAparatologia } from '../../../../services/aparatolgia';
 import { findFacialById, updateFacial } from '../../../../services/faciales';
+import { showAllStatusVisibles } from '../../../../services/status';
 import { addZero } from '../../../../utils/utils';
 
 const useStyles = makeStyles(theme => ({
@@ -38,6 +39,7 @@ const ModalCita = (props) => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [cosmetologas, setCosmetologas] = useState([]);
+  const [statements, setStatements] = useState([]);
 
   const [values, setValues] = useState({
   });
@@ -48,6 +50,10 @@ const ModalCita = (props) => {
 
   const handleChangeObservaciones = e => {
     setValues({ ...values, observaciones: e.target.value.toUpperCase() });
+  }
+
+  const handleChangeStatus = e => {
+    setValues({ ...values, status: e.target.value });
   }
 
   const handleChangeTiempo = e => {
@@ -92,7 +98,6 @@ const ModalCita = (props) => {
 
   }
 
-
   const findCita = async () => {
     let response;
     switch (cita.servicio._id) {
@@ -109,10 +114,26 @@ const ModalCita = (props) => {
     }
   }
 
+  const loadStaus = async () => {
+    const response = await showAllStatusVisibles();
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      // SI EL DIA DE LA CITA ES A FUTURO, ELIMINA EL STATUS ASISTIO
+      const resStatus = empleado.super_admin ? response.data : response.data.filter(item => {
+        return item._id !== statusAsistioId ? true : (new Date(cita.fecha_hora).getDate() === new Date().getDate() && cita.status._id === statusConfirmadoId);
+      });
+      const resStatus2 = empleado.super_admin ? resStatus : resStatus.filter(item => {
+        return item._id !== statusAtendidoId ? true : (sucursal !== sucursalRubenDarioId && sucursal !== sucursalManuelAcunaId);
+      });
+      setStatements(resStatus2);
+    }
+    setIsLoading(false);
+  }
+
   const loadAll = async () => {
     setIsLoading(true);
     await findCita();
     await loadCosmetologas();
+    await loadStaus();
     setIsLoading(false);
   }
 
@@ -133,8 +154,10 @@ const ModalCita = (props) => {
             onChangeQuienRealiza={(e) => handleChangeQuienRealiza(e)}
             onChangeTiempo={(e) => handleChangeTiempo(e)}
             onChangeDisparos={(e) => handleChangeDisparos(e)}
+            onChangeStatus={(e) => handleChangeStatus(e)}
             tratamientos={tratamientos}
             cosmetologas={cosmetologas}
+            statements={statements}
             colorBase={colorBase}
             onChangeObservaciones={handleChangeObservaciones}
             onClickActualizarCita={handleOnClickActualizarCita}

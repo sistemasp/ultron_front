@@ -25,8 +25,20 @@ export const tratamientoLuzpulzadaId = process.env.REACT_APP_LUZ_PULZADA_TRATAMI
 export const peelingResorcinaTratamientoId = process.env.REACT_APP_PEELING_RESORCINA_TRATAMIENTO_ID;
 export const micropeelingResorcinaTratamientoId = process.env.REACT_APP_MICROPEELING_RESORCINA_TRATAMIENTO_ID;
 
-export const statusCanceloSPId = process.env.REACT_APP_CANCELO_SP_STATUS_ID;
 export const statusAsistioId = process.env.REACT_APP_ASISTIO_STATUS_ID;
+export const statusCanceloId = process.env.REACT_APP_CANCELO_STATUS_ID
+export const statusNoAsistioId = process.env.REACT_APP_NO_ASISTIO_STATUS_ID
+export const statusPendienteId = process.env.REACT_APP_PENDIENTE_STATUS_ID
+export const statusReagendoId = process.env.REACT_APP_REAGENDO_STATUS_ID
+export const statusEnConsultorioId = process.env.REACT_APP_EN_CONSULTORIO_STATUS_ID
+export const statusEnCabinaId = process.env.REACT_APP_EN_CABINA_STATUS_ID
+export const statusAtendidoId = process.env.REACT_APP_ATENDIDO_STATUS_ID
+export const statusEnProcedimientoId = process.env.REACT_APP_EN_PROCEDIMIENTO_STATUS_ID
+export const statusEnSalaDeCuracionId = process.env.REACT_APP_EN_SALA_CURACION_STATUS_ID
+export const statusCanceloCPId = process.env.REACT_APP_CANCELO_CP_STATUS_ID
+export const statusCanceloSPId = process.env.REACT_APP_CANCELO_SP_STATUS_ID
+export const statusConfirmadoId = process.env.REACT_APP_CONFIRMADO_STATUS_ID
+export const statusCanceladoId = process.env.REACT_APP_CANCELADO_STATUS_ID
 
 export const tipoEntradaFacialesId = process.env.REACT_APP_TIPO_ENTRADA_FACIALES_ID;
 export const tipoEntradaAparatologiasId = process.env.REACT_APP_TIPO_ENTRADA_APARATOLOGIA_ID;

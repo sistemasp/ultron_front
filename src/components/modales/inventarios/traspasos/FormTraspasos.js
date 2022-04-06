@@ -10,7 +10,6 @@ import TableComponent from '../../../table/TableComponent';
 import { ComboCustom } from '../../../basic/ComboCustom';
 import { ComboCustomDescripcion } from '../../../basic/ComboCustomDescripcion';
 import { CheckCustom } from '../../../basic/CheckCustom';
-import { toFormatterCurrency } from '../../../../utils/utils';
 
 function getModalStyle() {
   const top = 50;
@@ -25,7 +24,7 @@ function getModalStyle() {
   };
 }
 
-const FormFacturas = (props) => {
+const FormTraspasos = (props) => {
 
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
@@ -83,11 +82,11 @@ const FormFacturas = (props) => {
                   disabled={isLoading}
                   text='GUARDAR' />
               </Grid>
-              <Grid item xs={true}>
+              <Grid item xs={4}>
                 <TextField
                   className={classes.textField}
                   name="factura"
-                  label="FACTURA"
+                  label="SOLICITUD DE TRASPASO"
                   value={values.factura}
                   onChange={onChange}
                   variant="outlined" />
@@ -109,7 +108,7 @@ const FormFacturas = (props) => {
                     invalidDateMessage='SELECCIONA UNA FECHA' />
                 </MuiPickersUtilsProvider>
               </Grid>
-              <Grid item xs={true} >
+              <Grid item xs={3} >
                 <FormControl variant="outlined" className={classes.textField}>
                   <ComboCustom
                     label='PROVEEDOR'
@@ -118,10 +117,7 @@ const FormFacturas = (props) => {
                     options={proveedores} />
                 </FormControl>
               </Grid>
-              <Grid item xs={true}>
-                <h1>{`TOTAL: ${toFormatterCurrency(values.total)}`}</h1>
-              </Grid>
-              <Grid item xs={true}>
+              <Grid item xs={3}>
                 <ButtonCustom
                   className={classes.button}
                   color="primary"
@@ -131,19 +127,37 @@ const FormFacturas = (props) => {
                   text='ACTUALIZAR DATOS' />
               </Grid>
 
-              <Grid item xs={12}>
-                <br />
-              </Grid>
-
               {
                 values.factura && values.factura.length > 3 ?
                   <Fragment>
                     <Grid item xs={2}>
                       <TextField
                         className={classes.formControl}
-                        name="cantidad"
-                        label="CANTIDAD"
-                        value={registro.cantidad}
+                        name="piezas"
+                        label="PIEZAS"
+                        value={registro.piezas}
+                        onChange={onChangeRegistro}
+                        type='Number'
+                        variant="outlined" />
+                    </Grid>
+
+                    <Grid item xs={4} >
+                      <FormControl variant="outlined" className={classes.textField}>
+                        <ComboCustomProductos
+                          label='PRODUCTO'
+                          name="producto"
+                          value={registro.producto}
+                          onChange={onChangeProducto}
+                          options={productos} />
+                      </FormControl>
+                    </Grid>
+
+                    <Grid item xs={2}>
+                      <TextField
+                        className={classes.formControl}
+                        name="costo"
+                        label="COSTO"
+                        value={registro.costo}
                         onChange={onChangeRegistro}
                         type='Number'
                         variant="outlined" />
@@ -156,17 +170,6 @@ const FormFacturas = (props) => {
                           value={registro.unidad_entrada}
                           onChange={onChangeUnidadEntrada}
                           options={unidades} />
-                      </FormControl>
-                    </Grid>
-
-                    <Grid item xs={4} >
-                      <FormControl variant="outlined" className={classes.textField}>
-                        <ComboCustomProductos
-                          label='PRODUCTO'
-                          name="producto"
-                          value={registro.producto}
-                          onChange={onChangeProducto}
-                          options={productos} />
                       </FormControl>
                     </Grid>
 
@@ -189,17 +192,6 @@ const FormFacturas = (props) => {
                           onChange={onChangeUnidadSalida}
                           options={unidades} />
                       </FormControl>
-                    </Grid>
-
-                    <Grid item xs={2}>
-                      <TextField
-                        className={classes.formControl}
-                        name="costo"
-                        label="COSTO"
-                        value={registro.costo}
-                        onChange={onChangeRegistro}
-                        type='Number'
-                        variant="outlined" />
                     </Grid>
 
                     <Grid item xs={2}>
@@ -245,7 +237,7 @@ const FormFacturas = (props) => {
                         color="primary"
                         variant="contained"
                         onClick={() => onClickAgregar(registro)}
-                        disabled={isLoading || !registro.cantidad || !registro.producto
+                        disabled={isLoading || !registro.piezas || !registro.producto
                           || !registro.costo || !registro.unidad_entrada || !registro.contenido
                           || !registro.unidad_salida || !registro.lote}
                         text='AGREGAR' />
@@ -272,4 +264,4 @@ const FormFacturas = (props) => {
   );
 }
 
-export default FormFacturas;
+export default FormTraspasos;

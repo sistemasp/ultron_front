@@ -7,6 +7,7 @@ import { Paper } from '@material-ui/core';
 import TableComponent from '../../../components/table/TableComponent';
 import ModalCita from '../../../components/modales/cosmetologa/cita';
 import myStyles from '../../../css';
+import ModalProximaCita from '../../../components/modales/modal_proxima_cita';
 
 export const AgendarAparatologiaContainer = (props) => {
 
@@ -22,6 +23,7 @@ export const AgendarAparatologiaContainer = (props) => {
 		filterDate,
 		empleado,
 		onChangeTipoCita,
+		openModalProxima,
 		onChangeMedio,
 		colorBase,
 		// TABLE DATES PROPERTIES
@@ -75,7 +77,32 @@ export const AgendarAparatologiaContainer = (props) => {
 						colorBase={colorBase}
 						setFilterDate={setFilterDate} /> : ''
 			}
-			
+			{
+				openModalProxima ?
+					<ModalProximaCita
+						open={openModalProxima}
+						cita={aparatologia}
+						onClickActualizarCita={onClickActualizarCita}
+						onClose={onClickCancel}
+						onChangeServicio={onChangeServicio}
+						onChangeTratamientos={onChangeTratamientos}
+						onChangeFecha={onChangeFecha}
+						onChangeHora={onChangeHora}
+						onChangeTipoCita={onChangeTipoCita}
+						onChangeMedio={onChangeMedio}
+						onChangeAsistio={onChangeAsistio}
+						servicios={servicios}
+						tratamientos={tratamientos}
+						horarios={horarios}
+						empleado={empleado}
+						loadAparatologias={loadAparatologias}
+						sucursal={sucursal}
+						setOpenAlert={setOpenAlert}
+						setMessage={setMessage}
+						setSeverity={setSeverity}
+						colorBase={colorBase}
+						setFilterDate={setFilterDate} /> : ''
+			}			
 			<Paper>
 				<MuiPickersUtilsProvider utils={DateFnsUtils}>
 					<Grid

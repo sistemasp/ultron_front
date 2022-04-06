@@ -32,13 +32,15 @@ const Existencias = (props) => {
 	const columns = [
 		{ title: 'CÓDIGO', field: 'producto.codigo' },
 		{ title: 'DESCRIPCION', field: 'producto.descripcion' },
+		{ title: 'STOCK ENTRADA', field: 'cantidad' },
 		{ title: 'UNIDAD ENTRADA', field: 'unidad_entrada.descripcion' },
-		{ title: 'STOCK ENTRADA', field: 'stock' },
 		{ title: 'CONTENIDO', field: 'contenido' },
 		{ title: 'UNIDAD SALIDA', field: 'unidad_salida.descripcion' },
-		{ title: 'STOCK SALIDA', field: 'stock' },
+		{ title: 'STOCK SALIDA', field: 'stock_salida' },
 		{ title: 'FACTURA', field: 'factura.factura' },
-		{ title: 'COSTO UNITARIO', field: 'costo_unitario_moneda' },
+		{ title: 'COSTO', field: 'costo_moneda' },
+		{ title: 'COSTO UNIDAD ENTRADA', field: 'costo_unidad_entrada_moneda' },
+		{ title: 'COSTO UNIDAD SALIDA', field: 'costo_unidad_salida_moneda' },
 		{ title: 'LOTE', field: 'lote' },
 		{ title: 'CADUCIDAD', field: 'caducidad_show' },
 	];
@@ -71,8 +73,12 @@ const Existencias = (props) => {
         if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			const resRegistros = response.data;
 			resRegistros.forEach(item => {
-				item.costo_unitario_moneda = toFormatterCurrency(item.costo_unitario);
-				item.caducidad_show = dateToString(item.caducidad);
+				item.costo_moneda = toFormatterCurrency(item.costo);
+				item.costo_unidad_entrada_moneda = toFormatterCurrency(item.costo / item.cantidad);
+				item.caducidad_show = item.caducidad ? dateToString(item.caducidad) : 'SIN CADUCIDAD';
+				item.stock_salida = item.cantidad * item.contenido;
+				item.costo_unidad_salida_moneda = toFormatterCurrency(item.costo / item.stock_salida );
+
 			});
             setRegistros(resRegistros);
         }
