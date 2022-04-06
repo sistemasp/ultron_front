@@ -4,12 +4,14 @@ import myStyles from '../../../../../css';
 import TableComponent from '../../../../../components/table/TableComponent';
 import { ButtonCustom } from '../../../../../components/basic/ButtonCustom';
 import ModalFacturas from '../../../../../components/modales/inventarios/facturas';
+import ModalTraspasos from '../../../../../components/modales/inventarios/traspasos';
 
 export const TraspasosContainer = (props) => {
 
   const {
     empleado,
-    titulo,
+    tituloEnviados,
+    tituloRecibidos,
     columns,
     facturas,
     open,
@@ -30,7 +32,7 @@ export const TraspasosContainer = (props) => {
     <Fragment>
       {
         open ?
-          <ModalFacturas
+          <ModalTraspasos
             open={open}
             onClose={handleClose}
             sucursal={sucursal}
@@ -39,18 +41,30 @@ export const TraspasosContainer = (props) => {
             factura={factura}
             empleado={empleado} /> : ''
       }
-      <Grid container>
-        <Grid item xs={12} sm={4}>
+      <Grid container spacing={2}>
+        <Grid item xs={6}>
           <ButtonCustom
             className={classes.button}
             color="primary"
             variant="contained"
             onClick={handleOpen}
-            text='NUEVA FACTURA' />
+            text='GENERAR SOLICITUD DE TRASPASO' />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={6}>
+          <br />
+        </Grid>
+        <Grid item xs={6}>
           <TableComponent
-            titulo={titulo}
+            titulo={tituloEnviados}
+            columns={columns}
+            data={facturas}
+            actions={actions}
+            options={options}
+            components={components} />
+        </Grid>
+        <Grid item xs={6}>
+          <TableComponent
+            titulo={tituloRecibidos}
             columns={columns}
             data={facturas}
             actions={actions}

@@ -7,6 +7,7 @@ import { Paper } from '@material-ui/core';
 import TableComponent from '../../../components/table/TableComponent';
 import myStyles from '../../../css';
 import ModalCita from '../../../components/modales/cosmetologa/cita';
+import ModalProximaCita from '../../../components/modales/modal_proxima_cita';
 
 export const AgendarFacialContainer = (props) => {
 
@@ -69,6 +70,32 @@ export const AgendarFacialContainer = (props) => {
 				openModal ?
 					<ModalCita
 						open={openModal}
+						cita={facial}
+						onClickActualizarCita={onClickActualizarCita}
+						onClose={onClickCancel}
+						onChangeServicio={onChangeServicio}
+						onChangeTratamientos={onChangeTratamientos}
+						onChangeFecha={onChangeFecha}
+						onChangeHora={onChangeHora}
+						onChangeTipoCita={onChangeTipoCita}
+						onChangeMedio={onChangeMedio}
+						onChangeAsistio={onChangeAsistio}
+						servicios={servicios}
+						tratamientos={tratamientos}
+						horarios={horarios}
+						empleado={empleado}
+						loadFaciales={loadFaciales}
+						sucursal={sucursal}
+						setOpenAlert={setOpenAlert}
+						setMessage={setMessage}
+						setSeverity={setSeverity}
+						colorBase={colorBase}
+						setFilterDate={setFilterDate} /> : ''
+			}
+			{
+				openModalProxima ?
+					<ModalProximaCita
+						open={openModalProxima}
 						cita={facial}
 						onClickActualizarCita={onClickActualizarCita}
 						onClose={onClickCancel}

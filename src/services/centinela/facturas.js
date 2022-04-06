@@ -54,4 +54,14 @@ export const updateFactura = async (idFactura, factura) => {
     }
 }
 
-
+export const deleteFactura = async (idFactura) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/factura/${idFactura}`,
+            method: 'DELETE'
+        });
+        return response;
+    } catch (error) {
+        console.log('deleteFactura', error);
+    }
+}

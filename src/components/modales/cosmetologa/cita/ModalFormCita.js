@@ -25,19 +25,20 @@ const ModalFormCita = (props) => {
 
   const {
     values,
-    errors,
     handleSubmit,
     onChangeTiempo,
     onChangeDisparos,
     onChangeQuienRealiza,
+    onChangeStatus,
     onClickCancel,
     onClickActualizarCita,
     open,
     cosmetologas,
+    statements,
     onChangeObservaciones,
     colorBase,
   } = props;
-
+  
   const classes = myStyles(colorBase)();
 
   return (
@@ -55,7 +56,19 @@ const ModalFormCita = (props) => {
               <Grid item xs={12}>
                 <h2 className={classes.label}>{values.paciente_nombre}</h2>
               </Grid>
-
+              <Grid item xs={12}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="simple-select-outlined-statements">STATUS</InputLabel>
+                  <Select
+                    labelId="simple-select-outlined-statements"
+                    id="simple-select-outlined-statements"
+                    value={values.status}
+                    onChange={onChangeStatus}
+                    label="STATUS" >
+                    {statements.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              </Grid>
               <Grid item xs={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="simple-select-outlined-quien-realiza">QUIEN REALIZA</InputLabel>
