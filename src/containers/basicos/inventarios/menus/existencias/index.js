@@ -4,8 +4,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import myStyles from "../../../../../css";
 import { ExistenciasContainer } from "./existencias";
-import { showAllProductos } from "../../../../../services/centinela/productos";
-import { showAllRegistros } from "../../../../../services/centinela/registros";
+import { showAllRegistroFacturas } from "../../../../../services/centinela/registrofacturas";
 import { dateToString, toFormatterCurrency } from "../../../../../utils/utils";
 
 function Alert(props) {
@@ -38,7 +37,7 @@ const Existencias = (props) => {
 		{ title: 'UNIDAD SALIDA', field: 'unidad_salida.descripcion' },
 		{ title: 'STOCK SALIDA', field: 'stock_salida' },
 		{ title: 'FACTURA', field: 'factura.factura' },
-		{ title: 'COSTO', field: 'costo_moneda' },
+		{ title: 'COSTO TOTAL', field: 'costo_moneda' },
 		{ title: 'COSTO UNIDAD ENTRADA', field: 'costo_unidad_entrada_moneda' },
 		{ title: 'COSTO UNIDAD SALIDA', field: 'costo_unidad_salida_moneda' },
 		{ title: 'LOTE', field: 'lote' },
@@ -69,7 +68,7 @@ const Existencias = (props) => {
 	};
 
     const loadRegistros = async() => {
-        const response = await showAllRegistros();
+        const response = await showAllRegistroFacturas();
         if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			const resRegistros = response.data;
 			resRegistros.forEach(item => {

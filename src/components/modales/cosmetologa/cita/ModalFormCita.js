@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Modal from '@material-ui/core/Modal';
 import { TextField, FormControl, InputLabel, Select, MenuItem, Grid } from '@material-ui/core';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import { ButtonCustom } from '../../../basic/ButtonCustom';
 import { toFormatterCurrency } from '../../../../utils/utils';
 import myStyles from '../../../../css';
+import { statusReagendoId } from '../../../../utils/constants';
 
 function getModalStyle() {
   const top = 50;
@@ -29,16 +32,19 @@ const ModalFormCita = (props) => {
     onChangeTiempo,
     onChangeDisparos,
     onChangeQuienRealiza,
+    onChangeFecha,
+    onChangeHora,
     onChangeStatus,
     onClickCancel,
     onClickActualizarCita,
     open,
+    horarios,
     cosmetologas,
     statements,
     onChangeObservaciones,
     colorBase,
   } = props;
-  
+
   const classes = myStyles(colorBase)();
 
   return (
@@ -69,6 +75,46 @@ const ModalFormCita = (props) => {
                   </Select>
                 </FormControl>
               </Grid>
+              {
+                values.status === statusReagendoId ?
+                  <Fragment>
+                    <Grid item xs={12} sm={6}>
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                          disableToolbar
+                          disablePast
+                          autoOk
+                          variant="inline"
+                          format="dd/MM/yyyy"
+                          margin="normal"
+                          id="date-picker-inline"
+                          label="FECHA"
+                          value={values.nueva_fecha_hora}
+                          onChange={onChangeFecha}
+                          KeyboardButtonProps={{
+                            'aria-label': 'change date',
+                          }}
+                          invalidDateMessage='Selecciona una fecha' />
+                      </MuiPickersUtilsProvider>
+                    </Grid>
+
+                    <Grid item xs={12} sm={6}>
+                      <FormControl variant="outlined" className={classes.formControl}>
+                        <InputLabel id="simple-select-outlined-hora">HORA</InputLabel>
+                        <Select
+                          labelId="simple-select-outlined-hora"
+                          id="simple-select-outlined-hora"
+                          value={values.hora}
+                          disabled={!values.nueva_fecha_hora}
+                          onChange={onChangeHora}
+                          label="HORA" >
+                          {horarios.sort().map((item, index) => <MenuItem key={index} value={item.hora}>{item.hora}</MenuItem>)}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                  </Fragment>
+                  : ''
+              }
               <Grid item xs={12}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="simple-select-outlined-quien-realiza">QUIEN REALIZA</InputLabel>

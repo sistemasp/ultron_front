@@ -8,7 +8,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { showAllProductos } from '../../../../services/centinela/productos';
 import { showAllProveedors } from '../../../../services/centinela/proveedores';
 import { showAllUnidades } from '../../../../services/centinela/unidades';
-import { createRegistro } from '../../../../services/centinela/registros';
+import { createRegistroFactura } from '../../../../services/centinela/registrofacturas';
 import { responseCodeCreate, responseCodeOK } from '../../../../utils/constants';
 import { toFormatterCurrency } from '../../../../utils/utils';
 
@@ -236,7 +236,7 @@ const ModalFacturas = (props) => {
 
   const handleClickAgregar = async (registro) => {
     registro.factura = factura.id;
-    const resRegistro = await createRegistro(registro);
+    const resRegistro = await createRegistroFactura(registro);
     if (`${resRegistro.status}` === responseCodeCreate) {
       await createFactura(values);
       // setRegistro({

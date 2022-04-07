@@ -70,7 +70,7 @@ const FormTraspasos = (props) => {
           <form>
             <Grid container spacing={2}>
               <Grid item xs={6}>
-                <h1>FACTURA</h1>
+                <h1>SOLICITUD DE TRASPASO</h1>
               </Grid>
 
               <Grid item xs={6}>
@@ -82,60 +82,27 @@ const FormTraspasos = (props) => {
                   disabled={isLoading}
                   text='GUARDAR' />
               </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  className={classes.textField}
-                  name="factura"
-                  label="SOLICITUD DE TRASPASO"
-                  value={values.factura}
-                  onChange={onChange}
-                  variant="outlined" />
-              </Grid>
-              <Grid item xs={2}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <KeyboardDatePicker
-                    autoOk
-                    variant="inline"
-                    format="dd/MM/yyyy"
-                    margin="normal"
-                    id="date-picker-inline"
-                    label="FECHA FACTURA"
-                    value={values.fecha}
-                    onChange={onChangeFecha}
-                    KeyboardButtonProps={{
-                      'aria-label': 'change date',
-                    }}
-                    invalidDateMessage='SELECCIONA UNA FECHA' />
-                </MuiPickersUtilsProvider>
-              </Grid>
-              <Grid item xs={3} >
+              <Grid item xs={4} >
                 <FormControl variant="outlined" className={classes.textField}>
-                  <ComboCustom
-                    label='PROVEEDOR'
-                    value={values.proveedor}
-                    onChange={onChangeProveedor}
-                    options={proveedores} />
+                  <ComboCustomDescripcion
+                    label='ALMACEN ORIGEN'
+                    value={registro.unidad_entrada}
+                    onChange={onChangeUnidadEntrada}
+                    options={unidades} />
                 </FormControl>
               </Grid>
-              <Grid item xs={3}>
-                <ButtonCustom
-                  className={classes.button}
-                  color="primary"
-                  variant="contained"
-                  onClick={() => onClickActualizar(values)}
-                  disabled={isLoading}
-                  text='ACTUALIZAR DATOS' />
+              <Grid item xs={12} >
+                <br />
               </Grid>
-
               {
-                values.factura && values.factura.length > 3 ?
+                true ?
                   <Fragment>
                     <Grid item xs={2}>
                       <TextField
                         className={classes.formControl}
-                        name="piezas"
-                        label="PIEZAS"
-                        value={registro.piezas}
+                        name="cantidad"
+                        label="CANTIDAD"
+                        value={registro.cantidad}
                         onChange={onChangeRegistro}
                         type='Number'
                         variant="outlined" />
@@ -153,108 +120,27 @@ const FormTraspasos = (props) => {
                     </Grid>
 
                     <Grid item xs={2}>
-                      <TextField
-                        className={classes.formControl}
-                        name="costo"
-                        label="COSTO"
-                        value={registro.costo}
-                        onChange={onChangeRegistro}
-                        type='Number'
-                        variant="outlined" />
-                    </Grid>
-
-                    <Grid item xs={2} >
-                      <FormControl variant="outlined" className={classes.textField}>
-                        <ComboCustomDescripcion
-                          label='UNIDAD ENTRADA'
-                          value={registro.unidad_entrada}
-                          onChange={onChangeUnidadEntrada}
-                          options={unidades} />
-                      </FormControl>
-                    </Grid>
-
-                    <Grid item xs={2}>
-                      <TextField
-                        className={classes.formControl}
-                        name="contenido"
-                        label="CONTENIDO"
-                        value={registro.contenido}
-                        onChange={onChangeRegistro}
-                        type='Number'
-                        variant="outlined" />
-                    </Grid>
-
-                    <Grid item xs={2} >
-                      <FormControl variant="outlined" className={classes.textField}>
-                        <ComboCustomDescripcion
-                          label='UNIDAD SALIDA'
-                          value={registro.unidad_salida}
-                          onChange={onChangeUnidadSalida}
-                          options={unidades} />
-                      </FormControl>
-                    </Grid>
-
-                    <Grid item xs={2}>
-                      <TextField
-                        className={classes.formControl}
-                        name="lote"
-                        label="LOTE"
-                        value={registro.lote}
-                        onChange={onChangeRegistro}
-                        variant="outlined" />
-                    </Grid>
-
-                    <Grid item xs={2}>
-                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <KeyboardDatePicker
-                          autoOk
-                          variant="inline"
-                          format="dd/MM/yyyy"
-                          margin="normal"
-                          id="date-picker-inline"
-                          label="FECHA CADUCIDAD"
-                          value={registro.caducidad}
-                          onChange={onChangeFechaCaducidad}
-                          disabled={registro.sin_caducidad}
-                          KeyboardButtonProps={{
-                            'aria-label': 'change date',
-                          }}
-                          invalidDateMessage='SELECCIONA UNA FECHA' />
-                      </MuiPickersUtilsProvider>
-                    </Grid>
-
-                    <Grid item xs={2} >
-                      <CheckCustom
-                        checked={registro.sin_caducidad}
-                        onChange={onChangSinCaducidad}
-                        name="checkedC"
-                        label="SIN CADUCIDAD" />
-                    </Grid>
-
-                    <Grid item xs={2}>
                       <ButtonCustom
                         className={classes.button}
                         color="primary"
                         variant="contained"
                         onClick={() => onClickAgregar(registro)}
-                        disabled={isLoading || !registro.piezas || !registro.producto
+                        disabled={isLoading || !registro.cantidad || !registro.producto
                           || !registro.costo || !registro.unidad_entrada || !registro.contenido
                           || !registro.unidad_salida || !registro.lote}
                         text='AGREGAR' />
                     </Grid>
                   </Fragment> : ''
               }
-
               <Grid item xs={12}>
                 <TableComponent
                   titulo={titulo}
                   columns={columns}
-                  data={values.registros}
+                  data={[]}
                   actions={actions}
                   options={options}
                   components={components} />
               </Grid>
-
             </Grid>
 
           </form>

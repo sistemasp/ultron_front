@@ -8,7 +8,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { showAllProductos } from '../../../../services/centinela/productos';
 import { showAllProveedors } from '../../../../services/centinela/proveedores';
 import { showAllUnidades } from '../../../../services/centinela/unidades';
-import { createRegistro } from '../../../../services/centinela/registros';
+import { createRegistroFactura } from '../../../../services/centinela/registrofacturas';
 import { responseCodeCreate, responseCodeOK } from '../../../../utils/constants';
 import { toFormatterCurrency } from '../../../../utils/utils';
 
@@ -37,8 +37,6 @@ const ModalTraspasos = (props) => {
     { title: 'CÓDIGO', field: 'producto.codigo' },
     { title: 'DESCRIPCIÓN', field: 'producto.descripcion' },
     { title: 'PIEZAS', field: 'piezas' },
-    { title: 'COSTO', field: 'costo_moneda' },
-    { title: 'COSTO UNITARIO', field: 'costo_unitario_moneda' },
   ];
 
   const options = {
@@ -79,31 +77,6 @@ const ModalTraspasos = (props) => {
     },
   ];
 
-
-  const loadProductos = async () => {
-    const response = await showAllProductos();
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      const resProductos = response.data;
-      setProductos(resProductos);
-    }
-  }
-
-  const loadProveedores = async () => {
-    const response = await showAllProveedors();
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      const resProveedores = response.data;
-      setProveedores(resProveedores);
-    }
-  }
-
-  const loadUnidades = async () => {
-    const response = await showAllUnidades();
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      const resUnidades = response.data;
-      setUnidades(resUnidades);
-    }
-  }
-
   const handleChange = (e) => {
     setValues({
       ...values,
@@ -111,113 +84,27 @@ const ModalTraspasos = (props) => {
     });
   }
 
-  const handleChangeRegistro = (e) => {
-    setRegistro({
-      ...registro,
-      [e.target.name]: e.target.value.toUpperCase()
-    });
-  }
-
-  const handleChangeProveedor = (e, newValue) => {
-    setIsLoading(true);
-    setValues({
-      ...values,
-      proveedor: newValue,
-    });
-    setIsLoading(false);
-  };
-
-  const handleChangeProducto = (e, newValue) => {
-    setIsLoading(true);
-    setRegistro({
-      ...registro,
-      producto: newValue,
-    });
-    setIsLoading(false);
-  };
-
-  const handleChangeUnidadEntrada = (e, newValue) => {
-    setIsLoading(true);
-    setRegistro({
-      ...registro,
-      unidad_entrada: newValue,
-    });
-    setIsLoading(false);
-  };
-
-  const handleChangeUnidadSalida = (e, newValue) => {
-    setIsLoading(true);
-    setRegistro({
-      ...registro,
-      unidad_salida: newValue,
-    });
-    setIsLoading(false);
-  };
-
-  const handleChangSinCaducidad = (event) => {
-    const newValue = !registro.sin_caducidad;
-    setRegistro({
-      ...registro,
-      sin_caducidad: newValue,
-    });
-    if (newValue) {
-      delete registro.caducidad;
-    }
-  }
-
   const findFactura = async () => {
     setIsLoading(true);
-    const response = await findFacturaById(factura.id);
-    if (`${response.status}` === responseCodeOK) {
-      const resFactura = response.data;
-      resFactura.registros.map(item => {
-        item.costo_moneda = toFormatterCurrency(item.costo);
-        item.costo_unitario_moneda = toFormatterCurrency(item.costo / item.piezas);
-      });
-      setValues(resFactura);
-      setIsLoading(false);
-    }
+    setIsLoading(false);
+
   }
 
   const loadAll = async () => {
     setIsLoading(true);
-    await findFactura();
-    await loadProductos();
-    await loadProveedores();
-    await loadUnidades();
     setIsLoading(false);
   }
 
   const handleClickGuardar = async (values) => {
-    setIsLoading(true);
-    const response = await createFactura(values);
-    // const response = !values.id ? await createFactura(values) : await updateFactura(values.id, values);
-    if (`${response.status}` === responseCodeOK
-      || `${response.status}` === responseCodeCreate) {
-      loadFacturas();
-      onClose();
-      setIsLoading(false);
-    }
+    onClose();
   }
 
   const handleClickActualizar = async (values) => {
-    setIsLoading(true);
-    const response = await createFactura(values);
-    // const response = !values.id ? await createFactura(values) : await updateFactura(values.id, values);
-    if (`${response.status}` === responseCodeOK
-      || `${response.status}` === responseCodeCreate) {
-      findFactura();
-      setIsLoading(false);
-    }
+
   }
 
   const handleChangeFechaCaducidad = async (date) => {
-    setIsLoading(true);
-    setRegistro({
-      ...registro,
-      caducidad: date,
-    });
-    setIsLoading(false);
+
   };
 
   const handleChangeFecha = async (date) => {
@@ -232,7 +119,7 @@ const ModalTraspasos = (props) => {
 
   const handleClickAgregar = async (registro) => {
     registro.factura = factura.id;
-    const resRegistro = await createRegistro(registro);
+    const resRegistro = await createRegistroFactura(registro);
     if (`${resRegistro.status}` === responseCodeCreate) {
       await createFactura(values);
       // setRegistro({
@@ -267,15 +154,9 @@ const ModalTraspasos = (props) => {
             onClickGuardar={handleClickGuardar}
             onClickActualizar={handleClickActualizar}
             onChange={handleChange}
-            onChangeRegistro={handleChangeRegistro}
             onClickAgregar={handleClickAgregar}
-            onChangeProveedor={handleChangeProveedor}
-            onChangeProducto={handleChangeProducto}
-            onChangeUnidadEntrada={handleChangeUnidadEntrada}
-            onChangeUnidadSalida={handleChangeUnidadSalida}
             onChangeFechaCaducidad={(e) => handleChangeFechaCaducidad(e)}
             onChangeFecha={(e) => handleChangeFecha(e)}
-            onChangSinCaducidad={(e) => handleChangSinCaducidad(e)}
             isLoading={isLoading}
             productos={productos}
             proveedores={proveedores}

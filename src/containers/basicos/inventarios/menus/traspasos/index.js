@@ -61,10 +61,10 @@ const Traspasos = (props) => {
 	}
 
 	const handleOnClickEliminar = (event, rowData) => {
-	
+
 	}
 
-	const actions = [
+	const actionsEnviados = [
 		{
 			icon: EditIcon,
 			tooltip: 'EDITAR',
@@ -74,6 +74,14 @@ const Traspasos = (props) => {
 			icon: EditIcon,
 			tooltip: 'ELIMINAR',
 			onClick: handleOnClickEliminar
+		},
+	];
+
+	const actionsRecibidos = [
+		{
+			icon: EditIcon,
+			tooltip: 'TOMAR',
+			onClick: handleOnClickEditar
 		},
 	];
 
@@ -153,12 +161,13 @@ const Traspasos = (props) => {
 					<TraspasosContainer
 						empleado={empleado}
 						columns={columns}
-						tituloEnviados='TRASPASOS ENVIADOS'
-						tituloRecibidos='TRASPASOS RECIBIDOS'
+						tituloEnviados='SOLICITUDES ENVIADAS'
+						tituloRecibidos='SOLICITUDES RECIBIDAS'
 						facturas={facturas}
 						factura={factura}
 						options={options}
-						actions={actions}
+						actionsEnviados={actionsEnviados}
+						actionsRecibidos={actionsRecibidos}
 						components={components}
 						handleOpen={handleOpen}
 						handleClose={handleClose}

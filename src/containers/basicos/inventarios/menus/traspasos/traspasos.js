@@ -19,7 +19,8 @@ export const TraspasosContainer = (props) => {
     loadFacturas,
     factura,
     sucursal,
-    actions,
+    actionsEnviados,
+    actionsRecibidos,
     components,
     options,
     handleOpen,
@@ -55,22 +56,23 @@ export const TraspasosContainer = (props) => {
         </Grid>
         <Grid item xs={6}>
           <TableComponent
-            titulo={tituloEnviados}
+            titulo={tituloRecibidos}
             columns={columns}
             data={facturas}
-            actions={actions}
+            actions={actionsRecibidos}
             options={options}
             components={components} />
         </Grid>
         <Grid item xs={6}>
           <TableComponent
-            titulo={tituloRecibidos}
+            titulo={tituloEnviados}
             columns={columns}
             data={facturas}
-            actions={actions}
+            actions={actionsEnviados}
             options={options}
             components={components} />
         </Grid>
+
       </Grid>
     </Fragment>
   );
