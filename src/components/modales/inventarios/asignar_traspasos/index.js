@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Backdrop, CircularProgress, FormControl, MenuItem, Select } from '@material-ui/core';
 import { Fragment } from 'react';
-import FormTraspasos from './FormTraspasos';
+import FormAsignarTraspasos from './FormAsignarTraspasos';
 import myStyles from '../../../../css';
 import { showAllAlmacens } from '../../../../services/centinela/almacenes';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -12,7 +12,7 @@ import { showAllUnidades } from '../../../../services/centinela/unidades';
 import { createRegistroTraspaso, deleteRegistroTraspaso } from '../../../../services/centinela/registrotraspasos';
 import { createTraspaso, findTraspasoById } from '../../../../services/centinela/traspasos';
 
-const ModalTraspasos = (props) => {
+const ModalAsignarTraspasos = (props) => {
 
   const {
     open,
@@ -186,7 +186,7 @@ const ModalTraspasos = (props) => {
     <Fragment>
       {
         !isLoading ?
-          <FormTraspasos
+          <FormAsignarTraspasos
             aria-labelledby="simple-modal-title"
             aria-describedby="simple-modal-description"
             values={values}
@@ -217,4 +217,4 @@ const ModalTraspasos = (props) => {
   );
 }
 
-export default ModalTraspasos;
+export default ModalAsignarTraspasos;

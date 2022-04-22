@@ -239,17 +239,6 @@ const ModalFacturas = (props) => {
     const resRegistro = await createRegistroFactura(registro);
     if (`${resRegistro.status}` === responseCodeCreate) {
       await createFactura(values);
-      // setRegistro({
-      //   piezas: '',
-      //   producto: {},
-      //   costo: '',
-      //   unidad_entrada: {},
-      //   contenido: '',
-      //   unidad_salida: {},
-      //   lote: '',
-      //   caducidad: '',
-      //   sin_caducidad: false,
-      // });
       findFactura();
     }
   }

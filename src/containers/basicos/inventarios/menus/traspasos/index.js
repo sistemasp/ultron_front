@@ -4,188 +4,202 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import myStyles from "../../../../../css";
 import { TraspasosContainer } from "./traspasos";
-import { showAllFacturas } from "../../../../../services/centinela/facturas";
 import { dateToString } from "../../../../../utils/utils";
 import EditIcon from '@material-ui/icons/Edit';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import { centinelaStatusPendienteId, responseCodeCreate } from "../../../../../utils/constants";
+import { sucursalToAlmacen } from "../../../../../utils/utils_centinela";
+import { createTraspaso, deleteTraspaso, findTraspasosByAlmacenDestino, findTraspasosByAlmacenOrigen } from "../../../../../services/centinela/traspasos";
+import { deleteRegistroTraspaso } from "../../../../../services/centinela/registrotraspasos";
 
 function Alert(props) {
-	return <MuiAlert elevation={6} variant="filled" {...props} />;
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const Traspasos = (props) => {
 
-	const classes = myStyles();
+  const classes = myStyles();
 
-	const [facturas, setFacturas] = useState([]);
-	const [factura, setFactura] = useState({});
-	const [open, setOpen] = useState(false);
-	const [isLoading, setIsLoading] = useState(false);
-	const [message, setMessage] = useState('');
-	const [severity, setSeverity] = useState('success');
-	const [openAlert, setOpenAlert] = useState(false);
+  const [solicitudesEnviadas, setSolicitudesEnviadas] = useState([]);
+  const [solicitudesRecibidas, setSolicitudesRecibidas] = useState([]);
+  const [traspaso, setTraspaso] = useState({});
+  const [open, setOpen] = useState(false);
+  const [openAsignar, setOpenAsignar] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState('');
+  const [severity, setSeverity] = useState('success');
+  const [openAlert, setOpenAlert] = useState(false);
 
-	const {
-		empleado,
-		colorBase,
-		sucursal,
-	} = props;
+  const {
+    empleado,
+    colorBase,
+    sucursal,
+  } = props;
 
-	const columns = [
-		{ title: 'FECHA', field: 'fecha_show' },
-		{ title: 'ALMACEN', field: 'almacen.descripcion' },
-		{ title: 'STATUS', field: 'proveedor.nombre' },
-	];
+  const almacen = sucursalToAlmacen(sucursal._id);
 
-	const options = {
-		headerStyle: {
-			backgroundColor: colorBase,
-			color: '#FFF',
-			fontWeight: 'bolder',
-			fontSize: '18px',
-			textAlign: 'center',
-		},
-		cellStyle: {
-			fontWeight: 'bolder',
-			fontSize: '16px',
-			padding: '5px',
-			textAlign: 'center',
-		},
-		exportAllData: true,
-		exportButton: empleado.super_admin,
-		exportDelimiter: ';',
-	}
+  const columnsEnviadas = [
+    { title: 'FECHA', field: 'fecha_show' },
+    { title: 'ALMACEN', field: 'almacen_origen.descripcion' },
+    { title: 'STATUS', field: 'status.descripcion' },
+  ];
 
-	const handleOnClickEditar = (event, rowData) => {
-		setFactura(rowData);
-		setOpen(true);
-	}
+  const columnsRecibidas = [
+    { title: 'FECHA', field: 'fecha_show' },
+    { title: 'ALMACEN', field: 'almacen_destino.descripcion' },
+    { title: 'STATUS', field: 'status.descripcion' },
+  ];
 
-	const handleOnClickEliminar = (event, rowData) => {
+  const options = {
+    headerStyle: {
+      backgroundColor: colorBase,
+      color: '#FFF',
+      fontWeight: 'bolder',
+      fontSize: '18px',
+      textAlign: 'center',
+    },
+    cellStyle: {
+      fontWeight: 'bolder',
+      fontSize: '16px',
+      padding: '5px',
+      textAlign: 'center',
+    },
+    exportAllData: true,
+    exportButton: empleado.super_admin,
+    exportDelimiter: ';',
+  }
 
-	}
+  const handleOnClickEditar = (event, rowData) => {
+    setTraspaso(rowData);
+    setOpen(true);
+  }
 
-	const actionsEnviados = [
-		{
-			icon: EditIcon,
-			tooltip: 'EDITAR',
-			onClick: handleOnClickEditar
-		},
-		{
-			icon: EditIcon,
-			tooltip: 'ELIMINAR',
-			onClick: handleOnClickEliminar
-		},
-	];
+  const handleOnClickAsignar = (event, rowData) => {
+    setTraspaso(rowData);
+    setOpenAsignar(true);
+  }
 
-	const actionsRecibidos = [
-		{
-			icon: EditIcon,
-			tooltip: 'TOMAR',
-			onClick: handleOnClickEditar
-		},
-	];
+  const handleOnClickEliminar = async (event, rowData) => {
+    rowData.registros.map(async (registro) => {
+      await deleteRegistroTraspaso(registro.id);
+    });
+    await deleteTraspaso(rowData.id);
+    loadSolicitudesEnviadas();
+  }
 
-	const onChangeActions = (e, rowData) => {
-		const action = e.target.value;
-		switch (action) {
-			case 'EDITAR':
-				handleOnClickEditar(e, rowData);
-				break;
-			case 'ELIMINAR':
-				handleOnClickEliminar(e, rowData);
-				break;
-		}
-	}
+  const actionsEnviados = [
+    {
+      icon: EditIcon,
+      tooltip: 'EDITAR',
+      onClick: handleOnClickEditar
+    },
+    {
+      icon: DeleteForeverIcon,
+      tooltip: 'ELIMINAR',
+      onClick: handleOnClickEliminar
+    },
+  ];
 
-	const components = {
-		Actions: props => {
-			return props.actions.length > 0
-				? <Fragment>
-					<FormControl variant="outlined" className={classes.formControl}>
-						<Select
-							labelId="simple-select-outlined-actions"
-							id="simple-select-outlined-actions"
-							onChange={(e) => onChangeActions(e, props.data)}
-							label="ACCIONES">
-							{
-								props.actions.map((item, index) => {
-									return <MenuItem
-										key={index}
-										value={item.tooltip}
-									>{item.tooltip}</MenuItem>
-								})
-							}
-						</Select>
-					</FormControl>
-				</Fragment>
-				: ''
-		}
-	};
+  const actionsRecibidos = [
+    {
+      icon: AssignmentTurnedInIcon,
+      tooltip: 'ASIGNAR',
+      onClick: handleOnClickAsignar
+    },
+  ];
 
-	const handleOpen = () => {
-		setOpen(true);
-	}
+  const handleOpen = async () => {
+    const traspaso = {
+      almacen_origen: almacen,
+      almacen_destino: almacen,
+      status: centinelaStatusPendienteId,
+      total: 0,
+      fecha: new Date(),
+      registros: []
+    };
+    const response = await createTraspaso(traspaso);
+    if (`${response.status}` === responseCodeCreate) {
+      setTraspaso(response.data);
+      setOpen(true);
+    }
+  }
 
-	const handleClose = () => {
-		setOpen(false);
-	}
+  const handleClose = () => {
+    setOpen(false);
+    setOpenAsignar(false);
+  }
 
-	const handleCloseAlert = () => {
-		setOpenAlert(false);
-	};
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
+  };
 
-	const loadFacturas = async () => {
-		const response = await showAllFacturas();
-		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			const resFacturas = response.data.forEach(item => {
-				item.fecha_show = dateToString(item.fecha);
-			});
-			setFacturas(response.data);
-		}
-	};
+  const loadSolicitudesEnviadas = async () => {
+    const response = await findTraspasosByAlmacenDestino(almacen);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      const resSolicitudesEnviadas = response.data.forEach(item => {
+        item.fecha_show = dateToString(item.fecha);
+      });
+      setSolicitudesEnviadas(response.data);
+    }
+  };
 
-	const loadAll = async () => {
-		setIsLoading(true);
-		await loadFacturas();
-		setIsLoading(false);
-	}
+  const loadSolicitudesRecibidas = async () => {
+    const response = await findTraspasosByAlmacenOrigen(almacen);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      const resSolicitudesResibidas = response.data.forEach(item => {
+        item.fecha_show = dateToString(item.fecha);
+      });
+      setSolicitudesRecibidas(response.data);
+    }
+  };
 
-	useEffect(() => {
-		loadAll();
-	}, []);
+  const loadAll = async () => {
+    setIsLoading(true);
+    await loadSolicitudesEnviadas();
+    await loadSolicitudesRecibidas();
+    setIsLoading(false);
+  }
 
-	return (
-		<Fragment>
-			{
-				!isLoading ?
-					<TraspasosContainer
-						empleado={empleado}
-						columns={columns}
-						tituloEnviados='SOLICITUDES ENVIADAS'
-						tituloRecibidos='SOLICITUDES RECIBIDAS'
-						facturas={facturas}
-						factura={factura}
-						options={options}
-						actionsEnviados={actionsEnviados}
-						actionsRecibidos={actionsRecibidos}
-						components={components}
-						handleOpen={handleOpen}
-						handleClose={handleClose}
-						loadFacturas={loadFacturas}
-						open={open}
-						sucursal={sucursal}
-						colorBase={colorBase} /> :
-					<Backdrop className={classes.backdrop} open={isLoading} >
-						<CircularProgress color="inherit" />
-					</Backdrop>
-			}
-			<Snackbar open={openAlert} autoHideDuration={5000} onClose={handleCloseAlert}>
-				<Alert onClose={handleCloseAlert} severity={severity}>
-					{message}
-				</Alert>
-			</Snackbar>
-		</Fragment>
-	);
+  useEffect(() => {
+    loadAll();
+  }, []);
+
+  return (
+    <Fragment>
+      {
+        !isLoading ?
+          <TraspasosContainer
+            empleado={empleado}
+            columnsEnviadas={columnsEnviadas}
+            columnsRecibidas={columnsRecibidas}
+            tituloEnviados='SOLICITUDES ENVIADAS'
+            tituloRecibidos='SOLICITUDES RECIBIDAS'
+            solicitudesEnviadas={solicitudesEnviadas}
+            solicitudesRecibidas={solicitudesRecibidas}
+            traspaso={traspaso}
+            options={options}
+            actionsEnviados={actionsEnviados}
+            actionsRecibidos={actionsRecibidos}
+            handleOpen={handleOpen}
+            handleClose={handleClose}
+            loadSolicitudesEnviadas={loadSolicitudesEnviadas}
+            loadSolicitudesRecibidas={loadSolicitudesRecibidas}
+            open={open}
+            openAsignar={openAsignar}
+            sucursal={sucursal}
+            colorBase={colorBase} /> :
+          <Backdrop className={classes.backdrop} open={isLoading} >
+            <CircularProgress color="inherit" />
+          </Backdrop>
+      }
+      <Snackbar open={openAlert} autoHideDuration={5000} onClose={handleCloseAlert}>
+        <Alert onClose={handleCloseAlert} severity={severity}>
+          {message}
+        </Alert>
+      </Snackbar>
+    </Fragment>
+  );
 }
 
 export default Traspasos;

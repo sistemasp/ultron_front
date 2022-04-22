@@ -24,7 +24,7 @@ function getModalStyle() {
   };
 }
 
-const FormTraspasos = (props) => {
+const FormAsignarTraspasos = (props) => {
 
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
@@ -71,7 +71,7 @@ const FormTraspasos = (props) => {
           <form>
             <Grid container spacing={2}>
               <Grid item xs={6}>
-                <h1>SOLICITUD DE TRASPASO</h1>
+                <h1>ASIGNAR DE TRASPASO</h1>
               </Grid>
 
               <Grid item xs={6}>
@@ -157,4 +157,4 @@ const FormTraspasos = (props) => {
   );
 }
 
-export default FormTraspasos;
+export default FormAsignarTraspasos;

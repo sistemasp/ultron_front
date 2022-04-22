@@ -5,6 +5,7 @@ import TableComponent from '../../../../../components/table/TableComponent';
 import { ButtonCustom } from '../../../../../components/basic/ButtonCustom';
 import ModalFacturas from '../../../../../components/modales/inventarios/facturas';
 import ModalTraspasos from '../../../../../components/modales/inventarios/traspasos';
+import ModalAsignarTraspasos from '../../../../../components/modales/inventarios/asignar_traspasos';
 
 export const TraspasosContainer = (props) => {
 
@@ -12,12 +13,16 @@ export const TraspasosContainer = (props) => {
     empleado,
     tituloEnviados,
     tituloRecibidos,
-    columns,
-    facturas,
+    columnsEnviadas,
+    columnsRecibidas,
+    solicitudesEnviadas,
+    solicitudesRecibidas,
     open,
+    openAsignar,
     handleClose,
-    loadFacturas,
-    factura,
+    loadSolicitudesEnviadas,
+    loadSolicitudesRecibidas,
+    traspaso,
     sucursal,
     actionsEnviados,
     actionsRecibidos,
@@ -38,8 +43,21 @@ export const TraspasosContainer = (props) => {
             onClose={handleClose}
             sucursal={sucursal}
             colorBase={colorBase}
-            loadProductos={loadFacturas}
-            factura={factura}
+            loadSolicitudesEnviadas={loadSolicitudesEnviadas}
+            loadSolicitudesRecibidas={loadSolicitudesRecibidas}
+            traspaso={traspaso}
+            empleado={empleado} /> : ''
+      }
+      {
+        openAsignar ?
+          <ModalAsignarTraspasos
+            open={openAsignar}
+            onClose={handleClose}
+            sucursal={sucursal}
+            colorBase={colorBase}
+            loadSolicitudesEnviadas={loadSolicitudesEnviadas}
+            loadSolicitudesRecibidas={loadSolicitudesRecibidas}
+            traspaso={traspaso}
             empleado={empleado} /> : ''
       }
       <Grid container spacing={2}>
@@ -57,20 +75,18 @@ export const TraspasosContainer = (props) => {
         <Grid item xs={6}>
           <TableComponent
             titulo={tituloRecibidos}
-            columns={columns}
-            data={facturas}
+            columns={columnsRecibidas}
+            data={solicitudesRecibidas}
             actions={actionsRecibidos}
-            options={options}
-            components={components} />
+            options={options}/>
         </Grid>
         <Grid item xs={6}>
           <TableComponent
             titulo={tituloEnviados}
-            columns={columns}
-            data={facturas}
+            columns={columnsEnviadas}
+            data={solicitudesEnviadas}
             actions={actionsEnviados}
-            options={options}
-            components={components} />
+            options={options} />
         </Grid>
 
       </Grid>

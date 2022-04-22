@@ -60,11 +60,11 @@ export const MenuContainer = (props) => {
   } = props;
 
   const useStyles = makeStyles(theme => ({
-		root: {
-			flexGrow: 1,
-			backgroundColor: theme.palette.background.paper,
-		}
-	}));
+    root: {
+      flexGrow: 1,
+      backgroundColor: theme.palette.background.paper,
+    }
+  }));
 
   const classes = myStyles(colorBase)();
   const classess = useStyles();
@@ -72,52 +72,53 @@ export const MenuContainer = (props) => {
   return (
     <div className={classess.root}>
       <AppBar
-				className={classes.bar}
-				position="sticky" />
-        <Tabs
-          value={value}
-          onChange={onChangeTab}
-          aria-label="simple tabs"
-          variant="scrollable"
-          scrollButtons="on" >
-          <Tab label="PRODUCTOS" {...a11yProps(0)} />
-          <Tab label="EXISTENCIAS" {...a11yProps(1)} />
-          <Tab label="FACTURAS" {...a11yProps(2)} />
-          <Tab label="TRASPASOS" {...a11yProps(3)} />
-          {/* <Tab label="ENTRADAS" {...a11yProps(4)} />
+        className={classes.bar}
+        position="sticky" />
+      <Tabs
+        value={value}
+        onChange={onChangeTab}
+        aria-label="simple tabs"
+        variant="scrollable"
+        scrollButtons="on" >
+        <Tab label="PRODUCTOS" {...a11yProps(0)} />
+        <Tab label="EXISTENCIAS" {...a11yProps(1)} />
+        <Tab label="FACTURAS" {...a11yProps(2)} />
+        <Tab label="TRASPASOS" {...a11yProps(3)} />
+        {/* <Tab label="ENTRADAS" {...a11yProps(4)} />
           <Tab label="SALIDAS" {...a11yProps(5)} /> */}
-        </Tabs>
-        <TabPanel value={value} index={0}>
-          <Productos
-            empleado={empleado}
-            sucursal={sucursal}
-            colorBase={colorBase} />
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          <Existencias
-            empleado={empleado}
-            colorBase={colorBase} />
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-          <Facturas
-            empleado={empleado}
-            colorBase={colorBase} />
-        </TabPanel>
-        <TabPanel value={value} index={3}>
-          <Traspasos
-            empleado={empleado}
-            colorBase={colorBase} />
-        </TabPanel>
-        <TabPanel value={value} index={4}>
-          <Entradas
-            empleado={empleado}
-            colorBase={colorBase} />
-        </TabPanel>
-        <TabPanel value={value} index={5}>
-          <Salidas
-            empleado={empleado}
-            colorBase={colorBase} />
-        </TabPanel>
+      </Tabs>
+      <TabPanel value={value} index={0}>
+        <Productos
+          empleado={empleado}
+          sucursal={sucursal}
+          colorBase={colorBase} />
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        <Existencias
+          empleado={empleado}
+          colorBase={colorBase} />
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        <Facturas
+          empleado={empleado}
+          colorBase={colorBase} />
+      </TabPanel>
+      <TabPanel value={value} index={3}>
+        <Traspasos
+          empleado={empleado}
+          colorBase={colorBase}
+          sucursal={sucursal} />
+      </TabPanel>
+      <TabPanel value={value} index={4}>
+        <Entradas
+          empleado={empleado}
+          colorBase={colorBase} />
+      </TabPanel>
+      <TabPanel value={value} index={5}>
+        <Salidas
+          empleado={empleado}
+          colorBase={colorBase} />
+      </TabPanel>
     </div>
   );
 };
