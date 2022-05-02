@@ -32,29 +32,18 @@ const FormAsignarTraspasos = (props) => {
   const {
     values,
     isLoading,
-    onChangeFecha,
-    onChangeFechaCaducidad,
-    onClickAgregar,
+    onClickEmpacar,
     onChange,
-    onChangeRegistro,
     open,
     colorBase,
     onClickGuardar,
-    onClickActualizar,
-    onChangeProveedor,
-    onChangeAlmacen,
     onChangeUnidad,
-    onChangeCantidad,
-    onChangSinCaducidad,
-    almacenes,
     onChangeProducto,
     productos,
     unidades,
     titulo,
     columns,
-    registros,
     registro,
-    actions,
     options,
     components,
   } = props;
@@ -71,7 +60,7 @@ const FormAsignarTraspasos = (props) => {
           <form>
             <Grid container spacing={2}>
               <Grid item xs={6}>
-                <h1>ASIGNAR DE TRASPASO</h1>
+                <h1>SOLICITUD DE TRASPASO</h1>
               </Grid>
 
               <Grid item xs={6}>
@@ -82,15 +71,6 @@ const FormAsignarTraspasos = (props) => {
                   onClick={() => onClickGuardar(values)}
                   disabled={isLoading}
                   text='GUARDAR' />
-              </Grid>
-              <Grid item xs={6} >
-                <FormControl variant="outlined" className={classes.textField}>
-                  <ComboCustomDescripcion
-                    label='ALMACEN ORIGEN'
-                    value={values.almacen_origen}
-                    onChange={onChangeAlmacen}
-                    options={almacenes} />
-                </FormControl>
               </Grid>
               <Grid item xs={12} >
                 <br />
@@ -133,9 +113,9 @@ const FormAsignarTraspasos = (props) => {
                         className={classes.button}
                         color="primary"
                         variant="contained"
-                        onClick={() => onClickAgregar(registro)}
+                        onClick={() => onClickEmpacar(registro)}
                         disabled={isLoading || !registro.cantidad || !registro.producto || !registro.unidad}
-                        text='AGREGAR' />
+                        text='EMPACAR' />
                     </Grid>
                   </Fragment> : ''
               }
@@ -144,7 +124,6 @@ const FormAsignarTraspasos = (props) => {
                   titulo={titulo}
                   columns={columns}
                   data={values.registros}
-                  actions={actions}
                   options={options}
                   components={components} />
               </Grid>

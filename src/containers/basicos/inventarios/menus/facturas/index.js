@@ -10,8 +10,12 @@ import {
 } from "../../../../../services/centinela/facturas";
 import { dateToString } from "../../../../../utils/utils";
 import EditIcon from '@material-ui/icons/Edit';
-import { centinelaAlmacenOcciId, centinelaProveedorOtroId, responseCodeCreate, responseCodeOK } from "../../../../../utils/constants";
+import { responseCodeCreate, responseCodeOK } from "../../../../../utils/constants";
 import { toFormatterCurrency } from '../../../../../utils/utils';
+import { 
+	centinelaAlmacenOcciId,
+	centinelaProveedorOtroId
+} from "../../../../../utils/centinela_constants";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;

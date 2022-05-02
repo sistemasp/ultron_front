@@ -1,14 +1,17 @@
-import { 
-  centinelaAlmaceMAId,
-  centinelaAlmacenCDMPId,
-  centinelaAlmacenFedeId,
-  centinelaAlmacenOcciId,
-  centinelaAlmacenRDId,
+import {
   sucursalFederalismoId,
   sucursalManuelAcunaId,
   sucursalOccidentalId,
   sucursalRubenDarioId,
 } from "./constants";
+
+import {
+  centinelaAlmaceMAId,
+  centinelaAlmacenCDMPId,
+  centinelaAlmacenFedeId,
+  centinelaAlmacenOcciId,
+  centinelaAlmacenRDId,
+} from "./centinela_constants";
 
 
 export const sucursalToAlmacen = (sucursalId) => {

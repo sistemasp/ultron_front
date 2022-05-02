@@ -30,6 +30,9 @@ export const TraspasosContainer = (props) => {
     options,
     handleOpen,
     colorBase,
+    setMessage,
+    setSeverity,
+    setOpenAlert,
   } = props;
 
   const classes = myStyles(colorBase)();
@@ -58,6 +61,9 @@ export const TraspasosContainer = (props) => {
             loadSolicitudesEnviadas={loadSolicitudesEnviadas}
             loadSolicitudesRecibidas={loadSolicitudesRecibidas}
             traspaso={traspaso}
+            setMessage={setMessage}
+            setSeverity={setSeverity}
+            setOpenAlert={setOpenAlert}
             empleado={empleado} /> : ''
       }
       <Grid container spacing={2}>
@@ -78,7 +84,7 @@ export const TraspasosContainer = (props) => {
             columns={columnsRecibidas}
             data={solicitudesRecibidas}
             actions={actionsRecibidos}
-            options={options}/>
+            options={options} />
         </Grid>
         <Grid item xs={6}>
           <TableComponent

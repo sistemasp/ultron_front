@@ -11,6 +11,7 @@ import { responseCodeCreate, responseCodeOK } from '../../../../utils/constants'
 import { showAllUnidades } from '../../../../services/centinela/unidades';
 import { createRegistroTraspaso, deleteRegistroTraspaso } from '../../../../services/centinela/registrotraspasos';
 import { createTraspaso, findTraspasoById } from '../../../../services/centinela/traspasos';
+import { centinelaBackgroundColorError, centinelaStatusEnviadoId, centinelaTextColorOK } from '../../../../utils/centinela_constants';
 
 const ModalAsignarTraspasos = (props) => {
 
@@ -21,9 +22,12 @@ const ModalAsignarTraspasos = (props) => {
     traspaso,
     loadSolicitudesEnviadas,
     loadSolicitudesRecibidas,
+    setMessage,
+    setSeverity,
+    setOpenAlert,
   } = props;
 
-  const titulo = "REGISTROS";
+  const titulo = "INSUMOS";
 
   const [isLoading, setIsLoading] = useState(false);
   const [values, setValues] = useState({
@@ -37,18 +41,19 @@ const ModalAsignarTraspasos = (props) => {
   const classes = myStyles(colorBase)();
 
   const columns = [
-    { title: 'CANTIDAD', field: 'cantidad' },
-    { title: 'CÓDIGO', field: 'producto.codigo' },
-    { title: 'DESCRIPCIÓN', field: 'producto.descripcion' },
+    { title: 'PRODUCTO', field: 'show_producto' },
+    { title: 'CANTIDAD', field: 'show_cantidad' },
+    { title: 'SURTIDO', field: 'surtido' },
+    { title: 'FALTANTES', field: 'faltantes' },
   ];
 
   const options = {
-    // rowStyle: rowData => {
-    //   return {
-    //     color: rowData.status.color,
-    //     backgroundColor: rowData.pagado ? process.env.REACT_APP_PAGADO_COLOR : ''
-    //   };
-    // },
+    rowStyle: rowData => {
+      return {
+        color: rowData.faltantes === 0 ? centinelaTextColorOK : '',
+        backgroundColor: rowData.faltantes === 0 ? process.env.REACT_APP_PAGADO_COLOR : (rowData.faltantes < 0 ? centinelaBackgroundColorError : '')
+      };
+    },
     headerStyle: {
       backgroundColor: colorBase,
       color: '#FFF',
@@ -65,21 +70,6 @@ const ModalAsignarTraspasos = (props) => {
     paging: false,
   }
 
-  const handleOnClickEliminar = async (e, rowData) => {
-    const response = await deleteRegistroTraspaso(rowData.id);
-    if (`${response.status}` === responseCodeOK) {
-      findTraspaso();
-    }
-  }
-
-  const actions = [
-    {
-      icon: DeleteForeverIcon,
-      tooltip: 'ELIMINAR',
-      onClick: handleOnClickEliminar
-    },
-  ];
-
   const handleChange = (e) => {
     setRegistro({
       ...registro,
@@ -92,6 +82,11 @@ const ModalAsignarTraspasos = (props) => {
     const response = await findTraspasoById(traspaso.id);
     if (`${response.status}` === responseCodeOK) {
       const resTraspaso = response.data;
+      resTraspaso.registros.map(registro => {
+        registro.show_producto = `${registro.producto.codigo} - ${registro.producto.descripcion}`;
+        registro.faltantes = Number(registro.cantidad) - Number(registro.surtido);
+        registro.show_cantidad = `${registro.cantidad} (${registro.unidad.descripcion})`;
+      });
       setValues(resTraspaso);
     }
     setIsLoading(false);
@@ -123,7 +118,20 @@ const ModalAsignarTraspasos = (props) => {
     setIsLoading(false);
   }
 
+  const registrosCompletos = (registros) => {
+    let registroCompleto = true;
+    registros.map(registro => {
+      if (registro.cantidad != registro.surtido) {
+        registroCompleto = false;
+      }
+    });
+    return registroCompleto;
+  }
+
   const handleClickGuardar = async (values) => {
+    if (registrosCompletos(values.registros)) {
+      values.status = centinelaStatusEnviadoId;
+    }
     await createTraspaso(values);
     loadSolicitudesEnviadas();
     loadSolicitudesRecibidas();
@@ -161,11 +169,28 @@ const ModalAsignarTraspasos = (props) => {
     setIsLoading(false);
   };
 
-  const handleClickAgregar = async (registro) => {
-    registro.traspaso = traspaso.id;
-    const resRegistro = await createRegistroTraspaso(registro);
-    if (`${resRegistro.status}` === responseCodeCreate) {
-      findTraspaso();
+  const handleClickEmpacar = async (registro) => {
+    const findRegistro = values.registros.find(reg => {
+      return registro.producto.id === reg.producto.id;
+    });
+    if (findRegistro) {
+      const faltante = Number(findRegistro.cantidad) - Number(findRegistro.surtido);
+      if (faltante >= registro.cantidad) {
+        const newRegistro = {
+          ...findRegistro,
+          surtido: (Number(findRegistro.surtido) + Number(registro.cantidad)),
+        };
+        await createRegistroTraspaso(newRegistro);
+        findTraspaso();
+      } else {
+        setSeverity(`error`);
+        setMessage(`NO PUEDES SURTIR MAS PRODUCTOS DE LOS QUE FALTAN`);
+        setOpenAlert(true);
+      }
+    } else {
+      setSeverity(`error`);
+      setMessage(`NO SE ENCONTRO EL PRODUCTO`);
+      setOpenAlert(true);
     }
   }
 
@@ -197,7 +222,7 @@ const ModalAsignarTraspasos = (props) => {
             onChangeProducto={handleChangeProducto}
             onChangeAlmacen={handleChangeAlmacen}
             onChangeUnidad={handleChangeUnidad}
-            onClickAgregar={handleClickAgregar}
+            onClickEmpacar={handleClickEmpacar}
             isLoading={isLoading}
             productos={productos}
             almacenes={almacenes}
@@ -205,7 +230,6 @@ const ModalAsignarTraspasos = (props) => {
             titulo={titulo}
             columns={columns}
             registro={registro}
-            actions={actions}
             options={options}
             colorBase={colorBase} />
           : <Backdrop className={classes.backdrop} open={isLoading} >

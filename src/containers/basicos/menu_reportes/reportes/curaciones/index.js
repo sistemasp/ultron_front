@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { ReportesCuracionesContainer } from "./reportes_curaciones";
 import { findCuracionesByRangeDateAndSucursal } from "../../../../../services/curaciones";
 import { Backdrop, CircularProgress } from "@material-ui/core";
-import { toFormatterCurrency, addZero } from "../../../../../utils/utils";
+import { toFormatterCurrency, addZero, generateFolio, dateToString } from "../../../../../utils/utils";
 
 const useStyles = makeStyles(theme => ({
 	backdrop: {
@@ -17,9 +17,12 @@ const ReportesCuraciones = (props) => {
 	const classes = useStyles();
 
 	const {
+		empleado,
 		sucursal,
 		colorBase,
 	} = props;
+
+	const token = empleado.access_token;
 
 	const [isLoading, setIsLoading] = useState(true);
 	const [citas, setCitas] = useState([]);
@@ -40,20 +43,17 @@ const ReportesCuraciones = (props) => {
 	});
 
 	const columns = [
-		{ title: 'FECHA', field: 'fecha_show' },
+		{ title: 'FECHA', field: 'fecha' },
+		{ title: 'FOLIO', field: 'consecutivo' },
+		{ title: 'TURNO', field: 'turno' },
 		{ title: 'HORA', field: 'hora' },
-		{ title: 'CONSECUTIVO', field: 'consecutivo' },
-		{ title: 'PACIENTE', field: 'paciente_nombre' },
-		{ title: 'FOLIO CONSULTA', field: 'folio_consulta' },
-		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo_nombre' },
-		{ title: 'MATERIALES', field: 'materiales_show' },
-		{ title: 'BIOPSIAS', field: 'biopsias_show' },
-		{ title: 'COSTO BIOPSIAS', field: 'costo_biopsias_moneda' },
-		{ title: 'PATÓLOGO', field: 'patologo.nombre' },
-		{ title: 'ESTADO', field: 'status.nombre' },
+		{ title: 'PACIENTE', field: 'paciente.nombre_completo' },
+		{ title: 'TELÉFONO', field: 'paciente.telefono' },
+		{ title: 'DERMATÓLOGO (A)', field: 'dermatologo.nombre' },
 		{ title: 'PRECIO', field: 'precio_moneda' },
-		{ title: 'TOTAL', field: 'total_moneda' },
-		{ title: 'SUCURSAL', field: 'sucursal.nombre' },
+		{ title: 'NOMBRE CURACIÓN', field: 'curacion_nombre.nombre' },
+		{ title: 'TIPO CURACIÓN', field: 'curacion_tipo.nombre' },
+		{ title: 'AREA', field: 'curacion_area.nombre' },
 		{ title: 'OBSERVACIONES', field: 'observaciones' },
 	];
 
@@ -74,32 +74,6 @@ const ReportesCuraciones = (props) => {
 		exportButton: true,
 		exportDelimiter: ';'
 	}
-
-	useEffect(() => {
-
-		const loadCitas = async () => {
-			const response = await findCuracionesByRangeDateAndSucursal(date.getDate(), date.getMonth(), date.getFullYear(),
-				date.getDate(), date.getMonth(), date.getFullYear(), sucursal);
-
-			if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-				await response.data.forEach(item => {
-					const fecha = new Date(item.fecha_hora);
-					item.fecha_show = `${addZero(fecha.getDate())}/${addZero(fecha.getMonth() + 1)}/${fecha.getFullYear()}`;
-					item.hora = `${addZero(fecha.getHours())}:${addZero(fecha.getMinutes())}`;
-					item.precio_moneda = toFormatterCurrency(item.precio);
-					item.total_moneda = toFormatterCurrency(item.total);
-					item.costo_biopsias_moneda = toFormatterCurrency(item.costo_biopsias);
-					item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
-					item.promovendedor_nombre = item.promovendedor ? item.promovendedor.nombre : 'SIN ASIGNAR';
-					item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
-				});
-				setCitas(response.data);
-			}
-		}
-		setIsLoading(true);
-		loadCitas();
-		setIsLoading(false);
-	}, [sucursal]);
 
 	const handleChangeStartDate = async (date) => {
 		setIsLoading(true);
@@ -132,22 +106,25 @@ const ReportesCuraciones = (props) => {
 
 	const loadCitas = async (startDate, endDate) => {
 		const response = await findCuracionesByRangeDateAndSucursal(startDate.getDate(), startDate.getMonth(), startDate.getFullYear(),
-			endDate.getDate(), (endDate.getMonth() + 1), endDate.getFullYear(), sucursal);
+			endDate.getDate(), (endDate.getMonth() + 1), endDate.getFullYear(), sucursal, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			await response.data.forEach(item => {
+			response.data.forEach(item => {
+				item.fecha = dateToString(item.fecha_hora);
+				item.folio = generateFolio(item);
 				const fecha = new Date(item.fecha_hora);
-				item.fecha_show = `${addZero(fecha.getDate())}/${addZero(fecha.getMonth() + 1)}/${fecha.getFullYear()}`;
 				item.hora = `${addZero(fecha.getHours())}:${addZero(fecha.getMinutes())}`;
+				item.paciente.nombre_completo = `${item.paciente.nombres} ${item.paciente.apellidos}`;
 				item.precio_moneda = toFormatterCurrency(item.precio);
-				item.total_moneda = toFormatterCurrency(item.total);
-				item.costo_biopsias_moneda = toFormatterCurrency(item.costo_biopsias);
-				item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
-				item.promovendedor_nombre = item.promovendedor ? item.promovendedor.nombre : 'SIN ASIGNAR';
-				item.dermatologo_nombre = item.dermatologo ? item.dermatologo.nombre : 'DIRECTO';
 			});
 			setCitas(response.data);
 		}
 	}
+
+	useEffect(() => {
+		setIsLoading(true);
+		loadCitas(startDate.fecha_show, endDate.fecha_show);
+		setIsLoading(false);
+	}, [startDate, endDate]);
 
 	const actions = [
 	];
@@ -166,6 +143,7 @@ const ReportesCuraciones = (props) => {
 						options={options}
 						citas={citas}
 						actions={actions}
+						colorBase={colorBase}
 						loadCitas={loadCitas}
 						onClickReportes={handleReportes}
 						{...props} />

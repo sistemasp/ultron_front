@@ -8,10 +8,13 @@ import { dateToString } from "../../../../../utils/utils";
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
-import { centinelaStatusPendienteId, responseCodeCreate } from "../../../../../utils/constants";
-import { sucursalToAlmacen } from "../../../../../utils/utils_centinela";
+import { responseCodeCreate } from "../../../../../utils/constants";
+import { sucursalToAlmacen } from "../../../../../utils/centinela_utils";
 import { createTraspaso, deleteTraspaso, findTraspasosByAlmacenDestino, findTraspasosByAlmacenOrigen } from "../../../../../services/centinela/traspasos";
 import { deleteRegistroTraspaso } from "../../../../../services/centinela/registrotraspasos";
+import { centinelaBackgroundColorEnProceso, centinelaBackgroundColorEnviado, centinelaBackgroundColorOk, centinelaStatusEnProcesoId, centinelaStatusEnviadoId, centinelaStatusFinalizadoId, centinelaStatusPendienteId, centinelaTextColorEnProceso, centinelaTextColorEnviado, centinelaTextColorOK } from "../../../../../utils/centinela_constants";
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -52,6 +55,16 @@ const Traspasos = (props) => {
   ];
 
   const options = {
+    rowStyle: rowData => {
+      return {
+        color: rowData.status.id == centinelaStatusEnviadoId ? centinelaTextColorEnviado : 
+          (rowData.status.id == centinelaStatusFinalizadoId ? centinelaTextColorOK : 
+            (rowData.status.id == centinelaStatusEnProcesoId ? centinelaTextColorEnProceso : '')),
+        backgroundColor: rowData.status.id == centinelaStatusEnviadoId ? centinelaBackgroundColorEnviado : 
+          (rowData.status.id == centinelaStatusFinalizadoId ? centinelaBackgroundColorOk : 
+            (rowData.status.id == centinelaStatusEnProcesoId ? centinelaBackgroundColorEnProceso : ''))
+      };
+    },
     headerStyle: {
       backgroundColor: colorBase,
       color: '#FFF',
@@ -75,37 +88,86 @@ const Traspasos = (props) => {
     setOpen(true);
   }
 
-  const handleOnClickAsignar = (event, rowData) => {
+  const handleOnClickRevisado = async (event, rowData) => {
+    const newTraspaso = {
+      ...rowData,
+      status: centinelaStatusFinalizadoId,
+    };
+    const response = await createTraspaso(newTraspaso);
+    if (`${response.status}` === responseCodeCreate) {
+      loadAll();
+    }
+  }
+
+  const handleOnClickAsignar = async (event, rowData) => {
     setTraspaso(rowData);
-    setOpenAsignar(true);
+    const newTraspaso = {
+      ...rowData,
+      status: centinelaStatusEnProcesoId,
+    };
+    const response = await createTraspaso(newTraspaso);
+    if (`${response.status}` === responseCodeCreate) {
+      setOpenAsignar(true);
+    }
   }
 
   const handleOnClickEliminar = async (event, rowData) => {
+    setIsLoading(true);
     rowData.registros.map(async (registro) => {
       await deleteRegistroTraspaso(registro.id);
     });
     await deleteTraspaso(rowData.id);
     loadSolicitudesEnviadas();
+    setIsLoading(false);
   }
 
   const actionsEnviados = [
-    {
-      icon: EditIcon,
-      tooltip: 'EDITAR',
-      onClick: handleOnClickEditar
+    rowData => {
+      return rowData.status.id == centinelaStatusPendienteId ?
+        {
+          icon: EditIcon,
+          tooltip: 'EDITAR',
+          onClick: handleOnClickEditar
+        } : ''
     },
-    {
-      icon: DeleteForeverIcon,
-      tooltip: 'ELIMINAR',
-      onClick: handleOnClickEliminar
+    rowData => {
+      return rowData.status.id == centinelaStatusPendienteId ? {
+        icon: DeleteForeverIcon,
+        tooltip: 'ELIMINAR',
+        onClick: handleOnClickEliminar
+      } : ''
+    },
+    rowData => {
+      return rowData.status.id == centinelaStatusEnviadoId ? {
+        icon: CheckBoxIcon,
+        tooltip: 'REVISAR',
+        onClick: handleOnClickRevisado
+      } : ''
+    },
+    rowData => {
+      return rowData.status.id == centinelaStatusFinalizadoId ? {
+        icon: VisibilityIcon,
+        tooltip: 'VER',
+        onClick: handleOnClickEditar
+      } : ''
     },
   ];
 
   const actionsRecibidos = [
-    {
-      icon: AssignmentTurnedInIcon,
-      tooltip: 'ASIGNAR',
-      onClick: handleOnClickAsignar
+    rowData => {
+      return rowData.status.id == centinelaStatusPendienteId || rowData.status.id == centinelaStatusEnProcesoId ?
+        {
+          icon: AssignmentTurnedInIcon,
+          tooltip: 'ASIGNAR',
+          onClick: handleOnClickAsignar
+        } : ''
+    },
+    rowData => {
+      return rowData.status.id == centinelaStatusFinalizadoId ? {
+        icon: VisibilityIcon,
+        tooltip: 'VER',
+        onClick: handleOnClickEditar
+      } : ''
     },
   ];
 
@@ -181,6 +243,9 @@ const Traspasos = (props) => {
             options={options}
             actionsEnviados={actionsEnviados}
             actionsRecibidos={actionsRecibidos}
+            setMessage={setMessage}
+            setSeverity={setSeverity}
+            setOpenAlert={setOpenAlert}
             handleOpen={handleOpen}
             handleClose={handleClose}
             loadSolicitudesEnviadas={loadSolicitudesEnviadas}
