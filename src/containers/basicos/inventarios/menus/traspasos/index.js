@@ -253,6 +253,7 @@ const Traspasos = (props) => {
             open={open}
             openAsignar={openAsignar}
             sucursal={sucursal}
+            almacen={almacen}
             colorBase={colorBase} /> :
           <Backdrop className={classes.backdrop} open={isLoading} >
             <CircularProgress color="inherit" />

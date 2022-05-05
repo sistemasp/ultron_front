@@ -4,8 +4,9 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import myStyles from "../../../../../css";
 import { ExistenciasContainer } from "./existencias";
-import { showAllRegistroFacturas } from "../../../../../services/centinela/registrofacturas";
+import { sucursalToAlmacen } from "../../../../../utils/centinela_utils";
 import { dateToString, toFormatterCurrency } from "../../../../../utils/utils";
+import { findByAlmacen } from "../../../../../services/centinela/existencias";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -36,7 +37,6 @@ const Existencias = (props) => {
 		{ title: 'CONTENIDO', field: 'contenido' },
 		{ title: 'UNIDAD SALIDA', field: 'unidad_salida.descripcion' },
 		{ title: 'STOCK SALIDA', field: 'stock_salida' },
-		{ title: 'FACTURA', field: 'factura.factura' },
 		{ title: 'COSTO TOTAL', field: 'costo_moneda' },
 		{ title: 'COSTO UNIDAD ENTRADA', field: 'costo_unidad_entrada_moneda' },
 		{ title: 'COSTO UNIDAD SALIDA', field: 'costo_unidad_salida_moneda' },
@@ -68,7 +68,8 @@ const Existencias = (props) => {
 	};
 
     const loadRegistros = async() => {
-        const response = await showAllRegistroFacturas();
+		const almacen = sucursalToAlmacen(sucursal._id);
+        const response = await findByAlmacen(almacen);
         if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			const resRegistros = response.data;
 			resRegistros.forEach(item => {

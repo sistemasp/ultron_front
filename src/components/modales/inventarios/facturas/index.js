@@ -11,6 +11,8 @@ import { showAllUnidades } from '../../../../services/centinela/unidades';
 import { createRegistroFactura } from '../../../../services/centinela/registrofacturas';
 import { responseCodeCreate, responseCodeOK } from '../../../../utils/constants';
 import { toFormatterCurrency } from '../../../../utils/utils';
+import { sucursalToAlmacen } from '../../../../utils/centinela_utils';
+import { createExistencia } from '../../../../services/centinela/existencias';
 
 const ModalFacturas = (props) => {
 
@@ -20,6 +22,7 @@ const ModalFacturas = (props) => {
     loadFacturas,
     colorBase,
     factura,
+    sucursal,
   } = props;
 
   const titulo = "REGISTROS";
@@ -78,7 +81,6 @@ const ModalFacturas = (props) => {
       onClick: handleOnClickEliminar
     },
   ];
-
 
   const loadProductos = async () => {
     const response = await showAllProductos();
@@ -233,13 +235,20 @@ const ModalFacturas = (props) => {
     setIsLoading(false);
   };
 
-
   const handleClickAgregar = async (registro) => {
-    registro.factura = factura.id;
-    const resRegistro = await createRegistroFactura(registro);
-    if (`${resRegistro.status}` === responseCodeCreate) {
-      await createFactura(values);
-      findFactura();
+    const almacen = sucursalToAlmacen(sucursal._id);
+    const existencia = {
+      ...registro,
+      almacen: almacen
+    };
+    const response = await createExistencia(existencia);
+    if (`${response.status}` === responseCodeCreate) {
+      registro.factura = factura.id;
+      const resRegistro = await createRegistroFactura(registro);
+      if (`${resRegistro.status}` === responseCodeCreate) {
+        await createFactura(values);
+        findFactura();
+      }
     }
   }
 

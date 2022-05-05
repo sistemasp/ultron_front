@@ -12,6 +12,7 @@ import { showAllUnidades } from '../../../../services/centinela/unidades';
 import { createRegistroTraspaso, deleteRegistroTraspaso } from '../../../../services/centinela/registrotraspasos';
 import { createTraspaso, findTraspasoById } from '../../../../services/centinela/traspasos';
 import { centinelaBackgroundColorError, centinelaStatusEnviadoId, centinelaTextColorOK } from '../../../../utils/centinela_constants';
+import { findByAlmacenProducto } from '../../../../services/centinela/existencias';
 
 const ModalAsignarTraspasos = (props) => {
 
@@ -20,6 +21,7 @@ const ModalAsignarTraspasos = (props) => {
     onClose,
     colorBase,
     traspaso,
+    almacen,
     loadSolicitudesEnviadas,
     loadSolicitudesRecibidas,
     setMessage,
@@ -37,6 +39,9 @@ const ModalAsignarTraspasos = (props) => {
   const [almacenes, setAlmacenes] = useState([]);
   const [productos, setProductos] = useState([]);
   const [unidades, setUnidades] = useState([]);
+  const [lotes, setLotes] = useState([]);
+
+  const [openLotes, setOpenLotes] = useState(false);
 
   const classes = myStyles(colorBase)();
 
@@ -169,11 +174,31 @@ const ModalAsignarTraspasos = (props) => {
     setIsLoading(false);
   };
 
+  const handleClose = () => {
+  console.log("KAOZ se EJECUTando");
+
+    setLotes([]);
+    //setOpenLotes(false);
+  }
+
   const handleClickEmpacar = async (registro) => {
+    setIsLoading(true);
     const findRegistro = values.registros.find(reg => {
       return registro.producto.id === reg.producto.id;
     });
     if (findRegistro) {
+      // const resFindLotes = await findByAlmacenProducto(almacen, findRegistro.producto.id);
+      // if (`${resFindLotes.status}` === responseCodeOK) {
+
+      //   const lotes = resFindLotes.data.filter(lote => {
+      //     return lote.cantidad > 0;
+      //   });
+      //   console.log("KAOZ", lotes.length);
+      //   if (lotes.length > 1) {
+      //     setLotes(lotes);
+      //     setOpenLotes(true);
+      //   }  
+      // }
       const faltante = Number(findRegistro.cantidad) - Number(findRegistro.surtido);
       if (faltante >= registro.cantidad) {
         const newRegistro = {
@@ -192,6 +217,7 @@ const ModalAsignarTraspasos = (props) => {
       setMessage(`NO SE ENCONTRO EL PRODUCTO`);
       setOpenAlert(true);
     }
+    setIsLoading(false);
   }
 
   const loadAll = async () => {
@@ -223,6 +249,7 @@ const ModalAsignarTraspasos = (props) => {
             onChangeAlmacen={handleChangeAlmacen}
             onChangeUnidad={handleChangeUnidad}
             onClickEmpacar={handleClickEmpacar}
+            handleClose={handleClose}
             isLoading={isLoading}
             productos={productos}
             almacenes={almacenes}
@@ -231,6 +258,7 @@ const ModalAsignarTraspasos = (props) => {
             columns={columns}
             registro={registro}
             options={options}
+            openLotes={openLotes}
             colorBase={colorBase} />
           : <Backdrop className={classes.backdrop} open={isLoading} >
             <CircularProgress color="inherit" />

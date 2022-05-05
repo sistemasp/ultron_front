@@ -96,11 +96,13 @@ export const MenuContainer = (props) => {
       <TabPanel value={value} index={1}>
         <Existencias
           empleado={empleado}
+          sucursal={sucursal}
           colorBase={colorBase} />
       </TabPanel>
       <TabPanel value={value} index={2}>
         <Facturas
           empleado={empleado}
+          sucursal={sucursal}
           colorBase={colorBase} />
       </TabPanel>
       <TabPanel value={value} index={3}>

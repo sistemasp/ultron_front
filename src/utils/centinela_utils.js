@@ -13,7 +13,6 @@ import {
   centinelaAlmacenRDId,
 } from "./centinela_constants";
 
-
 export const sucursalToAlmacen = (sucursalId) => {
   let almacen = centinelaAlmacenCDMPId;
   switch (sucursalId) {

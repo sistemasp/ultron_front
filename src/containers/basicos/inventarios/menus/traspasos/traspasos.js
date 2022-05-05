@@ -24,6 +24,7 @@ export const TraspasosContainer = (props) => {
     loadSolicitudesRecibidas,
     traspaso,
     sucursal,
+    almacen,
     actionsEnviados,
     actionsRecibidos,
     components,
@@ -57,6 +58,7 @@ export const TraspasosContainer = (props) => {
             open={openAsignar}
             onClose={handleClose}
             sucursal={sucursal}
+            almacen={almacen}
             colorBase={colorBase}
             loadSolicitudesEnviadas={loadSolicitudesEnviadas}
             loadSolicitudesRecibidas={loadSolicitudesRecibidas}
