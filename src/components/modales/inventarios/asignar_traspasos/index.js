@@ -9,10 +9,13 @@ import { showAllProductos } from '../../../../services/centinela/productos';
 // import { createRegistroFactura } from '../../../../services/centinela/registrotraspasos';
 import { responseCodeCreate, responseCodeOK } from '../../../../utils/constants';
 import { showAllUnidades } from '../../../../services/centinela/unidades';
-import { createRegistroTraspaso, deleteRegistroTraspaso } from '../../../../services/centinela/registrotraspasos';
+import { createRegistroTraspaso, deleteRegistroTraspaso, findRegistroTraspasoById } from '../../../../services/centinela/registrotraspasos';
 import { createTraspaso, findTraspasoById } from '../../../../services/centinela/traspasos';
 import { centinelaBackgroundColorError, centinelaStatusEnviadoId, centinelaTextColorOK } from '../../../../utils/centinela_constants';
 import { findByAlmacenProducto } from '../../../../services/centinela/existencias';
+import { dateToString, toFormatterCurrency } from '../../../../utils/utils';
+import { createSurtidoTraspaso, deleteSurtidoTraspaso, findSurtidoTraspasoByRegistroId } from '../../../../services/centinela/surtidotraspasos';
+import TableComponent from '../../../table/TableComponent';
 
 const ModalAsignarTraspasos = (props) => {
 
@@ -36,6 +39,8 @@ const ModalAsignarTraspasos = (props) => {
     ...traspaso,
   });
   const [registro, setRegistro] = useState({});
+  const [registros, setRegistros] = useState([]);
+  const [findRegistro, setFindRegistro] = useState({});
   const [almacenes, setAlmacenes] = useState([]);
   const [productos, setProductos] = useState([]);
   const [unidades, setUnidades] = useState([]);
@@ -75,10 +80,79 @@ const ModalAsignarTraspasos = (props) => {
     paging: false,
   }
 
-  const handleChange = (e) => {
+  const handleEliminarRegistro = async (event, rowData) => {
+    setIsLoading(true);
+    await deleteSurtidoTraspaso(rowData.id)
+    loadAll()
+    setIsLoading(false);
+  }
+
+  const actions = [
+    {
+      icon: DeleteForeverIcon,
+      tooltip: 'ELIMINAR REGISTRO',
+      onClick: handleEliminarRegistro
+    },
+  ]
+
+  const columnsRegistroDetalles = [
+    { title: 'CANTIDAD', field: 'cantidad' },
+    { title: 'COSTO', field: 'costo_moneda' },
+    { title: 'LOTE', field: 'lote' },
+    { title: 'CADUCIDAD', field: 'show_caducidad' },
+  ]
+
+  const optionsRegistroDetail = {
+    headerStyle: {
+      backgroundColor: colorBase,
+      color: '#FFF',
+      fontWeight: 'bolder',
+      fontSize: '16px',
+      padding: '5px',
+    },
+    cellStyle: {
+      fontWeight: 'bolder',
+      fontSize: '16px',
+      padding: '0px',
+    },
+    exportAllData: true,
+    exportButton: false,
+    exportDelimiter: ';',
+    search: false,
+    showTitle: false,
+    toolbar: false,
+    paging: false,
+    draggable: false,
+  }
+
+  const detailRegistroPanel = [
+    {
+      tooltip: 'DETALLES',
+      render: rowData => {
+        return (
+          <Fragment>
+            <TableComponent
+              actions={actions}
+              columns={columnsRegistroDetalles}
+              data={rowData.surtidos}
+              options={optionsRegistroDetail} />
+          </Fragment>
+        )
+      },
+    }
+  ];
+
+  const handleChange = (event, index) => {
+    let faltantes = findRegistro.faltantes;
+    const current = event.target.value > 0 ? event.target.value : 0
+    registros.forEach((reg, ind) => {
+      faltantes -= ind === index ? 0 : reg.cantidad
+    })
+    const cantidad = current > faltantes ? faltantes : current
+    registros[index] = { ...registros[index], cantidad: cantidad }
     setRegistro({
       ...registro,
-      [e.target.name]: e.target.value.toUpperCase()
+      cantidad: cantidad
     });
   }
 
@@ -87,14 +161,28 @@ const ModalAsignarTraspasos = (props) => {
     const response = await findTraspasoById(traspaso.id);
     if (`${response.status}` === responseCodeOK) {
       const resTraspaso = response.data;
-      resTraspaso.registros.map(registro => {
-        registro.show_producto = `${registro.producto.codigo} - ${registro.producto.descripcion}`;
-        registro.faltantes = Number(registro.cantidad) - Number(registro.surtido);
-        registro.show_cantidad = `${registro.cantidad} (${registro.unidad.descripcion})`;
-      });
-      setValues(resTraspaso);
+      await resTraspaso.registros.reduce(async (previousPromise, registro) => {
+        await previousPromise
+        const resRegTra = await findSurtidoTraspasoByRegistroId(registro.id)
+        if (`${resRegTra.status}` === responseCodeOK) {
+          const surtidos = resRegTra.data
+          let cantidadSurtida = 0
+          surtidos.forEach(surtido => {
+            surtido.costo_moneda = toFormatterCurrency(surtido.costo)
+            surtido.show_caducidad = surtido.caducidad ? dateToString(surtido.caducidad) : 'SIN CADUCIDAD'
+            cantidadSurtida += surtido.cantidad
+          })
+          registro.surtido = cantidadSurtida
+          registro.show_producto = `${registro.producto.codigo} - ${registro.producto.descripcion}`
+          registro.faltantes = Number(registro.cantidad) - cantidadSurtida
+          registro.show_cantidad = `${registro.cantidad} (${registro.unidad.descripcion})`
+          registro.surtidos = surtidos
+        }
+        return Promise.resolve()
+      }, Promise.resolve())
+      setValues(resTraspaso)
     }
-    setIsLoading(false);
+    setIsLoading(false)
   }
 
   const loadUnidades = async () => {
@@ -123,100 +211,79 @@ const ModalAsignarTraspasos = (props) => {
     setIsLoading(false);
   }
 
-  const registrosCompletos = (registros) => {
-    let registroCompleto = true;
-    registros.map(registro => {
-      if (registro.cantidad != registro.surtido) {
-        registroCompleto = false;
-      }
-    });
-    return registroCompleto;
-  }
-
   const handleClickGuardar = async (values) => {
-    if (registrosCompletos(values.registros)) {
-      values.status = centinelaStatusEnviadoId;
-    }
     await createTraspaso(values);
     loadSolicitudesEnviadas();
     loadSolicitudesRecibidas();
     onClose();
   }
 
-  const handleChangeProducto = (e, newValue) => {
+  const handleClickEnviar = async (values) => {
+    values.status = centinelaStatusEnviadoId
+    // handleClickGuardar(values);
+    console.log("KAOZ", values)
+  }
+
+  const handleChangeProducto = async (e, newValue) => {
+    setLotes([]);
     setIsLoading(true);
     setRegistro({
       ...registro,
       producto: newValue,
     });
-    setIsLoading(false);
-  };
-
-
-  const handleChangeAlmacen = async (e, newValue) => {
-    setIsLoading(true);
-    const newValues = {
-      ...values,
-      almacen_origen: newValue,
-    }
-    const response = await createTraspaso(newValues);
-    if (`${response.status}` === responseCodeCreate) {
-      findTraspaso();
-    }
-  };
-
-  const handleChangeUnidad = (e, newValue) => {
-    setIsLoading(true);
-    setRegistro({
-      ...registro,
-      unidad: newValue,
-    });
-    setIsLoading(false);
-  };
-
-  const handleClose = () => {
-  console.log("KAOZ se EJECUTando");
-
-    setLotes([]);
-    //setOpenLotes(false);
-  }
-
-  const handleClickEmpacar = async (registro) => {
-    setIsLoading(true);
     const findRegistro = values.registros.find(reg => {
-      return registro.producto.id === reg.producto.id;
+      return (newValue ? newValue.id : '') === reg.producto.id;
     });
     if (findRegistro) {
-      // const resFindLotes = await findByAlmacenProducto(almacen, findRegistro.producto.id);
-      // if (`${resFindLotes.status}` === responseCodeOK) {
-
-      //   const lotes = resFindLotes.data.filter(lote => {
-      //     return lote.cantidad > 0;
-      //   });
-      //   console.log("KAOZ", lotes.length);
-      //   if (lotes.length > 1) {
-      //     setLotes(lotes);
-      //     setOpenLotes(true);
-      //   }  
-      // }
-      const faltante = Number(findRegistro.cantidad) - Number(findRegistro.surtido);
-      if (faltante >= registro.cantidad) {
-        const newRegistro = {
-          ...findRegistro,
-          surtido: (Number(findRegistro.surtido) + Number(registro.cantidad)),
-        };
-        await createRegistroTraspaso(newRegistro);
-        findTraspaso();
-      } else {
-        setSeverity(`error`);
-        setMessage(`NO PUEDES SURTIR MAS PRODUCTOS DE LOS QUE FALTAN`);
-        setOpenAlert(true);
+      setFindRegistro(findRegistro)
+      const resFindLotes = await findByAlmacenProducto(almacen, findRegistro.producto.id)
+      if (`${resFindLotes.status}` === responseCodeOK) {
+        const lotes = resFindLotes.data.filter(lote => {
+          return lote.cantidad > 0
+        })
+        if (lotes.length === 0) {
+          setSeverity(`error`);
+          setMessage(`NO HAY "${findRegistro.producto.codigo} - ${findRegistro.producto.descripcion}" EN EXISTENCIAS`)
+          setOpenAlert(true)
+        } else {
+          lotes.map((lote, index) => {
+            lote.registroTraspaso = findRegistro.id
+            lote.caducidad_show = lote.caducidad ? dateToString(lote.caducidad) : 'SIN CADUCIDAD'
+            lote.stock_salida_show = `${lote.stock_salida} (${lote.unidad_salida.descripcion})`
+            lote.costo_unidad_salida = lote.costo / (lote.cantidad * lote.contenido)
+            lote.costo_unidad_salida_moneda = toFormatterCurrency(lote.costo_unidad_salida)
+            lote.unidad = findRegistro.unidad
+            registros[index] = {
+              ...lote,
+              cantidad: 0,
+            }
+          })
+          setLotes(lotes);
+        }
       }
     } else {
       setSeverity(`error`);
       setMessage(`NO SE ENCONTRO EL PRODUCTO`);
-      setOpenAlert(true);
+      setOpenAlert(newValue ? true : false);
     }
+    setIsLoading(false);
+  };
+
+  const handleClickEmpacar = async (registros) => {
+    setIsLoading(true)
+    const nuevosRegistros = registros.filter(reg => {
+      return reg.cantidad > 0
+    })
+    nuevosRegistros.forEach(async (nuevoRegistro) => {
+      nuevoRegistro.existencia_id = nuevoRegistro.id
+      delete nuevoRegistro.id
+      nuevoRegistro.costo = nuevoRegistro.costo_unidad_salida
+      const response = await createSurtidoTraspaso(nuevoRegistro)
+      if (`${response.status}` === responseCodeCreate) {
+        loadAll()
+      }
+    })
+    handleChangeProducto()
     setIsLoading(false);
   }
 
@@ -244,12 +311,11 @@ const ModalAsignarTraspasos = (props) => {
             open={open}
             onClickCancel={onClose}
             onClickGuardar={handleClickGuardar}
+            onClickEnviar={handleClickEnviar}
             onChange={handleChange}
             onChangeProducto={handleChangeProducto}
-            onChangeAlmacen={handleChangeAlmacen}
-            onChangeUnidad={handleChangeUnidad}
             onClickEmpacar={handleClickEmpacar}
-            handleClose={handleClose}
+            detailRegistroPanel={detailRegistroPanel}
             isLoading={isLoading}
             productos={productos}
             almacenes={almacenes}
@@ -257,8 +323,10 @@ const ModalAsignarTraspasos = (props) => {
             titulo={titulo}
             columns={columns}
             registro={registro}
+            registros={registros}
             options={options}
             openLotes={openLotes}
+            lotes={lotes}
             colorBase={colorBase} />
           : <Backdrop className={classes.backdrop} open={isLoading} >
             <CircularProgress color="inherit" />

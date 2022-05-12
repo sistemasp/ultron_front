@@ -57,11 +57,11 @@ const Traspasos = (props) => {
   const options = {
     rowStyle: rowData => {
       return {
-        color: rowData.status.id == centinelaStatusEnviadoId ? centinelaTextColorEnviado : 
-          (rowData.status.id == centinelaStatusFinalizadoId ? centinelaTextColorOK : 
+        color: rowData.status.id == centinelaStatusEnviadoId ? centinelaTextColorEnviado :
+          (rowData.status.id == centinelaStatusFinalizadoId ? centinelaTextColorOK :
             (rowData.status.id == centinelaStatusEnProcesoId ? centinelaTextColorEnProceso : '')),
-        backgroundColor: rowData.status.id == centinelaStatusEnviadoId ? centinelaBackgroundColorEnviado : 
-          (rowData.status.id == centinelaStatusFinalizadoId ? centinelaBackgroundColorOk : 
+        backgroundColor: rowData.status.id == centinelaStatusEnviadoId ? centinelaBackgroundColorEnviado :
+          (rowData.status.id == centinelaStatusFinalizadoId ? centinelaBackgroundColorOk :
             (rowData.status.id == centinelaStatusEnProcesoId ? centinelaBackgroundColorEnProceso : ''))
       };
     },
@@ -122,6 +122,11 @@ const Traspasos = (props) => {
   }
 
   const actionsEnviados = [
+    {
+      icon: VisibilityIcon,
+      tooltip: 'VER',
+      onClick: handleOnClickEditar
+    },
     rowData => {
       return rowData.status.id == centinelaStatusPendienteId ?
         {
@@ -144,16 +149,14 @@ const Traspasos = (props) => {
         onClick: handleOnClickRevisado
       } : ''
     },
-    rowData => {
-      return rowData.status.id == centinelaStatusFinalizadoId ? {
-        icon: VisibilityIcon,
-        tooltip: 'VER',
-        onClick: handleOnClickEditar
-      } : ''
-    },
   ];
 
   const actionsRecibidos = [
+    {
+      icon: VisibilityIcon,
+      tooltip: 'VER',
+      onClick: handleOnClickEditar
+    },
     rowData => {
       return rowData.status.id == centinelaStatusPendienteId || rowData.status.id == centinelaStatusEnProcesoId ?
         {
@@ -161,13 +164,6 @@ const Traspasos = (props) => {
           tooltip: 'ASIGNAR',
           onClick: handleOnClickAsignar
         } : ''
-    },
-    rowData => {
-      return rowData.status.id == centinelaStatusFinalizadoId ? {
-        icon: VisibilityIcon,
-        tooltip: 'VER',
-        onClick: handleOnClickEditar
-      } : ''
     },
   ];
 

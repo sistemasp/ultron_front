@@ -1,15 +1,10 @@
 import React, { Fragment } from 'react';
 import Modal from '@material-ui/core/Modal';
 import { FormControl, Grid, TextField } from '@material-ui/core';
-import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import { ButtonCustom } from "../../../basic/ButtonCustom";
 import { ComboCustomProductos } from "../../../basic/ComboCustomProductos";
 import myStyles from '../../../../css';
 import TableComponent from '../../../table/TableComponent';
-import { ComboCustom } from '../../../basic/ComboCustom';
-import { ComboCustomDescripcion } from '../../../basic/ComboCustomDescripcion';
-import { CheckCustom } from '../../../basic/CheckCustom';
 
 function getModalStyle() {
   const top = 50;
@@ -37,7 +32,7 @@ const FormAsignarTraspasos = (props) => {
     open,
     colorBase,
     onClickGuardar,
-    onChangeUnidad,
+    onClickEnviar,
     onChangeProducto,
     productos,
     unidades,
@@ -46,9 +41,12 @@ const FormAsignarTraspasos = (props) => {
     registro,
     options,
     components,
-  } = props;
+    lotes,
+    registros,
+    detailRegistroPanel,
+  } = props
 
-  const classes = myStyles(colorBase)();
+  const classes = myStyles(colorBase)()
 
   return (
     <div>
@@ -63,7 +61,7 @@ const FormAsignarTraspasos = (props) => {
                 <h1>SOLICITUD DE TRASPASO</h1>
               </Grid>
 
-              <Grid item xs={6}>
+              <Grid item xs={3}>
                 <ButtonCustom
                   className={classes.button}
                   color="primary"
@@ -72,60 +70,119 @@ const FormAsignarTraspasos = (props) => {
                   disabled={isLoading}
                   text='GUARDAR' />
               </Grid>
+              <Grid item xs={3}>
+                <ButtonCustom
+                  className={classes.button}
+                  color="primary"
+                  variant="contained"
+                  onClick={() => onClickEnviar(values)}
+                  disabled={isLoading}
+                  text='ENVIAR' />
+              </Grid>
               <Grid item xs={12} >
                 <br />
               </Grid>
+              <Grid item xs={7} >
+                <FormControl variant="outlined" className={classes.textField}>
+                  <ComboCustomProductos
+                    label='PRODUCTO'
+                    name="producto"
+                    value={registro.producto}
+                    onChange={onChangeProducto}
+                    options={productos} />
+                </FormControl>
+              </Grid>
+              <Grid container spacing={1}>
+                <Grid item xs={true} >
+                  <h2>
+                    LOTE
+                  </h2>
+                </Grid>
+                <Grid item xs={true} >
+                  <h2>
+                    CADUCIDAD
+                  </h2>
+                </Grid>
+                <Grid item xs={true} >
+                  <h2>
+                    EXISTENCIAS
+                  </h2>
+                </Grid>
+                <Grid item xs={true} >
+                  <h2>
+                    COSTO POR PIEZA
+                  </h2>
+                </Grid>
+                <Grid item xs={true}>
+                  <h2>
+                    CANTIDAD
+                  </h2>
+                </Grid>
+                <Grid item xs={true} >
+                  <h2>
+                    UNIDAD DE SALIDA
+                  </h2>
+                </Grid>
+              </Grid>
               {
-                true ?
-                  <Fragment>
-                    <Grid item xs={1}>
-                      <TextField
-                        className={classes.formControl}
-                        name="cantidad"
-                        label="CANTIDAD"
-                        value={registro.cantidad}
-                        onChange={onChange}
-                        type='Number'
-                        variant="outlined" />
+                lotes.map((lote, index) => {
+                  return <Fragment>
+                    <Grid container spacing={1}>
+                      <Grid item xs={true} >
+                        <h3>
+                          {lote.lote}
+                        </h3>
+                      </Grid>
+                      <Grid item xs={true} >
+                        <h3>
+                          {lote.caducidad_show}
+                        </h3>
+                      </Grid>
+                      <Grid item xs={true} >
+                        <h3>
+                          {lote.stock_salida_show}
+                        </h3>
+                      </Grid>
+                      <Grid item xs={true} >
+                        <h3>
+                          {lote.costo_unidad_salida_moneda}
+                        </h3>
+                      </Grid>
+                      <Grid item xs={true}>
+                        <TextField
+                          className={classes.formControl}
+                          name="cantidad"
+                          label="CANTIDAD"
+                          value={registros[index].cantidad}
+                          onChange={(event) => onChange(event, index)}
+                          type='Number'
+                          variant="outlined" />
+                      </Grid>
+                      <Grid item xs={true} >
+                        <h3>
+                          {lote.unidad.descripcion}
+                        </h3>
+                      </Grid>
                     </Grid>
-                    <Grid item xs={true} >
-                      <FormControl variant="outlined" className={classes.textField}>
-                        <ComboCustomDescripcion
-                          label='UNIDAD'
-                          value={registro.unidad}
-                          onChange={onChangeUnidad}
-                          options={unidades} />
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={7} >
-                      <FormControl variant="outlined" className={classes.textField}>
-                        <ComboCustomProductos
-                          label='PRODUCTO'
-                          name="producto"
-                          value={registro.producto}
-                          onChange={onChangeProducto}
-                          options={productos} />
-                      </FormControl>
-                    </Grid>
-
-                    <Grid item xs={2}>
-                      <ButtonCustom
-                        className={classes.button}
-                        color="primary"
-                        variant="contained"
-                        onClick={() => onClickEmpacar(registro)}
-                        disabled={isLoading || !registro.cantidad || !registro.producto || !registro.unidad}
-                        text='EMPACAR' />
-                    </Grid>
-                  </Fragment> : ''
+                  </Fragment>
+                })
               }
+              <Grid item xs={2}>
+                <ButtonCustom
+                  className={classes.button}
+                  color="primary"
+                  variant="contained"
+                  onClick={() => onClickEmpacar(registros)}
+                  text='EMPACAR' />
+              </Grid>
               <Grid item xs={12}>
                 <TableComponent
                   titulo={titulo}
                   columns={columns}
                   data={values.registros}
                   options={options}
-                  components={components} />
+                  components={components}
+                  detailPanel={detailRegistroPanel} />
               </Grid>
             </Grid>
 

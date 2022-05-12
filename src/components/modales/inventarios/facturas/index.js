@@ -239,14 +239,14 @@ const ModalFacturas = (props) => {
     const almacen = sucursalToAlmacen(sucursal._id);
     const existencia = {
       ...registro,
-      almacen: almacen
-    };
+      almacen: almacen,
+      factura: factura.id
+    }
     const response = await createExistencia(existencia);
     if (`${response.status}` === responseCodeCreate) {
       registro.factura = factura.id;
       const resRegistro = await createRegistroFactura(registro);
       if (`${resRegistro.status}` === responseCodeCreate) {
-        await createFactura(values);
         findFactura();
       }
     }

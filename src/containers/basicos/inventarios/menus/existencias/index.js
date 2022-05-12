@@ -73,16 +73,14 @@ const Existencias = (props) => {
         if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			const resRegistros = response.data;
 			resRegistros.forEach(item => {
-				item.costo_moneda = toFormatterCurrency(item.costo);
-				item.costo_unidad_entrada_moneda = toFormatterCurrency(item.costo / item.cantidad);
-				item.caducidad_show = item.caducidad ? dateToString(item.caducidad) : 'SIN CADUCIDAD';
-				item.stock_salida = item.cantidad * item.contenido;
-				item.costo_unidad_salida_moneda = toFormatterCurrency(item.costo / item.stock_salida );
-
+				item.costo_moneda = toFormatterCurrency(item.costo)
+				item.costo_unidad_entrada_moneda = toFormatterCurrency(item.costo / item.cantidad)
+				item.caducidad_show = item.caducidad ? dateToString(item.caducidad) : 'SIN CADUCIDAD'
+				item.costo_unidad_salida_moneda = toFormatterCurrency(item.costo / item.stock_salida )
 			});
             setRegistros(resRegistros);
         }
-    };
+    }
 
     const loadAll = async () => {
         setIsLoading(true);
