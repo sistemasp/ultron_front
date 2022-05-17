@@ -5,31 +5,35 @@ import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import { Paper, Button } from '@material-ui/core';
 import TableComponent from '../../../../../components/table/TableComponent';
+import { ButtonCustom } from '../../../../../components/basic/ButtonCustom';
+import myStyles from '../../../../../css';
 
 export const ReportesCuracionesContainer = (props) => {
 
-    const {
-        onChangeStartDate,
+	const {
+		onChangeStartDate,
 		onChangeEndDate,
 		startDate,
 		endDate,
 		onClickReportes,
-        // TABLE DATES PROPERTIES
-        titulo,
-        columns,
-        citas,
-        actions,
-        options,
+		// TABLE DATES PROPERTIES
+		titulo,
+		columns,
+		citas,
+		actions,
+		options,
+		colorBase,
+	} = props;
 
-    } = props;
+	const classes = myStyles(colorBase)();
 
-    return (
-        <Fragment>
-            <Paper>
+	return (
+		<Fragment>
+			<Paper>
 				<Grid container spacing={3} justify="center">
-                    <Grid item xs={12} sm={2}>
+					<Grid item xs={12} sm={2}>
 						<MuiPickersUtilsProvider utils={DateFnsUtils}>
-							<Grid 
+							<Grid
 								container
 								justify="center"
 								alignItems="center" >
@@ -52,7 +56,7 @@ export const ReportesCuracionesContainer = (props) => {
 					</Grid>
 					<Grid item xs={12} sm={2}>
 						<MuiPickersUtilsProvider utils={DateFnsUtils}>
-							<Grid 
+							<Grid
 								container
 								justify="center"
 								alignItems="center" >
@@ -74,23 +78,23 @@ export const ReportesCuracionesContainer = (props) => {
 						</MuiPickersUtilsProvider>
 					</Grid>
 					<Grid item xs={12} sm={2}>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={() => onClickReportes()} >
-                            OBTENER DATOS
-                        </Button>
-                    </Grid>
+						<ButtonCustom
+							className={classes.button}
+							variant="contained"
+							color="primary"
+							onClick={() => onClickReportes()}
+							text="OBTENER DATOS" />
+					</Grid>
 				</Grid>
-            </Paper>
+			</Paper>
 
-            <TableComponent
-                titulo={titulo}
-                columns={columns}
-                data={citas}
-                actions={actions}
-                options={options} />
+			<TableComponent
+				titulo={titulo}
+				columns={columns}
+				data={citas}
+				actions={actions}
+				options={options} />
 
-        </Fragment>
-    );
+		</Fragment>
+	);
 }

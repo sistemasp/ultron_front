@@ -4,9 +4,9 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import myStyles from "../../../../../css";
 import { ExistenciasContainer } from "./existencias";
-import { showAllProductos } from "../../../../../services/centinela/productos";
-import { showAllRegistros } from "../../../../../services/centinela/registros";
+import { sucursalToAlmacen } from "../../../../../utils/centinela_utils";
 import { dateToString, toFormatterCurrency } from "../../../../../utils/utils";
+import { findByAlmacen } from "../../../../../services/centinela/existencias";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -37,8 +37,7 @@ const Existencias = (props) => {
 		{ title: 'CONTENIDO', field: 'contenido' },
 		{ title: 'UNIDAD SALIDA', field: 'unidad_salida.descripcion' },
 		{ title: 'STOCK SALIDA', field: 'stock_salida' },
-		{ title: 'FACTURA', field: 'factura.factura' },
-		{ title: 'COSTO', field: 'costo_moneda' },
+		{ title: 'COSTO TOTAL', field: 'costo_moneda' },
 		{ title: 'COSTO UNIDAD ENTRADA', field: 'costo_unidad_entrada_moneda' },
 		{ title: 'COSTO UNIDAD SALIDA', field: 'costo_unidad_salida_moneda' },
 		{ title: 'LOTE', field: 'lote' },
@@ -69,20 +68,19 @@ const Existencias = (props) => {
 	};
 
     const loadRegistros = async() => {
-        const response = await showAllRegistros();
+		const almacen = sucursalToAlmacen(sucursal._id);
+        const response = await findByAlmacen(almacen);
         if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
 			const resRegistros = response.data;
 			resRegistros.forEach(item => {
-				item.costo_moneda = toFormatterCurrency(item.costo);
-				item.costo_unidad_entrada_moneda = toFormatterCurrency(item.costo / item.cantidad);
-				item.caducidad_show = item.caducidad ? dateToString(item.caducidad) : 'SIN CADUCIDAD';
-				item.stock_salida = item.cantidad * item.contenido;
-				item.costo_unidad_salida_moneda = toFormatterCurrency(item.costo / item.stock_salida );
-
+				item.costo_moneda = toFormatterCurrency(item.costo)
+				item.costo_unidad_entrada_moneda = toFormatterCurrency(item.costo_unidad_entrada)
+				item.caducidad_show = item.caducidad ? dateToString(item.caducidad) : 'SIN CADUCIDAD'
+				item.costo_unidad_salida_moneda = toFormatterCurrency(item.costo_unidad_salida )
 			});
             setRegistros(resRegistros);
         }
-    };
+    }
 
     const loadAll = async () => {
         setIsLoading(true);
