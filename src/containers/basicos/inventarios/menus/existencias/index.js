@@ -74,9 +74,9 @@ const Existencias = (props) => {
 			const resRegistros = response.data;
 			resRegistros.forEach(item => {
 				item.costo_moneda = toFormatterCurrency(item.costo)
-				item.costo_unidad_entrada_moneda = toFormatterCurrency(item.costo / item.cantidad)
+				item.costo_unidad_entrada_moneda = toFormatterCurrency(item.costo_unidad_entrada)
 				item.caducidad_show = item.caducidad ? dateToString(item.caducidad) : 'SIN CADUCIDAD'
-				item.costo_unidad_salida_moneda = toFormatterCurrency(item.costo / item.stock_salida )
+				item.costo_unidad_salida_moneda = toFormatterCurrency(item.costo_unidad_salida )
 			});
             setRegistros(resRegistros);
         }

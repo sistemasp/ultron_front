@@ -28,6 +28,8 @@ const Traspasos = (props) => {
   const [solicitudesRecibidas, setSolicitudesRecibidas] = useState([]);
   const [traspaso, setTraspaso] = useState({});
   const [open, setOpen] = useState(false);
+  const [openVerTraspaso, setOpenVerTraspaso] = useState(false);
+  const [openRevisarTraspaso, setOpenRevisarTraspaso] = useState(false);
   const [openAsignar, setOpenAsignar] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -83,20 +85,19 @@ const Traspasos = (props) => {
     exportDelimiter: ';',
   }
 
+  const handleOnClickVer = (event, rowData) => {
+    setTraspaso(rowData);
+    setOpenVerTraspaso(true);
+  }
+
+  const handleOnClickRevisado = (event, rowData) => {
+    setTraspaso(rowData);
+    setOpenRevisarTraspaso(true);
+  }
+  
   const handleOnClickEditar = (event, rowData) => {
     setTraspaso(rowData);
     setOpen(true);
-  }
-
-  const handleOnClickRevisado = async (event, rowData) => {
-    const newTraspaso = {
-      ...rowData,
-      status: centinelaStatusFinalizadoId,
-    };
-    const response = await createTraspaso(newTraspaso);
-    if (`${response.status}` === responseCodeCreate) {
-      loadAll();
-    }
   }
 
   const handleOnClickAsignar = async (event, rowData) => {
@@ -125,7 +126,7 @@ const Traspasos = (props) => {
     {
       icon: VisibilityIcon,
       tooltip: 'VER',
-      onClick: handleOnClickEditar
+      onClick: handleOnClickVer
     },
     rowData => {
       return rowData.status.id == centinelaStatusPendienteId ?
@@ -155,7 +156,7 @@ const Traspasos = (props) => {
     {
       icon: VisibilityIcon,
       tooltip: 'VER',
-      onClick: handleOnClickEditar
+      onClick: handleOnClickVer
     },
     rowData => {
       return rowData.status.id == centinelaStatusPendienteId || rowData.status.id == centinelaStatusEnProcesoId ?
@@ -184,8 +185,10 @@ const Traspasos = (props) => {
   }
 
   const handleClose = () => {
-    setOpen(false);
-    setOpenAsignar(false);
+    setOpen(false)
+    setOpenAsignar(false)
+    setOpenVerTraspaso(false)
+    setOpenRevisarTraspaso(false)
   }
 
   const handleCloseAlert = () => {
@@ -247,6 +250,8 @@ const Traspasos = (props) => {
             loadSolicitudesEnviadas={loadSolicitudesEnviadas}
             loadSolicitudesRecibidas={loadSolicitudesRecibidas}
             open={open}
+            openVerTraspaso={openVerTraspaso}
+            openRevisarTraspaso={openRevisarTraspaso}
             openAsignar={openAsignar}
             sucursal={sucursal}
             almacen={almacen}

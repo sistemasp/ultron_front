@@ -12,7 +12,7 @@ import { showAllUnidades } from '../../../../services/centinela/unidades';
 import { createRegistroTraspaso, deleteRegistroTraspaso, findRegistroTraspasoById } from '../../../../services/centinela/registrotraspasos';
 import { createTraspaso, findTraspasoById } from '../../../../services/centinela/traspasos';
 import { centinelaBackgroundColorError, centinelaStatusEnviadoId, centinelaTextColorOK } from '../../../../utils/centinela_constants';
-import { findByAlmacenProducto } from '../../../../services/centinela/existencias';
+import { createExistencia, findByAlmacenProducto } from '../../../../services/centinela/existencias';
 import { dateToString, toFormatterCurrency } from '../../../../utils/utils';
 import { createSurtidoTraspaso, deleteSurtidoTraspaso, findSurtidoTraspasoByRegistroId } from '../../../../services/centinela/surtidotraspasos';
 import TableComponent from '../../../table/TableComponent';
@@ -144,7 +144,8 @@ const ModalAsignarTraspasos = (props) => {
 
   const handleChange = (event, index) => {
     let faltantes = findRegistro.faltantes;
-    const current = event.target.value > 0 ? event.target.value : 0
+    const cant = event.target.value;
+    const current = cant > 0 ? (cant > registros[index].stock_salida ? registros[index].stock_salida : cant ) : 0
     registros.forEach((reg, ind) => {
       faltantes -= ind === index ? 0 : reg.cantidad
     })
@@ -212,16 +213,31 @@ const ModalAsignarTraspasos = (props) => {
   }
 
   const handleClickGuardar = async (values) => {
-    await createTraspaso(values);
-    loadSolicitudesEnviadas();
-    loadSolicitudesRecibidas();
-    onClose();
+    await createTraspaso(values)
+    loadSolicitudesEnviadas()
+    loadSolicitudesRecibidas()
+    onClose()
   }
 
   const handleClickEnviar = async (values) => {
     values.status = centinelaStatusEnviadoId
-    // handleClickGuardar(values);
-    console.log("KAOZ", values)
+    values.registros.map(async (registro) => {
+      const resFindLotes = await findByAlmacenProducto(almacen, registro.producto.id)
+      if (`${resFindLotes.status}` === responseCodeOK) {
+        const resLotes = resFindLotes.data
+
+        registro.surtidos.map(surtido => {
+          resLotes.map(async (lote) => {
+            if (lote.lote === surtido.lote) {
+              lote.stock_salida -= surtido.cantidad
+              lote.cantidad = parseInt(lote.stock_salida / lote.contenido)
+              await createExistencia(lote)
+            }
+          })
+        })
+      }
+    })
+    handleClickGuardar(values)
   }
 
   const handleChangeProducto = async (e, newValue) => {
@@ -250,7 +266,6 @@ const ModalAsignarTraspasos = (props) => {
             lote.registroTraspaso = findRegistro.id
             lote.caducidad_show = lote.caducidad ? dateToString(lote.caducidad) : 'SIN CADUCIDAD'
             lote.stock_salida_show = `${lote.stock_salida} (${lote.unidad_salida.descripcion})`
-            lote.costo_unidad_salida = lote.costo / (lote.cantidad * lote.contenido)
             lote.costo_unidad_salida_moneda = toFormatterCurrency(lote.costo_unidad_salida)
             lote.unidad = findRegistro.unidad
             registros[index] = {

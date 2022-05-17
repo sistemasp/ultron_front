@@ -6,6 +6,8 @@ import { ButtonCustom } from '../../../../../components/basic/ButtonCustom';
 import ModalFacturas from '../../../../../components/modales/inventarios/facturas';
 import ModalTraspasos from '../../../../../components/modales/inventarios/traspasos';
 import ModalAsignarTraspasos from '../../../../../components/modales/inventarios/asignar_traspasos';
+import ModalVerTraspasos from '../../../../../components/modales/inventarios/ver_traspasos';
+import ModalRevisarTraspasos from '../../../../../components/modales/inventarios/revisar_traspasos';
 
 export const TraspasosContainer = (props) => {
 
@@ -18,6 +20,8 @@ export const TraspasosContainer = (props) => {
     solicitudesEnviadas,
     solicitudesRecibidas,
     open,
+    openVerTraspaso,
+    openRevisarTraspaso,
     openAsignar,
     handleClose,
     loadSolicitudesEnviadas,
@@ -46,6 +50,32 @@ export const TraspasosContainer = (props) => {
             open={open}
             onClose={handleClose}
             sucursal={sucursal}
+            colorBase={colorBase}
+            loadSolicitudesEnviadas={loadSolicitudesEnviadas}
+            loadSolicitudesRecibidas={loadSolicitudesRecibidas}
+            traspaso={traspaso}
+            empleado={empleado} /> : ''
+      }
+       {
+        openVerTraspaso ?
+          <ModalVerTraspasos
+            open={openVerTraspaso}
+            onClose={handleClose}
+            sucursal={sucursal}
+            almacen={almacen}
+            colorBase={colorBase}
+            loadSolicitudesEnviadas={loadSolicitudesEnviadas}
+            loadSolicitudesRecibidas={loadSolicitudesRecibidas}
+            traspaso={traspaso}
+            empleado={empleado} /> : ''
+      }
+      {
+        openRevisarTraspaso ?
+          <ModalRevisarTraspasos
+            open={openRevisarTraspaso}
+            onClose={handleClose}
+            sucursal={sucursal}
+            almacen={almacen}
             colorBase={colorBase}
             loadSolicitudesEnviadas={loadSolicitudesEnviadas}
             loadSolicitudesRecibidas={loadSolicitudesRecibidas}

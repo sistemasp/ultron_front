@@ -197,9 +197,7 @@ const ModalFacturas = (props) => {
   const handleClickGuardar = async (values) => {
     setIsLoading(true);
     const response = await createFactura(values);
-    // const response = !values.id ? await createFactura(values) : await updateFactura(values.id, values);
-    if (`${response.status}` === responseCodeOK
-      || `${response.status}` === responseCodeCreate) {
+    if (`${response.status}` === responseCodeCreate) {
       loadFacturas();
       onClose();
       setIsLoading(false);
@@ -209,7 +207,6 @@ const ModalFacturas = (props) => {
   const handleClickActualizar = async (values) => {
     setIsLoading(true);
     const response = await createFactura(values);
-    // const response = !values.id ? await createFactura(values) : await updateFactura(values.id, values);
     if (`${response.status}` === responseCodeOK
       || `${response.status}` === responseCodeCreate) {
       findFactura();
@@ -240,14 +237,17 @@ const ModalFacturas = (props) => {
     const existencia = {
       ...registro,
       almacen: almacen,
-      factura: factura.id
+      stock_salida: Number(registro.contenido) * Number(registro.cantidad),
+      costo_unidad_entrada: Number(registro.costo) / Number(registro.cantidad),
+      costo_unidad_salida: Number(registro.costo) / (Number(registro.contenido) * Number(registro.cantidad)),
+      factura: factura.id,
     }
     const response = await createExistencia(existencia);
     if (`${response.status}` === responseCodeCreate) {
-      registro.factura = factura.id;
-      const resRegistro = await createRegistroFactura(registro);
+      registro.factura = factura.id
+      const resRegistro = await createRegistroFactura(registro)
       if (`${resRegistro.status}` === responseCodeCreate) {
-        findFactura();
+        findFactura()
       }
     }
   }
