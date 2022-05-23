@@ -70,6 +70,32 @@ const LoginForm = (props) => {
 
   const navigate = useNavigate();
 
+  const [carrie, setCarrie] = useState(false);
+
+
+  const sumota = () => {
+    const num1 = "323"
+    const num2 = "456"
+    console.log("KAOZ", '', num1, '+', num2)
+    let resultado = ''
+    let final = ''
+    for (let i = num1.length - 1; i >= 0; i--) {
+      let res = Number(num1[i]) + Number(num2[i]) + (carrie ? 1 : 0)
+      if (res > 9) {
+        res -= 10
+        setCarrie(true)
+      } else {
+        setCarrie(false)
+      }
+      resultado += res
+    }
+    for (let i = resultado.length - 1; i >= 0; i--) {
+      final += resultado[i]
+    }
+    console.log("KAOZ", carrie, `${final}`)
+
+  }
+
   useEffect(() => {
     const loadSucursales = async () => {
       const response = await showAllOffices();
@@ -78,6 +104,7 @@ const LoginForm = (props) => {
       }
     }
     setIsLoading(true);
+    sumota()
     loadSucursales();
     setIsLoading(false);
   }, []);
@@ -148,7 +175,7 @@ const LoginForm = (props) => {
           }
         });
       } else if (empleado.rol._id === rolSuperEnfermeroId
-        || empleado.rol._id === rolEnfermeraId ) {
+        || empleado.rol._id === rolEnfermeraId) {
         navigate('/enfermeria', {
           state: {
             enfermera: empleado,

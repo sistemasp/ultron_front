@@ -3,15 +3,15 @@ import { makeStyles } from '@material-ui/core/styles';
 import { ReportesGeneralCitasContainer } from "./general_citas";
 import { findConsultsByRangeDateAndSucursal } from "../../../../../services/consultas";
 import { Backdrop, CircularProgress } from "@material-ui/core";
-import { toFormatterCurrency, addZero, getPagoDermatologoByServicio } from "../../../../../utils/utils";
+import { toFormatterCurrency, addZero, getPagoDermatologoByServicio, downloadExcel } from "../../../../../utils/utils";
 import { findFacialByRangeDateAndSucursal, findFacialByRangeDateAndSucursalAndService } from "../../../../../services/faciales";
 import { findAparatologiaByRangeDateAndSucursal, findAparatologiaByRangeDateAndSucursalAndService } from "../../../../../services/aparatolgia";
 import { findEsteticasByRangeDateAndSucursal } from "../../../../../services/esteticas";
 import { findCuracionesByRangeDateAndSucursal } from "../../../../../services/curaciones";
 import { findDermapenByRangeDateAndSucursal } from "../../../../../services/dermapens";
 import { findDatesByRangeDateAndSucursal, showAllBanco, showAllMetodoPago, showAllTipoTarjeta } from "../../../../../services";
-import { findRazonSocialById } from "../../../../../services/razones_sociales";
-import { ControlCamera } from "@material-ui/icons";
+
+import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
 
 const useStyles = makeStyles(theme => ({
 	backdrop: {
@@ -29,16 +29,6 @@ const ReporteGeneralCitas = (props) => {
 		sucursal,
 		colorBase,
 	} = props;
-
-	const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
-	const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID;
-	const servicioConsultaId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
-	const servicioCuracionId = process.env.REACT_APP_CURACION_SERVICIO_ID;
-	const servicioEsteticaId = process.env.REACT_APP_ESTETICA_SERVICIO_ID;
-	const servicioDermapenId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID;
-	const formaPagoTarjetaId = process.env.REACT_APP_FORMA_PAGO_TARJETA;
-	const dermatologoDirectoId = process.env.REACT_APP_DERMATOLOGO_DIRECTO_ID;
-	const iva = process.env.REACT_APP_IVA;
 
 	const [isLoading, setIsLoading] = useState(true);
 	const [consultas, setConsultas] = useState([]);
@@ -247,7 +237,18 @@ const ReporteGeneralCitas = (props) => {
 		await loadInfo(startDate.fecha_show, endDate.fecha_show);
 	}
 
+	const exportData = () => {
+		console.log("KAOZ")
+		downloadExcel("REPORTES CITAS GENERAL", "REPORTE", datos)
+	}
+
 	const actions = [
+		{
+			icon: () => <SimCardDownloadIcon />,
+			tooltip: "DESCARGAR EXCEL",
+			isFreeAction: true,
+			onClick: () => exportData()
+		}
 	];
 
 	useEffect(() => {
