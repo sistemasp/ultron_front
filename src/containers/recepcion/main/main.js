@@ -45,6 +45,7 @@ import InventariosForm from '../../basicos/inventarios';
 import { ButtonCustom } from '../../../components/basic/ButtonCustom';
 import PieChartIcon from '@material-ui/icons/PieChart';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import FaceRetouchingNaturalIcon from '@mui/icons-material/FaceRetouchingNatural';
 import {
 	rolRecepcionistaId,
 	rolJulioId,
@@ -267,6 +268,15 @@ export const MainContainer = props => {
 							<ListItem button key={'INVENTARIOS'} onClick={(e) => onChangeTab(e, 9, handleDrawerClose)}>
 								<ListItemIcon> <AddShoppingCartIcon /> </ListItemIcon>
 								<ListItemText primary={'INVENTARIOS'} />
+							</ListItem>
+							: ''
+					}
+
+					{
+						empleado.rol._id === rolJulioId || getInventarios() ?
+							<ListItem button key={'ESTÉTICA'} onClick={(e) => onChangeTab(e, 10, handleDrawerClose)}>
+								<ListItemIcon> <FaceRetouchingNaturalIcon /> </ListItemIcon>
+								<ListItemText primary={'ESTÉTICA'} />
 							</ListItem>
 							: ''
 					}

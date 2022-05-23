@@ -95,9 +95,3 @@ export const productoConsultaObj = {
     _id: productoConsultaId,
     nombre: "CONSULTAS",
 }
-
-
-//////////////////////////////// CENTINELA ///////////////////
-
-export const centinelaProveedorOtroId = process.env.REACT_APP_CENTINELA_PROVEEDOR_OTRO_ID;
-export const centinelaAlmacenOcciId = process.env.REACT_APP_CENTINELA_ALMACEN_OCCI_ID;

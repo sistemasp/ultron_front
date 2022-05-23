@@ -3,42 +3,43 @@ import { Backdrop, CircularProgress, FormControl, MenuItem, Select } from '@mate
 import { Fragment } from 'react';
 import FormTraspasos from './FormTraspasos';
 import myStyles from '../../../../css';
-import { createFactura, deleteFactura, findFacturaById, updateFactura } from '../../../../services/centinela/facturas';
+import { showAllAlmacens } from '../../../../services/centinela/almacenes';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { showAllProductos } from '../../../../services/centinela/productos';
-import { showAllProveedors } from '../../../../services/centinela/proveedores';
-import { showAllUnidades } from '../../../../services/centinela/unidades';
-import { createRegistro } from '../../../../services/centinela/registros';
+// import { createRegistroFactura } from '../../../../services/centinela/registrotraspasos';
 import { responseCodeCreate, responseCodeOK } from '../../../../utils/constants';
-import { toFormatterCurrency } from '../../../../utils/utils';
+import { showAllUnidades } from '../../../../services/centinela/unidades';
+import { createRegistroTraspaso, deleteRegistroTraspaso } from '../../../../services/centinela/registrotraspasos';
+import { createTraspaso, findTraspasoById } from '../../../../services/centinela/traspasos';
 
 const ModalTraspasos = (props) => {
 
   const {
     open,
     onClose,
-    loadFacturas,
     colorBase,
-    factura,
+    traspaso,
+    loadSolicitudesEnviadas,
+    loadSolicitudesRecibidas,
   } = props;
 
   const titulo = "REGISTROS";
 
   const [isLoading, setIsLoading] = useState(false);
-  const [values, setValues] = useState({});
+  const [values, setValues] = useState({
+    ...traspaso,
+  });
   const [registro, setRegistro] = useState({});
+  const [almacenes, setAlmacenes] = useState([]);
   const [productos, setProductos] = useState([]);
-  const [proveedores, setProveedores] = useState([]);
   const [unidades, setUnidades] = useState([]);
 
   const classes = myStyles(colorBase)();
 
   const columns = [
+    { title: 'CANTIDAD', field: 'cantidad' },
     { title: 'CÓDIGO', field: 'producto.codigo' },
     { title: 'DESCRIPCIÓN', field: 'producto.descripcion' },
-    { title: 'PIEZAS', field: 'piezas' },
-    { title: 'COSTO', field: 'costo_moneda' },
-    { title: 'COSTO UNITARIO', field: 'costo_unitario_moneda' },
   ];
 
   const options = {
@@ -65,9 +66,9 @@ const ModalTraspasos = (props) => {
   }
 
   const handleOnClickEliminar = async (e, rowData) => {
-    const response = await deleteFactura(rowData.id);
+    const response = await deleteRegistroTraspaso(rowData.id);
     if (`${response.status}` === responseCodeOK) {
-      findFactura();
+      findTraspaso();
     }
   }
 
@@ -79,21 +80,21 @@ const ModalTraspasos = (props) => {
     },
   ];
 
-
-  const loadProductos = async () => {
-    const response = await showAllProductos();
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      const resProductos = response.data;
-      setProductos(resProductos);
-    }
+  const handleChange = (e) => {
+    setRegistro({
+      ...registro,
+      [e.target.name]: e.target.value.toUpperCase()
+    });
   }
 
-  const loadProveedores = async () => {
-    const response = await showAllProveedors();
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      const resProveedores = response.data;
-      setProveedores(resProveedores);
+  const findTraspaso = async () => {
+    setIsLoading(true);
+    const response = await findTraspasoById(traspaso.id);
+    if (`${response.status}` === responseCodeOK) {
+      const resTraspaso = response.data;
+      setValues(resTraspaso);
     }
+    setIsLoading(false);
   }
 
   const loadUnidades = async () => {
@@ -104,28 +105,30 @@ const ModalTraspasos = (props) => {
     }
   }
 
-  const handleChange = (e) => {
-    setValues({
-      ...values,
-      [e.target.name]: e.target.value.toUpperCase()
-    });
-  }
-
-  const handleChangeRegistro = (e) => {
-    setRegistro({
-      ...registro,
-      [e.target.name]: e.target.value.toUpperCase()
-    });
-  }
-
-  const handleChangeProveedor = (e, newValue) => {
+  const loadAlmacenes = async () => {
     setIsLoading(true);
-    setValues({
-      ...values,
-      proveedor: newValue,
-    });
+    const response = await showAllAlmacens();
+    if (`${response.status}` === responseCodeOK) {
+      setAlmacenes(response.data);
+    }
     setIsLoading(false);
-  };
+  }
+
+  const loadProductos = async () => {
+    setIsLoading(true);
+    const response = await showAllProductos();
+    if (`${response.status}` === responseCodeOK) {
+      setProductos(response.data);
+    }
+    setIsLoading(false);
+  }
+
+  const handleClickGuardar = async (values) => {
+    await createTraspaso(values);
+    loadSolicitudesEnviadas();
+    loadSolicitudesRecibidas();
+    onClose();
+  }
 
   const handleChangeProducto = (e, newValue) => {
     setIsLoading(true);
@@ -136,118 +139,43 @@ const ModalTraspasos = (props) => {
     setIsLoading(false);
   };
 
-  const handleChangeUnidadEntrada = (e, newValue) => {
-    setIsLoading(true);
-    setRegistro({
-      ...registro,
-      unidad_entrada: newValue,
-    });
-    setIsLoading(false);
-  };
 
-  const handleChangeUnidadSalida = (e, newValue) => {
+  const handleChangeAlmacen = async (e, newValue) => {
     setIsLoading(true);
-    setRegistro({
-      ...registro,
-      unidad_salida: newValue,
-    });
-    setIsLoading(false);
-  };
-
-  const handleChangSinCaducidad = (event) => {
-    const newValue = !registro.sin_caducidad;
-    setRegistro({
-      ...registro,
-      sin_caducidad: newValue,
-    });
-    if (newValue) {
-      delete registro.caducidad;
+    const newValues = {
+      ...values,
+      almacen_origen: newValue,
     }
-  }
+    const response = await createTraspaso(newValues);
+    if (`${response.status}` === responseCodeCreate) {
+      findTraspaso();
+    }
+  };
 
-  const findFactura = async () => {
+  const handleChangeUnidad = (e, newValue) => {
     setIsLoading(true);
-    const response = await findFacturaById(factura.id);
-    if (`${response.status}` === responseCodeOK) {
-      const resFactura = response.data;
-      resFactura.registros.map(item => {
-        item.costo_moneda = toFormatterCurrency(item.costo);
-        item.costo_unitario_moneda = toFormatterCurrency(item.costo / item.piezas);
-      });
-      setValues(resFactura);
-      setIsLoading(false);
+    setRegistro({
+      ...registro,
+      unidad: newValue,
+    });
+    setIsLoading(false);
+  };
+
+  const handleClickAgregar = async (registro) => {
+    registro.traspaso = traspaso.id;
+    const resRegistro = await createRegistroTraspaso(registro);
+    if (`${resRegistro.status}` === responseCodeCreate) {
+      findTraspaso();
     }
   }
 
   const loadAll = async () => {
     setIsLoading(true);
-    await findFactura();
-    await loadProductos();
-    await loadProveedores();
-    await loadUnidades();
+    findTraspaso();
+    loadAlmacenes();
+    loadUnidades();
+    loadProductos();
     setIsLoading(false);
-  }
-
-  const handleClickGuardar = async (values) => {
-    setIsLoading(true);
-    const response = await createFactura(values);
-    // const response = !values.id ? await createFactura(values) : await updateFactura(values.id, values);
-    if (`${response.status}` === responseCodeOK
-      || `${response.status}` === responseCodeCreate) {
-      loadFacturas();
-      onClose();
-      setIsLoading(false);
-    }
-  }
-
-  const handleClickActualizar = async (values) => {
-    setIsLoading(true);
-    const response = await createFactura(values);
-    // const response = !values.id ? await createFactura(values) : await updateFactura(values.id, values);
-    if (`${response.status}` === responseCodeOK
-      || `${response.status}` === responseCodeCreate) {
-      findFactura();
-      setIsLoading(false);
-    }
-  }
-
-  const handleChangeFechaCaducidad = async (date) => {
-    setIsLoading(true);
-    setRegistro({
-      ...registro,
-      caducidad: date,
-    });
-    setIsLoading(false);
-  };
-
-  const handleChangeFecha = async (date) => {
-    setIsLoading(true);
-    setValues({
-      ...values,
-      fecha: date,
-    });
-    setIsLoading(false);
-  };
-
-
-  const handleClickAgregar = async (registro) => {
-    registro.factura = factura.id;
-    const resRegistro = await createRegistro(registro);
-    if (`${resRegistro.status}` === responseCodeCreate) {
-      await createFactura(values);
-      // setRegistro({
-      //   piezas: '',
-      //   producto: {},
-      //   costo: '',
-      //   unidad_entrada: {},
-      //   contenido: '',
-      //   unidad_salida: {},
-      //   lote: '',
-      //   caducidad: '',
-      //   sin_caducidad: false,
-      // });
-      findFactura();
-    }
   }
 
   useEffect(() => {
@@ -265,26 +193,21 @@ const ModalTraspasos = (props) => {
             open={open}
             onClickCancel={onClose}
             onClickGuardar={handleClickGuardar}
-            onClickActualizar={handleClickActualizar}
             onChange={handleChange}
-            onChangeRegistro={handleChangeRegistro}
-            onClickAgregar={handleClickAgregar}
-            onChangeProveedor={handleChangeProveedor}
             onChangeProducto={handleChangeProducto}
-            onChangeUnidadEntrada={handleChangeUnidadEntrada}
-            onChangeUnidadSalida={handleChangeUnidadSalida}
-            onChangeFechaCaducidad={(e) => handleChangeFechaCaducidad(e)}
-            onChangeFecha={(e) => handleChangeFecha(e)}
-            onChangSinCaducidad={(e) => handleChangSinCaducidad(e)}
+            onChangeAlmacen={handleChangeAlmacen}
+            onChangeUnidad={handleChangeUnidad}
+            onClickAgregar={handleClickAgregar}
             isLoading={isLoading}
             productos={productos}
-            proveedores={proveedores}
+            almacenes={almacenes}
             unidades={unidades}
             titulo={titulo}
             columns={columns}
             registro={registro}
-            // actions={actions}
-            options={options} />
+            actions={actions}
+            options={options}
+            colorBase={colorBase} />
           : <Backdrop className={classes.backdrop} open={isLoading} >
             <CircularProgress color="inherit" />
           </Backdrop>

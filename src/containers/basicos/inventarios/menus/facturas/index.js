@@ -7,11 +7,17 @@ import { FacturasContainer } from "./facturas";
 import {
 	showAllFacturas,
 	createFactura,
+	findFacturaByAlmacen,
 } from "../../../../../services/centinela/facturas";
 import { dateToString } from "../../../../../utils/utils";
 import EditIcon from '@material-ui/icons/Edit';
-import { centinelaAlmacenOcciId, centinelaProveedorOtroId, responseCodeCreate, responseCodeOK } from "../../../../../utils/constants";
+import { responseCodeCreate, responseCodeOK } from "../../../../../utils/constants";
 import { toFormatterCurrency } from '../../../../../utils/utils';
+import { 
+	centinelaAlmacenOcciId,
+	centinelaProveedorOtroId
+} from "../../../../../utils/centinela_constants";
+import { sucursalToAlmacen } from "../../../../../utils/centinela_utils";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -35,6 +41,7 @@ const Facturas = (props) => {
 		sucursal,
 	} = props;
 
+	const almacenId = sucursalToAlmacen(sucursal._id); 
 	const token = empleado.access_token;
 
 	const columns = [
@@ -137,7 +144,7 @@ const Facturas = (props) => {
 	}
 
 	const loadFacturas = async () => {
-		const response = await showAllFacturas();
+		const response = await findFacturaByAlmacen(almacenId);
 		if (`${response.status}` === responseCodeOK) {
 			response.data.forEach(item => {
 				item.fecha_show = dateToString(item.fecha);

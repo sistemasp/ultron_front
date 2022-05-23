@@ -28,6 +28,18 @@ export const findFacturaById = async (idFactura) => {
     }
 }
 
+export const findFacturaByAlmacen = async (almacenId) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/factura/almacen/${almacenId}`,
+            method: 'GET'
+        });
+        return response;
+    } catch (error) {
+        console.log('findFacturaByAlmacen', error);
+    }
+}
+
 export const createFactura = async (factura) => {
     try {
         const response = await axios({

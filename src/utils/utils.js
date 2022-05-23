@@ -1,4 +1,12 @@
-import { sucursalFederalismoId, sucursalOccidentalId, tipoCitaDerivado, tipoCitaDirecto, tipoCitaRealizado, tipoCitaRevisado } from "./constants";
+import { 
+  sucursalFederalismoId,
+  sucursalOccidentalId,
+  tipoCitaDerivado,
+  tipoCitaDirecto,
+  tipoCitaRealizado,
+  tipoCitaRevisado
+} from "./constants"
+import XLSX from 'xlsx'
 
 const sucursalManuelAcunaId = process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID;
 const sucursalRubenDarioId = process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID;
@@ -203,4 +211,21 @@ export const productoMinimoSucursal = (producto, sucursalId) => {
       break;
   }
   return minimo;
+}
+
+export const downloadExcel = (fileName, sheetName, data) => {
+  console.log("KAOZ", fileName, sheetName, data)
+  const newData = data.map(row => {
+    delete row.tableData
+    return row
+  })
+  const workSheet = XLSX.utils.json_to_sheet(newData)
+  const workBook = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(workBook, workSheet, sheetName)
+  //Buffer
+  let buf = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" })
+  //Binary string
+  XLSX.write(workBook, { bookType: "xlsx", type: "binary" })
+  //Download
+  XLSX.writeFile(workBook, `${fileName}.xlsx`)
 }

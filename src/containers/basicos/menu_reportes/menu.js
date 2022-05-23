@@ -104,6 +104,7 @@ export const MenuContainer = props => {
 					<Tab label="PAGOS PATOLÓGOS" {...a11yProps(5)} />
 					<Tab label="CORTES" {...a11yProps(6)} />
 					<Tab label="SUBSECUENCIA" {...a11yProps(7)} />
+					<Tab label="CURACIONES" {...a11yProps(8)} />
 				</Tabs>
 			</AppBar>
 
@@ -151,6 +152,12 @@ export const MenuContainer = props => {
 			</TabPanel>
 			<TabPanel value={value} index={7}>
 				<ReporteSubsecuencias
+					empleado={empleado}
+					colorBase={colorBase}
+					sucursal={sucursal} />
+			</TabPanel>
+			<TabPanel value={value} index={8}>
+				<ReportesCuraciones
 					empleado={empleado}
 					colorBase={colorBase}
 					sucursal={sucursal} />

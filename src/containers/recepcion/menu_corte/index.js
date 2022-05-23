@@ -115,7 +115,6 @@ const Corte = (props) => {
     { title: 'DESCRIPCIÓN', field: 'descripcion' },
     { title: 'RECEPCIONISTA', field: 'recepcionista.nombre' },
     { title: 'CANTIDAD', field: 'cantidad_moneda' },
-
   ];
 
   const options = {
@@ -137,7 +136,7 @@ const Corte = (props) => {
 
   const optionsDetail = {
     headerStyle: {
-      backgroundColor: process.env.REACT_APP_TOP_BAR_DETAIL_COLOR,
+      backgroundColor: colorBase,
       color: '#FFF',
       fontWeight: 'bolder',
       fontSize: '16px',
@@ -381,19 +380,6 @@ const Corte = (props) => {
       });
       setEntradas(data);
       await loadDataEntradas(tipoEntradas, data, formaPagos);
-      setIsLoading(false);
-    }
-  }
-
-  const loadPagosAnticipados = async (tipoEntradas, formaPagos, hora_apertura, hora_cierre) => {
-    const response = await showEntradasTodayBySucursalAndHoraAplicacionPA(sucursal, hora_apertura, hora_cierre ? hora_cierre : new Date());
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      const data = response.data;
-      data.map((item) => {
-        item.cantidad_moneda = toFormatterCurrency(item.cantidad);
-      });
-      setPagosAnticipados(data);
-      await loadDataPagosAnticipados(tipoEntradas, data, formaPagos);
       setIsLoading(false);
     }
   }
