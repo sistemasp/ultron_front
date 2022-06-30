@@ -3,6 +3,7 @@ import ModalFormPaciente from './ModalFormPaciente';
 import {
   showAllSexos,
 } from "../../../services";
+import {stateMexico} from './states'
 
 const ModalPaciente = (props) => {
   const {
@@ -25,6 +26,7 @@ const ModalPaciente = (props) => {
     telefono: paciente.telefono,
     email: paciente.email,
     sexo: paciente.sexo,
+    estado: paciente.estado,
     fecha_nacimiento: paciente.fecha_nacimiento ? paciente.fecha_nacimiento : '',
     familiar: false,
     quien_captura: paciente._id ? paciente.quien_captura : empleadoId,
@@ -41,6 +43,13 @@ const ModalPaciente = (props) => {
     setValues({
       ...values,
       sexo: newValue
+    })
+  }
+
+  const handleChangeEstado = (e, newValue) => {
+    setValues({
+      ...values,
+      estado: newValue
     })
   }
 
@@ -73,6 +82,7 @@ const ModalPaciente = (props) => {
   }, []);
 
   return (
+    <>
     <ModalFormPaciente
       aria-labelledby="simple-modal-title"
       aria-describedby="simple-modal-description"
@@ -88,9 +98,12 @@ const ModalPaciente = (props) => {
       onChangeSexo={handleChangeSexo}
       onChangeEmail={handleChangeEmail}
       onChangeFamiliar={handleChangeFamiliar}
+      onChangeEstado={handleChangeEstado}
       colorBase={colorBase}
-      sexos={sexos} />
-
+      sexos={sexos} 
+      state={stateMexico}
+      />
+      </>
   );
 }
 
