@@ -5,6 +5,9 @@ import TableComponent from '../../../../../components/table/TableComponent';
 import { ButtonCustom } from '../../../../../components/basic/ButtonCustom';
 import ModalFacturas from '../../../../../components/modales/inventarios/facturas';
 import ModalTraspasos from '../../../../../components/modales/inventarios/traspasos';
+import ModalAsignarTraspasos from '../../../../../components/modales/inventarios/asignar_traspasos';
+import ModalVerTraspasos from '../../../../../components/modales/inventarios/ver_traspasos';
+import ModalRevisarTraspasos from '../../../../../components/modales/inventarios/revisar_traspasos';
 
 export const TraspasosContainer = (props) => {
 
@@ -12,18 +15,29 @@ export const TraspasosContainer = (props) => {
     empleado,
     tituloEnviados,
     tituloRecibidos,
-    columns,
-    facturas,
+    columnsEnviadas,
+    columnsRecibidas,
+    solicitudesEnviadas,
+    solicitudesRecibidas,
     open,
+    openVerTraspaso,
+    openRevisarTraspaso,
+    openAsignar,
     handleClose,
-    loadFacturas,
-    factura,
+    loadSolicitudesEnviadas,
+    loadSolicitudesRecibidas,
+    traspaso,
     sucursal,
-    actions,
+    almacen,
+    actionsEnviados,
+    actionsRecibidos,
     components,
     options,
     handleOpen,
     colorBase,
+    setMessage,
+    setSeverity,
+    setOpenAlert,
   } = props;
 
   const classes = myStyles(colorBase)();
@@ -37,8 +51,51 @@ export const TraspasosContainer = (props) => {
             onClose={handleClose}
             sucursal={sucursal}
             colorBase={colorBase}
-            loadProductos={loadFacturas}
-            factura={factura}
+            loadSolicitudesEnviadas={loadSolicitudesEnviadas}
+            loadSolicitudesRecibidas={loadSolicitudesRecibidas}
+            traspaso={traspaso}
+            empleado={empleado} /> : ''
+      }
+       {
+        openVerTraspaso ?
+          <ModalVerTraspasos
+            open={openVerTraspaso}
+            onClose={handleClose}
+            sucursal={sucursal}
+            almacen={almacen}
+            colorBase={colorBase}
+            loadSolicitudesEnviadas={loadSolicitudesEnviadas}
+            loadSolicitudesRecibidas={loadSolicitudesRecibidas}
+            traspaso={traspaso}
+            empleado={empleado} /> : ''
+      }
+      {
+        openRevisarTraspaso ?
+          <ModalRevisarTraspasos
+            open={openRevisarTraspaso}
+            onClose={handleClose}
+            sucursal={sucursal}
+            almacen={almacen}
+            colorBase={colorBase}
+            loadSolicitudesEnviadas={loadSolicitudesEnviadas}
+            loadSolicitudesRecibidas={loadSolicitudesRecibidas}
+            traspaso={traspaso}
+            empleado={empleado} /> : ''
+      }
+      {
+        openAsignar ?
+          <ModalAsignarTraspasos
+            open={openAsignar}
+            onClose={handleClose}
+            sucursal={sucursal}
+            almacen={almacen}
+            colorBase={colorBase}
+            loadSolicitudesEnviadas={loadSolicitudesEnviadas}
+            loadSolicitudesRecibidas={loadSolicitudesRecibidas}
+            traspaso={traspaso}
+            setMessage={setMessage}
+            setSeverity={setSeverity}
+            setOpenAlert={setOpenAlert}
             empleado={empleado} /> : ''
       }
       <Grid container spacing={2}>
@@ -55,22 +112,21 @@ export const TraspasosContainer = (props) => {
         </Grid>
         <Grid item xs={6}>
           <TableComponent
-            titulo={tituloEnviados}
-            columns={columns}
-            data={facturas}
-            actions={actions}
-            options={options}
-            components={components} />
+            titulo={tituloRecibidos}
+            columns={columnsRecibidas}
+            data={solicitudesRecibidas}
+            actions={actionsRecibidos}
+            options={options} />
         </Grid>
         <Grid item xs={6}>
           <TableComponent
-            titulo={tituloRecibidos}
-            columns={columns}
-            data={facturas}
-            actions={actions}
-            options={options}
-            components={components} />
+            titulo={tituloEnviados}
+            columns={columnsEnviadas}
+            data={solicitudesEnviadas}
+            actions={actionsEnviados}
+            options={options} />
         </Grid>
+
       </Grid>
     </Fragment>
   );

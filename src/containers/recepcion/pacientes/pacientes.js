@@ -27,12 +27,13 @@ export const PacientesContainer = (props) => {
     onClickGuardar,
     onClickcConsulta,
     colorBase,
+    setIsLoading,
   } = props;
 
   const classes = myStyles(colorBase)();
 
   const pacientes = query =>
-    new Promise((resolve, reject) => {
+  new Promise((resolve, reject) => {
       const url = `${baseUrl}/paciente/remote?per_page=${query.pageSize}&page=${query.page + 1}&search=${query.search}`
       fetch(url, {
         headers: {
@@ -48,6 +49,41 @@ export const PacientesContainer = (props) => {
           })
         })
     });
+
+const pacientesSucrusal = () => {
+  setIsLoading(true);
+  const JsonFields = ["Nombre","Email","Genero","Fecha nacimiento"]
+
+  let csvStr = JsonFields.join(",") + "\n";
+
+  const url = `${baseUrl}/paciente/`
+  fetch(url, {
+    headers: {
+      Authorization: `Bearer ${empleado.access_token}`
+    }
+  })
+    .then(response => response.json())
+    .then(result => {
+      result.forEach(({nombres, apellidos, email, sexo, fecha_nacimiento}) => {
+        const Name          = nombres +' '+ apellidos;
+        const Email         = email ? email : 'NA';
+        const Gender        = sexo ? sexo.nombre : 'NA';
+        const Date          = fecha_nacimiento;
+    
+        csvStr += Name + ',' + Email + ',' + Gender + ','  + Date + "\n";
+      })
+
+      const exportName = 'Pacientes_' + new Date().toLocaleDateString('es-MX');
+      var dataStr = "data:text/plain;charset=utf-8," + encodeURIComponent(csvStr);
+      var downloadAnchorNode = document.createElement('a');
+      downloadAnchorNode.setAttribute("href",     dataStr);
+      downloadAnchorNode.setAttribute("download", exportName + ".csv");
+      document.body.appendChild(downloadAnchorNode); // required for firefox
+      downloadAnchorNode.click();
+      downloadAnchorNode.remove();
+      setIsLoading(false);
+    })
+}
 
   return (
     <Fragment>
@@ -91,6 +127,16 @@ export const PacientesContainer = (props) => {
             onClick={handleOpen}
             text='NUEVO PACIENTE' />
         </Grid>
+
+        <Grid style={{marginLeft: 10}} item xs={12} sm={4}>
+          <ButtonCustom
+            className={classes.button}
+            color="primary"
+            variant="contained"
+            onClick={pacientesSucrusal}
+            text='Obtener Pacientes' />
+        </Grid>
+
         <Grid item xs={12}>
           <TableComponent
             titulo={titulo}

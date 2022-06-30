@@ -28,6 +28,7 @@ const ModalFormPaciente = (props) => {
     handleSubmit,
     onChange,
     onChangeSexo,
+    onChangeEstado,
     onChangeEmail,
     onChangeFamiliar,
     dataComplete,
@@ -38,6 +39,7 @@ const ModalFormPaciente = (props) => {
     sexos,
     colorBase,
     sucursal,
+    state,
   } = props;
 
   const classes = myStyles(colorBase)();
@@ -135,6 +137,17 @@ const ModalFormPaciente = (props) => {
                     options={sexos} />
                 </FormControl>
               </Grid>
+              { sucursal._id === process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID &&
+                <Grid item xs={12}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <ComboCustom
+                    label='ESTADO'
+                    value={values.estado}
+                    onChange={onChangeEstado}
+                    options={state} />
+                </FormControl>
+              </Grid>
+             }
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
                   className={classes.buttonCancel}

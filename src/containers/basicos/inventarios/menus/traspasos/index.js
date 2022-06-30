@@ -4,179 +4,269 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import myStyles from "../../../../../css";
 import { TraspasosContainer } from "./traspasos";
-import { showAllFacturas } from "../../../../../services/centinela/facturas";
 import { dateToString } from "../../../../../utils/utils";
 import EditIcon from '@material-ui/icons/Edit';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import { responseCodeCreate } from "../../../../../utils/constants";
+import { sucursalToAlmacen } from "../../../../../utils/centinela_utils";
+import { createTraspaso, deleteTraspaso, findTraspasosByAlmacenDestino, findTraspasosByAlmacenOrigen } from "../../../../../services/centinela/traspasos";
+import { deleteRegistroTraspaso } from "../../../../../services/centinela/registrotraspasos";
+import { centinelaBackgroundColorEnProceso, centinelaBackgroundColorEnviado, centinelaBackgroundColorOk, centinelaStatusEnProcesoId, centinelaStatusEnviadoId, centinelaStatusFinalizadoId, centinelaStatusPendienteId, centinelaTextColorEnProceso, centinelaTextColorEnviado, centinelaTextColorOK } from "../../../../../utils/centinela_constants";
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 function Alert(props) {
-	return <MuiAlert elevation={6} variant="filled" {...props} />;
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const Traspasos = (props) => {
 
-	const classes = myStyles();
+  const classes = myStyles();
 
-	const [facturas, setFacturas] = useState([]);
-	const [factura, setFactura] = useState({});
-	const [open, setOpen] = useState(false);
-	const [isLoading, setIsLoading] = useState(false);
-	const [message, setMessage] = useState('');
-	const [severity, setSeverity] = useState('success');
-	const [openAlert, setOpenAlert] = useState(false);
+  const [solicitudesEnviadas, setSolicitudesEnviadas] = useState([]);
+  const [solicitudesRecibidas, setSolicitudesRecibidas] = useState([]);
+  const [traspaso, setTraspaso] = useState({});
+  const [open, setOpen] = useState(false);
+  const [openVerTraspaso, setOpenVerTraspaso] = useState(false);
+  const [openRevisarTraspaso, setOpenRevisarTraspaso] = useState(false);
+  const [openAsignar, setOpenAsignar] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState('');
+  const [severity, setSeverity] = useState('success');
+  const [openAlert, setOpenAlert] = useState(false);
 
-	const {
-		empleado,
-		colorBase,
-		sucursal,
-	} = props;
+  const {
+    empleado,
+    colorBase,
+    sucursal,
+  } = props;
 
-	const columns = [
-		{ title: 'FECHA', field: 'fecha_show' },
-		{ title: 'ALMACEN', field: 'almacen.descripcion' },
-		{ title: 'STATUS', field: 'proveedor.nombre' },
-	];
+  const almacen = sucursalToAlmacen(sucursal._id);
 
-	const options = {
-		headerStyle: {
-			backgroundColor: colorBase,
-			color: '#FFF',
-			fontWeight: 'bolder',
-			fontSize: '18px',
-			textAlign: 'center',
-		},
-		cellStyle: {
-			fontWeight: 'bolder',
-			fontSize: '16px',
-			padding: '5px',
-			textAlign: 'center',
-		},
-		exportAllData: true,
-		exportButton: empleado.super_admin,
-		exportDelimiter: ';',
-	}
+  const columnsEnviadas = [
+    { title: 'FECHA', field: 'fecha_show' },
+    { title: 'ALMACEN', field: 'almacen_origen.descripcion' },
+    { title: 'STATUS', field: 'status.descripcion' },
+  ];
 
-	const handleOnClickEditar = (event, rowData) => {
-		setFactura(rowData);
-		setOpen(true);
-	}
+  const columnsRecibidas = [
+    { title: 'FECHA', field: 'fecha_show' },
+    { title: 'ALMACEN', field: 'almacen_destino.descripcion' },
+    { title: 'STATUS', field: 'status.descripcion' },
+  ];
 
-	const handleOnClickEliminar = (event, rowData) => {
-	
-	}
+  const options = {
+    rowStyle: rowData => {
+      return {
+        color: rowData.status.id == centinelaStatusEnviadoId ? centinelaTextColorEnviado :
+          (rowData.status.id == centinelaStatusFinalizadoId ? centinelaTextColorOK :
+            (rowData.status.id == centinelaStatusEnProcesoId ? centinelaTextColorEnProceso : '')),
+        backgroundColor: rowData.status.id == centinelaStatusEnviadoId ? centinelaBackgroundColorEnviado :
+          (rowData.status.id == centinelaStatusFinalizadoId ? centinelaBackgroundColorOk :
+            (rowData.status.id == centinelaStatusEnProcesoId ? centinelaBackgroundColorEnProceso : ''))
+      };
+    },
+    headerStyle: {
+      backgroundColor: colorBase,
+      color: '#FFF',
+      fontWeight: 'bolder',
+      fontSize: '18px',
+      textAlign: 'center',
+    },
+    cellStyle: {
+      fontWeight: 'bolder',
+      fontSize: '16px',
+      padding: '5px',
+      textAlign: 'center',
+    },
+    exportAllData: true,
+    exportButton: empleado.super_admin,
+    exportDelimiter: ';',
+  }
 
-	const actions = [
-		{
-			icon: EditIcon,
-			tooltip: 'EDITAR',
-			onClick: handleOnClickEditar
-		},
-		{
-			icon: EditIcon,
-			tooltip: 'ELIMINAR',
-			onClick: handleOnClickEliminar
-		},
-	];
+  const handleOnClickVer = (event, rowData) => {
+    setTraspaso(rowData);
+    setOpenVerTraspaso(true);
+  }
 
-	const onChangeActions = (e, rowData) => {
-		const action = e.target.value;
-		switch (action) {
-			case 'EDITAR':
-				handleOnClickEditar(e, rowData);
-				break;
-			case 'ELIMINAR':
-				handleOnClickEliminar(e, rowData);
-				break;
-		}
-	}
+  const handleOnClickRevisado = (event, rowData) => {
+    setTraspaso(rowData);
+    setOpenRevisarTraspaso(true);
+  }
+  
+  const handleOnClickEditar = (event, rowData) => {
+    setTraspaso(rowData);
+    setOpen(true);
+  }
 
-	const components = {
-		Actions: props => {
-			return props.actions.length > 0
-				? <Fragment>
-					<FormControl variant="outlined" className={classes.formControl}>
-						<Select
-							labelId="simple-select-outlined-actions"
-							id="simple-select-outlined-actions"
-							onChange={(e) => onChangeActions(e, props.data)}
-							label="ACCIONES">
-							{
-								props.actions.map((item, index) => {
-									return <MenuItem
-										key={index}
-										value={item.tooltip}
-									>{item.tooltip}</MenuItem>
-								})
-							}
-						</Select>
-					</FormControl>
-				</Fragment>
-				: ''
-		}
-	};
+  const handleOnClickAsignar = async (event, rowData) => {
+    setTraspaso(rowData);
+    const newTraspaso = {
+      ...rowData,
+      status: centinelaStatusEnProcesoId,
+    };
+    const response = await createTraspaso(newTraspaso);
+    if (`${response.status}` === responseCodeCreate) {
+      setOpenAsignar(true);
+    }
+  }
 
-	const handleOpen = () => {
-		setOpen(true);
-	}
+  const handleOnClickEliminar = async (event, rowData) => {
+    setIsLoading(true);
+    rowData.registros.map(async (registro) => {
+      await deleteRegistroTraspaso(registro.id);
+    });
+    await deleteTraspaso(rowData.id);
+    loadSolicitudesEnviadas();
+    setIsLoading(false);
+  }
 
-	const handleClose = () => {
-		setOpen(false);
-	}
+  const actionsEnviados = [
+    {
+      icon: VisibilityIcon,
+      tooltip: 'VER',
+      onClick: handleOnClickVer
+    },
+    rowData => {
+      return rowData.status.id == centinelaStatusPendienteId ?
+        {
+          icon: EditIcon,
+          tooltip: 'EDITAR',
+          onClick: handleOnClickEditar
+        } : ''
+    },
+    rowData => {
+      return rowData.status.id == centinelaStatusPendienteId ? {
+        icon: DeleteForeverIcon,
+        tooltip: 'ELIMINAR',
+        onClick: handleOnClickEliminar
+      } : ''
+    },
+    rowData => {
+      return rowData.status.id == centinelaStatusEnviadoId ? {
+        icon: CheckBoxIcon,
+        tooltip: 'REVISAR',
+        onClick: handleOnClickRevisado
+      } : ''
+    },
+  ];
 
-	const handleCloseAlert = () => {
-		setOpenAlert(false);
-	};
+  const actionsRecibidos = [
+    {
+      icon: VisibilityIcon,
+      tooltip: 'VER',
+      onClick: handleOnClickVer
+    },
+    rowData => {
+      return rowData.status.id == centinelaStatusPendienteId || rowData.status.id == centinelaStatusEnProcesoId ?
+        {
+          icon: AssignmentTurnedInIcon,
+          tooltip: 'ASIGNAR',
+          onClick: handleOnClickAsignar
+        } : ''
+    },
+  ];
 
-	const loadFacturas = async () => {
-		const response = await showAllFacturas();
-		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-			const resFacturas = response.data.forEach(item => {
-				item.fecha_show = dateToString(item.fecha);
-			});
-			setFacturas(response.data);
-		}
-	};
+  const handleOpen = async () => {
+    const traspaso = {
+      almacen_origen: almacen,
+      almacen_destino: almacen,
+      status: centinelaStatusPendienteId,
+      total: 0,
+      fecha: new Date(),
+      registros: []
+    };
+    const response = await createTraspaso(traspaso);
+    if (`${response.status}` === responseCodeCreate) {
+      setTraspaso(response.data);
+      setOpen(true);
+    }
+  }
 
-	const loadAll = async () => {
-		setIsLoading(true);
-		await loadFacturas();
-		setIsLoading(false);
-	}
+  const handleClose = () => {
+    setOpen(false)
+    setOpenAsignar(false)
+    setOpenVerTraspaso(false)
+    setOpenRevisarTraspaso(false)
+  }
 
-	useEffect(() => {
-		loadAll();
-	}, []);
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
+  };
 
-	return (
-		<Fragment>
-			{
-				!isLoading ?
-					<TraspasosContainer
-						empleado={empleado}
-						columns={columns}
-						tituloEnviados='TRASPASOS ENVIADOS'
-						tituloRecibidos='TRASPASOS RECIBIDOS'
-						facturas={facturas}
-						factura={factura}
-						options={options}
-						actions={actions}
-						components={components}
-						handleOpen={handleOpen}
-						handleClose={handleClose}
-						loadFacturas={loadFacturas}
-						open={open}
-						sucursal={sucursal}
-						colorBase={colorBase} /> :
-					<Backdrop className={classes.backdrop} open={isLoading} >
-						<CircularProgress color="inherit" />
-					</Backdrop>
-			}
-			<Snackbar open={openAlert} autoHideDuration={5000} onClose={handleCloseAlert}>
-				<Alert onClose={handleCloseAlert} severity={severity}>
-					{message}
-				</Alert>
-			</Snackbar>
-		</Fragment>
-	);
+  const loadSolicitudesEnviadas = async () => {
+    const response = await findTraspasosByAlmacenDestino(almacen);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      const resSolicitudesEnviadas = response.data.forEach(item => {
+        item.fecha_show = dateToString(item.fecha);
+      });
+      setSolicitudesEnviadas(response.data);
+    }
+  };
+
+  const loadSolicitudesRecibidas = async () => {
+    const response = await findTraspasosByAlmacenOrigen(almacen);
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      const resSolicitudesResibidas = response.data.forEach(item => {
+        item.fecha_show = dateToString(item.fecha);
+      });
+      setSolicitudesRecibidas(response.data);
+    }
+  };
+
+  const loadAll = async () => {
+    setIsLoading(true);
+    await loadSolicitudesEnviadas();
+    await loadSolicitudesRecibidas();
+    setIsLoading(false);
+  }
+
+  useEffect(() => {
+    loadAll();
+  }, []);
+
+  return (
+    <Fragment>
+      {
+        !isLoading ?
+          <TraspasosContainer
+            empleado={empleado}
+            columnsEnviadas={columnsEnviadas}
+            columnsRecibidas={columnsRecibidas}
+            tituloEnviados='SOLICITUDES ENVIADAS'
+            tituloRecibidos='SOLICITUDES RECIBIDAS'
+            solicitudesEnviadas={solicitudesEnviadas}
+            solicitudesRecibidas={solicitudesRecibidas}
+            traspaso={traspaso}
+            options={options}
+            actionsEnviados={actionsEnviados}
+            actionsRecibidos={actionsRecibidos}
+            setMessage={setMessage}
+            setSeverity={setSeverity}
+            setOpenAlert={setOpenAlert}
+            handleOpen={handleOpen}
+            handleClose={handleClose}
+            loadSolicitudesEnviadas={loadSolicitudesEnviadas}
+            loadSolicitudesRecibidas={loadSolicitudesRecibidas}
+            open={open}
+            openVerTraspaso={openVerTraspaso}
+            openRevisarTraspaso={openRevisarTraspaso}
+            openAsignar={openAsignar}
+            sucursal={sucursal}
+            almacen={almacen}
+            colorBase={colorBase} /> :
+          <Backdrop className={classes.backdrop} open={isLoading} >
+            <CircularProgress color="inherit" />
+          </Backdrop>
+      }
+      <Snackbar open={openAlert} autoHideDuration={5000} onClose={handleCloseAlert}>
+        <Alert onClose={handleCloseAlert} severity={severity}>
+          {message}
+        </Alert>
+      </Snackbar>
+    </Fragment>
+  );
 }
 
 export default Traspasos;
