@@ -41,6 +41,7 @@ const Pacientes = (props) => {
 		onClickAgendarAparatologia,
 		onClickAgendarDermapen,
 		colorBase,
+		sucursal,
 	} = props;
 
 	const columns = [
@@ -49,6 +50,7 @@ const Pacientes = (props) => {
 		{ title: 'TELÉFONO', field: 'telefono' },
 		{ title: 'EMAIL', field: 'email' },
 		{ title: 'SEXO', field: 'sexo.nombre' },
+		sucursal._id === process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID ? { title: 'ESTADO', field: 'estado' } : {},
 		{ title: 'FECHA DE NACIMIENTO', field: 'fecha_nacimiento' },
 	];
 
@@ -254,7 +256,8 @@ const Pacientes = (props) => {
 						handleOpen={handleOpen}
 						handleClose={handleClose}
 						colorBase={colorBase}
-						components={components} /> :
+						components={components}
+						setIsLoading={setIsLoading}/> :
 					<Backdrop className={classes.backdrop} open={isLoading} >
 						<CircularProgress color="inherit" />
 					</Backdrop>

@@ -34,21 +34,21 @@ export const PacientesContainer = (props) => {
 
   const pacientes = query =>
   new Promise((resolve, reject) => {
-      const url = `${baseUrl}/paciente/remote?per_page=${query.pageSize}&page=${query.page + 1}&search=${query.search}`
-      fetch(url, {
-        headers: {
-          Authorization: `Bearer ${empleado.access_token}`
-        }
+  const url = `${baseUrl}/paciente/remote?per_page=${query.pageSize}&page=${query.page + 1}&search=${query.search}`
+  fetch(url, {
+    headers: {
+      Authorization: `Bearer ${empleado.access_token}`
+    }
+  })
+    .then(response => response.json())
+    .then(result => {
+      resolve({
+        data: result.data,
+        page: result.page - 1,
+        totalCount: result.total,
       })
-        .then(response => response.json())
-        .then(result => {
-          resolve({
-            data: result.data,
-            page: result.page - 1,
-            totalCount: result.total,
-          })
-        })
-    });
+    })
+});
 
 const pacientesSucrusal = () => {
   setIsLoading(true);
@@ -127,7 +127,6 @@ const pacientesSucrusal = () => {
             onClick={handleOpen}
             text='NUEVO PACIENTE' />
         </Grid>
-
         <Grid style={{marginLeft: 10}} item xs={12} sm={4}>
           <ButtonCustom
             className={classes.button}
@@ -136,7 +135,6 @@ const pacientesSucrusal = () => {
             onClick={pacientesSucrusal}
             text='Obtener Pacientes' />
         </Grid>
-
         <Grid item xs={12}>
           <TableComponent
             titulo={titulo}

@@ -82,7 +82,6 @@ const ModalPaciente = (props) => {
   }, []);
 
   return (
-    <>
     <ModalFormPaciente
       aria-labelledby="simple-modal-title"
       aria-describedby="simple-modal-description"
@@ -103,7 +102,6 @@ const ModalPaciente = (props) => {
       sexos={sexos} 
       state={stateMexico}
       />
-      </>
   );
 }
 

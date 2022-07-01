@@ -287,8 +287,7 @@ const Pacientes = (props) => {
 						handleClose={handleClose}
 						colorBase={colorBase}
 						components={components} 
-						setIsLoading={setIsLoading}
-						/> :
+						setIsLoading={setIsLoading}/> :
 					<Backdrop className={classes.backdrop} open={isLoading} >
 						<CircularProgress color="inherit" />
 					</Backdrop>
