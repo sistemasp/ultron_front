@@ -103,6 +103,7 @@ export const AgendarConsultaContainer = (props) => {
     onChangeDigitos,
   } = props;
 
+  // console.log(dermatologos, values);
   const classes = myStyles(colorBase)();
 
   const showPromovendedores = [

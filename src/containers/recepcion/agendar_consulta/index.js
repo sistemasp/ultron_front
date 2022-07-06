@@ -122,6 +122,11 @@ const AgendarConsulta = (props) => {
 	const servicioConsultaId = process.env.REACT_APP_CONSULTA_SERVICIO_ID;
 	const tratamientoConsultaId = process.env.REACT_APP_CONSULTA_TRATAMIENTO_ID;
 
+	/*Eliminar despues de Julio*/
+	const promoJulioAdriana = process.env.REACT_APP_PROMO_JULIO_ADRIANA
+	const promoJulioDaniela	= process.env.REACT_APP_PROMO_JULIO_DANIELA
+	/*---------------------------*/
+
 	const date = new Date();
 
 	const getPrecio = () => {
@@ -458,9 +463,20 @@ const AgendarConsulta = (props) => {
 		setValues({ ...values, tiempo: e.target.value });
 	}
 
-	const handleChangeDermatologos = (e) => {
-		setValues({ ...values, dermatologo: e.target.value });
-	}
+	// const handleChangeDermatologos = (e) => {
+	// 	const {_id} = sucursal;
+	// 	let esquema = dermatologos.find(x => x._id == e.target.value);
+	// 	// console.log(esquema.esquema.porcentaje_consulta === '50' ? 'Cumple' : 'No cumple' );
+	// 	// console.log('cambio dermatologos', e.target);
+	// 	// console.log('Esquema', esquema.esquema.porcentaje_consulta, '  ', values.frecuencia.nombre);
+	// 	if(sucursalManuelAcunaId === _id || sucursalRubenDarioId === _id && esquema.esquema.porcentaje_consulta === '50' && values.frecuencia.nombre === 'PRIMERA VEZ'){
+	// 		setValues({ ...values, dermatologo: e.target.value, precio: 550 });
+	// 		return
+	// 	} 
+		
+		
+	// 	setValues({ ...values, dermatologo: e.target.value, precio: getPrecio() });
+	// }
 
 	const handleChangeHoliDay = (e) => {
 		setValues({
@@ -490,7 +506,36 @@ const AgendarConsulta = (props) => {
 		setValues({ ...values, promovendedor: e.target.value });
 	}
 
+	/* Eliminar despues de Julio (Antes actualizar las funcion dermatologo y frecuencia) */
+	const getPrecioJulio = (dermatologo,frecuencia) => {
+		const {_id} = sucursal;
+
+		if((sucursalManuelAcunaId === _id || sucursalRubenDarioId === _id) && (promoJulioAdriana === dermatologo || promoJulioDaniela === dermatologo) && frecuencia === 'PRIMERA VEZ') {
+			return 550;
+		}
+
+		return getPrecio();
+	}
+	/*---------------------------*/
+
+	const handleChangeDermatologos = (e) => {
+		const {_id} = sucursal;
+		const {frecuencia} = values;
+		const newPrecio = getPrecioJulio(e.target.value, frecuencia.nombre)
+		
+		setValues({ ...values, dermatologo: e.target.value, precio: newPrecio });
+		
+		/* Regresar despues de Julio */
+		//  setValues({ ...values, dermatologo: e.target.value });
+		/*---------------------------*/
+	}
+
 	const handleChangeFrecuencia = (e, newValue) => {
+		/* Eliminar despues de Julio */
+			const newPrecio = getPrecioJulio(values.dermatologo, newValue.nombre)		 
+
+		/*---------------------------*/
+		
 		const frecuencia = newValue;
 
 		const dermatologo = dermatologos.find(item => {
@@ -505,6 +550,7 @@ const AgendarConsulta = (props) => {
 			dermatologo: frecuencia && frecuencia._id === frecuenciaPrimeraVezId ? dermatologo._id : dermatologoDirectoId,
 			promovendedor: frecuencia && frecuencia._id === frecuenciaReconsultaId ? promovendedor : promovendedorSinPromovendedorId,
 			producto: frecuencia && frecuencia._id === frecuenciaPrimeraVezId ? productoConsultaId : values.producto,
+			precio: newPrecio,
 		});
 	}
 
