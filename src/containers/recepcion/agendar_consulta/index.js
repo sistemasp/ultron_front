@@ -149,6 +149,8 @@ const AgendarConsulta = (props) => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [disableDate, setDisableDate] = useState(true);
 	const [isHoliDay, setIsHoliDay] = useState(false);
+	/*Eliminar despues de julio*/ 
+	const [isPromoJuly, setIsPromoJuly] = useState(false);
 	const [cambioTurno, setCambioTurno] = useState(false);
 	const [values, setValues] = useState({
 		hora: '',
@@ -463,21 +465,6 @@ const AgendarConsulta = (props) => {
 		setValues({ ...values, tiempo: e.target.value });
 	}
 
-	// const handleChangeDermatologos = (e) => {
-	// 	const {_id} = sucursal;
-	// 	let esquema = dermatologos.find(x => x._id == e.target.value);
-	// 	// console.log(esquema.esquema.porcentaje_consulta === '50' ? 'Cumple' : 'No cumple' );
-	// 	// console.log('cambio dermatologos', e.target);
-	// 	// console.log('Esquema', esquema.esquema.porcentaje_consulta, '  ', values.frecuencia.nombre);
-	// 	if(sucursalManuelAcunaId === _id || sucursalRubenDarioId === _id && esquema.esquema.porcentaje_consulta === '50' && values.frecuencia.nombre === 'PRIMERA VEZ'){
-	// 		setValues({ ...values, dermatologo: e.target.value, precio: 550 });
-	// 		return
-	// 	} 
-		
-		
-	// 	setValues({ ...values, dermatologo: e.target.value, precio: getPrecio() });
-	// }
-
 	const handleChangeHoliDay = (e) => {
 		setValues({
 			...values,
@@ -507,23 +494,55 @@ const AgendarConsulta = (props) => {
 	}
 
 	/* Eliminar despues de Julio (Antes actualizar las funcion dermatologo y frecuencia) */
-	const getPrecioJulio = (dermatologo,frecuencia) => {
+	const getPrecioJulio = (dermatologo, promo) => {
 		const {_id} = sucursal;
 
-		if((sucursalManuelAcunaId === _id || sucursalRubenDarioId === _id) && (promoJulioAdriana === dermatologo || promoJulioDaniela === dermatologo) && frecuencia === 'PRIMERA VEZ') {
+		if((sucursalManuelAcunaId === _id || sucursalRubenDarioId === _id) && (promoJulioAdriana === dermatologo || promoJulioDaniela === dermatologo) && promo) {
+			setOpenAlert(true);
+			setSeverity('success');
+			setMessage('PROMOCION APLICADA');
 			return 550;
+		} else if(promo) {
+			setOpenAlert(true);
+			setSeverity('warning');
+			setMessage('No cumple los requisitos');
+			setIsPromoJuly(false);
 		}
+
 
 		return getPrecio();
 	}
-	/*---------------------------*/
+
+	const handleChangePromoJuly = (e) => {
+		/* Eliminar despues de Julio */
+		/*---------------------------*/
+		setIsPromoJuly(!isPromoJuly);
+		/*---------------------------*/
+
+		const newPrecio = getPrecioJulio(values.dermatologo, !isPromoJuly);
+
+		
+		setValues({
+			...values,
+			precio: newPrecio,
+			porcentaje_descuento_clinica: !isPromoJuly ? ((newPrecio * 100)/getPrecio()).toFixed(2) : '0',
+			descuento_clinica: !isPromoJuly ? getPrecio() - newPrecio : 0,
+		})
+		
+	}
 
 	const handleChangeDermatologos = (e) => {
 		const {_id} = sucursal;
 		const {frecuencia} = values;
-		const newPrecio = getPrecioJulio(e.target.value, frecuencia.nombre)
+		const newPrecio = getPrecioJulio(e.target.value, isPromoJuly);
 		
-		setValues({ ...values, dermatologo: e.target.value, precio: newPrecio });
+		setValues({ 
+			...values, 
+			dermatologo: e.target.value, 
+			precio: newPrecio,
+			porcentaje_descuento_clinica: isPromoJuly ? ((values.precio * 100)/getPrecio()).toFixed(2) : '0',
+			descuento_clinica: isPromoJuly ? getPrecio() - values.precio : 0,
+		});
 		
 		/* Regresar despues de Julio */
 		//  setValues({ ...values, dermatologo: e.target.value });
@@ -531,23 +550,22 @@ const AgendarConsulta = (props) => {
 	}
 
 	const handleChangeFrecuencia = (e, newValue) => {
-		/* Eliminar despues de Julio */
-			const newPrecio = getPrecioJulio(values.dermatologo, newValue.nombre)		 
 
-		/*---------------------------*/
-		
 		const frecuencia = newValue;
-
+		
 		const dermatologo = dermatologos.find(item => {
 			return item._id === dermatologoDirectoId;
 		});
 		const promovendedor = promovendedores.find(item => {
 			return item._id === promovendedorSinPromovendedorId;
 		});
+
+		const newDermatologo = frecuencia && frecuencia._id === frecuenciaPrimeraVezId ? dermatologo._id : dermatologoDirectoId;
+		const newPrecio = getPrecioJulio(newDermatologo, isPromoJuly);
 		setValues({
 			...values,
 			frecuencia: frecuencia,
-			dermatologo: frecuencia && frecuencia._id === frecuenciaPrimeraVezId ? dermatologo._id : dermatologoDirectoId,
+			dermatologo: newDermatologo,
 			promovendedor: frecuencia && frecuencia._id === frecuenciaReconsultaId ? promovendedor : promovendedorSinPromovendedorId,
 			producto: frecuencia && frecuencia._id === frecuenciaPrimeraVezId ? productoConsultaId : values.producto,
 			precio: newPrecio,
@@ -873,12 +891,13 @@ const AgendarConsulta = (props) => {
 
 	const handleChangePaymentMethod = (e) => {
 		const formaPago = e.target.value;
+
 		setValues({
 			...values,
 			forma_pago: formaPago,
-			precio: formaPago !== noPagaFormaPagoId ? getPrecio() : '0',
-			porcentaje_descuento_clinica: formaPago !== noPagaFormaPagoId ? '0' : '100',
-			descuento_clinica: formaPago !== noPagaFormaPagoId ? 0 : getPrecio(),
+			precio: formaPago !== noPagaFormaPagoId ? getPrecioJulio(values.dermatologo, isPromoJuly) : '0',
+			porcentaje_descuento_clinica: formaPago !== noPagaFormaPagoId ? isPromoJuly ? ((values.precio * 100)/getPrecio()).toFixed(2) : '0' : '100',
+			descuento_clinica: formaPago !== noPagaFormaPagoId ? isPromoJuly ? getPrecio() - values.precio : 0 : getPrecio(),
 		});
 	}
 
@@ -1047,7 +1066,11 @@ const AgendarConsulta = (props) => {
 						onChangeBank={(e) => handleChangeBank(e)}
 						onChangeCardType={(e) => handleChangeCardType(e)}
 						onChangeDigitos={(e) => handleChangeDigitos(e)}
-						onGuardarModalPagos={handleGuardarModalPagos} /> :
+						onGuardarModalPagos={handleGuardarModalPagos} 
+						// Promotion Julio
+						onChangePromoJuly={handleChangePromoJuly}
+						isPromoJuly={isPromoJuly}
+						/> :
 					<Backdrop className={classes.backdrop} open={isLoading} >
 						<CircularProgress color="inherit" />
 					</Backdrop>

@@ -101,9 +101,12 @@ export const AgendarConsultaContainer = (props) => {
     onChangeCardType,
     tiposTarjeta,
     onChangeDigitos,
+    // Promocion Julio
+    onChangePromoJuly,
+    isPromoJuly,
+    // ----------------
   } = props;
 
-  // console.log(dermatologos, values);
   const classes = myStyles(colorBase)();
 
   const showPromovendedores = [
@@ -223,6 +226,16 @@ export const AgendarConsultaContainer = (props) => {
               label="ES FESTIVO"
             />
           </Grid>
+          
+          { (sucursal._id === process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID || sucursal._id === process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID) &&
+            <Grid item xs={12} sm={true} className={classes.grid_center}>
+            <CheckCustom
+              checked={isPromoJuly}
+              onChange={onChangePromoJuly}
+              name="checkeCJ"
+              label="Cupón Julio"
+            />
+          </Grid>}
           {/* {
             sucursal._id === process.env.REACT_APP_SUCURSAL_OCCI_ID ||
               sucursal._id === process.env.REACT_APP_SUCURSAL_FEDE_ID ?
