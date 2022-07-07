@@ -233,7 +233,7 @@ export const AgendarConsultaContainer = (props) => {
               checked={isPromoJuly}
               onChange={onChangePromoJuly}
               name="checkeCJ"
-              label="Cupón Julio"
+              label="CUPÓN JULIO"
             />
           </Grid>}
           {/* {
