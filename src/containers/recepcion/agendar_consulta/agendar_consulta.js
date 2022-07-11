@@ -218,14 +218,14 @@ export const AgendarConsultaContainer = (props) => {
           <Grid item xs={12} sm={2}>
             <h1>{toFormatterCurrency(values.precio)}</h1>
           </Grid>
-          <Grid item xs={12} sm={true} className={classes.grid_center}>
+          {/* <Grid item xs={12} sm={true} className={classes.grid_center}>
             <CheckCustom
               checked={isHoliDay}
               onChange={onChangeHoliDay}
               name="checkedF"
               label="ES FESTIVO"
             />
-          </Grid>
+          </Grid> */}
           
           { (sucursal._id === process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID || sucursal._id === process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID) &&
             <Grid item xs={12} sm={true} className={classes.grid_center}>

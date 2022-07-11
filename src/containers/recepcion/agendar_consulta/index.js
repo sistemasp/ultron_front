@@ -466,6 +466,7 @@ const AgendarConsulta = (props) => {
 	}
 
 	const handleChangeHoliDay = (e) => {
+		
 		setValues({
 			...values,
 			precio: !isHoliDay ? sucursal.precio_festivo : // Dia Festivo
