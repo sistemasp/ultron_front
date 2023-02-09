@@ -196,7 +196,7 @@ const FormImprimirPagoDermatologo = (props) => {
   const dermatologoDirectoId = process.env.REACT_APP_DERMATOLOGO_DIRECTO_ID;
   const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID;
   const formaPagoSesionAnticipadaId = process.env.REACT_APP_FORMA_PAGO_SESION_ANTICIPADA;
-
+  const tratamientoRadiofrecuencia = process.env.REACT_APP_RADIOFRECUENCIA_TRATAMIENTO_ID;
   const listaFaciales = [...faciales];
   const listaAparatologias = [...aparatologias];
   const sesionesAnticipadas = [];
@@ -904,13 +904,13 @@ const FormImprimirPagoDermatologo = (props) => {
                       let comisionDermatologo = 0;
                       if (aparatologia.forma_pago._id !== formaPagoSesionAnticipadaId) {
                         aparatologia.tratamientos.forEach(tratamiento => {
-
                           tratamiento.areasSeleccionadas.map(area => {
+                            const { servicio, nombre, tratamiento } = area;
                             const itemPrecio = precioAreaBySucursal(sucursal._id, area);
                             if (tratamiento._id === tratamientoLuzpulzadaId) {
                               comisionDermatologo = comisionAreaBySucursalAndTipo(sucursal._id, aparatologia.tipo_cita._id, area);
                             } else {
-                              comisionDermatologo += (Number(itemPrecio) * Number(aparatologia.frecuencia === frecuenciaPrimeraVezId ? dermatologo.esquema.porcentaje_laser : (aparatologia.dermatologo === dermatologoDirectoId ? 100 : 0)) / 100);
+                              comisionDermatologo += (servicio === servicioAparatologiaId && nombre === 'FACIAL' && tratamiento === tratamientoRadiofrecuencia ? 140 : Number(itemPrecio) * Number(aparatologia.frecuencia === frecuenciaPrimeraVezId ? dermatologo.esquema.porcentaje_laser : (aparatologia.dermatologo === dermatologoDirectoId ? 100 : 0)) / 100);
                             }
                           });
                         });

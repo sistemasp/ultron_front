@@ -180,7 +180,8 @@ const Dermatologos = (props) => {
 				const fecha_entrada_show = `${addZero(fecha_entrada.getDate())}/${addZero(Number(fecha_entrada.getMonth() + 1))}/${fecha_entrada.getFullYear()}`;
 				const fecha_baja = new Date(item.fecha_baja);
 				const fecha_baja_show = `${addZero(fecha_baja.getDate())}/${addZero(Number(fecha_baja.getMonth() + 1))}/${fecha_baja.getFullYear()}`;
-				item.fecha_entrada_show = fecha_entrada_show;
+				// item.fecha_entrada_show = fecha_entrada_show;
+				item.fecha_entrada_show = '-';
 				item.fecha_baja_show = item.fecha_baja ? fecha_baja_show : 'VIGENTE';
 			});
 			setDermatologos(response.data);
@@ -196,7 +197,8 @@ const Dermatologos = (props) => {
 				const fecha_entrada_show = `${addZero(fecha_entrada.getDate())}/${addZero(Number(fecha_entrada.getMonth() + 1))}/${fecha_entrada.getFullYear()}`;
 				const fecha_baja = new Date(item.fecha_baja);
 				const fecha_baja_show = `${addZero(fecha_baja.getDate())}/${addZero(Number(fecha_baja.getMonth() + 1))}/${fecha_baja.getFullYear()}`;
-				item.fecha_entrada_show = fecha_entrada_show;
+				// item.fecha_entrada_show = fecha_entrada_show;
+				item.fecha_entrada_show = '-';
 				item.fecha_baja_show = item.fecha_baja ? fecha_baja_show : 'VIGENTE';
 			});
 			setPatologos(response.data);
