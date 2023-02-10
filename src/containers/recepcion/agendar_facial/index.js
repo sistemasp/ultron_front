@@ -408,7 +408,6 @@ const AgendarFacial = (props) => {
     data.hora_salida = '--:--';
     data.tipo_cita = data.dermatologo._id === dermatologoDirectoId ? directoTipoCitaId : data.tipo_cita;
     // data.tiempo = getTimeToTratamiento(data.tratamientos);
-
     const response = await createFacial(data, token);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
       if (esHoy) {
