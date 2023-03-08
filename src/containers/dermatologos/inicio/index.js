@@ -34,10 +34,14 @@ const InicioDermatologos = (props) => {
 
   const classes = props;
 
-  const titulo = 'RECETA';
+  const tituloNormal = 'RECETA NORMAL';
+  const tituloAntibioticos = 'RECETA ANTIBIÓTICOS';
+  const tituloControlados = 'RECETA CONTROLADOS';
+  const tituloEstudios = 'RECETA ESTUDIOS';
+
   const columns = [
-    { title: 'LABORATORIO', field: 'laboratorio.nombre' },
-    { title: 'PRODUCTO', field: 'producto.nombre' },
+    { title: 'LABORATORIO', field: 'nombre_laboratorio' },
+    { title: 'PRODUCTO', field: 'nombre_producto' },
     { title: 'RECOMENDACIÓN', field: 'recomendacion' },
   ];
 
@@ -153,6 +157,10 @@ const InicioDermatologos = (props) => {
       const receta = response.data;
       if (receta) {
         setReceta(receta);
+        setReceta({
+          ...receta,
+          fecha_proxima_consulta: receta.fecha_proxima_consulta ? receta.fecha_proxima_consulta : ""
+        })
         setProductos(receta.productos);
         receta.productos.forEach(async (producto) => {
           const responseLaboratorio = await findLaboratorioById(producto.laboratorio._id);
@@ -173,6 +181,7 @@ const InicioDermatologos = (props) => {
           dermatologo: consultorio.dermatologo._id,
           sucursal: consultorio.sucursal,
           productos: [],
+          fecha_proxima_consulta: new Date(),
         };
 
         const responseReceta = await createReceta(newReceta);
@@ -182,6 +191,10 @@ const InicioDermatologos = (props) => {
           setOpenAlert(true);
           setMessage('RECETA CREADA CORRECTAMENTE');
           setReceta(responseReceta.data);
+          setReceta({
+            ...receta,
+            fecha_proxima_consulta: receta.fecha_proxima_consulta ? receta.fecha_proxima_consulta : ""
+          })
           responseReceta.data.productos.forEach(async (producto) => {
             const responseLaboratorio = await findLaboratorioById(producto.laboratorio._id);
             const responseProductoComercial = await findProductoComercialById(producto.producto._id);
@@ -198,6 +211,13 @@ const InicioDermatologos = (props) => {
     }
   }
 
+  const handleChangeProximaConsulta = (date) => {
+    setReceta({
+      ...receta,
+      fecha_proxima_consulta: date
+    })
+  }
+
   const handleClickCompletarDatos = (i) => {
     setOpenModalPacienteDomicilio(true);
   }
@@ -206,8 +226,11 @@ const InicioDermatologos = (props) => {
     setOpenModalItemReceta(true);
   }
 
-  const handleClickImprimirReceta = () => {
-    setOpenModalImprimirReceta(true);
+  const handleClickImprimirReceta =  async () => {
+    const responseReceta = await updateReceta(receta._id, receta)
+    if (`${responseReceta.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      setOpenModalImprimirReceta(true)
+    }
   }
 
   const handleClosePacienteDomicilio = () => {
@@ -223,10 +246,15 @@ const InicioDermatologos = (props) => {
   }
 
   const handleAgregarProducto = async (event, newItem) => {
-    receta.productos.push(newItem);
+    const item = {
+      nombre_laboratorio: newItem.laboratorio._id.nombre,
+      nombre_producto: newItem.producto._id.nombre,
+      recomendacion: newItem.recomendacion,
+    }
+
+    receta.productos.push(item);
     const response = await updateReceta(receta._id, receta);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setOpenModalItemReceta(false);
       findConsultorio();
     }
   }
@@ -246,10 +274,12 @@ const InicioDermatologos = (props) => {
               consultorio={consultorio}
               producto={producto}
               receta={receta}
+              colorBase={colorBase}
               onAgregarProducto={handleAgregarProducto}
               onClickCompletarDatos={handleClickCompletarDatos}
               onClickItemReceta={handleClickItemReceta}
               onClickImprimirReceta={handleClickImprimirReceta}
+              onChangeProximaConsulta={(e) => handleChangeProximaConsulta(e)}
               openModalPacienteDomicilio={openModalPacienteDomicilio}
               onClosePacienteDomicilio={handleClosePacienteDomicilio}
               openModalItemReceta={openModalItemReceta}
@@ -258,7 +288,10 @@ const InicioDermatologos = (props) => {
               setSeverity={setSeverity}
               setOpenAlert={setOpenAlert}
               findConsultorio={findConsultorio}
-              titulo={titulo}
+              tituloNormal={tituloNormal}
+              tituloAntibioticos={tituloAntibioticos}
+              tituloControlados={tituloControlados}
+              tituloEstudios={tituloEstudios}
               columns={columns}
               productos={productos}
               actions={actions}

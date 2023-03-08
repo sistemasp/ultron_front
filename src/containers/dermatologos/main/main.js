@@ -61,10 +61,12 @@ export const MainDermatologosContainer = props => {
 		setMessage,
 		setSeverity,
 		setOpenAlert,
-		colorBase,
 	} = props;
 
+	const colorBase = sucursal.color;
+
 	const classes = myStyles(colorBase)();
+
 	const theme = useTheme();
 	const [openDrawer, setOpenDrawer] = useState(false);
 
@@ -164,11 +166,13 @@ export const MainDermatologosContainer = props => {
 					<TabPanel value={value} index={0}>
 						<InicioDermatologos
 							dermatologo={dermatologo}
+							colorBase={colorBase}
 							sucursal={sucursal} />
 					</TabPanel>
 					<TabPanel value={value} index={1}>
 						<InicioDermatologos
 							dermatologo={dermatologo}
+							colorBase={colorBase}
 							sucursal={sucursal} />
 					</TabPanel>
 				</Fragment>

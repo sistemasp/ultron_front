@@ -41,3 +41,19 @@ export const updateReceta = async (idReceta, receta) => {
         console.log('updateReceta', error);
     }
 }
+
+export const findRecetaByRangeDateAndSucursal = async (diai, mesi, anioi, diaf, mesf, aniof, sucursalId, token) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/receta/fecha_inicio/${diai}/${mesi}/${anioi}/fecha_fin/${diaf}/${mesf}/${aniof}/sucursal/${sucursalId}`,
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response;
+    } catch (error) {
+        console.log('findRecetaByRangeDateAndSucursal', error);
+        return error;
+    }
+}

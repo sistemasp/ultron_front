@@ -25,6 +25,7 @@ import ReportesPagosAnticipados from './reportes/pagos_anticipados';
 import ReportePagosPatologos from './reportes/pagos_patologos';
 import ReporteCortes from './reportes/cortes';
 import ReporteSubsecuencias from './reportes/subsecuencias';
+import ReportesRecetas from './reportes/recetas';
 
 function TabPanel(props) {
 	const { children, value, index, ...other } = props;
@@ -105,6 +106,7 @@ export const MenuContainer = props => {
 					<Tab label="CORTES" {...a11yProps(6)} />
 					<Tab label="SUBSECUENCIA" {...a11yProps(7)} />
 					<Tab label="CURACIONES" {...a11yProps(8)} />
+					<Tab label="RECETAS" {...a11yProps(9)} />
 				</Tabs>
 			</AppBar>
 
@@ -158,6 +160,12 @@ export const MenuContainer = props => {
 			</TabPanel>
 			<TabPanel value={value} index={8}>
 				<ReportesCuraciones
+					empleado={empleado}
+					colorBase={colorBase}
+					sucursal={sucursal} />
+			</TabPanel>
+			<TabPanel value={value} index={9}>
+				<ReportesRecetas
 					empleado={empleado}
 					colorBase={colorBase}
 					sucursal={sucursal} />

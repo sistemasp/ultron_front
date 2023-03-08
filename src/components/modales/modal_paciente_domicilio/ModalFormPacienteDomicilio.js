@@ -100,33 +100,7 @@ const ModalFormPacienteDomicilio = (props) => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  className={classes.textField}
-                  name="domicilio"
-                  label="DOMICILIO"
-                  value={values.domicilio}
-                  onChange={onChange}
-                  variant="outlined" />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  className={classes.textField}
-                  name="numero_exterior"
-                  label="NUMERO EXTERIOR"
-                  value={values.numero_exterior}
-                  onChange={onChange}
-                  variant="outlined" />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  className={classes.textField}
-                  name="numero_interior"
-                  label="NUMERO INTERIOR"
-                  value={values.numero_interior}
-                  onChange={onChange}
-                  variant="outlined" />
-              </Grid>
+              
               <Grid item xs={12} sm={6} >
                 <TextField
                   className={classes.textField}
@@ -136,82 +110,7 @@ const ModalFormPacienteDomicilio = (props) => {
                   onChange={onChange}
                   variant="outlined" />
               </Grid>
-              <Grid item xs={12} sm={6} className={classes.grid_center}>
-                <ButtonCustom
-                  className={classes.button}
-                  color="primary"
-                  variant="contained"
-                  onClick={onClickBuscar}
-                  text="BUSCAR" />
-              </Grid>
-
-              {
-                values.codigo_postal ?
-                  <Fragment>
-                    <Grid item xs={12}>
-                      <h3 className={classes.label}>ESTADO: {values.estado}</h3>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <h3 className={classes.label}>MUNICIPIO: {values.municipio}</h3>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <h3 className={classes.label}>CIUDAD: {values.ciudad}</h3>
-                    </Grid>
-                  </Fragment> :
-                  <Fragment>
-                    <Grid item xs={12}>
-                      <FormControl variant="outlined" className={classes.formControl}>
-                        <InputLabel id="simple-select-outlined-estados">ESTADOS</InputLabel>
-                        <Select
-                          labelId="simple-select-outlined-estados"
-                          id="simple-select-outlined-estados"
-                          value={values.estado}
-                          onChange={onChangeEstado}
-                          isSearchable={true}
-                          label="ESTADOS" >
-                          {estados.sort().map((item, index) => <MenuItem key={index} value={item}>{item}</MenuItem>)}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <FormControl variant="outlined" className={classes.formControl}>
-                        <InputLabel id="simple-select-outlined-municipio">MUNICIPIO</InputLabel>
-                        <Select
-                          labelId="simple-select-outlined-municipio"
-                          id="simple-select-outlined-municipio"
-                          value={values.municipio}
-                          onChange={onChangeMunicipio}
-                          label="MUNICIPIO" >
-                          {municipios.sort().map((item, index) => <MenuItem key={index} value={item}>{item}</MenuItem>)}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        className={classes.textField}
-                        name="ciudad"
-                        label="CIUDAD"
-                        value={values.ciudad}
-                        onChange={onChange}
-                        variant="outlined" />
-                    </Grid>
-                  </Fragment>
-              }
-
-              <Grid item xs={12}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-colonia">COLONIA</InputLabel>
-                  <Select
-                    labelId="simple-select-outlined-colonia"
-                    id="simple-select-outlined-colonia"
-                    value={values.colonia}
-                    onChange={onChangeColonia}
-                    label="COLONIA" >
-                    {colonias.sort().map((item, index) => <MenuItem key={index} value={item}>{item.toUpperCase()}</MenuItem>)}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={6} >
                 <TextField
                   className={classes.textField}
                   name="telefono"

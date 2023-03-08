@@ -92,7 +92,7 @@ const ModalFormPaciente = (props) => {
                 variant="outlined" />
               </Grid>
               */}
-              <Grid item xs={12}>
+              <Grid item xs={6}>
                 <TextField
                   className={classes.textField}
                   name="telefono"
@@ -101,6 +101,19 @@ const ModalFormPaciente = (props) => {
                   onChange={onChange}
                   inputProps={{
                     maxLength: "10",
+                  }}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  className={classes.textField}
+                  name="codigo_postal"
+                  label="CP"
+                  value={values.codigo_postal}
+                  onChange={onChange}
+                  inputProps={{
+                    maxLength: "5",
                   }}
                   variant="outlined"
                 />

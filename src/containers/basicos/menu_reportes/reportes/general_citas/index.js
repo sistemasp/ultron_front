@@ -238,7 +238,6 @@ const ReporteGeneralCitas = (props) => {
 	}
 
 	const exportData = () => {
-		console.log("KAOZ")
 		downloadExcel("REPORTES CITAS GENERAL", "REPORTE", datos)
 	}
 

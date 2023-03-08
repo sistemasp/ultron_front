@@ -97,7 +97,6 @@ const ModalRevisarTraspasos = (props) => {
         return reg.surtidos[rowData.tableData.id] ? reg.surtidos[rowData.tableData.id].id === rowData.id
           : false
       })
-      console.log("KAOZ", registro)
 
       const existencia = {
         ...rowData,

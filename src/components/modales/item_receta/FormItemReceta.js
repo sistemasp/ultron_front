@@ -4,7 +4,7 @@ import Modal from '@material-ui/core/Modal';
 import { TextField, Button, Grid, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 import { ButtonCustom } from '../../basic/ButtonCustom';
 import myStyles from '../../../css';
-import { CheckCustom } from '../../basic/CheckCustom';
+import { ComboCustom } from '../../basic/ComboCustom';
 
 function getModalStyle() {
   const top = 50;
@@ -51,7 +51,7 @@ const FormItemReceta = (props) => {
     handleSubmit,
     values,
     onChange,
-    onChangeLaboratorio,
+    //onChangeLaboratorio,
     onChangeProducto,
     onAgregarProducto,
     onClickCancel,
@@ -60,6 +60,7 @@ const FormItemReceta = (props) => {
     productos,
   } = props;
 
+  console.log("KAOZ", values);
   return (
     <div>
       <Modal
@@ -72,37 +73,30 @@ const FormItemReceta = (props) => {
               <Grid item xs={12} className={classes.label}>
                 <h1 className={classes.label}>{`PRODUCTO`}</h1>
               </Grid>
-              <Grid item xs={12}>
+
+              <Grid item xs={7} >
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-hora">LABORATORIO</InputLabel>
-                  <Select
-                    labelId="simple-select-outlined-dermatologo"
-                    id="simple-select-outlined-dermatologo"
-                    value={values.laboratorio._id}
-                    onChange={onChangeLaboratorio}
-                    name="laboratorio"
-                    label="LABORATORIO" >
-                    {laboratorios.sort().map((item, index) => {
-                      return <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>
-                    })}
-                  </Select>
+                  <ComboCustom
+                    label='PRODUCTO'
+                    value={values.producto._id}
+                    onChange={onChangeProducto}
+                    options={productos} />
                 </FormControl>
               </Grid>
 
-              <Grid item xs={12}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-hora">PRODUCTO</InputLabel>
-                  <Select
-                    labelId="simple-select-outlined-dermatologo"
-                    id="simple-select-outlined-dermatologo"
-                    value={values.producto._id}
-                    onChange={onChangeProducto}
-                    name="producto"
-                    label="PRODUCTO" >
-                    {productos.sort().map((item, index) => <MenuItem key={index} value={item._id}>{item.nombre}</MenuItem>)}
-                  </Select>
-                </FormControl>
+              <Grid item xs={5} className={classes.label}>
+                <h2 className={classes.label}>{`LABORATORIO: ${values.producto._id ? values.producto._id.laboratorio.nombre : "-"}`}</h2>
               </Grid>
+
+              {/* <Grid item xs={12} >
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <ComboCustom
+                    label='LABORATORIOS'
+                    value={values.laboratorio._id}
+                    // onChange={onChangeLaboratorio}
+                    options={laboratorios} />
+                </FormControl>
+              </Grid> */}
 
               <Grid item xs={12}>
                 <TextField
@@ -120,7 +114,7 @@ const FormItemReceta = (props) => {
                   color="secondary"
                   variant="contained"
                   onClick={onClickCancel}
-                  text='CANCELAR' />
+                  text='CERRAR' />
               </Grid>
               
               <Grid item xs={12} sm={6}>

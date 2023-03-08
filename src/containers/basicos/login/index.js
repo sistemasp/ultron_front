@@ -76,7 +76,6 @@ const LoginForm = (props) => {
   const sumota = () => {
     const num1 = "323"
     const num2 = "456"
-    console.log("KAOZ", '', num1, '+', num2)
     let resultado = ''
     let final = ''
     for (let i = num1.length - 1; i >= 0; i--) {
@@ -92,7 +91,6 @@ const LoginForm = (props) => {
     for (let i = resultado.length - 1; i >= 0; i--) {
       final += resultado[i]
     }
-    console.log("KAOZ", carrie, `${final}`)
 
   }
 

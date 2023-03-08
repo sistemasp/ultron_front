@@ -7,7 +7,7 @@ import { createLaboratorio, showAllLaboratorios, updateLaboratorio } from '../..
 import { Fragment } from 'react';
 import { Backdrop, CircularProgress } from '@material-ui/core';
 import myStyles from '../../../css';
-import { createProductoComercial, showProductoComercialByLaboratorioId, updateProductoComercial } from '../../../services/productos_comerciales';
+import { showAllProductoComercials, showProductoComercialByLaboratorioId, updateProductoComercial } from '../../../services/productos_comerciales';
 
 const ModalItemReceta = (props) => {
 
@@ -40,38 +40,39 @@ const ModalItemReceta = (props) => {
     });
   }
 
-  const loadProductosComerciales = async (laboratorioId) => {
-    const response = await showProductoComercialByLaboratorioId(laboratorioId);
+  const loadProductosComerciales = async () => {
+    const response = await showAllProductoComercials();
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       setProductos(response.data);
     }
   }
 
-  const handleChangeLaboratorio = async (event) => {
-    await loadProductosComerciales(event.target.value);
+  // const handleChangeLaboratorio = async (event, newValue) => {
+  //   await loadProductosComerciales(newValue._id);
+  //   setValues({
+  //     ...values,
+  //     laboratorio: { _id: newValue }
+  //   });
+  // }
+
+  const handleChangeProducto = async (event, newValue) => {
     setValues({
       ...values,
-      [event.target.name]: { _id: event.target.value }
+      producto: { _id: newValue },
+      laboratorio: { _id: newValue.laboratorio }
     });
   }
 
-  const handleChangeProducto = async (event) => {
-    setValues({
-      ...values,
-      [event.target.name]: { _id: event.target.value }
-    });
-  }
-
-  const loadLaboratorios = async () => {
-    const response = await showAllLaboratorios();
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setLaboratorios(response.data);
-    }
-  }
+  // const loadLaboratorios = async () => {
+  //   const response = await showAllLaboratorios();
+  //   if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+  //     setLaboratorios(response.data);
+  //   }
+  // }
 
   const loadAll = async () => {
     setIsLoading(true);
-    await loadLaboratorios();
+    await loadProductosComerciales();
     setIsLoading(false);
   }
 
@@ -90,7 +91,7 @@ const ModalItemReceta = (props) => {
             open={open}
             onClickCancel={onClose}
             onChange={handleChange}
-            onChangeLaboratorio={handleChangeLaboratorio}
+            // onChangeLaboratorio={handleChangeLaboratorio}
             onChangeProducto={handleChangeProducto}
             onAgregarProducto={onAgregarProducto}
             laboratorios={laboratorios}

@@ -7,6 +7,8 @@ import {
 } from "@material-ui/core";
 
 import { Fragment } from "react";
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import myStyles from "../../../css";
 import { ButtonCustom } from "../../../components/basic/ButtonCustom";
 import ModalPacienteDomicilio from "../../../components/modales/modal_paciente_domicilio";
@@ -22,6 +24,7 @@ export const InicioContainer = (props) => {
 		onClickCompletarDatos,
 		onClickItemReceta,
 		onClickImprimirReceta,
+		onChangeProximaConsulta,
 		// MODAL PACIENTE DOMICILIO
 		openModalPacienteDomicilio,
 		onClosePacienteDomicilio,
@@ -41,7 +44,10 @@ export const InicioContainer = (props) => {
 		receta,
 		sucursal,
 		// TABLE DATA
-		titulo,
+		tituloNormal,
+		tituloAntibioticos,
+		tituloControlados,
+		tituloEstudios,
 		columns,
 		productos,
 		actions,
@@ -99,11 +105,37 @@ export const InicioContainer = (props) => {
 				<Grid item xs={12}>
 					<Paper>
 						<Fragment>
-							<Grid item xs={12}>
-								<h1>{consultorio.paciente ? `PACIENTE: ${consultorio.paciente.nombres} ${consultorio.paciente.apellidos}` : `SIN PACIENTE`}</h1>
+							<Grid container>
+								<Grid item xs={10}>
+									<h1>{consultorio.paciente ? `PACIENTE: ${consultorio.paciente.nombres} ${consultorio.paciente.apellidos}` : `SIN PACIENTE`}</h1>
+								</Grid>
+								<Grid item xs={true} sm={true}>
+									<MuiPickersUtilsProvider utils={DateFnsUtils}>
+									<Grid
+										container
+										justify="center"
+										alignItems="center" >
+										<KeyboardDatePicker
+										disableToolbar
+										disablePast
+										autoOk
+										variant="inline"
+										format="dd/MM/yyyy"
+										margin="normal"
+										id="date-picker-inline"
+										label="FECHA PRÓXIMA CONSULTA"
+										value={receta.fecha_proxima_consulta}
+										onChange={onChangeProximaConsulta}
+										KeyboardButtonProps={{
+											'aria-label': 'change date',
+										}}
+										invalidDateMessage='SELECCIONA UNA FECHA' />
+									</Grid>
+									</MuiPickersUtilsProvider>
+								</Grid>
 							</Grid>
 							{
-								consultorio.paciente && !consultorio.paciente.domicilio
+								consultorio.paciente && !consultorio.paciente.codigo_postal
 									?
 									<Grid item xs={12}>
 										<ButtonCustom
@@ -119,34 +151,122 @@ export const InicioContainer = (props) => {
 					</Paper>
 				</Grid>
 				{
-					consultorio.paciente && consultorio.paciente.domicilio
+					consultorio.paciente && consultorio.paciente.codigo_postal
 						?
 						<Grid item xs={12}>
 							<Paper>
-								<Grid item xs={12} sm={4}>
-									<ButtonCustom
-										className={classes.button}
-										color="primary"
-										variant="contained"
-										onClick={() => onClickItemReceta()}
-										text={'AGREGAR PRODUCTO'} />
+								<Grid container>
+									<Grid item xs={5}>
+										<ButtonCustom
+											className={classes.button}
+											color="primary"
+											variant="contained"
+											onClick={() => onClickItemReceta()}
+											text={'AGREGAR PRODUCTO'} />
+									</Grid>
+									<Grid item xs={2}>
+
+									</Grid>
+									<Grid item xs={5}>
+										<ButtonCustom
+											className={classes.button}
+											color="primary"
+											variant="contained"
+											onClick={() => onClickItemReceta()}
+											text={'AGREGAR ESTUDIO'} />
+									</Grid>
 								</Grid>
+								
 								<Grid item xs={12}>
 									<TableComponent
-										titulo={titulo}
+										titulo={tituloNormal}
 										columns={columns}
 										data={productos}
 										actions={actions}
 										options={options}
 										components={components} />
 								</Grid>
+
 								<Grid item xs={12}>
 									<ButtonCustom
 										className={classes.button}
 										color="primary"
 										variant="contained"
 										onClick={() => onClickImprimirReceta()}
-										text={'IMPRIMIR'} />
+										disabled={!receta.fecha_proxima_consulta}
+										text={'IMPRIMIR RECETA'} />
+								</Grid>
+
+								<Grid item xs={12}>
+									<br></br>
+								</Grid>
+
+								<Grid item xs={12}>
+									<TableComponent
+										titulo={tituloAntibioticos}
+										columns={columns}
+										data={productos}
+										actions={actions}
+										options={options}
+										components={components} />
+								</Grid>
+
+								<Grid item xs={12}>
+									<ButtonCustom
+										className={classes.button}
+										color="primary"
+										variant="contained"
+										onClick={() => onClickImprimirReceta()}
+										disabled={!receta.fecha_proxima_consulta}
+										text={'IMPRIMIR ANTIBIÓTICOS'} />
+								</Grid>
+
+								<Grid item xs={12}>
+									<br></br>
+								</Grid>
+
+								<Grid item xs={12}>
+									<TableComponent
+										titulo={tituloControlados}
+										columns={columns}
+										data={productos}
+										actions={actions}
+										options={options}
+										components={components} />
+								</Grid>
+
+								<Grid item xs={12}>
+									<ButtonCustom
+										className={classes.button}
+										color="primary"
+										variant="contained"
+										onClick={() => onClickImprimirReceta()}
+										disabled={!receta.fecha_proxima_consulta}
+										text={'IMPRIMIR CONTROLADOS'} />
+								</Grid>
+
+								<Grid item xs={12}>
+									<br></br>
+								</Grid>
+
+								<Grid item xs={12}>
+									<TableComponent
+										titulo={tituloEstudios}
+										columns={columns}
+										data={productos}
+										actions={actions}
+										options={options}
+										components={components} />
+								</Grid>
+
+								<Grid item xs={12}>
+									<ButtonCustom
+										className={classes.button}
+										color="primary"
+										variant="contained"
+										onClick={() => onClickImprimirReceta()}
+										disabled={!receta.fecha_proxima_consulta}
+										text={'IMPRIMIR ESTUDIOS'} />
 								</Grid>
 							</Paper>
 						</Grid>

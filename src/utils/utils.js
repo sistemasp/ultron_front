@@ -214,7 +214,6 @@ export const productoMinimoSucursal = (producto, sucursalId) => {
 }
 
 export const downloadExcel = (fileName, sheetName, data) => {
-  console.log("KAOZ", fileName, sheetName, data)
   const newData = data.map(row => {
     delete row.tableData
     return row
