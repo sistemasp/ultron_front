@@ -1,12 +1,12 @@
 import React, { useState, Fragment, useEffect } from 'react';
 import { Backdrop, CircularProgress, makeStyles } from '@material-ui/core';
-import FormImprimirReceta from './FormImprimirReceta';
 import { culcularEdad } from '../../../utils/utils';
 import { findConsultById } from '../../../services/consultas';
 import myStyles from '../../../css';
-import { useLocation, useNavigate } from "react-router-dom";
+import FormImprimirEstudios from './FormImprimirEstudios';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-const ImprimirReceta = (props) => {
+const ImprimirEstudios = (props) => {
 
   const navigate = useNavigate();
 
@@ -20,8 +20,6 @@ const ImprimirReceta = (props) => {
     receta,
   } = location.state;
   
-  
-
   const classes = myStyles(colorBase)();
 
   const [show, setShow] = useState(true);
@@ -58,7 +56,7 @@ const ImprimirReceta = (props) => {
     <Fragment>
       {
         !isLoading ?
-          <FormImprimirReceta
+          <FormImprimirEstudios
             aria-labelledby="simple-modal-title"
             aria-describedby="simple-modal-description"
             consultorio={consultorio}
@@ -78,6 +76,7 @@ const ImprimirReceta = (props) => {
     </Fragment>
 
   );
+
 }
 
-export default ImprimirReceta;
+export default ImprimirEstudios;

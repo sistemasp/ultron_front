@@ -84,6 +84,10 @@ export const rolSupervisorId = process.env.REACT_APP_SUPERVISOR_ROL_ID;
 export const rolJulioId = process.env.REACT_APP_JULIO_ROL_ID;
 export const rolSuperEnfermeroId = process.env.REACT_APP_SUPER_ENFERMERO_ROL_ID;
 
+export const tipoMedicamentoNormalId = process.env.REACT_APP_TIPO_MEDICAMENTO_NORMAL_ID
+export const tipoMedicamentoAntibioticoId = process.env.REACT_APP_TIPO_MEDICAMENTO_ANTIBIOTICO_ID
+export const tipoMedicamentoControladoId = process.env.REACT_APP_TIPO_MEDICAMENTO_CONTROLADO_ID
+
 export const dermatologoDirectoId = process.env.REACT_APP_DERMATOLOGO_DIRECTO_ID;
 
 export const frecuenciaPrimeraVezObj = {

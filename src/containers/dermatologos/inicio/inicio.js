@@ -14,6 +14,7 @@ import { ButtonCustom } from "../../../components/basic/ButtonCustom";
 import ModalPacienteDomicilio from "../../../components/modales/modal_paciente_domicilio";
 import TableComponent from "../../../components/table/TableComponent";
 import ModalItemReceta from "../../../components/modales/item_receta";
+import ModalItemEstudio from "../../../components/modales/item_estudio";
 import ModalImprimirReceta from "../../../components/modales/imprimir/receta";
 
 export const InicioContainer = (props) => {
@@ -23,6 +24,7 @@ export const InicioContainer = (props) => {
 		consultorio,
 		onClickCompletarDatos,
 		onClickItemReceta,
+		onClickItemEstudio,
 		onClickImprimirReceta,
 		onChangeProximaConsulta,
 		// MODAL PACIENTE DOMICILIO
@@ -37,9 +39,16 @@ export const InicioContainer = (props) => {
 		onCloseItemRecetar,
 		onAgregarProducto,
 		producto,
+		// MODAL ITEM ESTUDIO
+		openModalItemEstudio,
+		onCloseItemEstudio,
+		onClickAgregarEstudios,
 		// MODAL IMPRIMIR RECETA
 		openModalImprimirReceta,
 		onCloseImprimirRecetar,
+		onClickImprimirRecetaAntibioticos,
+		onClickImprimirRecetaControlados,
+		onClickImprimirEstudios,
 		datos,
 		receta,
 		sucursal,
@@ -49,8 +58,13 @@ export const InicioContainer = (props) => {
 		tituloControlados,
 		tituloEstudios,
 		columns,
-		productos,
+		columnsEstudio,
+		productosNormales,
+		productosAntibioticos,
+		productosControlados,
+		analisismedicos,
 		actions,
+		actionsEstudios,
 		options,
 		components,
 		colorBase,
@@ -81,6 +95,17 @@ export const InicioContainer = (props) => {
 						onClose={onCloseItemRecetar}
 						onAgregarProducto={onAgregarProducto}
 						producto={producto}
+						setMessage={setMessage}
+						setSeverity={setSeverity}
+						setOpenAlert={setOpenAlert} />
+					: ''
+			}
+			{
+				openModalItemEstudio ?
+					<ModalItemEstudio
+						open={openModalItemEstudio}
+						onClose={onCloseItemEstudio}
+						onClickAgregarEstudios={onClickAgregarEstudios}
 						setMessage={setMessage}
 						setSeverity={setSeverity}
 						setOpenAlert={setOpenAlert} />
@@ -172,102 +197,126 @@ export const InicioContainer = (props) => {
 											className={classes.button}
 											color="primary"
 											variant="contained"
-											onClick={() => onClickItemReceta()}
+											onClick={() => onClickItemEstudio()}
 											text={'AGREGAR ESTUDIO'} />
 									</Grid>
 								</Grid>
+								{
+									productosNormales && productosNormales.length > 0 ?
+									<Fragment>
+										<Grid item xs={12}>
+											<TableComponent
+												titulo={tituloNormal}
+												columns={columns}
+												data={productosNormales}
+												actions={actions}
+												options={options}
+												components={components} />
+										</Grid>
+
+										<Grid item xs={12}>
+											<ButtonCustom
+												className={classes.button}
+												color="primary"
+												variant="contained"
+												onClick={() => onClickImprimirReceta()}
+												disabled={!receta.fecha_proxima_consulta}
+												text={'IMPRIMIR RECETA'} />
+										</Grid>
+
+										<Grid item xs={12}>
+											<br></br>
+										</Grid>
+									</Fragment>
+									: ''										
+								}
+
+								{
+									productosAntibioticos && productosAntibioticos.length > 0 ?
+									<Fragment>
+										<Grid item xs={12}>
+											<TableComponent
+												titulo={tituloAntibioticos}
+												columns={columns}
+												data={productosAntibioticos}
+												actions={actions}
+												options={options}
+												components={components} />
+										</Grid>
+
+										<Grid item xs={12}>
+											<ButtonCustom
+												className={classes.button}
+												color="primary"
+												variant="contained"
+												onClick={() => onClickImprimirRecetaAntibioticos()}
+												disabled={!receta.fecha_proxima_consulta}
+												text={'IMPRIMIR ANTIBIÓTICOS'} />
+										</Grid>
+
+										<Grid item xs={12}>
+											<br></br>
+										</Grid>
+									</Fragment>
+									:''
+								}
 								
-								<Grid item xs={12}>
-									<TableComponent
-										titulo={tituloNormal}
-										columns={columns}
-										data={productos}
-										actions={actions}
-										options={options}
-										components={components} />
-								</Grid>
+								{
+									productosControlados && productosControlados.length > 0 ?
+									<Fragment>
+										<Grid item xs={12}>
+											<TableComponent
+												titulo={tituloControlados}
+												columns={columns}
+												data={productosControlados}
+												actions={actions}
+												options={options}
+												components={components} />
+										</Grid>
 
-								<Grid item xs={12}>
-									<ButtonCustom
-										className={classes.button}
-										color="primary"
-										variant="contained"
-										onClick={() => onClickImprimirReceta()}
-										disabled={!receta.fecha_proxima_consulta}
-										text={'IMPRIMIR RECETA'} />
-								</Grid>
+										<Grid item xs={12}>
+											<ButtonCustom
+												className={classes.button}
+												color="primary"
+												variant="contained"
+												onClick={() => onClickImprimirRecetaControlados()}
+												disabled={!receta.fecha_proxima_consulta}
+												text={'IMPRIMIR CONTROLADOS'} />
+										</Grid>
 
-								<Grid item xs={12}>
-									<br></br>
-								</Grid>
+										<Grid item xs={12}>
+											<br></br>
+										</Grid>
+									</Fragment>
+									: ''
+								}
 
-								<Grid item xs={12}>
-									<TableComponent
-										titulo={tituloAntibioticos}
-										columns={columns}
-										data={productos}
-										actions={actions}
-										options={options}
-										components={components} />
-								</Grid>
+								{
+									analisismedicos && analisismedicos.length > 0 ?
+									<Fragment>
+										<Grid item xs={12}>
+											<TableComponent
+												titulo={tituloEstudios}
+												columns={columnsEstudio}
+												data={analisismedicos}
+												actions={actionsEstudios}
+												options={options}
+												components={components} />
+										</Grid>
 
-								<Grid item xs={12}>
-									<ButtonCustom
-										className={classes.button}
-										color="primary"
-										variant="contained"
-										onClick={() => onClickImprimirReceta()}
-										disabled={!receta.fecha_proxima_consulta}
-										text={'IMPRIMIR ANTIBIÓTICOS'} />
-								</Grid>
+										<Grid item xs={12}>
+											<ButtonCustom
+												className={classes.button}
+												color="primary"
+												variant="contained"
+												onClick={() => onClickImprimirEstudios()}
+												disabled={!receta.fecha_proxima_consulta}
+												text={'IMPRIMIR ESTUDIOS'} />
+										</Grid>
+									</Fragment>
+									: ''
+								}
 
-								<Grid item xs={12}>
-									<br></br>
-								</Grid>
-
-								<Grid item xs={12}>
-									<TableComponent
-										titulo={tituloControlados}
-										columns={columns}
-										data={productos}
-										actions={actions}
-										options={options}
-										components={components} />
-								</Grid>
-
-								<Grid item xs={12}>
-									<ButtonCustom
-										className={classes.button}
-										color="primary"
-										variant="contained"
-										onClick={() => onClickImprimirReceta()}
-										disabled={!receta.fecha_proxima_consulta}
-										text={'IMPRIMIR CONTROLADOS'} />
-								</Grid>
-
-								<Grid item xs={12}>
-									<br></br>
-								</Grid>
-
-								<Grid item xs={12}>
-									<TableComponent
-										titulo={tituloEstudios}
-										columns={columns}
-										data={productos}
-										actions={actions}
-										options={options}
-										components={components} />
-								</Grid>
-
-								<Grid item xs={12}>
-									<ButtonCustom
-										className={classes.button}
-										color="primary"
-										variant="contained"
-										onClick={() => onClickImprimirReceta()}
-										disabled={!receta.fecha_proxima_consulta}
-										text={'IMPRIMIR ESTUDIOS'} />
-								</Grid>
 							</Paper>
 						</Grid>
 						: ''
