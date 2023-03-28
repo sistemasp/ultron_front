@@ -105,8 +105,15 @@ const FormImprimirReceta = (props) => {
         </Grid>
        
         <Grid container>
+          <Grid item xs={5}></Grid>
           <Grid item xs={true} className={classes.label_right}>
             <h3 className={classes.label_h}> {`${receta.dermatologo.dgp}`}</h3>
+          </Grid>
+          <Grid item xs={true} className={classes.label_right}>
+            <h3 className={classes.label_h}> {`${receta.dermatologo.ae}`}</h3>
+          </Grid>
+          <Grid item xs={true} className={classes.label_right}>
+            <h3 className={classes.label_h}> {`${receta.dermatologo.dpej}`}</h3>
           </Grid>
         </Grid>
 
