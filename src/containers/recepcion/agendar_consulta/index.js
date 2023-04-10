@@ -338,6 +338,10 @@ const AgendarConsulta = (props) => {
 		});
 	}
 
+	const fechaCitaEsCitado = (fechaCita) => {
+		return fechaCita > new Date()
+	}
+
 	const handleClickAgendar = async (data) => {
 		setIsLoading(true);
 		const create_date = new Date();
@@ -350,7 +354,8 @@ const AgendarConsulta = (props) => {
 		data.total = data.precio;
 		data.servicio = consultaServicioId;
 		data.tipo_cita = data.frecuencia._id === frecuenciaPrimeraVezId ? tipoCitaRevisionId : tipoCitaDerivadaId;
-		if (sucursal._id === sucursalOccidentalId || sucursal._id === sucursalFederalismoId) {
+
+		if ((sucursal._id === sucursalOccidentalId || sucursal._id === sucursalFederalismoId) && !fechaCitaEsCitado(data.fecha_hora)) {
 			const fecha_hora = new Date();
 			fecha_hora.setMinutes(0);
 			fecha_hora.setSeconds(0);
@@ -364,7 +369,7 @@ const AgendarConsulta = (props) => {
 		const response = await createConsult(data, token);
 		if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
 			const resConsult = response.data;
-			if (sucursal._id === sucursalOccidentalId || sucursal._id === sucursalFederalismoId) {
+			if ((sucursal._id === sucursalOccidentalId || sucursal._id === sucursalFederalismoId) && !fechaCitaEsCitado(data.fecha_hora)) {
 				const entrada = {
 					create_date: create_date,
 					hora_aplicacion: create_date,

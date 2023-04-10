@@ -268,6 +268,10 @@ const AgendarCuracion = (props) => {
 		}
 	}
 
+	const fechaCitaEsCitado = (fechaCita) => {
+		return fechaCita > new Date()
+	}
+
 	const handleClickAgendar = async (data) => {
 		setIsLoading(true);
 		data.total = data.precio;
@@ -279,7 +283,9 @@ const AgendarCuracion = (props) => {
 		data.hora_llegada = '--:--';
 		data.hora_atencion = '--:--';
 		data.hora_salida = '--:--';
-		if (sucursal._id !== sucursalManuelAcunaId && sucursal._id !== sucursalRubenDarioId) {
+		if (sucursal !== sucursalManuelAcunaId && 
+			sucursal !== sucursalRubenDarioId && 
+			!fechaCitaEsCitado(data.fecha_hora)) {
 			const dateNow = new Date();
 			data.hora_llegada = `${addZero(dateNow.getHours())}:${addZero(dateNow.getMinutes())}`;
 			dateNow.setMinutes(0);

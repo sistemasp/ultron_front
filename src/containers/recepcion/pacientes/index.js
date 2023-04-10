@@ -51,7 +51,6 @@ const Pacientes = (props) => {
 		{ title: 'TELÉFONO', field: 'telefono' },
 		{ title: 'EMAIL', field: 'email' },
 		{ title: 'SEXO', field: 'sexo.nombre' },
-		sucursal._id === process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID ? { title: 'ESTADO', field: 'estado' } : {},
 		{ title: 'FECHA DE NACIMIENTO', field: 'fecha_nacimiento' },
 		empleado.super_admin ? { title: 'QUIEN CAPTURA', field: 'quien_captura.nombre' } : {},
 	];

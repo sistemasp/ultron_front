@@ -20,6 +20,11 @@ import myStyles from '../../../css';
 import ModalTraspasoServicio from '../../../components/modales/traspaso_servicio';
 import ModalProximaEstetica from '../../../components/modales/modal_proxima_estetica';
 import ModalImprimirEstetica from '../../../components/modales/imprimir/estetica';
+import { 
+	sucursalManuelAcunaId,
+	sucursalRubenDarioId,
+	rolRecepcionistaId
+  } from '../../../utils/constants';
 
 export const AgendarEsteticaContainer = (props) => {
 
@@ -320,8 +325,9 @@ export const AgendarEsteticaContainer = (props) => {
 								onChange={onChangeObservaciones}
 								variant="outlined" />
 						</Grid>
-						{sucursal._id === process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID ||
-							sucursal._id === process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID ?
+						{sucursal === sucursalManuelAcunaId ||
+							sucursal === sucursalRubenDarioId ||
+							empleado.rol._id !== rolRecepcionistaId ?
 							<Fragment>
 								<Grid item xs={12} sm={2}>
 									<MuiPickersUtilsProvider utils={DateFnsUtils}>

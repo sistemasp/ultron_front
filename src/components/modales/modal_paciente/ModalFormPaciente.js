@@ -92,7 +92,7 @@ const ModalFormPaciente = (props) => {
                 variant="outlined" />
               </Grid>
               */}
-              <Grid item xs={6}>
+              <Grid item xs={12}>
                 <TextField
                   className={classes.textField}
                   name="telefono"
@@ -105,7 +105,17 @@ const ModalFormPaciente = (props) => {
                   variant="outlined"
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12}>
+                <TextField
+                  className={classes.textField}
+                  name="email"
+                  label="EMAIL"
+                  value={values.email}
+                  onChange={onChangeEmail}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12}>
                 <TextField
                   className={classes.textField}
                   name="codigo_postal"
@@ -115,16 +125,6 @@ const ModalFormPaciente = (props) => {
                   inputProps={{
                     maxLength: "5",
                   }}
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  className={classes.textField}
-                  name="email"
-                  label="EMAIL"
-                  value={values.email}
-                  onChange={onChangeEmail}
                   variant="outlined"
                 />
               </Grid>
@@ -150,17 +150,6 @@ const ModalFormPaciente = (props) => {
                     options={sexos} />
                 </FormControl>
               </Grid>
-              { sucursal._id === process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID &&
-                <Grid item xs={12}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <ComboCustom
-                    label='ESTADO'
-                    value={values.estado}
-                    onChange={onChangeEstado}
-                    options={state} />
-                </FormControl>
-              </Grid>
-             }
               <Grid item xs={12} sm={6}>
                 <ButtonCustom
                   className={classes.buttonCancel}

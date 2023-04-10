@@ -20,7 +20,14 @@ import ModalTraspasoConsulta from '../../../components/modales/traspaso_consulta
 import myStyles from '../../../css';
 import { CheckCustom } from '../../../components/basic/CheckCustom';
 import { ComboCustom } from '../../../components/basic/ComboCustom';
-import { formaPagoTarjetaId, sucursalFederalismoId, sucursalManuelAcunaId, sucursalOccidentalId, sucursalRubenDarioId } from '../../../utils/constants';
+import { 
+  formaPagoTarjetaId,
+  sucursalFederalismoId,
+  sucursalManuelAcunaId,
+  sucursalOccidentalId,
+  sucursalRubenDarioId,
+  rolRecepcionistaId
+} from '../../../utils/constants';
 //import Select from 'react-select';
 
 export const AgendarConsultaContainer = (props) => {
@@ -86,13 +93,7 @@ export const AgendarConsultaContainer = (props) => {
     openModalImprimirConsultas,
     datosImpresion,
     onCloseImprimirConsulta,
-    openModalCuraciones,
-    onCloseCuracion,
-    curacion,
-    estetica,
     tipoServicioId,
-    openModalEstetica,
-    onCloseEstetica,
     onGuardarModalPagos,
     openModalProxima,
     openModalTraspaso,
@@ -392,7 +393,8 @@ export const AgendarConsultaContainer = (props) => {
               variant="outlined" />
           </Grid>
           {sucursal._id === sucursalManuelAcunaId ||
-            sucursal._id === sucursalRubenDarioId ?
+            sucursal._id === sucursalRubenDarioId ||
+            empleado.rol._id !== rolRecepcionistaId ?
             <Fragment>
               <Grid item xs={12} sm={2}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
