@@ -384,8 +384,9 @@ const InicioDermatologos = (props) => {
       producto_activo: newItem.producto._id.producto_activo ? newItem.producto._id.producto_activo : newItem.producto._id.nombre,
       tipo_medicamento: newItem.producto._id.tipo_medicamento
     }
-
+    receta.productos = receta.productos ? receta.productos : []
     receta.productos.push(item);
+    console.log("KAOZ", receta)
     const response = await updateReceta(receta._id, receta);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       findConsultorio();
