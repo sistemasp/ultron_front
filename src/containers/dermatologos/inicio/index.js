@@ -234,7 +234,6 @@ const InicioDermatologos = (props) => {
           const responseProductoComercial = await findProductoComercialById(producto.producto._id);
           if (`${responseLaboratorio.status}` === process.env.REACT_APP_RESPONSE_CODE_OK &&
             `${responseProductoComercial.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-            setIsLoading(true);
             producto.laboratorio = responseLaboratorio.data;
             producto.producto = responseProductoComercial.data;
             setIsLoading(false);
@@ -262,15 +261,14 @@ const InicioDermatologos = (props) => {
             ...receta,
             fecha_proxima_consulta: receta.fecha_proxima_consulta ? receta.fecha_proxima_consulta : ""
           })
+          findConsultorio()
           responseReceta.data.productos.forEach(async (producto) => {
             const responseLaboratorio = await findLaboratorioById(producto.laboratorio._id);
             const responseProductoComercial = await findProductoComercialById(producto.producto._id);
             if (`${responseLaboratorio.status}` === process.env.REACT_APP_RESPONSE_CODE_OK &&
               `${responseProductoComercial.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-              setIsLoading(true);
               producto.laboratorio = responseLaboratorio.data;
               producto.producto = responseProductoComercial.data;
-              setIsLoading(false);
             }
           });
         }
@@ -386,7 +384,6 @@ const InicioDermatologos = (props) => {
     }
     receta.productos = receta.productos ? receta.productos : []
     receta.productos.push(item);
-    console.log("KAOZ", receta)
     const response = await updateReceta(receta._id, receta);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
       findConsultorio();
