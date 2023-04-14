@@ -160,7 +160,7 @@ export const InicioContainer = (props) => {
 								</Grid>
 							</Grid>
 							{
-								consultorio.paciente && !consultorio.paciente.codigo_postal
+								consultorio.paciente && !consultorio.paciente.ocupacion
 									?
 									<Grid item xs={12}>
 										<ButtonCustom
@@ -176,7 +176,7 @@ export const InicioContainer = (props) => {
 					</Paper>
 				</Grid>
 				{
-					consultorio.paciente && consultorio.paciente.codigo_postal
+					consultorio.paciente && consultorio.paciente.ocupacion
 						?
 						<Grid item xs={12}>
 							<Paper>
