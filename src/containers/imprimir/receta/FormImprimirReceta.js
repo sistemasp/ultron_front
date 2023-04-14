@@ -47,6 +47,12 @@ const useStyles = makeStyles(theme => ({
     marginLeft: '10px',
     textAlign: 'left',
   },
+  label_left_mb10: {
+    marginTop: '0px',
+    marginBottom: '10px',
+    marginLeft: '10px',
+    textAlign: 'left',
+  },
   label_right: {
     marginTop: '0px',
     marginBottom: '0px',
@@ -141,7 +147,7 @@ const FormImprimirReceta = (props) => {
           productos.map((producto, index) => {
             return <Fragment>
               <Grid container>
-                <Grid item xs={true} className={classes.label_left}>
+                <Grid item xs={true} className={classes.label_left_mb10}>
                   <h3 className={classes.label_left}>
                     {
                       producto.tipo_medicamento === tipoMedicamentoNormalId 
