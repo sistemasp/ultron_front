@@ -109,64 +109,91 @@ const FormImprimirReceta = (props) => {
       aria-describedby="simple-modal-description" >
 
       <Grid container>
+        {
+          productos.map((producto, index) => {
+              {
+                if (index%4 === 0) {
+                  return <Fragment>
+                    <Grid container>
+                      <Grid item xs={true} className={classes.label_right}>
+                        <h3 className={classes.label_h}> {`${receta.dermatologo.nombre}`}</h3>
+                      </Grid>
+                    </Grid>
+                  
+                    <Grid container>
+                      <Grid item xs={5}></Grid>
+                      <Grid item xs={true} className={classes.label_right}>
+                        <h3 className={classes.label_h}> {`${receta.dermatologo.dgp}`}</h3>
+                      </Grid>
+                      <Grid item xs={true} className={classes.label_right}>
+                        <h3 className={classes.label_h}> {`${receta.dermatologo.ae}`}</h3>
+                      </Grid>
+                      <Grid item xs={true} className={classes.label_right}>
+                        <h3 className={classes.label_h}> {`${receta.dermatologo.dpej}`}</h3>
+                      </Grid>
+                    </Grid>
 
-        <Grid container>
-          <Grid item xs={true} className={classes.label_right}>
-            <h3 className={classes.label_h}> {`${receta.dermatologo.nombre}`}</h3>
-          </Grid>
-        </Grid>
-       
-        <Grid container>
-          <Grid item xs={5}></Grid>
-          <Grid item xs={true} className={classes.label_right}>
-            <h3 className={classes.label_h}> {`${receta.dermatologo.dgp}`}</h3>
-          </Grid>
-          <Grid item xs={true} className={classes.label_right}>
-            <h3 className={classes.label_h}> {`${receta.dermatologo.ae}`}</h3>
-          </Grid>
-          <Grid item xs={true} className={classes.label_right}>
-            <h3 className={classes.label_h}> {`${receta.dermatologo.dpej}`}</h3>
-          </Grid>
-        </Grid>
+                    <Grid container>
+                      <Grid item xs={true} className={classes.label_right}>
+                        <h3 className={classes.label_h}>{`${dateToString(consultorio.consulta.fecha_hora)}`}</h3>
+                      </Grid>
+                    </Grid>
 
-        <Grid container>
-          <Grid item xs={true} className={classes.label_right}>
-            <h3 className={classes.label_h}>{`${dateToString(consultorio.consulta.fecha_hora)}`}</h3>
-          </Grid>
-        </Grid>
+                    <Grid container>
+                      <Grid item xs={6} className={classes.label_right}>
+                        <h3 className={classes.label_h}> {`${consultorio.paciente.nombres} ${consultorio.paciente.apellidos}`}</h3>
+                      </Grid>
+                      <Grid item xs={2} className={classes.label_right}>
+                        <h3 className={classes.label_h}> {`${edad} `}</h3>
+                      </Grid>
+                      <Grid item xs={true} className={classes.label_right}>
+                        <h3 className={classes.label_h}> {`${dateToString(receta.fecha_proxima_consulta)}`}</h3>
+                      </Grid>
+                    </Grid>
+                    
+                    <h1><br /></h1>
+                    <Grid container>
+                      <Grid item xs={12} className={classes.label_left}>
+                        <h3 className={classes.label_left}>
+                          {
+                            producto.tipo_medicamento === tipoMedicamentoNormalId 
+                            ? `${index + 1} - ${producto.producto_activo}`
+                            : `${index + 1} - ${producto.nombre_producto} ( ${producto.producto_activo} )`
+                          }
+                        </h3>
+                      </Grid>
+                      <Grid item xs={12} className={classes.label_left_60}>
+                        <h3 className={classes.label_left}> ֎ {producto.recomendacion} </h3>
+                      </Grid>
+                    </Grid>
+                  </Fragment>
+                }
+                return <Fragment>
+                  <Grid container>
+                    <Grid item xs={12} className={classes.label_left}>
+                      <h3 className={classes.label_left}>
+                        {
+                          producto.tipo_medicamento === tipoMedicamentoNormalId 
+                          ? `${index + 1} - ${producto.producto_activo}`
+                          : `${index + 1} - ${producto.nombre_producto} ( ${producto.producto_activo} )`
+                        }
+                      </h3>
+                    </Grid>
+                    <Grid item xs={12} className={classes.label_left_60}>
+                      <h3 className={classes.label_left}> ֎ {producto.recomendacion} </h3>
+                    </Grid>
+                  </Grid>
+                </Fragment> 
+              }
 
-        <Grid container>
-          <Grid item xs={6} className={classes.label_right}>
-            <h3 className={classes.label_h}> {`${consultorio.paciente.nombres} ${consultorio.paciente.apellidos}`}</h3>
-          </Grid>
-          <Grid item xs={2} className={classes.label_right}>
-            <h3 className={classes.label_h}> {`${edad} `}</h3>
-          </Grid>
-          <Grid item xs={true} className={classes.label_right}>
-            <h3 className={classes.label_h}> {`${dateToString(receta.fecha_proxima_consulta)}`}</h3>
-          </Grid>
-        </Grid>
+          })
+          
+        }
         
-        <h1><br /></h1>
 
         {
           productos.map((producto, index) => {
-            return <Fragment>
-              <Grid container>
-                <Grid item xs={12} className={classes.label_left}>
-                  <h3 className={classes.label_left}>
-                    {
-                      producto.tipo_medicamento === tipoMedicamentoNormalId 
-                      ? `${index + 1} - ${producto.producto_activo}`
-                      : `${index + 1} - ${producto.nombre_producto} ( ${producto.producto_activo} )`
-                    }
-                  </h3>
-                </Grid>
-                <Grid item xs={12} className={classes.label_left_60}>
-                  <h3 className={classes.label_left}> ֎ {producto.recomendacion} </h3>
-                </Grid>
-              </Grid>
-            </Fragment>
+            
           })
         }
        

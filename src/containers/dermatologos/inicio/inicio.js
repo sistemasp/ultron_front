@@ -65,6 +65,7 @@ export const InicioContainer = (props) => {
 		analisismedicos,
 		actions,
 		actionsEstudios,
+		actions_controlados,
 		options,
 		components,
 		colorBase,
@@ -269,7 +270,7 @@ export const InicioContainer = (props) => {
 												titulo={tituloControlados}
 												columns={columns}
 												data={productosControlados}
-												actions={actions}
+												actions={actions_controlados}
 												options={options}
 												components={components} />
 										</Grid>

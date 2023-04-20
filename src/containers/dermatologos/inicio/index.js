@@ -120,10 +120,37 @@ const InicioDermatologos = (props) => {
     setIsLoading(false);
   }
 
+  const handleClickImprimirUnProducto = async (event, rowData) => {
+    const responseReceta = await updateReceta(receta._id, receta)
+    if (`${responseReceta.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      navigate('/imprimir/receta/normal',
+      {
+        state: {
+          sucursal: sucursal,
+          colorBase: colorBase,
+          productos: [rowData],
+          consultorio: consultorio,
+          receta: receta
+        }
+      })
+    } 
+  }
+
   const actions = [
     {
       tooltip: 'ELIMINAR',
       onClick: handleOnClickEliminarItem
+    }
+  ];
+
+  const actions_controlados = [
+    {
+      tooltip: 'ELIMINAR',
+      onClick: handleOnClickEliminarItem
+    },
+    {
+      tooltip: 'IMPRIMIR',
+      onClick: handleClickImprimirUnProducto
     }
   ];
 
@@ -162,6 +189,9 @@ const InicioDermatologos = (props) => {
         break;
       case 'ELIMINAR ESTUDIO':
         handleOnClickEliminarItemEstudios(e, rowData)
+        break
+      case 'IMPRIMIR':
+        handleClickImprimirUnProducto(e, rowData)
         break
     }
   }
@@ -453,6 +483,7 @@ const InicioDermatologos = (props) => {
               productosControlados={productosControlados}
               actions={actions}
               actionsEstudios={actionsEstudios}
+              actions_controlados={actions_controlados}
               options={options}
               components={components}
               openModalImprimirReceta={openModalImprimirReceta}
