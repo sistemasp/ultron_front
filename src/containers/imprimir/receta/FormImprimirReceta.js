@@ -112,7 +112,7 @@ const FormImprimirReceta = (props) => {
         {
           productos.map((producto, index) => {
               {
-                if (index%4 === 0) {
+                if (index%5 === 0) {
                   return <Fragment>
                     <Grid container>
                       <Grid item xs={true} className={classes.label_right}>
