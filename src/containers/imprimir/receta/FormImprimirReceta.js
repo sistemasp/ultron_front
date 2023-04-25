@@ -156,9 +156,9 @@ const FormImprimirReceta = (props) => {
                       <Grid item xs={12} className={classes.label_left}>
                         <h3 className={classes.label_left}>
                           {
-                            producto.tipo_medicamento === tipoMedicamentoNormalId 
-                            ? `${index + 1} - ${producto.producto_activo}`
-                            : `${index + 1} - ${producto.nombre_producto} ( ${producto.producto_activo} )`
+                            producto.producto_activo && producto.producto_activo !== producto.nombre_producto
+                            ? `${index + 1} - ${producto.nombre_producto} ( ${producto.producto_activo} )`
+                            : `${index + 1} - ${producto.nombre_producto}`
                           }
                         </h3>
                       </Grid>
@@ -173,9 +173,9 @@ const FormImprimirReceta = (props) => {
                     <Grid item xs={12} className={classes.label_left}>
                       <h3 className={classes.label_left}>
                         {
-                          producto.tipo_medicamento === tipoMedicamentoNormalId 
-                          ? `${index + 1} - ${producto.producto_activo}`
-                          : `${index + 1} - ${producto.nombre_producto} ( ${producto.producto_activo} )`
+                          producto.producto_activo && producto.producto_activo !== producto.nombre_producto
+                          ? `${index + 1} - ${producto.nombre_producto} ( ${producto.producto_activo} )`
+                          : `${index + 1} - ${producto.nombre_producto}`
                         }
                       </h3>
                     </Grid>
@@ -188,13 +188,6 @@ const FormImprimirReceta = (props) => {
 
           })
           
-        }
-        
-
-        {
-          productos.map((producto, index) => {
-            
-          })
         }
        
         {

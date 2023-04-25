@@ -20,8 +20,6 @@ const ImprimirReceta = (props) => {
     receta,
   } = location.state;
   
-  
-
   const classes = myStyles(colorBase)();
 
   const [show, setShow] = useState(true);
