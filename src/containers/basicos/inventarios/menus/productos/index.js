@@ -62,7 +62,7 @@ const Productos = (props) => {
 	}
 
 	const handleOnClickShowKardex = (event, rowData) => {
-		console.log("KAOZ", event, rowData);
+
 	}
 
 	const actions = [

@@ -16,6 +16,18 @@ export const findRecetaByConsultaId = async (consultaId) => {
     }
 }
 
+export const findRecetaByPacienteId = async (pacienteId) => {
+    try {
+        const response = await axios({
+            url: `${baseUrl}/receta/paciente/${pacienteId}`,
+            method: 'GET'
+        });
+        return response;
+    } catch (error) {
+        console.log('findRecetaByPacienteId', error);
+    }
+}
+
 export const createReceta = async (receta) => {
     try {
         const response = await axios({

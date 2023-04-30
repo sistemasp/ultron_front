@@ -23,6 +23,7 @@ import FaceIcon from '@material-ui/icons/Face';
 import ModalPassword from '../../../components/modales/modal_password';
 import myStyles from '../../../css';
 import InicioDermatologos from '../inicio';
+import RecetasPaciente from '../recetas';
 
 const TabPanel = (props) => {
 	const { children, value, index, ...other } = props;
@@ -170,7 +171,7 @@ export const MainDermatologosContainer = props => {
 							sucursal={sucursal} />
 					</TabPanel>
 					<TabPanel value={value} index={1}>
-						<InicioDermatologos
+						<RecetasPaciente
 							dermatologo={dermatologo}
 							colorBase={colorBase}
 							sucursal={sucursal} />
