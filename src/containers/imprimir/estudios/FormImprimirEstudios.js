@@ -101,22 +101,26 @@ const FormImprimirEstudios = (props) => {
 
         <Grid container>
           <Grid item xs={true} className={classes.label_right}>
-            <h3 className={classes.label_h}> {`${receta.dermatologo.nombre}`}</h3>
+            <h3 className={classes.label_h}> {receta.dermatologo.has_receta ? `` : `${receta.dermatologo.nombre}`}</h3>
           </Grid>
         </Grid>
        
         <Grid container>
           <Grid item xs={5}></Grid>
           <Grid item xs={true} className={classes.label_right}>
-            <h3 className={classes.label_h}> {`${receta.dermatologo.dgp}`}</h3>
+            <h3 className={classes.label_h}> {receta.dermatologo.has_receta ? <h1><br /></h1> : `${receta.dermatologo.dgp}`}</h3>
           </Grid>
           <Grid item xs={true} className={classes.label_right}>
-            <h3 className={classes.label_h}> {`${receta.dermatologo.ae}`}</h3>
+            <h3 className={classes.label_h}> {receta.dermatologo.has_receta ? `` : `${receta.dermatologo.ae}`}</h3>
           </Grid>
           <Grid item xs={true} className={classes.label_right}>
-            <h3 className={classes.label_h}> {`${receta.dermatologo.dpej}`}</h3>
+            <h3 className={classes.label_h}> {receta.dermatologo.has_receta ? `` : `${receta.dermatologo.dpej}`}</h3>
           </Grid>
         </Grid>
+
+        {
+          receta.dermatologo.has_receta ? <h1><br /><br /></h1> : ''
+        }
 
         <Grid container>
           <Grid item xs={true} className={classes.label_right}>
