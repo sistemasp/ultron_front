@@ -310,65 +310,63 @@ export const AgendarDermapenContainer = (props) => {
 							onChange={onChangeObservaciones}
 							variant="outlined" />
 					</Grid>
-					{sucursal._id === process.env.REACT_APP_SUCURSAL_MANUEL_ACUNA_ID ||
-						sucursal._id === process.env.REACT_APP_SUCURSAL_RUBEN_DARIO_ID ?
-						<Fragment>
-							<Grid item xs={12} sm={2}>
-								<MuiPickersUtilsProvider utils={DateFnsUtils}>
-									<Grid
-										container
-										justify="center"
-										alignItems="center" >
-										<KeyboardDatePicker
-											className={classes.formControl}
-											disableToolbar
-											//disablePast
-											autoOk
-											disabled={disableDate}
-											variant="inline"
-											format="dd/MM/yyyy"
-											margin="normal"
-											id="date-picker-inline"
-											label="FECHA"
-											value={values.fecha_hora}
-											onChange={onChangeFecha}
-											KeyboardButtonProps={{
-												'aria-label': 'change date',
-											}}
-											invalidDateMessage='Selecciona una fecha' />
-									</Grid>
-								</MuiPickersUtilsProvider>
-							</Grid>
-							<Grid item xs={12} sm={2}>
-								<FormControl variant="outlined" className={classes.formControl}>
-									<InputLabel id="simple-select-outlined-hora">HORA</InputLabel>
-									<Select
-										labelId="simple-select-outlined-hora"
-										id="simple-select-outlined-hora"
-										value={values.hora}
-										error={Boolean(errors.hora)}
-										onChange={onChangeHora}
-										disabled={!values.fecha_hora}
-										label="HORA" >
-										{horarios.sort().map((item, index) => <MenuItem key={index} value={item.hora}>{item.hora}</MenuItem>)}
-									</Select>
-								</FormControl>
-							</Grid>
-							<Grid item xs={12} sm={2}>
-								<TextField
-									className={classes.formControl}
-									name="tiempo"
-									error={Boolean(errors.tiempo)}
-									label="TIEMPO"
-									value={values.tiempo}
-									type='Number'
-									onChange={onChangeTiempo}
-									onInput={(e) => {
-										e.target.value = Math.max(0, parseInt(e.target.value)).toString().slice(0, 3)
-									}}
-									variant="outlined" />
-							</Grid>
-						</Fragment> : ''}
+					<Fragment>
+						<Grid item xs={12} sm={2}>
+							<MuiPickersUtilsProvider utils={DateFnsUtils}>
+								<Grid
+									container
+									justify="center"
+									alignItems="center" >
+									<KeyboardDatePicker
+										className={classes.formControl}
+										disableToolbar
+										//disablePast
+										autoOk
+										disabled={disableDate}
+										variant="inline"
+										format="dd/MM/yyyy"
+										margin="normal"
+										id="date-picker-inline"
+										label="FECHA"
+										value={values.fecha_hora}
+										onChange={onChangeFecha}
+										KeyboardButtonProps={{
+											'aria-label': 'change date',
+										}}
+										invalidDateMessage='Selecciona una fecha' />
+								</Grid>
+							</MuiPickersUtilsProvider>
+						</Grid>
+						<Grid item xs={12} sm={2}>
+							<FormControl variant="outlined" className={classes.formControl}>
+								<InputLabel id="simple-select-outlined-hora">HORA</InputLabel>
+								<Select
+									labelId="simple-select-outlined-hora"
+									id="simple-select-outlined-hora"
+									value={values.hora}
+									error={Boolean(errors.hora)}
+									onChange={onChangeHora}
+									disabled={!values.fecha_hora}
+									label="HORA" >
+									{horarios.sort().map((item, index) => <MenuItem key={index} value={item.hora}>{item.hora}</MenuItem>)}
+								</Select>
+							</FormControl>
+						</Grid>
+						<Grid item xs={12} sm={2}>
+							<TextField
+								className={classes.formControl}
+								name="tiempo"
+								error={Boolean(errors.tiempo)}
+								label="TIEMPO"
+								value={values.tiempo}
+								type='Number'
+								onChange={onChangeTiempo}
+								onInput={(e) => {
+									e.target.value = Math.max(0, parseInt(e.target.value)).toString().slice(0, 3)
+								}}
+								variant="outlined" />
+						</Grid>
+					</Fragment> 
 
 					<Grid item xs={12} sm={2}>
 						<TextField

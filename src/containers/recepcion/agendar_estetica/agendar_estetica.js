@@ -325,65 +325,62 @@ export const AgendarEsteticaContainer = (props) => {
 								onChange={onChangeObservaciones}
 								variant="outlined" />
 						</Grid>
-						{sucursal === sucursalManuelAcunaId ||
-							sucursal === sucursalRubenDarioId ||
-							empleado.rol._id !== rolRecepcionistaId ?
-							<Fragment>
-								<Grid item xs={12} sm={2}>
-									<MuiPickersUtilsProvider utils={DateFnsUtils}>
-										<Grid
-											container
-											justify="center"
-											alignItems="center" >
-											<KeyboardDatePicker
-												className={classes.formControl}
-												disableToolbar
-												//disablePast
-												autoOk
-												disabled={disableDate}
-												variant="inline"
-												format="dd/MM/yyyy"
-												margin="normal"
-												id="date-picker-inline"
-												label="FECHA"
-												value={values.fecha_hora}
-												onChange={onChangeFecha}
-												KeyboardButtonProps={{
-													'aria-label': 'change date',
-												}}
-												invalidDateMessage='Selecciona una fecha' />
-										</Grid>
-									</MuiPickersUtilsProvider>
-								</Grid>
-								<Grid item xs={12} sm={2}>
-									<TextField
-										className={classes.textField}
-										name="hora"
-										label="HORA"
-										value={values.hora}
-										type='Text'
-										onChange={onChangeHora}
-										onInput={(e) => {
-											e.target.value = e.target.value < 0 ? 0 : (e.target.value > 24 ? 24 : e.target.value);
-											e.target.value = (e.target.value).toString().slice(0, 2)
-										}}
-										variant="outlined" />
-								</Grid>
-								<Grid item xs={12} sm={2}>
-									<TextField
-										className={classes.textField}
-										name="minutos"
-										label="MINUTOS"
-										value={values.minutos}
-										type='Text'
-										onChange={onChangeMinutos}
-										onInput={(e) => {
-											e.target.value = e.target.value < 0 ? 0 : (e.target.value > 60 ? 60 : e.target.value);
-											e.target.value = (e.target.value).toString().slice(0, 2)
-										}}
-										variant="outlined" />
-								</Grid>
-							</Fragment> : ''}
+						<Fragment>
+							<Grid item xs={12} sm={2}>
+								<MuiPickersUtilsProvider utils={DateFnsUtils}>
+									<Grid
+										container
+										justify="center"
+										alignItems="center" >
+										<KeyboardDatePicker
+											className={classes.formControl}
+											disableToolbar
+											//disablePast
+											autoOk
+											disabled={disableDate}
+											variant="inline"
+											format="dd/MM/yyyy"
+											margin="normal"
+											id="date-picker-inline"
+											label="FECHA"
+											value={values.fecha_hora}
+											onChange={onChangeFecha}
+											KeyboardButtonProps={{
+												'aria-label': 'change date',
+											}}
+											invalidDateMessage='Selecciona una fecha' />
+									</Grid>
+								</MuiPickersUtilsProvider>
+							</Grid>
+							<Grid item xs={12} sm={2}>
+								<TextField
+									className={classes.textField}
+									name="hora"
+									label="HORA"
+									value={values.hora}
+									type='Text'
+									onChange={onChangeHora}
+									onInput={(e) => {
+										e.target.value = e.target.value < 0 ? 0 : (e.target.value > 24 ? 24 : e.target.value);
+										e.target.value = (e.target.value).toString().slice(0, 2)
+									}}
+									variant="outlined" />
+							</Grid>
+							<Grid item xs={12} sm={2}>
+								<TextField
+									className={classes.textField}
+									name="minutos"
+									label="MINUTOS"
+									value={values.minutos}
+									type='Text'
+									onChange={onChangeMinutos}
+									onInput={(e) => {
+										e.target.value = e.target.value < 0 ? 0 : (e.target.value > 60 ? 60 : e.target.value);
+										e.target.value = (e.target.value).toString().slice(0, 2)
+									}}
+									variant="outlined" />
+							</Grid>
+						</Fragment>
 						<Grid item xs={12} sm={2}>
 							<TextField
 								className={classes.textField}

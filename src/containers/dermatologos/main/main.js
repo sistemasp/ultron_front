@@ -20,10 +20,12 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { Button } from '@material-ui/core';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import FaceIcon from '@material-ui/icons/Face';
+import AddCommentIcon from '@mui/icons-material/AddComment';
 import ModalPassword from '../../../components/modales/modal_password';
 import myStyles from '../../../css';
 import InicioDermatologos from '../inicio';
 import RecetasPaciente from '../recetas';
+import FichaClinica from '../ficha_clinica';
 
 const TabPanel = (props) => {
 	const { children, value, index, ...other } = props;
@@ -151,7 +153,13 @@ export const MainDermatologosContainer = props => {
 					</ListItem>
 				</List>
 				<List>
-					<ListItem button key={'RECETAS'} onClick={(e) => onChangeTab(e, 1, handleDrawerClose)}>
+					<ListItem button key={'FICHA CLINICA'} onClick={(e) => onChangeTab(e, 1, handleDrawerClose)}>
+						<ListItemIcon> <AddCommentIcon /> </ListItemIcon>
+						<ListItemText primary={'FICHA CLINICA'} />
+					</ListItem>
+				</List>
+				<List>
+					<ListItem button key={'RECETAS'} onClick={(e) => onChangeTab(e, 2, handleDrawerClose)}>
 						<ListItemIcon> <FolderOpenIcon /> </ListItemIcon>
 						<ListItemText primary={'RECETAS'} />
 					</ListItem>
@@ -171,6 +179,12 @@ export const MainDermatologosContainer = props => {
 							sucursal={sucursal} />
 					</TabPanel>
 					<TabPanel value={value} index={1}>
+						<FichaClinica
+							dermatologo={dermatologo}
+							colorBase={colorBase}
+							sucursal={sucursal} />
+					</TabPanel>
+					<TabPanel value={value} index={2}>
 						<RecetasPaciente
 							dermatologo={dermatologo}
 							colorBase={colorBase}

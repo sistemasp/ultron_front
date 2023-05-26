@@ -392,49 +392,46 @@ export const AgendarConsultaContainer = (props) => {
               onChange={onChangeObservaciones}
               variant="outlined" />
           </Grid>
-          {sucursal._id === sucursalManuelAcunaId ||
-            sucursal._id === sucursalRubenDarioId ||
-            empleado.rol._id !== rolRecepcionistaId ?
-            <Fragment>
-              <Grid item xs={12} sm={2}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <Grid
-                    container
-                    justify="center"
-                    alignItems="center" >
-                    <KeyboardDatePicker
-                      disableToolbar
-                      //disablePast
-                      autoOk
-                      variant="inline"
-                      format="dd/MM/yyyy"
-                      margin="normal"
-                      id="date-picker-inline"
-                      label="FECHA"
-                      value={values.fecha_hora}
-                      onChange={onChangeFecha}
-                      KeyboardButtonProps={{
-                        'aria-label': 'change date',
-                      }}
-                      invalidDateMessage='SELECCIONA UNA FECHA' />
-                  </Grid>
-                </MuiPickersUtilsProvider>
-              </Grid>
-              <Grid item xs={12} sm={2}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="simple-select-outlined-hora">HORA</InputLabel>
-                  <Select
-                    labelId="simple-select-outlined-hora"
-                    id="simple-select-outlined-hora"
-                    value={values.hora}
-                    onChange={onChangeHora}
-                    disabled={values.fecha_show === ''}
-                    label="HORA" >
-                    {horarios.sort().map((item, index) => <MenuItem key={index} value={item.hora}>{item.hora}</MenuItem>)}
-                  </Select>
-                </FormControl>
-              </Grid>
-            </Fragment> : ''}
+          <Fragment>
+            <Grid item xs={12} sm={2}>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <Grid
+                  container
+                  justify="center"
+                  alignItems="center" >
+                  <KeyboardDatePicker
+                    disableToolbar
+                    //disablePast
+                    autoOk
+                    variant="inline"
+                    format="dd/MM/yyyy"
+                    margin="normal"
+                    id="date-picker-inline"
+                    label="FECHA"
+                    value={values.fecha_hora}
+                    onChange={onChangeFecha}
+                    KeyboardButtonProps={{
+                      'aria-label': 'change date',
+                    }}
+                    invalidDateMessage='SELECCIONA UNA FECHA' />
+                </Grid>
+              </MuiPickersUtilsProvider>
+            </Grid>
+            <Grid item xs={12} sm={2}>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="simple-select-outlined-hora">HORA</InputLabel>
+                <Select
+                  labelId="simple-select-outlined-hora"
+                  id="simple-select-outlined-hora"
+                  value={values.hora}
+                  onChange={onChangeHora}
+                  disabled={values.fecha_show === ''}
+                  label="HORA" >
+                  {horarios.sort().map((item, index) => <MenuItem key={index} value={item.hora}>{item.hora}</MenuItem>)}
+                </Select>
+              </FormControl>
+            </Grid>
+          </Fragment>
         </Grid>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <Grid
