@@ -61,6 +61,7 @@ const ReporteGeneralCitas = (props) => {
 		{ title: 'PACIENTE', field: 'paciente_nombre' },
 		{ title: 'TELÉFONO', field: 'paciente.telefono' },
 		{ title: 'FECHA NACIMIENTO', field: 'paciente.fecha_nacimiento' },
+		{ title: 'SEXO', field: 'paciente_sexo' },
 		{ title: 'HORA LLEGADA', field: 'hora_llegada' },
 		{ title: 'HORA ATENDIDO', field: 'hora_atencion' },
 		{ title: 'HORA SALIDA', field: 'hora_salida' },
@@ -125,6 +126,7 @@ const ReporteGeneralCitas = (props) => {
 			item.precio_moneda = toFormatterCurrency(item.precio);
 			item.total_moneda = toFormatterCurrency(item.total);
 			item.paciente_nombre = `${item.paciente.nombres} ${item.paciente.apellidos}`;
+			item.paciente_sexo = item.paciente.sexo ? item.paciente.sexo.nombre : 'SIN SEXO'
 			item.promovendedor_nombre = item.promovendedor ? item.promovendedor.nombre : 'SIN ASIGNAR';
 			item.cosmetologa_nombre = item.cosmetologa ? item.cosmetologa.nombre : 'SIN ASIGNAR';
 			item.quien_realiza_nombre = item.quien_realiza ? item.quien_realiza.nombre : 'SIN ASIGNAR';
