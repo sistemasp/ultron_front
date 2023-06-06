@@ -3,48 +3,48 @@ import axios from 'axios';
 export const baseUrl = process.env.REACT_APP_BASE_URL_U_SGCM_FICHA_CLINICA;
 
 // ALERGIAS
-export const showAllAlergias = async () => {
+export const showAllAntecedentesPersonalesPatologicos = async () => {
     try {
         const response = await axios({
-            url: `${baseUrl}/alergias`,
+            url: `${baseUrl}/antecedentespersonalespatologicos`,
             method: 'GET'
         })
         return response
     } catch (error) {
-        console.log('showAllAlergias', error)
+        console.log('showAllAntecedentesPersonalesPatologicos', error)
     }
 }
 
-export const createAlergias = async (alergias) => {
+export const createAntecedentesPersonalesPatologicos = async (antecedentesPersonalesPatologicos) => {
     try {
         const response = await axios({
-            url: `${baseUrl}/alergias`,
+            url: `${baseUrl}/antecedentespersonalespatologicos`,
             method: 'POST',
-            data: alergias
+            data: antecedentesPersonalesPatologicos
         })
         return response
     } catch (error) {
-        console.log('createAlergias', error)
+        console.log('createAntecedentesPersonalesPatologicos', error)
     }
 }
 
-export const updateAlergias = async (idAlergias, alergias) => {
+export const updateAntecedentesPersonalesPatologicos = async (idAntecedentesPersonalesPatologicos, antecedentesPersonalesPatologicos) => {
     try {
         const response = await axios({
-            url: `${baseUrl}/alergias/${idAlergias}`,
+            url: `${baseUrl}/antecedentespersonalespatologicos/${idAntecedentesPersonalesPatologicos}`,
             method: 'PUT',
-            data: alergias
+            data: antecedentesPersonalesPatologicos
         })
         return response
     } catch (error) {
-        console.log('updateAlergias', error)
+        console.log('updateAntecedentesPersonalesPatologicos', error)
     }
 }
 
-export const findAlergiasByRangeDateAndSucursal = async (diai, mesi, anioi, diaf, mesf, aniof, sucursalId, token) => {
+export const findAntecedentesPersonalesPatologicosByRangeDateAndSucursal = async (diai, mesi, anioi, diaf, mesf, aniof, sucursalId, token) => {
     try {
         const response = await axios({
-            url: `${baseUrl}/alergias/fecha_inicio/${diai}/${mesi}/${anioi}/fecha_fin/${diaf}/${mesf}/${aniof}/sucursal/${sucursalId}`,
+            url: `${baseUrl}/antecedentespersonalespatologicos/fecha_inicio/${diai}/${mesi}/${anioi}/fecha_fin/${diaf}/${mesf}/${aniof}/sucursal/${sucursalId}`,
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`
@@ -52,7 +52,7 @@ export const findAlergiasByRangeDateAndSucursal = async (diai, mesi, anioi, diaf
         })
         return response
     } catch (error) {
-        console.log('findAlergiasByRangeDateAndSucursal', error)
+        console.log('findAntecedentesPersonalesPatologicosByRangeDateAndSucursal', error)
         return error;
     }
 }

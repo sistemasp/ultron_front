@@ -32,6 +32,11 @@ const myStyles = (colorBase) => makeStyles( (theme) => {
             margin: 25,
             boxShadow: theme.shadows[5],
         },
+        paper_item: {
+            height: "98%",
+            padding: 25,
+            boxShadow: theme.shadows[10],
+        },
         paper_factura: {
             position: 'relative',
             width: "100%",
@@ -41,6 +46,10 @@ const myStyles = (colorBase) => makeStyles( (theme) => {
         },
         textField: {
             width: '100%',
+        },
+        textFieldFullWidth: {
+            width: '100%',
+            marginBottom: '10px'
         },
         formControl: {
             minWidth: 120,
@@ -111,6 +120,9 @@ const myStyles = (colorBase) => makeStyles( (theme) => {
         gridItem: {
             display: 'flex',
             flexWrap: 'wrap',
+        },
+        gridItemRight: {
+            marginRight: '10px'
         },
         root: {
             display: 'flex',

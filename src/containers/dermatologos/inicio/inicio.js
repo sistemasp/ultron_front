@@ -123,16 +123,15 @@ export const InicioContainer = (props) => {
 					: ''
 			}
 			<Grid container spacing={1} className={classes.container_main}>
-				<Grid item xs={12}>
-					<Paper>
-						<h1>{consultorio.nombre}</h1>
-					</Paper>
-				</Grid>
+				
 				<Grid item xs={12}>
 					<Paper>
 						<Fragment>
 							<Grid container>
-								<Grid item xs={10}>
+								<Grid item xs={true}>
+									<h1>{consultorio.nombre}</h1>
+								</Grid>
+								<Grid item xs={true}>
 									<h1>{consultorio.paciente ? `PACIENTE: ${consultorio.paciente.nombres} ${consultorio.paciente.apellidos}` : `SIN PACIENTE`}</h1>
 								</Grid>
 								<Grid item xs={true} sm={true}>

@@ -1,23 +1,61 @@
 import React from "react";
-import TextField from "@material-ui/core/TextField";
+import PropTypes from 'prop-types';
 import {
 	makeStyles,
 	Paper,
 	Grid,
+	AppBar, 
+	Box, 
+	Tab, 
+	Tabs, 
+	Typography
 } from "@material-ui/core";
 
 import { Fragment } from "react";
 import myStyles from "../../../css";
+import AntecedentesPersonalesPatologicos from "./antecedentes_personales_patologicos";
+import AntecedentesPersonalesNoPatologicos from "./antecedentes_personales_no_patologicos";
+import AntecedentesHeredofamiliares from "./antecedentes_heredofamiliares";
+
+function TabPanel(props) {
+	const { children, value, index, ...other } = props;
+
+	return (
+		<Typography
+			component="div"
+			role="tabpanel"
+			hidden={value !== index}
+			id={`simple-tabpanel-${index}`}
+			aria-labelledby={`simple-tab-${index}`}
+			{...other}
+		>
+			{value === index && <Box p={3}>{children}</Box>}
+		</Typography>
+	);
+}
+
+TabPanel.propTypes = {
+	children: PropTypes.node,
+	index: PropTypes.any.isRequired,
+	value: PropTypes.any.isRequired,
+};
+
+function a11yProps(index) {
+	return {
+		id: `simple-tab-${index}`,
+		'aria-controls': `simple-tabpanel-${index}`,
+	};
+}
 
 export const FichaClinicaContainer = (props) => {
 
 	const {
 		consultorio,
 		colorBase,
-		alergias
+		onChangeTab,
+		value
 	} = props;
 
-	console.log("KAOZ", alergias)
 	const classes = myStyles(colorBase)();
 
 	return (
@@ -34,87 +72,46 @@ export const FichaClinicaContainer = (props) => {
 					</Paper>
 				</Grid>
 
-				<Grid item xs={6}>
-					<Paper>
-						<Fragment>
-							<Grid container>
-								<Grid item xs={12}>
-									<h2>DATOS BASICOS DEL PACIENTE</h2>
-								</Grid>
-							</Grid>
-						</Fragment>
-					</Paper>
-				</Grid>
-
-				<Grid item xs={6}>
-					<Paper>
-						<Fragment>
-							<Grid container>
-								<Grid item xs={12}>
-									<h2>SIGNOS VITALES</h2>
-								</Grid>
-							</Grid>
-						</Fragment>
-					</Paper>
-				</Grid>
-
-				<Grid item xs={6}>
-					<Paper>
-						<Fragment>
-							<Grid container>
-								<Grid item xs={12}>
-									<h2>ANTECEDENTES PERSONALES PATOLÓGICOS</h2>
-								</Grid>
-							</Grid>
-						</Fragment>
-					</Paper>
-				</Grid>
-
-				<Grid item xs={6}>
-					<Paper>
-						<Fragment>
-							<Grid container>
-								<Grid item xs={12}>
-									<h2>ANTECEDENTES PERSONALES NO PATOLÓGICOS</h2>
-								</Grid>
-							</Grid>
-						</Fragment>
-					</Paper>
-				</Grid>
-
-				<Grid item xs={6}>
-					<Paper>
-						<Fragment>
-							<Grid container>
-								<Grid item xs={12}>
-									<h2>ANTECEDENTES HEREDOFAMILIARES</h2>
-								</Grid>
-							</Grid>
-						</Fragment>
-					</Paper>
-				</Grid>
-				
-				<Grid item xs={6}>
-					<Paper>
-						<Fragment>
-							<Grid container>
-								<Grid item xs={12}>
-									<h2>ALERGIAS</h2>
-								</Grid>
-							</Grid>
-						</Fragment>
-					</Paper>
-				</Grid>
-
 				<Grid item xs={12}>
 					<Paper>
-						<Fragment>
-							<Grid container>
-								<Grid item xs={12}>
-									<h2>NOTAS</h2>
-								</Grid>
-							</Grid>
-						</Fragment>
+						<AppBar
+							className={classes.bar}
+							position="sticky" >
+							<Tabs
+								value={value}
+								onChange={onChangeTab}
+								aria-label="simple tabs"
+								variant="fullWidth"
+								scrollButtons="on" >
+									<Tab className={classes.tabs} label="ANTECEDENTES PERSONALES PATOLÓGICOS" wrapped {...a11yProps(0)} />
+									<Tab className={classes.tabs} label="ANTECEDENTES PERSONALES NO PATOLÓGICOS" wrapped {...a11yProps(1)} />
+									<Tab className={classes.tabs} label="ANTECEDENTES HEREDOFAMILIARES" wrapped {...a11yProps(2)} />
+									<Tab className={classes.tabs} label="SIGNOS VITALES" wrapped {...a11yProps(3)} />
+									<Tab className={classes.tabs} label="ALERGIAS" wrapped {...a11yProps(4)} />
+									<Tab className={classes.tabs} label="NOTAS" wrapped {...a11yProps(5)} />								
+							</Tabs>
+						</AppBar>
+						<TabPanel value={value} index={0}>
+							<AntecedentesPersonalesPatologicos
+								consultorio={consultorio}
+								colorBase={colorBase} />
+						</TabPanel>
+						<TabPanel value={value} index={1}>
+							<AntecedentesPersonalesNoPatologicos
+								consultorio={consultorio}
+								colorBase={colorBase} />
+						</TabPanel>
+						<TabPanel value={value} index={2}>
+							<AntecedentesHeredofamiliares
+								consultorio={consultorio}
+								colorBase={colorBase} />
+						</TabPanel>
+						<TabPanel value={value} index={3}>
+						</TabPanel>
+						<TabPanel value={value} index={4}>
+						</TabPanel>
+						<TabPanel value={value} index={5}>
+						</TabPanel>
 					</Paper>
 				</Grid>
 
