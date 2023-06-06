@@ -33,14 +33,6 @@ const ReportesRecetas = (props) => {
 
 	const classes = myStyles(colorBase)();
 
-	const servicioFacialId = process.env.REACT_APP_FACIAL_SERVICIO_ID
-	const servicioAparatologiaId = process.env.REACT_APP_APARATOLOGIA_SERVICIO_ID
-	const servicioConsultaId = process.env.REACT_APP_CONSULTA_SERVICIO_ID
-	const servicioCuracionId = process.env.REACT_APP_CURACION_SERVICIO_ID
-	const servicioBiopsiaId = process.env.REACT_APP_BIOPSIA_SERVICIO_ID
-	const servicioEsteticaId = process.env.REACT_APP_ESTETICA_SERVICIO_ID
-	const servicioDermapenId = process.env.REACT_APP_DERMAPEN_SERVICIO_ID
-
 	const [isLoading, setIsLoading] = useState(true);
 	const [recetas, setRecetas] = useState([]);
 	const [datosImpresion, setDatosImpresion] = useState();
@@ -66,6 +58,7 @@ const ReportesRecetas = (props) => {
 		{ title: 'DERMATOLOGO', field: 'nombre_dermatologo' },
 		{ title: 'PACIENTE', field: 'nombre_paciente' },
 		{ title: 'EDAD', field: 'edad_paciente' },
+		{ title: 'TELÉFONO', field: 'telefono_paciente' },		
 		{ title: 'CP', field: 'cp_paciente' },
 		{ title: 'PROXIMA CONSULTA', field: 'fecha_proxima_consulta' },
 		{ title: 'LABORATORIO', field: 'nombre_laboratorio' },
@@ -115,6 +108,7 @@ const ReportesRecetas = (props) => {
 						nombre_dermatologo: receta.dermatologo.nombre,
 						nombre_paciente: `${receta.paciente.nombres} ${receta.paciente.apellidos}`,
 						edad_paciente: culcularEdad(receta.paciente.fecha_nacimiento),
+						telefono_paciente: receta.paciente.telefono,
 						fecha_proxima_consulta: receta.fecha_proxima_consulta,
 						cp_paciente: receta.paciente.codigo_postal,
 						nombre_laboratorio: pro.nombre_laboratorio,
