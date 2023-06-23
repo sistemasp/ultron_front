@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import TextField from "@material-ui/core/TextField";
 import {
 	FormControl,
@@ -16,6 +16,7 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { ButtonCustom } from "../../../components/basic/ButtonCustom";
 import { ComboCustom } from "../../../components/basic/ComboCustom";
+import ECTReactComponent from "../../../components/ect/ect";
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -68,7 +69,8 @@ export const LoginContainer = (props) => {
 	};*/
 
 	return (
-		<Paper>
+		<Fragment>
+				<Paper>
 			<form>
 				<Grid container className={classes.root} justify="center" spacing={3}>
 					<Grid item xs={12} >
@@ -127,6 +129,9 @@ export const LoginContainer = (props) => {
 					</Grid>
 				</Grid>
 			</form>
+			
 		</Paper>
+		</Fragment>
+	
 	);
 };

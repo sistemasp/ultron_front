@@ -5,6 +5,7 @@ import { Paper } from '@material-ui/core';
 import myStyles from '../../../../css';
 import { Checkbox, FormControlLabel, FormGroup, TextField } from '@mui/material';
 import { Label } from '@material-ui/icons';
+import { ButtonCustom } from '../../../../components/basic/ButtonCustom';
 
 export const AntecedentesPersonalesPatologicosContainer = (props) => {
 
@@ -17,8 +18,8 @@ export const AntecedentesPersonalesPatologicosContainer = (props) => {
 
   return (
     <Fragment>
-      <Grid container>
-        <Grid item xs={4} className={classes.gridItemRight}>
+      <Grid container spacing={2}>
+        <Grid item xs={4}>
           <Paper className={classes.paper_item}>
             <FormGroup>
               <h3>GENERALES</h3>
@@ -29,7 +30,7 @@ export const AntecedentesPersonalesPatologicosContainer = (props) => {
             </FormGroup>
           </Paper>
         </Grid>
-        <Grid item xs={4} className={classes.gridItemRight}>
+        <Grid item xs={4}>
           <Paper className={classes.paper_item}>
             <FormGroup>
               <h3>PATOLOGÍAS INFECTOCONTAGIOSAS</h3>
@@ -56,14 +57,14 @@ export const AntecedentesPersonalesPatologicosContainer = (props) => {
             </FormGroup>   
           </Paper>
         </Grid>
-        <Grid item xs={4} className={classes.gridItemRight}>
+        <Grid item xs={4}>
           <Paper className={classes.paper_item}>
             <FormGroup>
               <h3>PATOLOGÍAS EXANTEMÁTICAS</h3>
               <FormControlLabel control={<Checkbox />} label="EXANTEMA SÚBITO" />
               <FormControlLabel control={<Checkbox />} label="ROSÉOLA ESCARLATINA" />
               <FormControlLabel control={<Checkbox />} label="ROSÉOLA" />
-              <FormControlLabel control={<Checkbox />} label="SARAPIÓN" />
+              <FormControlLabel control={<Checkbox />} label="SARAMPIÓN" />
               <FormControlLabel control={<Checkbox />} label="VARICELA" />
               <FormControlLabel control={<Checkbox />} label="OTRA PATOLOGÍA EXANTEMÁTICA" />
             </FormGroup>
@@ -76,6 +77,15 @@ export const AntecedentesPersonalesPatologicosContainer = (props) => {
               id="fullWidth"
               fullWidth 
               multiline />
+            <br/>
+            <br/>
+            <ButtonCustom
+							className={classes.button}
+							type="submit"
+							color="primary"
+							variant="contained"
+							// onClick={handleSubmit}
+							text='GUARDAR' />
           </Paper>
         </Grid>
       </Grid>

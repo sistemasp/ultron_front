@@ -16,6 +16,9 @@ import myStyles from "../../../css";
 import AntecedentesPersonalesPatologicos from "./antecedentes_personales_patologicos";
 import AntecedentesPersonalesNoPatologicos from "./antecedentes_personales_no_patologicos";
 import AntecedentesHeredofamiliares from "./antecedentes_heredofamiliares";
+import SignosVitales from "./signos_vitales";
+import Alergias from "./alergias";
+import ExpedienteElectronico from "./expediente_electronico";
 
 function TabPanel(props) {
 	const { children, value, index, ...other } = props;
@@ -88,7 +91,7 @@ export const FichaClinicaContainer = (props) => {
 									<Tab className={classes.tabs} label="ANTECEDENTES HEREDOFAMILIARES" wrapped {...a11yProps(2)} />
 									<Tab className={classes.tabs} label="SIGNOS VITALES" wrapped {...a11yProps(3)} />
 									<Tab className={classes.tabs} label="ALERGIAS" wrapped {...a11yProps(4)} />
-									<Tab className={classes.tabs} label="NOTAS" wrapped {...a11yProps(5)} />								
+									{/* <Tab className={classes.tabs} label="EXPEDIENTE ELECTRONICO" wrapped {...a11yProps(5)} /> */}
 							</Tabs>
 						</AppBar>
 						<TabPanel value={value} index={0}>
@@ -107,10 +110,19 @@ export const FichaClinicaContainer = (props) => {
 								colorBase={colorBase} />
 						</TabPanel>
 						<TabPanel value={value} index={3}>
+							<SignosVitales
+								consultorio={consultorio}
+								colorBase={colorBase} />
 						</TabPanel>
 						<TabPanel value={value} index={4}>
+							<Alergias
+								consultorio={consultorio}
+								colorBase={colorBase} />
 						</TabPanel>
 						<TabPanel value={value} index={5}>
+							<ExpedienteElectronico
+								consultorio={consultorio}
+								colorBase={colorBase} />
 						</TabPanel>
 					</Paper>
 				</Grid>

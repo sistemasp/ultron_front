@@ -5,9 +5,9 @@ import { Paper } from '@material-ui/core';
 import myStyles from '../../../../css';
 import { Checkbox, FormControlLabel, FormGroup, TextField } from '@mui/material';
 import { Label } from '@material-ui/icons';
-import { ButtonCustom } from '../../../../components/basic/ButtonCustom';
+import ECTReactComponent from '../../../../components/ect/ect';
 
-export const AntecedentesPersonalesNoPatologicosContainer = (props) => {
+export const ExpedienteElectronicoContainer = (props) => {
 
   const {
     consultorio,
@@ -19,58 +19,52 @@ export const AntecedentesPersonalesNoPatologicosContainer = (props) => {
   return (
     <Fragment>
       <Grid container>
-        <Grid item xs={12} className={classes.gridItemRight}>
+        <Grid item xs={12} >
           <Paper className={classes.paper_item}>
             <Grid item xs={12} className={classes.textFieldFullWidth}>
               <TextField 
                 id="fullWidth"
                 fullWidth
                 multiline
-                label="TABAQUISMO (CIG/DIA/AÑOS)" />
+                label="MOTIVO DE LA CONSULTA" />
             </Grid>
             <Grid item xs={12} className={classes.textFieldFullWidth}>
               <TextField 
                 id="fullWidth"
                 fullWidth
                 multiline
-                label="ALCOHOLISMO (BEB/FREC)" />
+                label="INTERROGATORIO" />
             </Grid>
             <Grid item xs={12} className={classes.textFieldFullWidth}>
               <TextField 
                 id="fullWidth"
                 fullWidth
                 multiline
-                label="TOXICOMANIAS (ESP/DIA/AÑOS)" />
+                label="TOPOLOGÍA" />
             </Grid>
             <Grid item xs={12} className={classes.textFieldFullWidth}>
               <TextField 
                 id="fullWidth"
                 fullWidth
                 multiline
-                label="ALIMENTACIÓN (F/TIPO)" />
+                label="MORFOLOGÍA" />
             </Grid>
             <Grid item xs={12} className={classes.textFieldFullWidth}>
               <TextField 
                 id="fullWidth"
                 fullWidth
                 multiline
-                label="DEPORTES (ACT. FISICA/FREC)" />
+                label="DIAGNOSTICO CIE-11" />
+            </Grid>
+            <Grid item xs={12} >
+              <ECTReactComponent />
             </Grid>
             <Grid item xs={12} className={classes.textFieldFullWidth}>
               <TextField 
                 id="fullWidth"
                 fullWidth
                 multiline
-                label="INMUNIZACIONES" />
-            </Grid>
-            <Grid item xs={12} className={classes.textFieldFullWidth}>
-              <ButtonCustom
-                className={classes.button}
-                type="submit"
-                color="primary"
-                variant="contained"
-                // onClick={handleSubmit}
-                text='GUARDAR' />
+                label="NOTAS DE EVOLUCIÓN" />
             </Grid>
           </Paper>
         </Grid>

@@ -88,11 +88,11 @@ const FichaClinica = (props) => {
   };
 
   const loadAll = () => {
-    loadAlergias()
+    // loadAlergias()
     findConsultorio()
-    loadSignosVitales()
-    loadAntecedentesPersonalesNoPatologicos()
-    loadAntecedentesPersonalesPatologicos()
+    // loadSignosVitales()
+    // loadAntecedentesPersonalesNoPatologicos()
+    // loadAntecedentesPersonalesPatologicos()
   }
   
   useEffect(() => {

@@ -302,6 +302,8 @@ const AgendarConsulta = (props) => {
 				item.show_tratamientos = item.producto.nombre;
 				item.forma_pago_show = `${item.forma_pago.nombre}${item.factura ? ' (FACTURA)' : ''}`;
 			});
+			response.data.sort((a, b) => a.hora - b.hora)
+			console.log("KAOZ", response.data);
 			setConsultas(response.data);
 		}
 	}

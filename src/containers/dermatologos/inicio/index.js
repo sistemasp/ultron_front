@@ -69,6 +69,7 @@ const InicioDermatologos = (props) => {
     setIsLoading(true);
     const response = await findSurgeryBySucursalAndDermatologoId(sucursal._id, dermatologo._id);
     if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      console.log("KAOZ", response);
       const consultorio = response.data;
       setConsultorio(consultorio);
       if (!consultorio.disponible) {
