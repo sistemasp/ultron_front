@@ -29,19 +29,3 @@ export const updateAppGenerales = async (idAppGenerales, appGenerales) => {
         console.log('updateAppGenerales', error)
     }
 }
-
-export const findAlergiasByRangeDateAndSucursal = async (diai, mesi, anioi, diaf, mesf, aniof, sucursalId, token) => {
-    try {
-        const response = await axios({
-            url: `${baseUrl}/alergias/fecha_inicio/${diai}/${mesi}/${anioi}/fecha_fin/${diaf}/${mesf}/${aniof}/sucursal/${sucursalId}`,
-            method: 'GET',
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-        return response
-    } catch (error) {
-        console.log('findAlergiasByRangeDateAndSucursal', error)
-        return error;
-    }
-}
