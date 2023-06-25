@@ -7,6 +7,7 @@ import { FichaClinicaContainer } from "./ficha_clinica";
 import { showAllSignosVitales } from "../../../services/u-sgcm-ficha-clinica/signos_vitales";
 import { showAllAntecedentesPersonalesNoPatologicos } from "../../../services/u-sgcm-ficha-clinica/antecedentes_personales_no_patologicos";
 import { showAllAntecedentesPersonalesPatologicos } from "../../../services/u-sgcm-ficha-clinica/antecedentes_personales_patologicos";
+import { createHistoriaClinica, findHistoriaClinicaByPacienteId, updateHistoriaClinica } from "../../../services/u-sgcm-ficha-clinica/historia_clinica";
 
 const Alert = (props) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -22,6 +23,7 @@ const FichaClinica = (props) => {
   const [alergias, setAlergias] = useState([])
   const [signosVitales, setSignosVitales] = useState([])
   const [value, setValue] = useState(0);
+  const [historiaClinica, setHistoriaClinica] = useState({})
 
   const {
     dermatologo,
@@ -35,6 +37,29 @@ const FichaClinica = (props) => {
     setValue(newValue)
   }
 
+  const loadHistoriaClinica = async (consultorio) => {
+    setIsLoading(true)
+    const response = await findHistoriaClinicaByPacienteId(consultorio.paciente._id)
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      const historiaClinicaResponse = response.data;
+
+      if (!historiaClinicaResponse) {
+        const requestHistoriaClinica = {
+          paciente: consultorio.paciente._id,
+          sucursal: consultorio.sucursal,
+          dermatologo: consultorio.dermatologo._id,
+        }
+        const responseCreateHistoriaClinica = await createHistoriaClinica(requestHistoriaClinica)
+        if (`${responseCreateHistoriaClinica.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {
+          setHistoriaClinica(responseCreateHistoriaClinica.data)
+        }
+      } else {
+        setHistoriaClinica(historiaClinicaResponse)
+      }
+    }
+    setIsLoading(false)
+  }
+
   const findConsultorio = async () => {
     setIsLoading(true)
     const response = await findSurgeryBySucursalAndDermatologoId(sucursal._id, dermatologo._id)
@@ -42,59 +67,29 @@ const FichaClinica = (props) => {
       const consultorio = response.data
       if (consultorio) {
         setConsultorio(consultorio)
+        if (consultorio.paciente) {
+          loadHistoriaClinica(consultorio)
+        }
       }
     }
-    setIsLoading(false);
-  }
-
-  const loadSignosVitales = async () => {
-    setIsLoading(true)
-    const response = await showAllSignosVitales()
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setSignosVitales(response.data)
-    }
-    setIsLoading(false)
-  }
-
-  const loadAlergias = async () => {
-    setIsLoading(true)
-    const response = await showAllAlergias()
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setAlergias(response.data)
-    }
-    setIsLoading(false)
-  }
-
-  const loadAntecedentesPersonalesNoPatologicos = async () => {
-    setIsLoading(true)
-    const response = await showAllAntecedentesPersonalesNoPatologicos()
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setAlergias(response.data)
-    }
-    setIsLoading(false)
-  }
-
-  const loadAntecedentesPersonalesPatologicos = async () => {
-    setIsLoading(true)
-    const response = await showAllAntecedentesPersonalesPatologicos()
-    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-      setAlergias(response.data)
-    }
-    setIsLoading(false)
   }
 
   const handleCloseAlert = () => {
     setOpenAlert(false);
-  };
+  }
+
+  const commitHistoriaClinica = async() => {
+    const response = await updateHistoriaClinica(historiaClinica._id, historiaClinica)
+    if (`${response.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+      findConsultorio()
+    }
+  }
 
   const loadAll = () => {
-    // loadAlergias()
     findConsultorio()
-    // loadSignosVitales()
-    // loadAntecedentesPersonalesNoPatologicos()
-    // loadAntecedentesPersonalesPatologicos()
   }
   
+
   useEffect(() => {
     loadAll()
   }, []);
@@ -109,10 +104,13 @@ const FichaClinica = (props) => {
               sucursal={sucursal}
               consultorio={consultorio}
               colorBase={colorBase}
+              historiaClinica={historiaClinica}
+              setHistoriaClinica={setHistoriaClinica}
+              commitHistoriaClinica={() => commitHistoriaClinica()}
               setMessage={setMessage}
               setSeverity={setSeverity}
               setOpenAlert={setOpenAlert}
-              findConsultorio={findConsultorio}
+              findConsultorio={() => findConsultorio()}
               onChangeTab={handleChangeTab}
               value={value}
               alergias={alergias} />

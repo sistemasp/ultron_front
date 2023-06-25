@@ -56,7 +56,11 @@ export const FichaClinicaContainer = (props) => {
 		consultorio,
 		colorBase,
 		onChangeTab,
-		value
+		value,
+		historiaClinica,
+		setHistoriaClinica,
+		commitHistoriaClinica,
+		findConsultorio,
 	} = props;
 
 	const classes = myStyles(colorBase)();
@@ -75,57 +79,66 @@ export const FichaClinicaContainer = (props) => {
 					</Paper>
 				</Grid>
 
-				<Grid item xs={12}>
-					<Paper>
-						<AppBar
-							className={classes.bar}
-							position="sticky" >
-							<Tabs
-								value={value}
-								onChange={onChangeTab}
-								aria-label="simple tabs"
-								variant="fullWidth"
-								scrollButtons="on" >
-									<Tab className={classes.tabs} label="ANTECEDENTES PERSONALES PATOLÓGICOS" wrapped {...a11yProps(0)} />
-									<Tab className={classes.tabs} label="ANTECEDENTES PERSONALES NO PATOLÓGICOS" wrapped {...a11yProps(1)} />
-									<Tab className={classes.tabs} label="ANTECEDENTES HEREDOFAMILIARES" wrapped {...a11yProps(2)} />
-									<Tab className={classes.tabs} label="SIGNOS VITALES" wrapped {...a11yProps(3)} />
-									<Tab className={classes.tabs} label="ALERGIAS" wrapped {...a11yProps(4)} />
-									{/* <Tab className={classes.tabs} label="EXPEDIENTE ELECTRONICO" wrapped {...a11yProps(5)} /> */}
-							</Tabs>
-						</AppBar>
-						<TabPanel value={value} index={0}>
-							<AntecedentesPersonalesPatologicos
-								consultorio={consultorio}
-								colorBase={colorBase} />
-						</TabPanel>
-						<TabPanel value={value} index={1}>
-							<AntecedentesPersonalesNoPatologicos
-								consultorio={consultorio}
-								colorBase={colorBase} />
-						</TabPanel>
-						<TabPanel value={value} index={2}>
-							<AntecedentesHeredofamiliares
-								consultorio={consultorio}
-								colorBase={colorBase} />
-						</TabPanel>
-						<TabPanel value={value} index={3}>
-							<SignosVitales
-								consultorio={consultorio}
-								colorBase={colorBase} />
-						</TabPanel>
-						<TabPanel value={value} index={4}>
-							<Alergias
-								consultorio={consultorio}
-								colorBase={colorBase} />
-						</TabPanel>
-						<TabPanel value={value} index={5}>
-							<ExpedienteElectronico
-								consultorio={consultorio}
-								colorBase={colorBase} />
-						</TabPanel>
-					</Paper>
-				</Grid>
+				{
+					consultorio.paciente 
+					?
+					<Grid item xs={12}>
+						<Paper>
+							<AppBar
+								className={classes.bar}
+								position="sticky" >
+								<Tabs
+									value={value}
+									onChange={onChangeTab}
+									aria-label="simple tabs"
+									variant="fullWidth"
+									scrollButtons="on" >
+										<Tab 	className={classes.tabs} label="ANTECEDENTES PERSONALES PATOLÓGICOS" wrapped {...a11yProps(0)} />
+										<Tab className={classes.tabs} label="ANTECEDENTES PERSONALES NO PATOLÓGICOS" wrapped {...a11yProps(1)} />
+										<Tab className={classes.tabs} label="ANTECEDENTES HEREDOFAMILIARES" wrapped {...a11yProps(2)} />
+										<Tab className={classes.tabs} label="SIGNOS VITALES" wrapped {...a11yProps(3)} />
+										<Tab className={classes.tabs} label="ALERGIAS" wrapped {...a11yProps(4)} />
+										{/* <Tab className={classes.tabs} label="EXPEDIENTE ELECTRONICO" wrapped {...a11yProps(5)} /> */}
+								</Tabs>
+							</AppBar>
+							<TabPanel value={value} index={0}>
+								<AntecedentesPersonalesPatologicos
+									consultorio={consultorio}
+									colorBase={colorBase}
+									historiaClinica={historiaClinica}
+									setHistoriaClinica={setHistoriaClinica}
+									commitHistoriaClinica={commitHistoriaClinica}
+									findConsultorio={findConsultorio} />
+							</TabPanel>
+							<TabPanel value={value} index={1}>
+								<AntecedentesPersonalesNoPatologicos
+									consultorio={consultorio}
+									colorBase={colorBase} />
+							</TabPanel>
+							<TabPanel value={value} index={2}>
+								<AntecedentesHeredofamiliares
+									consultorio={consultorio}
+									colorBase={colorBase} />
+							</TabPanel>
+							<TabPanel value={value} index={3}>
+								<SignosVitales
+									consultorio={consultorio}
+									colorBase={colorBase} />
+							</TabPanel>
+							<TabPanel value={value} index={4}>
+								<Alergias
+									consultorio={consultorio}
+									colorBase={colorBase} />
+							</TabPanel>
+							<TabPanel value={value} index={5}>
+								<ExpedienteElectronico
+									consultorio={consultorio}
+									colorBase={colorBase} />
+							</TabPanel>
+						</Paper>
+					</Grid>
+					: ''
+				}
 
 			</Grid>
 		</Fragment>

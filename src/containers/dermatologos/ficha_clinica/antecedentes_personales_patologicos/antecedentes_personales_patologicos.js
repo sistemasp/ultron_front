@@ -6,12 +6,18 @@ import myStyles from '../../../../css';
 import { Checkbox, FormControlLabel, FormGroup, TextField } from '@mui/material';
 import { Label } from '@material-ui/icons';
 import { ButtonCustom } from '../../../../components/basic/ButtonCustom';
+import { CheckCustom } from '../../../../components/basic/CheckCustom';
 
 export const AntecedentesPersonalesPatologicosContainer = (props) => {
 
   const {
     consultorio,
     colorBase,
+    app_generales,
+    app_patologias_infectocontagiosas,
+    app_patologias_cronico_degenerativas,
+    app_patologias_exantematicas,
+    onChangeCheckGenerales,
   } = props;
 
   const classes = myStyles(colorBase)();
@@ -21,13 +27,13 @@ export const AntecedentesPersonalesPatologicosContainer = (props) => {
       <Grid container spacing={2}>
         <Grid item xs={4}>
           <Paper className={classes.paper_item}>
-            <FormGroup>
               <h3>GENERALES</h3>
-              <FormControlLabel control={<Checkbox />} label="HOSPITALIZACIONES" />
-              <FormControlLabel control={<Checkbox />} label="QUIRÚRGICOS" />
-              <FormControlLabel control={<Checkbox />} label="TRAUMÁTICOS" />
-              <FormControlLabel control={<Checkbox />} label="TRANSFUSIONALES" />
-            </FormGroup>
+              <FormGroup>
+                <CheckCustom checked={app_generales.hospitalizaciones} onChange={onChangeCheckGenerales} name="hospitalizaciones" label="HOSPITALIZACIONES" />
+                <CheckCustom checked={app_generales.quirurgicos} onChange={onChangeCheckGenerales} name="quirurgicos" label="QUIRÚRGICOS" />
+                <CheckCustom checked={app_generales.traumaticos} onChange={onChangeCheckGenerales} name="traumaticos" label="TRAUMÁTICOS" />
+                <CheckCustom checked={app_generales.transfusionales} onChange={onChangeCheckGenerales} name="transfusionales" label="TRANSFUSIONALES" />
+              </FormGroup>
           </Paper>
         </Grid>
         <Grid item xs={4}>
@@ -52,7 +58,7 @@ export const AntecedentesPersonalesPatologicosContainer = (props) => {
               <FormControlLabel control={<Checkbox />} label="HIPERTENSIÓN ARTERIAL SISTÉMICA" />
               <FormControlLabel control={<Checkbox />} label="DISLIPIDEMIAS" />
               <FormControlLabel control={<Checkbox />} label="OBESIDAD" />
-              <FormControlLabel control={<Checkbox />} label="NEOPLÁSICAS" />
+              <FormControlLabel control={<Checkbox />} label="NEOPLÁSIAS" />
               <FormControlLabel control={<Checkbox />} label="ENFERMEDADES REUMATOLÓGICAS" />
             </FormGroup>   
           </Paper>
