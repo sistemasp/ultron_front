@@ -47,7 +47,7 @@ const FichaClinica = (props) => {
         const requestHistoriaClinica = {
           paciente: consultorio.paciente._id,
           sucursal: consultorio.sucursal,
-          dermatologo: consultorio.dermatologo._id,
+          dermatologo: consultorio.dermatologo._id
         }
         const responseCreateHistoriaClinica = await createHistoriaClinica(requestHistoriaClinica)
         if (`${responseCreateHistoriaClinica.status}` === process.env.REACT_APP_RESPONSE_CODE_CREATED) {

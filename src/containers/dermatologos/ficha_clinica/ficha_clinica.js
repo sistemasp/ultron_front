@@ -106,34 +106,48 @@ export const FichaClinicaContainer = (props) => {
 									consultorio={consultorio}
 									colorBase={colorBase}
 									historiaClinica={historiaClinica}
-									setHistoriaClinica={setHistoriaClinica}
 									commitHistoriaClinica={commitHistoriaClinica}
 									findConsultorio={findConsultorio} />
 							</TabPanel>
 							<TabPanel value={value} index={1}>
 								<AntecedentesPersonalesNoPatologicos
 									consultorio={consultorio}
-									colorBase={colorBase} />
+									colorBase={colorBase}
+									historiaClinica={historiaClinica}
+									commitHistoriaClinica={commitHistoriaClinica}
+									findConsultorio={findConsultorio} />
 							</TabPanel>
 							<TabPanel value={value} index={2}>
 								<AntecedentesHeredofamiliares
 									consultorio={consultorio}
-									colorBase={colorBase} />
+									colorBase={colorBase}
+									historiaClinica={historiaClinica}
+									commitHistoriaClinica={commitHistoriaClinica}
+									findConsultorio={findConsultorio} />
 							</TabPanel>
 							<TabPanel value={value} index={3}>
 								<SignosVitales
 									consultorio={consultorio}
-									colorBase={colorBase} />
+									colorBase={colorBase}
+									historiaClinica={historiaClinica}
+									commitHistoriaClinica={commitHistoriaClinica}
+									findConsultorio={findConsultorio} />
 							</TabPanel>
 							<TabPanel value={value} index={4}>
 								<Alergias
 									consultorio={consultorio}
-									colorBase={colorBase} />
+									colorBase={colorBase}
+									historiaClinica={historiaClinica}
+									commitHistoriaClinica={commitHistoriaClinica}
+									findConsultorio={findConsultorio}/>
 							</TabPanel>
 							<TabPanel value={value} index={5}>
 								<ExpedienteElectronico
 									consultorio={consultorio}
-									colorBase={colorBase} />
+									colorBase={colorBase}
+									historiaClinica={historiaClinica}
+									commitHistoriaClinica={commitHistoriaClinica}
+									findConsultorio={findConsultorio} />
 							</TabPanel>
 						</Paper>
 					</Grid>

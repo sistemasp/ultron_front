@@ -2,30 +2,30 @@ import axios from 'axios';
 
 export const baseUrl = process.env.REACT_APP_BASE_URL_U_SGCM_FICHA_CLINICA;
 
-// SIGNOS VITALES
+// APP SIGNOS VITALES
 
-export const createSignosVitales = async (signosVitales) => {
+export const createAppSignosVitales = async (appSignosVitales) => {
     try {
         const response = await axios({
             url: `${baseUrl}/signosvitales`,
             method: 'POST',
-            data: signosVitales
+            data: appSignosVitales
         })
         return response
     } catch (error) {
-        console.log('createSignosVitales', error)
+        console.log('createAppSignosVitales', error)
     }
 }
 
-export const updateSignosVitales = async (idSignosVitales, signosVitales) => {
+export const updateAppSignosVitales = async (idAppSignosVitales, appSignosVitales) => {
     try {
         const response = await axios({
-            url: `${baseUrl}/signosvitales/${idSignosVitales}`,
+            url: `${baseUrl}/signosvitales/${idAppSignosVitales}`,
             method: 'PUT',
-            data: signosVitales
+            data: appSignosVitales
         })
         return response
     } catch (error) {
-        console.log('updateSignosVitales', error)
+        console.log('updateAppSignosVitales', error)
     }
 }

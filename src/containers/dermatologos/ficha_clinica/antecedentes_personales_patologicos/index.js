@@ -37,7 +37,6 @@ const AntecedentesPersonalesPatologicos = (props) => {
 		consultorio,
 		colorBase,
 		historiaClinica,
-		setHistoriaClinica,
 		commitHistoriaClinica,
 		findConsultorio,
 	} = props
