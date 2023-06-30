@@ -44,18 +44,6 @@ const MenuMainDermatologos = (props) => {
         });
 	}
 
-	const handleClickCambioPassword = () => {
-		setOpenModalPassword(true);
-	}
-
-	const handleOpen = () => {
-		setOpenModalPassword(true);
-	}
-
-	const handleClose = () => {
-		setOpenModalPassword(false);
-	}
-
 	const handleCloseAlert = () => {
 		setOpenAlert(false);
 	};
@@ -68,8 +56,12 @@ const MenuMainDermatologos = (props) => {
 					sucursal={sucursal}
 					value={value}
 					onChangeTab={handleChangeTab}
-					onClickLogout={handleLogout} />
+					onClickLogout={handleLogout}
+					setMessage={setMessage}
+					setSeverity={setSeverity}
+					setOpenAlert={setOpenAlert}/>
 			</Fragment>
+		
 			<Snackbar open={openAlert} autoHideDuration={5000} onClose={handleCloseAlert}>
 				<Alert onClose={handleCloseAlert} severity={severity}>
 					{message}

@@ -51,7 +51,7 @@ const InicioDermatologos = (props) => {
     { title: 'LABORATORIO', field: 'nombre_laboratorio' },
     { title: 'PRODUCTO', field: 'nombre_producto' },
     { title: 'RECOMENDACIÓN', field: 'recomendacion' },
-  ];
+  ]
 
   const columnsEstudio = [
     { title: 'NOMBRE', field: 'nombre' },
@@ -258,17 +258,18 @@ const InicioDermatologos = (props) => {
           return producto.tipo_medicamento === tipoMedicamentoControladoId
         })
         setProductosControlados(productosControladosList)
+        // console.log("KAOZ", receta);
 
-        receta.productos.forEach(async (producto) => {
-          const responseLaboratorio = await findLaboratorioById(producto.laboratorio._id);
-          const responseProductoComercial = await findProductoComercialById(producto.producto._id);
-          if (`${responseLaboratorio.status}` === process.env.REACT_APP_RESPONSE_CODE_OK &&
-            `${responseProductoComercial.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-            producto.laboratorio = responseLaboratorio.data;
-            producto.producto = responseProductoComercial.data;
-            setIsLoading(false);
-          }
-        });
+        // receta.productos.forEach(async (producto) => {
+        //   const responseLaboratorio = await findLaboratorioById(producto.laboratorio._id);
+        //   const responseProductoComercial = await findProductoComercialById(producto.producto._id);
+        //   if (`${responseLaboratorio.status}` === process.env.REACT_APP_RESPONSE_CODE_OK &&
+        //     `${responseProductoComercial.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+        //     producto.laboratorio = responseLaboratorio.data;
+        //     producto.producto = responseProductoComercial.data;
+        //     setIsLoading(false);
+        //   }
+        // })
       } else {
         const newReceta = {
           create_date: new Date(),
@@ -292,15 +293,15 @@ const InicioDermatologos = (props) => {
             fecha_proxima_consulta: receta.fecha_proxima_consulta ? receta.fecha_proxima_consulta : ""
           })
           findConsultorio()
-          responseReceta.data.productos.forEach(async (producto) => {
-            const responseLaboratorio = await findLaboratorioById(producto.laboratorio._id);
-            const responseProductoComercial = await findProductoComercialById(producto.producto._id);
-            if (`${responseLaboratorio.status}` === process.env.REACT_APP_RESPONSE_CODE_OK &&
-              `${responseProductoComercial.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
-              producto.laboratorio = responseLaboratorio.data;
-              producto.producto = responseProductoComercial.data;
-            }
-          });
+          // responseReceta.data.productos.forEach(async (producto) => {
+          //   const responseLaboratorio = await findLaboratorioById(producto.laboratorio._id);
+          //   const responseProductoComercial = await findProductoComercialById(producto.producto._id);
+          //   if (`${responseLaboratorio.status}` === process.env.REACT_APP_RESPONSE_CODE_OK &&
+          //     `${responseProductoComercial.status}` === process.env.REACT_APP_RESPONSE_CODE_OK) {
+          //     producto.laboratorio = responseLaboratorio.data;
+          //     producto.producto = responseProductoComercial.data;
+          //   }
+          // })
         }
       }
     }
@@ -436,7 +437,9 @@ const InicioDermatologos = (props) => {
   }
   
   useEffect(() => {
-    findConsultorio();
+    setIsLoading(true)
+    findConsultorio()
+
   }, []);
 
   return (

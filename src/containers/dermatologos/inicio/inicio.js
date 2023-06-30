@@ -71,7 +71,7 @@ export const InicioContainer = (props) => {
 		colorBase,
 	} = props;
 
-	const classes = myStyles(colorBase)();
+	const classes = myStyles(colorBase)()
 
 	return (
 		<Fragment>
